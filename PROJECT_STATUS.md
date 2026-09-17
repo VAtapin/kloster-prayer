@@ -10,6 +10,7 @@
 
 - Каталог устанавливаемого WordPress-плагина и ZIP: `kloster-prayer`.
 - Текущая версия: `1.2.2`.
+- GitHub Release `1.2.2` опубликован тегом без префикса `v`; в нём есть `kloster-prayer-1.2.2.zip` и постоянный `kloster-prayer.zip`.
 - Постоянная ссылка на последнюю версию: `https://github.com/VAtapin/kloster-prayer/releases/latest/download/kloster-prayer.zip`.
 - Платёжные ключи не хранятся в репозитории; они настраиваются в WordPress после установки.
 
@@ -26,6 +27,7 @@
 
 - PHP 8.4 lint прошёл для всех исходников плагина, встроенного Dompdf и изолированных PHP-тестов.
 - Локальная проверочная сборка содержит один корневой каталог `kloster-prayer`, главный файл плагина и не содержит `.git`, тестов, `tmp` или `output`.
-- PDF smoke-тест не завершён локально: политика Windows блокирует загрузку расширения PHP GD. Workflow GitHub Actions запускает его на чистом Linux-окружении с GD и mbstring.
+- PDF smoke-тест не завершён локально: политика Windows блокирует загрузку расширения PHP GD.
+- GitHub Actions на PHP 8.4 с GD и mbstring успешно проверил версию, PHP-синтаксис и PDF smoke-тест, затем опубликовал оба ZIP-файла Release 1.2.2.
 
-Последний связанный commit: Initial public plugin release.
+Последний связанный commit: Record 1.2.2 release.
