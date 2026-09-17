@@ -1,0 +1,12 @@
+/.github export-ignore
+/.distignore export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/CHANGELOG.md export-ignore
+/PROJECT_STATUS.md export-ignore
+/README.md export-ignore
+/tests export-ignore
+
+# Vendor sources are kept verbatim, including their upstream whitespace.
+kloster-prayer/includes/lib/dompdf/** -whitespace
+kloster-prayer/assets/css/admin.css -whitespace

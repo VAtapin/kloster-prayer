@@ -1,0 +1,12 @@
+.git
+.github
+.gitattributes
+.gitignore
+.distignore
+CHANGELOG.md
+PROJECT_STATUS.md
+README.md
+tests
+tmp
+output
+*.zip

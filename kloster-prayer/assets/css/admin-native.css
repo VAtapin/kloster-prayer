@@ -1,0 +1,47 @@
+/* Scoped to plugin screens; native WordPress tables keep core spacing. */
+.wrap.klp-admin{max-width:none}
+.klp-admin>h1{display:inline-block;margin-right:8px}
+.klp-admin .klp-card,.klp-admin .klp-card:not(.klp-grow){box-sizing:border-box;width:100%;max-width:none;padding:14px;margin:12px 0;border-radius:2px;box-shadow:none;min-width:0}
+.klp-admin .klp-native-editor{box-sizing:border-box;width:100%;max-width:none;margin:12px 0;padding:8px 16px 16px;background:#fff;border:1px solid #c3c4c7}
+.klp-admin .klp-native-editor .form-table{margin-top:0}
+.klp-admin .klp-native-editor .form-table th{padding:8px 12px 8px 0;width:170px}
+.klp-admin .klp-native-editor .form-table td{padding:6px 0}
+.klp-admin .klp-native-editor .form-table h2{font-size:14px;margin:6px 0 0;padding:5px 0;border-bottom:1px solid #dcdcde}
+.klp-admin .klp-native-editor .regular-text{width:min(100%,540px)}
+.klp-admin .klp-native-editor .large-text{max-width:900px;min-height:50px}
+.klp-admin .klp-native-editor #klp-image-preview img{max-width:240px;height:auto;display:block;margin-bottom:8px}
+.klp-admin .klp-service-checklist{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;max-width:1000px}
+.klp-admin .klp-service-checklist label{margin:0;font-weight:normal}
+.klp-admin .klp-payment-settings,.klp-admin .klp-report-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:12px}
+.klp-admin .klp-payment-settings .postbox{min-width:0;margin:0;border:1px solid #c3c4c7;background:#fff}
+.klp-admin .klp-detail-actions{display:inline-block;margin:10px 0}
+.klp-admin .klp-payment-settings h2{margin:0;padding:10px 12px;border-bottom:1px solid #dcdcde;font-size:14px}
+.klp-admin .klp-payment-settings .inside{margin:0;padding:0 12px 12px}
+.klp-admin .klp-payment-settings p{margin:10px 0}
+.klp-admin .klp-payment-settings p>label{display:block;margin-bottom:4px}
+.klp-admin .klp-payment-settings input:not([type=checkbox]),.klp-admin .klp-payment-settings select{width:100%;max-width:none}
+.klp-admin code{overflow-wrap:anywhere}
+.klp-admin .klp-stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:12px 0}
+.klp-admin .klp-stats>div{min-width:0;padding:12px;border-radius:2px}
+.klp-admin .klp-stats strong{font-size:20px;overflow-wrap:anywhere}
+.klp-admin .widefat td,.klp-admin .widefat th{overflow-wrap:anywhere}
+.klp-admin .wp-list-table .column-cb{width:2.2em}
+.klp-admin .wp-list-table .column-title{width:32%}
+.klp-admin .wp-list-table .column-details{width:24%}
+.klp-admin .wp-list-table .column-status{width:10%}
+.klp-admin .wp-list-table .column-updated_at{width:13%}
+.klp-admin .wp-list-table .column-id{width:8%}
+.klp-admin .wp-list-table .column-amount_cents{width:8%}
+.klp-admin .wp-list-table .column-printed_at{width:9%}
+.klp-admin .wp-list-table .column-created_at{width:12%}
+.klp-admin .klp-names{min-width:0;max-height:100px;overflow:auto}
+.klp-admin .tablenav.top{height:auto;min-height:32px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;clear:both;margin:8px 0}
+.klp-admin .tablenav .actions{padding:0;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.klp-admin .tablenav .actions select{margin:0;max-width:170px}
+.klp-admin .tablenav .tablenav-pages{margin-left:auto}
+.klp-admin .tablenav .clear{display:none}
+.klp-admin .klp-donors{table-layout:fixed}
+.klp-admin .klp-card>.widefat>tbody>tr>th{width:180px}
+@media(max-width:782px){.klp-admin .klp-payment-settings,.klp-admin .klp-report-groups{grid-template-columns:1fr}.klp-admin .klp-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.klp-admin .klp-native-editor .form-table th{width:auto}.klp-admin .klp-donors{display:block;overflow-x:auto}.klp-admin .tablenav .tablenav-pages{margin-left:0}}
+.klp-admin .klp-card input.small-text { display:inline-block; width:80px; max-width:80px; margin:0 8px 0 4px; }
+.klp-admin .klp-card input[type="date"] { display:inline-block; width:150px; margin:0 8px 0 4px; }

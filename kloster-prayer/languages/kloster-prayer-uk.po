@@ -1,0 +1,7 @@
+msgid ""
+msgstr ""
+"Language: uk\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Kloster: form not found."
+msgstr "Форму молитовних записок не знайдено."

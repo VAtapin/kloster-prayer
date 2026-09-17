@@ -1,0 +1,6 @@
+*.zip
+output/
+tmp/
+.idea/
+.vscode/
+*.log
