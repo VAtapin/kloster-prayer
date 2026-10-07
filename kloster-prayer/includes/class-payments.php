@@ -9,6 +9,33 @@ use WP_REST_Response;
 
 final class Payments
 {
+    /** Empty means follow WordPress automatically. Only an HTTPS origin is accepted. */
+    public static function normalize_api_origin(string $value): string
+    {
+        $value = trim($value);
+        if ($value === '') return '';
+        $parts = parse_url($value);
+        if (!$parts || ($parts['scheme'] ?? '') !== 'https' || empty($parts['host'])
+            || isset($parts['user'], $parts['pass']) || isset($parts['user']) || isset($parts['pass'])
+            || isset($parts['query']) || isset($parts['fragment'])
+            || !in_array($parts['path'] ?? '', ['', '/'], true)
+            || !filter_var($parts['host'], FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)
+            || !str_contains($parts['host'], '.')
+            || preg_match('/[\s\\\\]/', $value)) {
+            throw new \InvalidArgumentException('Invalid HTTPS origin');
+        }
+        return 'https://'.strtolower($parts['host']).(isset($parts['port'])?':'.$parts['port']:'');
+    }
+
+    public static function api_url(string $path): string
+    {
+        $url = rest_url('kloster-prayer/v1/'.ltrim($path, '/'));
+        try { $origin = self::normalize_api_origin((string)get_option('klp_api_origin', '')); }
+        catch (\InvalidArgumentException $e) { return $url; }
+        // Keep WordPress subdirectory, REST prefix and query-based permalink routing.
+        return $origin === '' ? $url : (string)preg_replace('~^https?://[^/]+~', $origin, $url, 1);
+    }
+
     public static function init(): void
     {
         add_action('klp_retry_confirmations', [self::class, 'retry_confirmations']);
@@ -63,9 +90,15 @@ final class Payments
         wp_send_json_success(['redirect' => $redirect]);
     }
 
+    /** Shared parser for new submissions and legacy PDF records. Never split spaces inside names. */
+    public static function split_names(string $raw): array
+    {
+        return array_values(array_filter(array_map('trim', preg_split('/[,;，;\\r\\n\\x{2028}\\x{2029}]+/u', $raw) ?: []), static fn(string $name): bool => $name !== ''));
+    }
+
     private static function clean_names(string $raw): array
     {
-        $lines = preg_split('/\R/u', sanitize_textarea_field($raw)) ?: [];
+        $lines = self::split_names(sanitize_textarea_field($raw));
         $lines = array_values(array_filter(array_map(static fn(string $name): string => trim(wp_strip_all_tags($name)), $lines)));
         return array_slice($lines, 0, 300);
     }
@@ -188,7 +221,7 @@ final class Payments
         $token = self::paypal_access_token();
         if (is_wp_error($token)) return $token;
         $base = get_option('klp_paypal_mode', 'live') === 'sandbox' ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
-        $return = add_query_arg(['order' => $order->public_id], rest_url('kloster-prayer/v1/paypal/return'));
+        $return = add_query_arg(['order' => $order->public_id], self::api_url('paypal/return'));
         $payload = ['intent' => 'CAPTURE', 'purchase_units' => [[
             'reference_id' => $order->public_id, 'custom_id' => (string) $order->id,
             'description' => self::payment_label($order),

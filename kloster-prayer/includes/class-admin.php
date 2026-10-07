@@ -63,6 +63,11 @@ final class Admin
             self::redirect('kloster-prayer', $ok ? 'email_sent' : 'email_failed');
         }
         if ($action === 'save_settings') {
+            if (isset($_POST['api_origin'])) {
+                try { $origin = Payments::normalize_api_origin((string)wp_unslash($_POST['api_origin'])); }
+                catch (\InvalidArgumentException $e) { wp_die(esc_html(__('Укажите HTTPS-домен без пути, параметров и логина, например https://example.org. Для автоматического выбора оставьте поле пустым.', 'kloster-prayer'))); }
+                update_option('klp_api_origin', $origin);
+            }
             if (!empty($_POST['stripe_secret'])) update_option('klp_stripe_secret', sanitize_text_field((string) wp_unslash($_POST['stripe_secret'])));
             if (!empty($_POST['stripe_webhook_secret'])) update_option('klp_stripe_webhook_secret', sanitize_text_field((string) wp_unslash($_POST['stripe_webhook_secret'])));
             update_option('klp_paypal_mode', in_array($_POST['paypal_mode'] ?? '', ['live', 'sandbox'], true) ? $_POST['paypal_mode'] : 'live');
@@ -136,6 +141,7 @@ final class Admin
         }
         require_once DIR.'/includes/class-orders-table.php';
         $table=new Orders_Table();$table->prepare_items();
+        echo '<p><a href="'.esc_url(admin_url('admin.php?page=kloster-prayer')).'">'.esc_html__('Текущие записки','kloster-prayer').'</a> | <a href="'.esc_url(admin_url('admin.php?page=kloster-prayer&archive=yes')).'">'.esc_html__('Архив','kloster-prayer').'</a></p>';
         echo '<p>Пустые бланки PDF: ';
         foreach (['ru'=>'RU', 'de'=>'DE'] as $language=>$label) {
             foreach (['health'=>'О здравии', 'rest'=>'Об упокоении'] as $intention=>$title) {
@@ -144,6 +150,7 @@ final class Admin
         }
         echo '</p>';
         echo '<form method="get"><input type="hidden" name="page" value="kloster-prayer">';
+        if (($_GET['archive']??'') === 'yes') echo '<input type="hidden" name="archive" value="yes">';
         $table->search_box('Поиск записок','klp-orders');echo '</form>';
         echo '<form method="post">';wp_nonce_field('klp_admin_action', '_klp_nonce');
         echo '<input type="hidden" name="page" value="kloster-prayer"><input type="hidden" name="klp_action" value="orders_bulk">';

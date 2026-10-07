@@ -8,7 +8,7 @@ $links=['Version 1.1.1','Author: <a href="https://atapin.de/">atapin.de</a>','<a
 $result=KlosterPrayer\Admin::external_meta($links,'kloster-prayer/kloster-prayer.php');
 if(substr_count(implode('',$result),'target="_blank"')!==2)throw new Exception('External link targets');
 if(KlosterPrayer\Admin::external_meta($links,'another/plugin.php')!==$links)throw new Exception('Other plugin changed');
-require KlosterPrayer\DIR.'/includes/class-payments.php';
+require_once KlosterPrayer\DIR.'/includes/class-payments.php';
 function sanitize_email($s){return $s;}function is_wp_error($r){return false;}
 $GLOBALS['response']=['code'=>200,'body'=>json_encode(['id'=>'cs_live_fixture','customer_details'=>['name'=>'Fixture Donor','email'=>'donor@example.org','address'=>['city'=>'Berlin']]])];
 function wp_remote_get($url,$args){return $GLOBALS['response'];}function wp_remote_retrieve_response_code($r){return $r['code'];}function wp_remote_retrieve_body($r){return $r['body'];}

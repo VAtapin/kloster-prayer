@@ -53,7 +53,7 @@ final class Pdf
         if($printed==='yes')$where[]='o.printed_at IS NOT NULL';elseif($printed==='no')$where[]='o.printed_at IS NULL';
         $sql='SELECT o.*,i.service_title,i.service_id,s.slug AS service_slug FROM '.Database::table('orders').' o INNER JOIN '.Database::table('order_items').' i ON i.order_id=o.id LEFT JOIN '.Database::table('services').' s ON s.id=i.service_id WHERE '.implode(' AND ',$where).' ORDER BY o.intention,o.created_at';
         $rows=$wpdb->get_results($args?$wpdb->prepare($sql,...$args):$sql); $cards=[];
-        foreach($rows as $row){ $limit=(int)$wpdb->get_var($wpdb->prepare('SELECT names_per_sheet FROM '.Database::table('services').' WHERE id=%d',(int)$row->service_id))?:10; $names=array_values(array_filter(array_map('trim',explode("\n",$row->names)))); foreach(array_chunk($names,$limit) as $chunk)$cards[]=['order_date'=>self::order_date($row),'order_id'=>(int)$row->id,'printed_at'=>$row->printed_at,'intention'=>$row->intention,'language'=>$row->language==='ru'?'ru':'de','title'=>$row->service_title,'names'=>$chunk,'note'=>$row->note]; }
+        foreach($rows as $row){ $limit=(int)$wpdb->get_var($wpdb->prepare('SELECT names_per_sheet FROM '.Database::table('services').' WHERE id=%d',(int)$row->service_id))?:10; $names=Payments::split_names((string)$row->names); foreach(array_chunk($names,$limit) as $chunk)$cards[]=['order_date'=>self::order_date($row),'order_id'=>(int)$row->id,'printed_at'=>$row->printed_at,'intention'=>$row->intention,'language'=>$row->language==='ru'?'ru':'de','title'=>$row->service_title,'names'=>$chunk,'note'=>$row->note]; }
         return $cards;
     }
 

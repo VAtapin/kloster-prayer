@@ -5,6 +5,7 @@ declare(strict_types=1);
 define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
 define('KlosterPrayer\\DIR',dirname(__DIR__).'/kloster-prayer');
 define('KlosterPrayer\\FILE',KlosterPrayer\DIR.'/kloster-prayer.php');
+require KlosterPrayer\DIR.'/includes/class-payments.php';
 require KlosterPrayer\DIR.'/includes/class-service-images.php';
 function sanitize_file_name($s){return preg_replace('/[^a-z0-9-]/','',$s);}
 function plugins_url($path,$file){return '../kloster-prayer/'.$path;}
@@ -14,6 +15,7 @@ $GLOBALS['fixture_languages']=['ru_RU','de_DE'];
 function pll_languages_list($args){return $GLOBALS['fixture_languages'];}
 function get_locale(){return 'ru_RU';}function determine_locale(){return get_locale();}
 function __($v,...$args){return $v;}function _x($v,...$args){return $v;}function _e($v,...$args){echo $v;}function _n($a,$b,$n){return $n==1?$a:$b;}
+function esc_html__($v,...$args){return esc_html($v);}
 function esc_attr($v){return htmlspecialchars((string)$v,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');}function esc_html($v){return esc_attr($v);}function esc_textarea($v){return esc_attr($v);}function esc_url($v){return esc_attr($v);}
 function sanitize_key($v){return preg_replace('/[^a-z0-9_-]/','',strtolower((string)$v));}function sanitize_text_field($v){return strip_tags((string)$v);}function wp_unslash($v){return $v;}function absint($v){return abs((int)$v);}function wp_parse_args($args,$defaults=[]){return array_merge($defaults,(array)$args);}
 function add_filter(...$args){}function add_action(...$args){}function apply_filters($hook,$value,...$args){return $value;}function current_user_can(...$args){return true;}

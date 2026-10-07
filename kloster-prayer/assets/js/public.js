@@ -27,6 +27,18 @@ document.addEventListener('DOMContentLoaded', function () {
     var currency = root.dataset.currency || 'EUR';
     var lang = root.dataset.lang === 'ru' ? 'ru-RU' : 'de-DE';
 
+    function normalizeNames(finalize) {
+      var start = names.selectionStart, end = names.selectionEnd;
+      var convert = function (value) { return value.replace(/[ \t]*[,;，][ \t]*/g, '\n'); };
+      var value = convert(names.value);
+      if (finalize) value = value.split(/[\r\n\u2028\u2029]+/).map(function (v) { return v.trim(); }).filter(Boolean).join('\n');
+      if (names.value !== value) {
+        var nextStart = convert(names.value.slice(0, start)).length;
+        var nextEnd = convert(names.value.slice(0, end)).length;
+        names.value = value;
+        if (!finalize) names.setSelectionRange(nextStart, nextEnd);
+      }
+    }
     function namesCount() {
       return names.value.split(/\r?\n/).map(function (v) { return v.trim(); }).filter(Boolean).length;
     }
@@ -56,9 +68,11 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('change', function (event) {
       if (event.target.name === 'intention') refreshVisibility(); else calculate();
     });
-    names.addEventListener('input', calculate);
+    names.addEventListener('input', function (event) { if (!event.isComposing) normalizeNames(false); calculate(); });
+    names.addEventListener('compositionend', function () { normalizeNames(false); calculate(); });
+    names.addEventListener('blur', function () { normalizeNames(true); calculate(); });
     form.addEventListener('submit', function (event) {
-      event.preventDefault(); error.hidden = true;
+      event.preventDefault(); error.hidden = true; normalizeNames(true); calculate();
       if (!form.checkValidity() || !form.querySelector('.klp-service input:checked')) {
         error.textContent = window.klosterPrayer.required; error.hidden = false; form.reportValidity(); return;
       }
@@ -71,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(function (reason) { error.textContent = reason.message || window.klosterPrayer.error; error.hidden = false; submit.disabled = false; });
     });
+    normalizeNames(true);
     refreshVisibility();
   });
 });

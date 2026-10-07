@@ -25,6 +25,8 @@ $cards = [
     ['intention' => 'rest', 'language' => 'de', 'title' => 'Panichida', 'names' => ['Alexej', 'Vera', 'Sergij'], 'note' => ''],
     ['intention' => 'rest', 'language' => 'ru', 'title' => 'Сорокоуст', 'names' => ['Анны', 'Владимира'], 'note' => ''],
 ];
+assert(\KlosterPrayer\Payments::split_names(" Мария, Иоанн\nБолящего Леонида,, Анна-Мария;") === ['Мария','Иоанн','Болящего Леонида','Анна-Мария']);
+$cards[0]['names'] = \KlosterPrayer\Payments::split_names('Болящего Леонида, Марии, Иоанна');
 $htmlMethod = new ReflectionMethod(\KlosterPrayer\Pdf::class, 'modern_html');
 $html = $htmlMethod->invoke(null, $cards);
 assert(is_file(\KlosterPrayer\DIR.'/assets/img/ZDRAVIE-print.png'));

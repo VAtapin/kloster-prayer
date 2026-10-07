@@ -10,6 +10,7 @@ final class Admin_Screens
         echo '<div class="wrap klp-admin"><h1>Настройки оплаты</h1>';
         if(isset($_GET['klp_notice']))echo '<div class="notice notice-success is-dismissible"><p>Настройки сохранены.</p></div>';
         echo '<form method="post">';wp_nonce_field('klp_admin_action', '_klp_nonce');
+        echo '<section class="postbox"><div class="inside"><h2>'.esc_html(__('Домен API', 'kloster-prayer')).'</h2><input class="regular-text" type="url" name="api_origin" aria-label="'.esc_attr(__('Домен API', 'kloster-prayer')).'" placeholder="https://example.org" value="'.esc_attr((string)get_option('klp_api_origin','')).'"><p class="description">'.esc_html(__('Необязательно. Пустое поле — использовать домен WordPress автоматически. Только HTTPS-домен, без /wp-json/ и других путей. Указанный домен должен обслуживать этот же сайт WordPress с действующим HTTPS.', 'kloster-prayer')).'</p><p>'.esc_html(__('После смены домена сохраните настройки и обновите Webhook URL в кабинетах Stripe и PayPal. Плагин не меняет их автоматически. Старый домен оставьте доступным для незавершённых оплат.', 'kloster-prayer')).'</p></div></section>';
         echo '<input type="hidden" name="klp_action" value="save_settings"><div class="klp-payment-settings">';
         foreach(['stripe'=>'Stripe','paypal'=>'PayPal'] as $provider=>$title){
             echo '<section class="postbox"><h2>'.esc_html($title).'</h2><div class="inside"><p><label><input type="checkbox" name="methods[]" value="'.esc_attr($provider).'" '.checked(in_array($provider,$enabled,true),true,false).'> Включить '.esc_html($title).'</label></p>';
@@ -18,7 +19,7 @@ final class Admin_Screens
             foreach($fields as $key=>$label){$secret=str_contains($key,'secret');$value=(string)get_option('klp_'.$key,'');
                 echo '<p><label for="'.esc_attr($key).'">'.esc_html($label).'</label><input id="'.esc_attr($key).'" name="'.esc_attr($key).'" type="'.($secret?'password':'text').'" value="'.esc_attr($secret?'':$value).'" autocomplete="off"'.($secret&&$value!==''?' placeholder="Сохранено — оставьте пустым, чтобы не менять"':'').'></p>';
             }
-            echo '<p><label>Webhook URL</label><code>'.esc_html(rest_url('kloster-prayer/v1/'.$provider.'/webhook')).'</code></p><p class="description">Настройка нужна только для включённого способа оплаты.</p></div></section>';
+            echo '<p><label>Webhook URL</label><code>'.esc_html(Payments::api_url($provider.'/webhook')).'</code></p><p class="description">Настройка нужна только для включённого способа оплаты.</p></div></section>';
         }
         echo '</div>';submit_button('Сохранить настройки');echo '</form></div>';
     }

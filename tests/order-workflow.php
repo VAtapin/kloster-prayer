@@ -41,6 +41,11 @@ assert(count($wpdb->history)===5);
 [$active]=KlosterPrayer\Orders_Table::where([]);[$archive]=KlosterPrayer\Orders_Table::where(['archive'=>'yes']);
 assert(str_contains($active,'archived_at IS NULL'));
 assert(str_contains($archive,'archived_at IS NOT NULL'));
+assert(!str_contains($archive,'archive=%s'));
+$nav=new ReflectionMethod(KlosterPrayer\Orders_Table::class,'extra_tablenav');
+ob_start();$nav->invoke(new KlosterPrayer\Orders_Table(),'top');$archiveNav=ob_get_clean();
+assert(str_contains($archiveNav,'name="archive"'));
+assert(str_contains($archiveNav,'Архив'));
 echo "Periods, leap year, inclusive dates, archive/restore, payment preservation, print history OK\n";
 function check_admin_referer(...$args){return true;}
 function wp_die($message,...$args){throw new RuntimeException($message);}

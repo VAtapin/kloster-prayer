@@ -25,7 +25,7 @@ final class Orders_Table extends \WP_List_Table
     }
     public static function where(array $input): array {
         global $wpdb;$where=[($input['archive']??'')==='yes'?'archived_at IS NOT NULL':'archived_at IS NULL'];$args=[];
-        foreach(['archive'=>[''=>'Текущие записки','yes'=>'Архив'],'payment_status'=>['pending','paid','failed','refunded','cancelled'],'intention'=>['health','rest'],'payment_provider'=>['stripe','paypal']] as $key=>$allowed){$value=$input[$key==='payment_provider'?'provider':$key]??'';if(in_array($value,$allowed,true)){$where[]=$key.'=%s';$args[]=$value;}}
+        foreach(['payment_status'=>['pending','paid','failed','refunded','cancelled'],'intention'=>['health','rest'],'payment_provider'=>['stripe','paypal']] as $key=>$allowed){$value=$input[$key==='payment_provider'?'provider':$key]??'';if(in_array($value,$allowed,true)){$where[]=$key.'=%s';$args[]=$value;}}
         if(($input['printed']??'')==='yes')$where[]='printed_at IS NOT NULL';elseif(($input['printed']??'')==='no')$where[]='printed_at IS NULL';
         if(preg_match('/^\d{4}-(0[1-9]|1[0-2])$/',(string)($input['month']??''))){$where[]='created_at >= %s AND created_at < %s';$args[]=$input['month'].'-01';$args[]=date('Y-m-d',strtotime($input['month'].'-01 +1 month'));}
         if(!empty($input['service_id'])){$where[]='id IN (SELECT order_id FROM '.Database::table('order_items').' WHERE service_id=%d)';$args[]=absint($input['service_id']);}
@@ -42,7 +42,7 @@ final class Orders_Table extends \WP_List_Table
     protected function extra_tablenav($which){
         if($which!=='top')return;
         echo '<div class="alignleft actions klp-order-filters">';
-        foreach(['payment_status'=>[''=>'Все оплаты','paid'=>'Оплачено','pending'=>'Ожидает','failed'=>'Ошибка','refunded'=>'Возвращено','cancelled'=>'Отменено'],'intention'=>[''=>'Оба типа','health'=>'О здравии','rest'=>'Об упокоении'],'printed'=>[''=>'Вся печать','yes'=>'Распечатано','no'=>'Не распечатано']] as $name=>$options){echo '<select aria-label="'.esc_attr($options['']).'" name="'.esc_attr($name).'">';foreach($options as $v=>$label)echo '<option value="'.esc_attr($v).'" '.selected($_GET[$name]??'',$v,false).'>'.esc_html($label).'</option>';echo '</select>';}
+        foreach(['archive'=>[''=>'Текущие записки','yes'=>'Архив'],'payment_status'=>[''=>'Все оплаты','paid'=>'Оплачено','pending'=>'Ожидает','failed'=>'Ошибка','refunded'=>'Возвращено','cancelled'=>'Отменено'],'intention'=>[''=>'Оба типа','health'=>'О здравии','rest'=>'Об упокоении'],'printed'=>[''=>'Вся печать','yes'=>'Распечатано','no'=>'Не распечатано']] as $name=>$options){echo '<select aria-label="'.esc_attr($options['']).'" name="'.esc_attr($name).'">';foreach($options as $v=>$label)echo '<option value="'.esc_attr($v).'" '.selected($_GET[$name]??'',$v,false).'>'.esc_html($label).'</option>';echo '</select>';}
         echo '<button class="button" formmethod="get">Фильтр</button> <button class="button" name="klp_action" value="generate_pdf">PDF</button> <a class="button" href="'.esc_url(wp_nonce_url(admin_url('admin-post.php?action=klp_csv'),'klp_csv')).'">CSV</a></div>';
     }
 }
