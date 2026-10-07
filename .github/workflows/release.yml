@@ -32,7 +32,9 @@ jobs:
           test "$TAG" = "$stable"
           find kloster-prayer tests -name '*.php' -print0 | xargs -0 -n1 php -l
           mkdir -p tmp/pdfs output/pdf
-          php tests/smoke.php
+          php -d zend.assertions=1 -d assert.exception=1 tests/smoke.php
+          php tests/notifications.php
+          php -d zend.assertions=1 -d assert.exception=1 tests/api-domain.php
 
       - name: Build installation ZIP
         env:

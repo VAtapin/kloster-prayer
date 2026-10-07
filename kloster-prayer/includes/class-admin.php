@@ -63,6 +63,11 @@ final class Admin
             self::redirect('kloster-prayer', $ok ? 'email_sent' : 'email_failed');
         }
         if ($action === 'save_settings') {
+            if (isset($_POST['notification_email'])) {
+                try { $recipient = Notifications::validate_recipient((string) wp_unslash($_POST['notification_email'])); }
+                catch (\InvalidArgumentException $e) { wp_die(esc_html__('Укажите один корректный email для уведомлений или оставьте поле пустым.', 'kloster-prayer')); }
+                update_option('klp_notification_email', $recipient);
+            }
             if (isset($_POST['api_origin'])) {
                 try { $origin = Payments::normalize_api_origin((string)wp_unslash($_POST['api_origin'])); }
                 catch (\InvalidArgumentException $e) { wp_die(esc_html(__('Укажите HTTPS-домен без пути, параметров и логина, например https://example.org. Для автоматического выбора оставьте поле пустым.', 'kloster-prayer'))); }

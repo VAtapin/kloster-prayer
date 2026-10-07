@@ -5,7 +5,7 @@ namespace KlosterPrayer;
 
 final class Database
 {
-    private const DB_VERSION = '1.2.0';
+    private const DB_VERSION = '1.2.5';
 
     public static function table(string $name): string
     {
@@ -172,6 +172,17 @@ final class Database
             created_at datetime NOT NULL,
             PRIMARY KEY (id),
             KEY order_history (order_id,id)
+        ) {$charset};");
+        $notifications = self::table('notifications');
+        dbDelta("CREATE TABLE {$notifications} (
+            order_id bigint unsigned NOT NULL,
+            created_at datetime NOT NULL,
+            sent_at datetime NULL,
+            locked_at datetime NULL,
+            last_attempt_at datetime NULL,
+            attempts int unsigned NOT NULL DEFAULT 0,
+            PRIMARY KEY (order_id),
+            KEY pending_notifications (sent_at,last_attempt_at)
         ) {$charset};");
         update_option('klp_db_version', self::DB_VERSION, true);
     }

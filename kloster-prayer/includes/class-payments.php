@@ -355,13 +355,18 @@ final class Payments
         if ($order_id <= 0) return;
         $table = Database::table('orders');
         $wpdb->query($wpdb->prepare("UPDATE {$table} SET payment_status='paid',payment_id=COALESCE(NULLIF(%s,''),payment_id),paid_at=COALESCE(paid_at,%s) WHERE id=%d AND payment_status<>'paid'", $payment_id, current_time('mysql'), $order_id));
-        if ($wpdb->rows_affected > 0) Order_Workflow::log($order_id,'paid','Оплата подтверждена');
+        if ($wpdb->rows_affected > 0) {
+            Notifications::enqueue($order_id);
+            Order_Workflow::log($order_id,'paid','Оплата подтверждена');
+        }
         $order = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$table} WHERE id=%d", $order_id));
         if ($order && !$order->confirmation_sent_at) self::send_confirmation($order);
+        Notifications::send($order_id);
     }
 
     public static function retry_confirmations(): void
     {
+        Notifications::retry();
         global $wpdb;
         $rows = $wpdb->get_results("SELECT * FROM " . Database::table('orders') . " WHERE payment_status='paid' AND confirmation_sent_at IS NULL ORDER BY paid_at ASC LIMIT 25");
         foreach ($rows as $order) self::send_confirmation($order);

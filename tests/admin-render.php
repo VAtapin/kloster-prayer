@@ -6,6 +6,7 @@ define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
 define('KlosterPrayer\\DIR',dirname(__DIR__).'/kloster-prayer');
 define('KlosterPrayer\\FILE',KlosterPrayer\DIR.'/kloster-prayer.php');
 require KlosterPrayer\DIR.'/includes/class-payments.php';
+require KlosterPrayer\DIR.'/includes/class-notifications.php';
 require KlosterPrayer\DIR.'/includes/class-service-images.php';
 function sanitize_file_name($s){return preg_replace('/[^a-z0-9-]/','',$s);}
 function plugins_url($path,$file){return '../kloster-prayer/'.$path;}
