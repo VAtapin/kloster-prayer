@@ -50,8 +50,10 @@ echo "Periods, leap year, inclusive dates, archive/restore, payment preservation
 function check_admin_referer(...$args){return true;}
 function wp_die($message,...$args){throw new RuntimeException($message);}
 $wpdb=new WorkflowDB();
+$wpdb->stored['archived_at']='2026-10-10 14:00:00';
 Flow::pdf_generated([['order_id'=>1],['order_id'=>1],['names'=>[]]]);
 assert($wpdb->stored['printed_at']!==null);
+assert($wpdb->stored['archived_at']==='2026-10-10 14:00:00');
 assert(count($wpdb->history)===1);
 assert($wpdb->history[0]['event_type']==='pdf_printed');
 Flow::pdf_generated([['order_id'=>1]]);

@@ -16,7 +16,7 @@ final class Pdf
     public static function url(array $filters = []): string
     {
         $args = ['action' => 'klp_pdf', '_wpnonce' => wp_create_nonce('klp_pdf')];
-        foreach (['payment_status','intention','printed','blank','language'] as $key) if (!empty($filters[$key])) $args[$key] = sanitize_key((string) $filters[$key]);
+        foreach (['archive','payment_status','intention','printed','blank','language'] as $key) if (!empty($filters[$key])) $args[$key] = sanitize_key((string) $filters[$key]);
         if (!empty($filters['order_ids'])) $args['order_ids'] = implode(',', array_filter(array_map('absint', is_array($filters['order_ids']) ? $filters['order_ids'] : explode(',', (string) $filters['order_ids']))));
         return add_query_arg($args, admin_url('admin-post.php'));
     }
@@ -44,10 +44,13 @@ final class Pdf
 
     private static function cards(): array
     {
-        global $wpdb; $where=['o.archived_at IS NULL']; $args=[];
+        global $wpdb; $where=[]; $args=[];
         $status=sanitize_key((string)($_GET['payment_status']??'')); $intention=sanitize_key((string)($_GET['intention']??'')); $printed=sanitize_key((string)($_GET['printed']??''));
         $ids=array_filter(array_map('absint',explode(',',(string)($_GET['order_ids']??''))));
         if($ids){$where[]='o.id IN ('.implode(',',array_fill(0,count($ids),'%d')).')';array_push($args,...$ids);}
+        // Explicit selections may include archived orders. Only whole-list exports
+        // use the archive view, so downloading never requires restoring an order.
+        else $where[]=($_GET['archive']??'')==='yes'?'o.archived_at IS NOT NULL':'o.archived_at IS NULL';
         if(in_array($status,['pending','paid','failed','refunded','cancelled'],true)){ $where[]='o.payment_status=%s';$args[]=$status; }
         if(in_array($intention,['health','rest'],true)){ $where[]='o.intention=%s';$args[]=$intention; }
         if($printed==='yes')$where[]='o.printed_at IS NOT NULL';elseif($printed==='no')$where[]='o.printed_at IS NULL';

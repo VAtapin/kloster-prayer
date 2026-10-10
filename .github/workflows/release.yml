@@ -34,6 +34,7 @@ jobs:
           mkdir -p tmp/pdfs output/pdf
           php -d zend.assertions=1 -d assert.exception=1 tests/smoke.php
           php tests/notifications.php
+          php tests/pdf-archive.php --render
           php -d zend.assertions=1 -d assert.exception=1 tests/api-domain.php
 
       - name: Build installation ZIP

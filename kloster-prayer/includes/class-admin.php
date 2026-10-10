@@ -55,7 +55,7 @@ final class Admin
                 if (!$ids) wp_die('Нет записок для выбранного фильтра.');
             }
             $filters = ['order_ids' => $ids];
-            foreach (['payment_status','intention','printed'] as $key) if (!empty($_POST[$key])) $filters[$key] = sanitize_key((string) $_POST[$key]);
+            foreach (['archive','payment_status','intention','printed'] as $key) if (!empty($_POST[$key])) $filters[$key] = sanitize_key((string) $_POST[$key]);
             wp_safe_redirect(Pdf::url($filters)); exit;
         }
         if ($action === 'resend_confirmation') {
