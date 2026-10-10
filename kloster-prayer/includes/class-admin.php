@@ -124,6 +124,7 @@ final class Admin
 
     public static function orders(): void
     {
+        require_once DIR.'/includes/class-orders-table.php';
         global $wpdb; self::header('Молитвенные записки');
         $view=absint($_GET['view']??0);
         if($view){

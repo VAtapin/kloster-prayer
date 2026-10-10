@@ -3,7 +3,7 @@
  * Plugin Name: Православные молитвенные записки и пожертвования
  * Plugin URI: https://atapin.de/
  * Description: Православные молитвенные записки и пожертвования: Stripe, PayPal, PDF и отчёты.
- * Version: 1.2.8
+ * Version: 1.2.9
  * Author: atapin.de
  * Author URI: https://atapin.de/
  * Text Domain: kloster-prayer
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const VERSION = '1.2.8';
+const VERSION = '1.2.9';
 const FILE = __FILE__;
 const DIR = __DIR__;
 

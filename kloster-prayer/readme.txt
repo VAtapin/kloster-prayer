@@ -2,7 +2,7 @@
 Contributors: atapin
 Requires at least: 7.1
 Requires PHP: 8.4
-Stable tag: 1.2.8
+Stable tag: 1.2.9
 License: GPLv2 or later
 
 Православные молитвенные записки и пожертвования для приходов, храмов, соборов и монастырей.
@@ -79,6 +79,9 @@ PayPal: PAYMENT.CAPTURE.COMPLETED, PAYMENT.CAPTURE.REFUNDED.
 Ключи и секреты эта настройка не меняет.
 
 == Changelog ==
+
+= 1.2.9 =
+* Исправлена критическая ошибка при прямом открытии карточки записки.
 
 = 1.2.8 =
 * Комментарии к запискам видны под именами в списке и в карточке, включая архив.

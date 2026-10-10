@@ -45,7 +45,7 @@ class FixtureDB {
 }
 $wpdb=new FixtureDB();
 require KlosterPrayer\DIR.'/includes/class-order-workflow.php';require KlosterPrayer\DIR.'/includes/class-database.php';require KlosterPrayer\DIR.'/includes/class-i18n.php';require KlosterPrayer\DIR.'/includes/class-admin.php';require KlosterPrayer\DIR.'/includes/class-admin-screens.php';require KlosterPrayer\DIR.'/includes/class-pdf.php';
-$pages=['settings'=>['settings',[]],'diagnostics'=>['diagnostics',[]],'reports'=>['reports',[]],'forms'=>['forms',[]],'services'=>['services',[]],'edit-form'=>['forms',['edit'=>1]],'edit-service'=>['services',['edit'=>1]],'orders'=>['orders',[]],'detail'=>['orders',['view'=>1]]];
+$pages=['detail'=>['orders',['view'=>1]],'settings'=>['settings',[]],'diagnostics'=>['diagnostics',[]],'reports'=>['reports',[]],'forms'=>['forms',[]],'services'=>['services',[]],'edit-form'=>['forms',['edit'=>1]],'edit-service'=>['services',['edit'=>1]],'orders'=>['orders',[]]];
 foreach($pages as $name=>[$method,$query]){
     $_GET=$query;$_POST=[];$_REQUEST=$query;ob_start();KlosterPrayer\Admin::$method();$body=ob_get_clean();
     if(str_contains($name,'edit-')){if(str_contains($body,'name="title_uk"')||str_contains($body,'name="title_pl"'))throw new Exception('Inactive languages displayed');}
