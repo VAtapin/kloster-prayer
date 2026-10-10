@@ -71,17 +71,26 @@ final class Pdf
     /** Original supplied artwork: coordinates below use its 3540 x 2480 grid. */
     private static function modern_html(array $cards): string
     {
-        $html = '<!doctype html><html><head><meta charset="utf-8"><style>@page{margin:6mm}body{margin:0;font-family:"DejaVu Sans",sans-serif;color:#171717}.page{position:relative;width:282mm;height:197.56mm}.page+.page{page-break-before:always}.background{position:absolute;left:0;top:0;width:282mm;height:197.56mm}.card{position:absolute;top:0;width:94mm;height:197.56mm}.service{position:absolute;left:12mm;width:70mm;top:27.4mm;font-size:12pt;font-weight:bold;text-align:center;line-height:5mm}.name{position:absolute;left:13.5mm;width:67mm;line-height:5mm;white-space:nowrap}.kind{position:absolute;left:14mm;top:19.7mm;width:66mm;height:5.1mm;background:white;font-size:11pt;font-weight:bold;line-height:5mm;text-align:center}.order-date{position:absolute;left:13mm;top:186mm;width:68mm;text-align:center;font-size:8pt;line-height:3mm}.note{position:absolute;left:13mm;top:181mm;width:68mm;font-size:7pt;line-height:3mm;text-align:center}</style></head><body>';
+        $html = '<!doctype html><html><head><meta charset="utf-8"><style>@page{margin:6mm}body{margin:0;font-family:"DejaVu Sans",sans-serif;color:#171717}.page{page-break-inside:avoid;position:relative;width:282mm;height:197.56mm}.page+.page{page-break-before:always}.background{position:absolute;left:0;top:0;width:282mm;height:197.56mm}.card{position:absolute;top:0;width:94mm;height:197.56mm}.service{position:absolute;left:12mm;width:70mm;top:27.4mm;font-size:12pt;font-weight:bold;text-align:center;line-height:5mm}.name{position:absolute;left:13.5mm;width:67mm;line-height:5mm;white-space:nowrap}.kind{position:absolute;left:14mm;top:19.7mm;width:66mm;height:5.1mm;background:white;font-size:11pt;font-weight:bold;line-height:5mm;text-align:center}.order-date{position:absolute;left:13mm;top:186mm;width:68mm;text-align:center;font-size:8pt;line-height:3mm}.note{position:absolute;left:13.5mm;width:67mm;font-size:9pt;line-height:4mm;text-align:left}</style></head><body>';
         $groups = [];
         foreach ($cards as $card) {
-            // The first printed line is reserved for the service title; 14 remain for names.
-            foreach (array_chunk($card['names'] ?: [''], 14) as $names) {
-                $copy = $card; $copy['names'] = $names;
-                $groups[$card['language'].'-'.$card['intention']][] = $copy;
+            $noteLines = self::note_lines((string) $card['note']);
+            $noteParts = $noteLines ? array_chunk($noteLines, 30) : [[]];
+            // Reserve measured comment space before splitting the names. The date
+            // stays below 186 mm; neither names nor comments may reach it.
+            $firstTop = 573 * 282 / 3540 - 5.3;
+            $step = 128.55 * 282 / 3540;
+            $limit = $noteLines ? max(1, min(14, 1 + (int) floor((180 - $firstTop - 7 - count($noteParts[0]) * 4) / $step))) : 14;
+            foreach (array_chunk($card['names'] ?: [''], $limit) as $names) {
+                foreach ($noteParts as $part => $lines) {
+                    $copy = $card; $copy['names'] = $part === 0 ? $names : [];
+                    $copy['note_lines'] = $lines;
+                    $groups[$card['language'].'-'.$card['intention']][] = $copy;
+                }
             }
         }
         foreach ($groups as $group) foreach (array_chunk($group, 3) as $page) {
-            $blank = array_merge($page[0], ['title'=>'', 'names'=>[], 'note'=>'', 'order_date'=>'']);
+            $blank = array_merge($page[0], ['title'=>'', 'names'=>[], 'note'=>'', 'note_lines'=>[], 'order_date'=>'']);
             $page = array_pad($page, 3, $blank);
             $rest = $page[0]['intention'] === 'rest';
             $file = DIR.'/assets/img/'.($rest ? 'UPOKOI-print.png' : 'ZDRAVIE-print.png');
@@ -98,10 +107,42 @@ final class Pdf
                     $html .= '<div class="name" style="top:'.$top.'mm;font-size:'.$size.'pt">'.esc_html($name).'</div>';
                 }
                 if (!empty($card['order_date'])) $html .= '<div class="order-date">'.esc_html(($card['language']==='de'?'Bestelldatum: ':'Дата заказа: ').$card['order_date']).'</div>';
-                $html .= '<div class="note">'.esc_html($card['note']).'</div></div>';
+                if ($card['note_lines']) {
+                    $noteTop = (573 + max(0, count($card['names']) - 1) * 128.55) * 282 / 3540 - 5.3 + (count($card['names']) ? 7 : 0);
+                    foreach ($card['note_lines'] as $line => $text) {
+                        $html .= '<div class="note" style="top:'.($noteTop + $line * 4).'mm;height:4mm;white-space:nowrap">'.esc_html($text).'</div>';
+                    }
+                }
+                $html .= '</div>';
             }
             $html .= '</div>';
         }
         return $html.'</body></html>';
+    }
+
+    /** Wrap comments with the same font/size used by the PDF, including long words. */
+    private static function note_lines(string $text): array
+    {
+        if (trim($text) === '') return [];
+        if (!class_exists(Dompdf::class)) require_once DIR.'/includes/lib/dompdf/autoload.inc.php';
+        static $metrics = null;
+        $metrics ??= (new Dompdf())->getFontMetrics();
+        $font = $metrics->getFont('DejaVu Sans', 'normal');
+        $width = 66 * 72 / 25.4;
+        $lines = [];
+        foreach (preg_split('/\R/u', trim($text)) ?: [] as $paragraph) {
+            $line = '';
+            foreach (preg_split('/\s+/u', trim($paragraph), -1, PREG_SPLIT_NO_EMPTY) ?: [] as $word) {
+                $candidate = $line === '' ? $word : $line.' '.$word;
+                if ($metrics->getTextWidth($candidate, $font, 9) <= $width) { $line = $candidate; continue; }
+                if ($line !== '') { $lines[] = $line; $line = ''; }
+                foreach (preg_split('//u', $word, -1, PREG_SPLIT_NO_EMPTY) ?: [] as $character) {
+                    if ($line !== '' && $metrics->getTextWidth($line.$character, $font, 9) > $width) { $lines[] = $line; $line = ''; }
+                    $line .= $character;
+                }
+            }
+            $lines[] = $line;
+        }
+        return $lines;
     }
 }
