@@ -16,12 +16,17 @@ final class Orders_Table extends \WP_List_Table
         switch($column){
             case 'donor': return $this->link($item,$item->billing_name?:$item->donor_name?:'—').'<br>'.esc_html($item->billing_email?:$item->donor_email?:'—');
             case 'services':return $this->link($item,implode(', ',$wpdb->get_col($wpdb->prepare('SELECT service_title FROM '.Database::table('order_items').' WHERE order_id=%d',$item->id))));
-            case 'names':return '<div class="klp-names">'.nl2br(esc_html($item->names)).'</div>';
+            case 'names':return '<div class="klp-names">'.nl2br(esc_html($item->names)).'</div>'.self::comment_html((string)($item->note??''));
             case 'amount_cents':return $this->link($item,number_format_i18n($item->amount_cents/100,2).' €');
             case 'payment_status':return $this->link($item,['paid'=>'Оплачено','pending'=>'Ожидает','failed'=>'Ошибка','refunded'=>'Возвращено','cancelled'=>'Отменено'][$item->payment_status]??$item->payment_status).'<br>'.$this->link($item,ucfirst($item->payment_provider));
             case 'printed_at':return $item->printed_at?'Распечатано<br>'.esc_html($item->printed_at):'—';
             case 'created_at':return esc_html($item->created_at);
         }return '';
+    }
+    public static function comment_html(string $note): string {
+        $note=trim($note);
+        if($note==='')return '';
+        return '<div class="klp-order-comment"><strong>'.esc_html__('Комментарий к записке','kloster-prayer').'</strong><div>'.nl2br(esc_html($note)).'</div></div>';
     }
     public static function where(array $input): array {
         global $wpdb;$where=[($input['archive']??'')==='yes'?'archived_at IS NOT NULL':'archived_at IS NULL'];$args=[];

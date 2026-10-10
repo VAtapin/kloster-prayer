@@ -45,3 +45,5 @@
 @media(max-width:782px){.klp-admin .klp-payment-settings,.klp-admin .klp-report-groups{grid-template-columns:1fr}.klp-admin .klp-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.klp-admin .klp-native-editor .form-table th{width:auto}.klp-admin .klp-donors{display:block;overflow-x:auto}.klp-admin .tablenav .tablenav-pages{margin-left:0}}
 .klp-admin .klp-card input.small-text { display:inline-block; width:80px; max-width:80px; margin:0 8px 0 4px; }
 .klp-admin .klp-card input[type="date"] { display:inline-block; width:150px; margin:0 8px 0 4px; }
+.klp-admin .klp-order-comment{margin-top:8px;padding:6px 8px;border-left:3px solid #c3c4c7;background:#fff;overflow-wrap:anywhere;white-space:normal;font-size:13px;line-height:1.5}
+.klp-admin .klp-order-comment strong{display:block;font-size:12px;color:#50575e}
