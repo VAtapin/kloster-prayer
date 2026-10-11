@@ -5,7 +5,7 @@ namespace KlosterPrayer;
 
 final class Database
 {
-    private const DB_VERSION = '1.2.5';
+    private const DB_VERSION = '1.2.11';
 
     public static function table(string $name): string
     {
@@ -33,15 +33,15 @@ final class Database
     {
         global $wpdb;
         $forms = self::table('forms');
-        $wpdb->query($wpdb->prepare("UPDATE {$forms} SET intro_ru=%s WHERE intro_ru=%s", 'Подайте имена для церковной молитвы.', 'Подайте имена для молитвы в нашем монастыре.'));
-        $wpdb->query($wpdb->prepare("UPDATE {$forms} SET intro_de=%s WHERE intro_de=%s", 'Reichen Sie Namen für das kirchliche Gebet ein.', 'Reichen Sie Namen für das Gebet in unserem Kloster ein.'));
-        $wpdb->query("UPDATE {$forms} SET intro_uk='Подайте імена для церковної молитви.' WHERE intro_uk='' OR intro_uk IS NULL");
-        $wpdb->query("UPDATE {$forms} SET intro_pl='Prosimy podać imiona do modlitwy cerkiewnej.' WHERE intro_pl='' OR intro_pl IS NULL");
+        $wpdb->query($wpdb->prepare("UPDATE %i SET intro_ru=%s WHERE intro_ru=%s", $forms, 'Подайте имена для церковной молитвы.', 'Подайте имена для молитвы в нашем монастыре.'));
+        $wpdb->query($wpdb->prepare("UPDATE %i SET intro_de=%s WHERE intro_de=%s", $forms, 'Reichen Sie Namen für das kirchliche Gebet ein.', 'Reichen Sie Namen für das Gebet in unserem Kloster ein.'));
+        $wpdb->query($wpdb->prepare("UPDATE %i SET intro_uk='Подайте імена для церковної молитви.' WHERE intro_uk='' OR intro_uk IS NULL", $forms));
+        $wpdb->query($wpdb->prepare("UPDATE %i SET intro_pl='Prosimy podać imiona do modlitwy cerkiewnej.' WHERE intro_pl='' OR intro_pl IS NULL", $forms));
         $services=self::table('services');
         $translations=['sorokoust'=>['Сорокоуст','Sorokoust'],'moleben'=>['Молебень','Molebień'],'akathist'=>['Акафіст','Akatyst'],'altar-candle'=>['Свічка у вівтар','Świeca do ołtarza'],'panikhida'=>['Панахида','Panichida'],'psalter'=>['Неусипна Псалтир','Nieustające czytanie Psałterza']];
-        foreach($translations as $slug=>$titles){$wpdb->query($wpdb->prepare("UPDATE {$services} SET title_uk=%s,title_pl=%s WHERE slug=%s AND (title_uk='' OR title_uk IS NULL)",$titles[0],$titles[1],$slug));}
-        $wpdb->query("UPDATE {$forms} SET title_uk=title_ru WHERE title_uk='' OR title_uk IS NULL");
-        $wpdb->query("UPDATE {$forms} SET title_pl=title_de WHERE title_pl='' OR title_pl IS NULL");
+        foreach($translations as $slug=>$titles){$wpdb->query($wpdb->prepare("UPDATE %i SET title_uk=%s,title_pl=%s WHERE slug=%s AND (title_uk='' OR title_uk IS NULL)", $services,$titles[0],$titles[1],$slug));}
+        $wpdb->query($wpdb->prepare("UPDATE %i SET title_uk=title_ru WHERE title_uk='' OR title_uk IS NULL", $forms));
+        $wpdb->query($wpdb->prepare("UPDATE %i SET title_pl=title_de WHERE title_pl='' OR title_pl IS NULL", $forms));
     }
 
     private static function install(): void
@@ -76,7 +76,9 @@ final class Database
             sort_order int NOT NULL DEFAULT 0,
             created_at datetime NOT NULL,
             updated_at datetime NOT NULL,
-            PRIMARY KEY (id), UNIQUE KEY slug (slug), KEY active_sort (is_active,sort_order)
+            PRIMARY KEY  (id),
+            UNIQUE KEY slug (slug),
+            KEY active_sort (is_active,sort_order)
         ) {$charset};");
 
         dbDelta("CREATE TABLE {$forms} (
@@ -95,14 +97,16 @@ final class Database
             is_active tinyint(1) NOT NULL DEFAULT 1,
             created_at datetime NOT NULL,
             updated_at datetime NOT NULL,
-            PRIMARY KEY (id), UNIQUE KEY slug (slug)
+            PRIMARY KEY  (id),
+            UNIQUE KEY slug (slug)
         ) {$charset};");
 
         dbDelta("CREATE TABLE {$form_services} (
             form_id bigint unsigned NOT NULL,
             service_id bigint unsigned NOT NULL,
             sort_order int NOT NULL DEFAULT 0,
-            PRIMARY KEY (form_id,service_id), KEY service_id (service_id)
+            PRIMARY KEY  (form_id,service_id),
+            KEY service_id (service_id)
         ) {$charset};");
 
         dbDelta("CREATE TABLE {$orders} (
@@ -130,8 +134,12 @@ final class Database
             confirmation_sent_at datetime NULL,
             created_at datetime NOT NULL,
             paid_at datetime NULL,
-            PRIMARY KEY (id), UNIQUE KEY public_id (public_id), UNIQUE KEY provider_payment (payment_provider,payment_id),
-            KEY status_created (payment_status,created_at), KEY printed_at (printed_at), KEY form_id (form_id)
+            PRIMARY KEY  (id),
+            UNIQUE KEY public_id (public_id),
+            UNIQUE KEY provider_payment (payment_provider,payment_id),
+            KEY status_created (payment_status,created_at),
+            KEY printed_at (printed_at),
+            KEY form_id (form_id)
         ) {$charset};");
 
         dbDelta("CREATE TABLE {$items} (
@@ -146,7 +154,9 @@ final class Database
             subtotal_cents int unsigned NOT NULL,
             remembrance_start date NULL,
             remembrance_end date NULL,
-            PRIMARY KEY (id), KEY order_id (order_id), KEY service_id (service_id)
+            PRIMARY KEY  (id),
+            KEY order_id (order_id),
+            KEY service_id (service_id)
         ) {$charset};");
 
         dbDelta("CREATE TABLE {$events} (
@@ -159,7 +169,9 @@ final class Database
             processed tinyint(1) NOT NULL DEFAULT 0,
             error_message text NULL,
             created_at datetime NOT NULL,
-            PRIMARY KEY (id), UNIQUE KEY provider_event (provider,event_id), KEY order_id (order_id)
+            PRIMARY KEY  (id),
+            UNIQUE KEY provider_event (provider,event_id),
+            KEY order_id (order_id)
         ) {$charset};");
 
         $history = self::table('order_history');
@@ -170,7 +182,7 @@ final class Database
             message text NOT NULL,
             user_id bigint unsigned NOT NULL DEFAULT 0,
             created_at datetime NOT NULL,
-            PRIMARY KEY (id),
+            PRIMARY KEY  (id),
             KEY order_history (order_id,id)
         ) {$charset};");
         $notifications = self::table('notifications');
@@ -181,7 +193,7 @@ final class Database
             locked_at datetime NULL,
             last_attempt_at datetime NULL,
             attempts int unsigned NOT NULL DEFAULT 0,
-            PRIMARY KEY (order_id),
+            PRIMARY KEY  (order_id),
             KEY pending_notifications (sent_at,last_attempt_at)
         ) {$charset};");
         update_option('klp_db_version', self::DB_VERSION, true);
@@ -191,7 +203,7 @@ final class Database
     {
         global $wpdb;
         $services = self::table('services');
-        if ((int) $wpdb->get_var("SELECT COUNT(*) FROM {$services}") > 0) {
+        if ((int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM %i", $services)) > 0) {
             return;
         }
 
@@ -214,7 +226,7 @@ final class Database
         }
 
         $forms = self::table('forms');
-        $service_rows = $wpdb->get_results("SELECT id,slug FROM {$services}");
+        $service_rows = $wpdb->get_results($wpdb->prepare("SELECT id,slug FROM %i", $services));
         $by_slug = [];
         foreach ($service_rows as $service) $by_slug[$service->slug] = (int) $service->id;
         // IDs 1-5 intentionally match the existing production shortcodes.

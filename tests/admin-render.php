@@ -35,7 +35,7 @@ class FixtureScreen {public $id='kloster-prayer';public $base='kloster-prayer';p
 function convert_to_screen($s){return new FixtureScreen();}
 class FixtureDB {
     public $prefix='wp_';public $queries=[];
-    public function prepare($q,...$args){$this->queries[]=[$q,$args];return $q;}
+    public function prepare($q,...$args){$this->queries[]=[$q,$args];while(str_contains($q,'%i')){$table=array_shift($args);$q=preg_replace('/%i/','`'.str_replace('`','``',(string)$table).'`',$q,1);}return $q;}
     public function esc_like($s){return addcslashes($s,'_%');}
     public function get_var($q){if(str_contains($q,'SHOW TABLES'))return 'wp_klp_orders';return 2;}
     public function get_col($q){return str_contains($q,'service_id FROM')?[1,2]:['Акафист'];}

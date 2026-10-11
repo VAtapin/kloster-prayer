@@ -3,5 +3,11 @@ msgstr ""
 "Language: de_DE\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+msgid "Orthodox Prayer Notes and Donations"
+msgstr "Orthodoxe Gebetsanliegen und Spenden"
+
+msgid "Orthodox prayer requests and donations with Stripe, PayPal, printable prayer slips and reports."
+msgstr "Orthodoxe Gebetsanliegen und Spenden mit Stripe, PayPal, druckbaren Gebetszetteln und Berichten."
+
 msgid "Kloster: form not found."
 msgstr "Gebetsformular nicht gefunden."

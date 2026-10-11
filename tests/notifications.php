@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
 require dirname(__DIR__).'/kloster-prayer/includes/class-database.php';
 require dirname(__DIR__).'/kloster-prayer/includes/class-payments.php';
 require dirname(__DIR__).'/kloster-prayer/includes/class-notifications.php';
@@ -22,7 +23,7 @@ function get_current_user_id(){return 0;}
 function wp_mail($to,$subject,$body,$headers){global $deliveries,$mail_ok,$throws;$deliveries[]=compact('to','subject','body','headers');if($throws)throw new RuntimeException('mail failure');return $mail_ok;}
 class NotificationDB {
  public $prefix='wp_'; public $queue=[]; public $history=[]; public $orders=[];public $rows_affected=0;
- function prepare($sql,...$args){return [$sql,$args];}
+ function prepare($sql,...$args){while(str_contains($sql,'%i')){$table=array_shift($args);$sql=preg_replace('/%i/','`'.str_replace('`','``',(string)$table).'`',$sql,1);}return [$sql,$args];}
  function query($q){[$sql,$a]=$q;
   if(str_starts_with($sql,'INSERT IGNORE')){if(isset($this->queue[$a[0]]))return 0;$this->queue[$a[0]]=['order_id'=>$a[0],'sent_at'=>null,'locked_at'=>null,'last_attempt_at'=>null,'attempts'=>0];return 1;}
   if(str_contains($sql,"SET payment_status='paid'")){[$payment,$date,$id]=$a;$this->rows_affected=0;if($this->orders[$id]->payment_status!=='paid'){$this->orders[$id]->payment_status='paid';$this->rows_affected=1;}return $this->rows_affected;}

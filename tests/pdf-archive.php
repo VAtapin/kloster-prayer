@@ -1,10 +1,13 @@
 <?php
 declare(strict_types=1);
+define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
 define('KlosterPrayer\\DIR', dirname(__DIR__).'/kloster-prayer');
 require KlosterPrayer\DIR.'/includes/class-database.php';
 require KlosterPrayer\DIR.'/includes/class-payments.php';
 require KlosterPrayer\DIR.'/includes/class-pdf.php';
 function sanitize_key($v){return preg_replace('/[^a-z0-9_-]/','',strtolower($v));}
+function sanitize_text_field($v){return strip_tags((string)$v);}
+function wp_unslash($v){return stripslashes((string)$v);}
 function absint($v){return abs((int)$v);}
 function wp_create_nonce($v){return 'fixture';}
 function admin_url($v){return 'https://example.org/wp-admin/'.$v;}
@@ -18,7 +21,7 @@ class ArchivePdfDB {
   $base=['service_title'=>'Молебен','service_id'=>2,'service_slug'=>'moleben','created_at'=>'2026-10-10 12:00:00','printed_at'=>null,'intention'=>'health','language'=>'ru','names'=>'Мария, Иоанн','note'=>''];
   $this->rows=[(object)($base+['id'=>5,'archived_at'=>null]),(object)($base+['id'=>6,'archived_at'=>'2026-10-10 14:00:00'])];
  }
- function prepare($sql,...$args){foreach($args as $arg)$sql=preg_replace('/%[ds]/',is_int($arg)?(string)$arg:"'".$arg."'",$sql,1);return $sql;}
+ function prepare($sql,...$args){foreach($args as $arg)$sql=preg_replace_callback('/%[ids]/',fn($m)=>$m[0]==='%i'?'`'.$arg.'`':(is_int($arg)?(string)$arg:"'".$arg."'"),$sql,1);return $sql;}
  function get_results($sql){$this->sql=$sql;return array_values(array_filter($this->rows,function($row)use($sql){
   if(str_contains($sql,'o.archived_at IS NOT NULL')&&$row->archived_at===null)return false;
   if(str_contains($sql,'o.archived_at IS NULL')&&$row->archived_at!==null)return false;

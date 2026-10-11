@@ -1,10 +1,12 @@
 <?php
 declare(strict_types=1);
+define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
 require dirname(__DIR__).'/kloster-prayer/includes/class-payments.php';
 use KlosterPrayer\Payments;
 $origin='';$base='https://old.example/wp-json/';
 function get_option($key,$default=''){global $origin;return $key==='klp_api_origin'?$origin:$default;}
 function rest_url($path){global $base;return $base.$path;}
+function wp_parse_url($url){return parse_url($url);}
 assert(Payments::normalize_api_origin(' https://NEW.example/ ')==='https://new.example');
 foreach(['http://example.org','https://user:pass@example.org','https://example.org/path','https://example.org?q=1','https://example.org#x','https://example.org\\evil','javascript:alert(1)','https://localhost'] as $bad){
     try{Payments::normalize_api_origin($bad);throw new RuntimeException('Accepted invalid origin');}catch(InvalidArgumentException $e){}

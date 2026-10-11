@@ -1,0 +1,50 @@
+# Sources and licenses
+
+## Plugin and artwork
+
+Plugin code: atapin.de, GPL-2.0-or-later; see LICENSE.
+Source: https://github.com/VAtapin/kloster-prayer
+PHP, JS and CSS are shipped as readable sources, not compiled-only bundles.
+
+Original ZDRAVIE/UPOKOI prayer-slip artwork and print derivatives:
+provided by the project owner, who confirmed ownership and permission for
+GPL-2.0-or-later distribution on 2026-10-11. The six service illustrations
+are project-created AI-generated illustrations, not photographs downloaded
+from third-party websites; distributed with the project under GPL-2.0-or-later.
+User-selected Media Library images remain the site owner's responsibility.
+
+## PDF libraries
+
+The distribution under includes/lib/dompdf includes full upstream PHP sources
+and Composer metadata. No executable code is downloaded at runtime.
+Only the WordPress autoload entry wrapper is adapted with an ABSPATH guard;
+upstream files under vendor are not modified.
+
+| Package | Version | License | Source / bundled license |
+| --- | --- | --- | --- |
+| dompdf/dompdf | 3.1.6 | LGPL-2.1 | https://github.com/dompdf/dompdf ; vendor/dompdf/dompdf/LICENSE.LGPL |
+| dompdf/php-font-lib | 1.0.2 | LGPL-2.1-or-later | https://github.com/dompdf/php-font-lib ; vendor/dompdf/php-font-lib/LICENSE |
+| dompdf/php-svg-lib | 1.0.2 | LGPL-3.0-or-later | https://github.com/dompdf/php-svg-lib ; vendor/dompdf/php-svg-lib/LICENSE |
+| masterminds/html5 | 2.10.1 | MIT | https://github.com/Masterminds/html5-php ; vendor/masterminds/html5/LICENSE.txt |
+| sabberworm/php-css-parser | 8.9.0 | MIT | https://github.com/MyIntervals/PHP-CSS-Parser ; vendor/sabberworm/php-css-parser/LICENSE |
+| Composer autoloader | generated | MIT | https://github.com/composer/composer ; vendor/composer/LICENSE |
+
+Paths in the table are relative to includes/lib/dompdf. Upstream copyright
+and license notices are retained. The plugin's GPL-2.0-or-later license permits
+choosing a compatible later GPL version where a bundled license requires it.
+
+## Fonts and color profile
+
+DejaVu fonts: Bitstream Vera license, DejaVu changes in the public domain,
+and Arev notices where applicable. Full notices are in assets/licenses/DejaVu-LICENSE.txt.
+Source and license: https://github.com/dejavu-fonts/dejavu-fonts
+and https://dejavu-fonts.github.io/License.html .
+The PDF core-font metrics bundled by Dompdf retain their Adobe copyright notices.
+The sRGB2014 ICC profile retains its license in
+includes/lib/dompdf/vendor/dompdf/dompdf/lib/res/sRGB2014.icc.LICENSE.
+
+## External services
+
+Stripe and PayPal are external payment services, not bundled SDKs.
+Their purposes, request data, terms and privacy links are documented in readme.txt.
+WordPress supplies the Media Library UI and jQuery; these are not separately bundled.

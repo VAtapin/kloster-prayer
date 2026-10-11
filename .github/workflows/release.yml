@@ -37,6 +37,7 @@ jobs:
           php tests/pdf-archive.php --render
           php tests/pdf-notes.php --render
           php -d zend.assertions=1 -d assert.exception=1 tests/api-domain.php
+          php -d zend.assertions=1 -d assert.exception=1 tests/payment-binding.php
 
       - name: Build installation ZIP
         env:

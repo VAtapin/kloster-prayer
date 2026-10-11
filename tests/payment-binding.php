@@ -1,0 +1,22 @@
+<?php
+declare(strict_types=1);
+define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
+require dirname(__DIR__).'/kloster-prayer/includes/class-payments.php';
+$order=(object)['id'=>7,'public_id'=>'request-7','payment_id'=>'PAYPAL-ORDER-7','payment_provider'=>'paypal','amount_cents'=>4000];
+$capture=['id'=>'CAPTURE-7','status'=>'COMPLETED','custom_id'=>'7','amount'=>['value'=>'40.00','currency_code'=>'EUR'],'supplementary_data'=>['related_ids'=>['order_id'=>'PAYPAL-ORDER-7']]];
+$matches=new ReflectionMethod(KlosterPrayer\Payments::class,'paypal_capture_matches');
+assert($matches->invoke(null,$order,$capture));
+foreach(['wrong order'=>['supplementary_data'=>['related_ids'=>['order_id'=>'OTHER']]],'wrong id'=>['custom_id'=>'8'],'wrong amount'=>['amount'=>['value'=>'1.00','currency_code'=>'EUR']],'wrong currency'=>['amount'=>['value'=>'40.00','currency_code'=>'USD']],'pending'=>['status'=>'PENDING'],'malformed amount'=>['amount'=>['value'=>'4e1','currency_code'=>'EUR']]] as $change)assert(!$matches->invoke(null,$order,array_replace($capture,$change)));
+$return=new ReflectionMethod(KlosterPrayer\Payments::class,'paypal_return_matches');
+$response=['id'=>'PAYPAL-ORDER-7','status'=>'COMPLETED','purchase_units'=>[['reference_id'=>'request-7','payments'=>['captures'=>[$capture]]]]];
+assert($return->invoke(null,$order,$response));
+assert(!$return->invoke(null,$order,array_replace($response,['id'=>'OTHER'])));
+$bad=$response;$bad['purchase_units'][0]['reference_id']='another-request';assert(!$return->invoke(null,$order,$bad));
+$bad=$response;$bad['purchase_units'][0]['payments']['captures'][0]['amount']['value']='1.00';assert(!$return->invoke(null,$order,$bad));
+$order->payment_provider='stripe';assert(!$matches->invoke(null,$order,$capture));
+$order->payment_id='cs_test_fixture';
+$stripe=new ReflectionMethod(KlosterPrayer\Payments::class,'stripe_session_matches');
+$session=['id'=>'cs_test_fixture','payment_status'=>'paid','currency'=>'eur','amount_total'=>4000];
+assert($stripe->invoke(null,$order,$session));
+foreach([['id'=>'cs_test_other'],['amount_total'=>100],['currency'=>'usd'],['payment_status'=>'unpaid']] as $change)assert(!$stripe->invoke(null,$order,array_replace($session,$change)));
+echo "PASS PayPal binding, capture status, amount/currency, IDs and return verification\n";

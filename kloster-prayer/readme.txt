@@ -1,103 +1,171 @@
-=== Православные молитвенные записки и пожертвования ===
+=== Orthodox Prayer Notes and Donations ===
 Contributors: atapin
+Tags: orthodox, prayer, donations, stripe, paypal
 Requires at least: 7.1
+Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.2.10
+Stable tag: 1.2.11
 License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Православные молитвенные записки и пожертвования для приходов, храмов, соборов и монастырей.
+Orthodox prayer requests and donations with Stripe, PayPal, printable prayer slips, an archive and reports.
 
-== Возможности ==
+== Description ==
 
-* Русский и немецкий интерфейс по текущей локали WordPress.
-* Управляемые требы, формы и пожертвования.
-* Stripe Checkout и PayPal Checkout.
-* Подтверждение по электронной почте только после подтвержденной оплаты.
-* Проверка подписей Stripe и PayPal webhook и защита от повторной обработки.
-* Список записок с фильтрами и отметкой печати.
-* PDF: альбомный A4, три записки на лист, отдельное оформление здравия и упокоения.
-* Отчеты по месяцу и способам оплаты.
-* Поиск, постраничный список, CSV-экспорт и печать выбранных записок.
-* Диагностика настроек, журнал событий оплаты и повторная отправка писем.
-* Автоматическая повторная отправка неудавшихся подтверждений и очистка старых ожидающих оплат.
+Accept Orthodox prayer requests and donations on a parish, church, cathedral or monastery website.
+Visitors select services, submit names and optional comments, and pay through the site's own Stripe or PayPal account.
 
-== Установка ==
+* Configurable services, amounts, forms and six responsive layouts.
+* Russian, German, Ukrainian and Polish prayer forms.
+* Names separated by commas are normalized to one person per line.
+* Payment confirmation emails and an optional designated recipient for paid requests.
+* Reports, payer details, CSV export, archive and restore.
+* Original three-column A4 landscape PDF slips for the living and departed.
+* Comments immediately below names in PDF and visible in the administration area.
+* Printing archived requests without restoring them.
+* Existing shortcodes and webhook paths remain compatible.
+* HTTPS API-origin setting for moving the same WordPress site to a new domain.
 
-1. Сделайте резервную копию сайта и базы данных.
-2. Деактивируйте старый плагин Kloster, чтобы два плагина не регистрировали один шорткод одновременно.
-3. Установите ZIP через Плагины -> Добавить плагин -> Загрузить плагин.
-4. Активируйте Kloster Gebetsanliegen.
-5. Откройте Kloster – Записки -> Настройки и сохраните Stripe/PayPal credentials.
-6. Создайте webhook в Stripe и PayPal по URL, показанным в настройках плагина.
+The plugin requires PHP mbstring and GD for PDF generation. PDF processing happens locally;
+there is no remote PDF service. Generating a PDF sets the print marker; it does not verify physical printer output.
 
-Плагин использует собственные таблицы с префиксом klp_ и не удаляет таблицы старого плагина.
+= External services: Stripe =
 
-== Уведомления получателю записок ==
+Stripe processes donations when the visitor selects Stripe. The site contacts
+https://api.stripe.com/v1/checkout/sessions to create Checkout and, at the administrator's request,
+retrieve payer details. It sends the donor email, EUR amount, selected service titles, internal/public
+request identifiers and return URLs. Prayer names and comments are not sent in the payment request.
+Stripe collects card/billing/contact details on its hosted payment page. Signed webhooks return
+payment results and available payer details. The site owner supplies the API key and webhook signing secret.
 
-В «Kloster – Записки → Настройки → Уведомления о записках» укажите один email получателя.
-После подтверждения оплаты новой записки на него отправляется отдельное HTML-письмо с требами,
-именами, примечанием, данными жертвователя, суммой и ссылкой в WordPress (для просмотра нужен вход).
-Пустое поле отключает уведомления; адрес администратора не используется.
-Подтверждение жертвователю остаётся отдельным письмом и не меняется.
+* Terms: https://stripe.com/legal/ssa
+* Privacy: https://stripe.com/privacy
+* API documentation: https://docs.stripe.com/api/checkout/sessions
 
-При включении настройки старые заказы автоматически не рассылаются. Ожидающие уведомления
-при отключении приостанавливаются; после включения отправляются на текущий указанный адрес.
-При ошибке передачи письма повторная попытка выполняется существующим почасовым заданием WP-Cron.
-Для своевременной обработки на малопосещаемом сайте настройте запуск WordPress cron на сервере.
-В истории записки фиксируются успех передачи почтовой системе или ошибка; это не подтверждение
-доставки в папку «Входящие». Если почтовая система приняла письмо, но процесс аварийно завершился
-до записи результата, восстановление очереди может повторить письмо.
-Перед обновлением сохраните резервную копию БД: версия 1.2.5 добавляет таблицу klp_notifications,
-существующие записки не удаляются. Используйте адрес уполномоченного получателя: письмо содержит
-имена для молитвы и персональные данные; доставка использует почтовую конфигурацию вашего сайта.
+= External services: PayPal =
 
-== Шорткоды ==
+PayPal processes donations when selected. The site contacts https://api-m.paypal.com (Live) or
+https://api-m.sandbox.paypal.com (Sandbox): /v1/oauth2/token for authentication,
+/v2/checkout/orders for creation/capture, and /v1/notifications/verify-webhook-signature
+to verify received events. Data includes REST application credentials for authentication,
+EUR amount, service titles, request/payment identifiers and return URLs. Verification sends
+the received webhook event, transmission headers and Webhook ID back to PayPal.
+Prayer names and comments are not sent when creating the payment.
+PayPal collects payer information on its own payment page and returns payment results/identifiers.
+This integration uses REST Orders v2, not IPN or legacy email-only payment buttons.
 
-* [kloster_form id="2"] — сохраненный совместимый шорткод формы по ID.
-* [kloster_form] — общая форма молитвенных записок.
-* [kloster_prayer_form slug="sorokoust"] — форма по стабильному коду.
-* [kloster_service slug="altar-candle"] — форма одной требы.
-* [kloster_payment_result] — отдельный блок результата оплаты; стандартные формы уже выводят его автоматически.
-* Параметр layout: standard, compact, wide, two_columns, cards или minimal.
-* Параметр header="no" скрывает внутренний заголовок, если заголовок уже добавлен средствами страницы.
+* Terms: https://www.paypal.com/legalhub/paypal/useragreement-full
+* Privacy: https://www.paypal.com/legalhub/paypal/privacy-full
+* Documentation: https://developer.paypal.com/api/get-started/
+* Webhooks: https://developer.paypal.com/api/rest/webhooks/rest/
 
-Совместимые начальные ID: 1 — свеча в алтарь, 2 — общая форма, 3 — сорокоуст, 4 — панихида, 5 — молебен.
+= Personal data and email =
 
-== Подключение PayPal ==
+The site stores prayer names, comments, donor email/name, service selections, amounts,
+payment identifiers/statuses, available billing details (name, email, phone and address),
+timestamps and action history in its own database. It does not store card numbers or security codes.
+Emails are sent through wp_mail and the site's mail configuration; they can contain prayer names,
+comments and payer details. Only specify an authorized recipient. The plugin author does not
+receive requests, keys, telemetry or payments. Site owners must define retention, restrict access
+and describe this processing in their site's privacy policy.
+Deactivation and uninstall do not automatically erase records or saved settings.
 
-В настройках оплаты раскройте «Как подключить PayPal — пошаговая инструкция».
-Для Live нужен PayPal Business аккаунт получателя; email сам по себе недостаточен.
-Откройте https://developer.paypal.com/dashboard/applications/ → Apps & Credentials,
-выберите Live или Sandbox, откройте REST приложение либо создайте его через Create App.
-Client ID и Secret копируются из страницы приложения. В том же приложении добавьте Webhook
-с точным HTTPS URL из настроек плагина (порт 443). Подпишитесь на PAYMENT.CAPTURE.COMPLETED
-и PAYMENT.CAPTURE.REFUNDED. ID созданного webhook вставьте в Webhook ID плагина.
-Все три значения и режим должны соответствовать одному приложению. Включите PayPal и сохраните.
-При смене режима замените весь комплект, включая Secret: пустой Secret сохраняет прежний.
-Сначала проверьте реальную тестовую оплату в Sandbox отдельным Personal аккаунтом покупателя;
-Business аккаунт продавца и Personal покупатель находятся в Testing Tools → Sandbox Accounts.
-Webhooks Simulator не подходит для используемой postback-проверки подписи:
-PayPal не поддерживает verify-webhook-signature для искусственных событий симулятора.
-Наличие ключей в диагностике не означает проверку их действительности в PayPal.
-Официальные инструкции: https://developer.paypal.com/api/get-started/
-и https://developer.paypal.com/api/rest/webhooks/rest/.
+= Source code and licenses =
 
-== Webhook события ==
+Readable PHP, JavaScript and CSS sources are included in the ZIP; no frontend build is required.
+Source repository: https://github.com/VAtapin/kloster-prayer
+third-party-notices.txt lists bundled libraries, fonts and artwork with their licenses.
+The plugin code and original prayer-slip artwork are GPL-2.0-or-later.
+Bundled libraries retain their own GPL-compatible licenses and notices.
 
+== Installation ==
+
+1. Back up the site and database before updating.
+2. If a previous separate Kloster plugin registers the same shortcode, deactivate it first.
+3. Upload the ZIP using Plugins → Add New → Upload Plugin, or install from the directory when available.
+4. Activate Orthodox Prayer Notes and Donations.
+5. Open the plugin's payment settings; configure only the payment providers you intend to enable.
+6. Register the exact webhook URL shown for each provider in that provider's dashboard.
+7. Insert [kloster_form] into a page and test the full payment flow with test credentials before going Live.
+
+= PayPal setup =
+
+Open https://developer.paypal.com/dashboard/applications/ and select Apps & Credentials.
+Choose Sandbox for testing or Live for real payments. Live requires the recipient's PayPal Business account.
+Open a REST app or create one with Create App. Copy Client ID and reveal/copy Secret.
+In the same app add a webhook using the exact public HTTPS URL shown by the plugin (port 443).
+Select PAYMENT.CAPTURE.COMPLETED and PAYMENT.CAPTURE.REFUNDED; copy the saved webhook's ID
+to the plugin's Webhook ID field. All three values and the selected mode must belong to the same app/environment.
+Enable PayPal and save. An empty Secret keeps the previous one: always replace it when changing app/mode.
+
+Use a Sandbox Business seller and a separate Sandbox Personal buyer from Testing Tools → Sandbox Accounts.
+Submit a real Sandbox checkout and inspect the request status, diagnostic event and configured emails.
+Mock events from Webhooks Simulator cannot be verified by PayPal's postback signature endpoint,
+which this plugin uses. A mock-event signature failure is not a valid end-to-end payment test.
+Expand the PayPal setup help in settings for detailed steps and official links.
+
+= Stripe setup =
+
+Obtain the Secret Key for the intended Stripe test or live environment.
+Add the exact webhook URL shown in settings, subscribe to checkout.session.completed and charge.refunded,
+and copy its endpoint signing secret to Webhook Secret. Keep test and live credentials consistent.
+An empty Secret Key/Webhook Secret field preserves its saved value.
+Never share secrets in screenshots or support messages.
+
+= Recipient notifications =
+
+Specify one authorized email under recipient notifications. Empty disables these notifications;
+the administrator email is not used as a fallback. Only newly confirmed paid requests are queued:
+enabling the option does not send historical requests. The donor confirmation is separate.
+Failures retry through hourly WP-Cron. Pending notifications use the current configured address.
+Mail acceptance does not prove Inbox delivery; a crash after mail acceptance can cause a retry.
+
+= Shortcodes =
+
+[kloster_form] — general prayer form.
+[kloster_form id="2"] — existing compatible form by ID.
+[kloster_prayer_form slug="gebetsanliegen"] — form by slug.
+[kloster_service slug="altar-candle"] — form for one service.
+[kloster_payment_result] — payment-result block; standard forms already display it.
+
+Layouts: standard, compact, wide, two_columns, cards, minimal.
+header="no" hides the internal heading. Forms fill the shortcode's available container width.
+
+= Domain changes =
+
+An empty API-domain setting follows WordPress. An override must be an HTTPS origin serving
+the same WordPress site; it does not configure DNS, TLS or hosting. It affects webhook and
+PayPal return URLs, not the payment provider's API servers. Update provider dashboard URLs
+after moving, and keep the old domain reachable while existing payment sessions finish.
+
+== Frequently Asked Questions ==
+
+= Can I use only Stripe? =
+Yes. Disabled providers do not require credentials.
+
+= Can I print archived requests? =
+Yes. Open the archive and download an individual or selected-request PDF without restoring records.
+
+= Which webhook events are supported? =
 Stripe: checkout.session.completed, charge.refunded.
-
 PayPal: PAYMENT.CAPTURE.COMPLETED, PAYMENT.CAPTURE.REFUNDED.
 
-== Смена домена ==
-В настройках оплаты поле «Домен API» можно оставить пустым: адреса следуют за доменом WordPress.
-Для отдельного домена укажите HTTPS-origin, например https://example.org, без пути.
-Он должен обслуживать тот же WordPress; настройка не создаёт DNS, сертификат или сайт в Plesk.
-Поле применяется к Webhook URL и возврату PayPal, не к API-серверам Stripe/PayPal и не к адресу сайта.
-После переезда обновите WordPress URL и адреса webhook в кабинетах платёжных систем.
-Сохраняйте старый домен на время завершения начатых оплат: старые платёжные сессии и return_url не переписываются.
-Ключи и секреты эта настройка не меняет.
+= Are setup diagnostics a live credentials test? =
+No. They check configuration availability, not authentication or an actual payment.
+
+= Does uninstall delete requests? =
+No. Payment records and settings are retained to prevent accidental loss.
+Manage retention and backups according to your site's policy.
 
 == Changelog ==
+
+= 1.2.11 =
+* Prepare directory metadata, English readme, source and third-party license notices.
+* Add compiled translation catalogs and translated plugin metadata.
+* Use identifier placeholders and explicit escaping; protect direct PHP entry points.
+* Correct dbDelta index formatting without deleting existing records.
+* Bind completed Stripe/PayPal payments to the saved request, amount and currency.
+* Remove the old monastery-specific logo URL from email markup.
 
 = 1.2.10 =
 * Пошаговая помощь по PayPal: аккаунт Business, ключи, режим, Webhook ID, события и Sandbox-проверка с официальными ссылками.

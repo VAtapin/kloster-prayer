@@ -3,5 +3,11 @@ msgstr ""
 "Language: pl_PL\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+msgid "Orthodox Prayer Notes and Donations"
+msgstr "Prawosławne intencje modlitewne i darowizny"
+
+msgid "Orthodox prayer requests and donations with Stripe, PayPal, printable prayer slips and reports."
+msgstr "Prawosławne intencje i darowizny: Stripe, PayPal, wydruk kartek modlitewnych i raporty."
+
 msgid "Kloster: form not found."
 msgstr "Nie znaleziono formularza intencji modlitewnych."

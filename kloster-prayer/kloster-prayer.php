@@ -1,15 +1,17 @@
 <?php
 /**
- * Plugin Name: Православные молитвенные записки и пожертвования
+ * Plugin Name: Orthodox Prayer Notes and Donations
  * Plugin URI: https://atapin.de/
- * Description: Православные молитвенные записки и пожертвования: Stripe, PayPal, PDF и отчёты.
- * Version: 1.2.10
+ * Description: Orthodox prayer requests and donations with Stripe, PayPal, printable prayer slips and reports.
+ * Version: 1.2.11
  * Author: atapin.de
  * Author URI: https://atapin.de/
  * Text Domain: kloster-prayer
  * Domain Path: /languages
  * Requires at least: 7.1
  * Requires PHP: 8.4
+ * License: GPL-2.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 declare(strict_types=1);
@@ -20,7 +22,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const VERSION = '1.2.10';
+const VERSION = '1.2.11';
 const FILE = __FILE__;
 const DIR = __DIR__;
 
@@ -42,12 +44,13 @@ register_deactivation_hook(FILE, static function (): void {
 });
 add_action('plugins_loaded', static function (): void {
     Database::maybe_upgrade();
-    I18n::init();
     Public_Form::init();
     Payments::init();
     Admin::init();
     Pdf::init();
 });
+
+add_action('init', [I18n::class, 'init']);
 
 add_filter('plugin_action_links_' . plugin_basename(FILE), static function (array $links): array {
     array_unshift($links, '<a href="' . esc_url(admin_url('admin.php?page=kloster-prayer-settings')) . '">' . esc_html__('Настройки', 'kloster-prayer') . '</a>');

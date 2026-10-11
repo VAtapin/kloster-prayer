@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 namespace KlosterPrayer;
+if (!defined('ABSPATH')) exit;
+require_once __DIR__.'/class-input.php';
 
 use WP_Error;
 use WP_REST_Request;
@@ -14,7 +16,7 @@ final class Payments
     {
         $value = trim($value);
         if ($value === '') return '';
-        $parts = parse_url($value);
+        $parts = wp_parse_url($value);
         if (!$parts || ($parts['scheme'] ?? '') !== 'https' || empty($parts['host'])
             || isset($parts['user'], $parts['pass']) || isset($parts['user']) || isset($parts['pass'])
             || isset($parts['query']) || isset($parts['fragment'])
@@ -52,30 +54,30 @@ final class Payments
     public static function create_payment(): void
     {
         check_ajax_referer('klp_payment', 'nonce');
-        $language = in_array($_POST['language'] ?? '', ['de', 'ru', 'uk', 'pl'], true) ? (string) $_POST['language'] : I18n::language();
-        if (!empty($_POST['website'])) {
+        $language = in_array(Input::post('language') ?? '', ['de', 'ru', 'uk', 'pl'], true) ? (string) Input::post('language') : I18n::language();
+        if (!empty(Input::post('website'))) {
             wp_send_json_error(['message' => I18n::text('error', $language)], 422);
         }
-        $rate_key = 'klp_rate_' . hash('sha256', (string) ($_SERVER['REMOTE_ADDR'] ?? '') . wp_salt('nonce'));
+        $rate_key = 'klp_rate_' . hash('sha256', Input::client_ip() . wp_salt('nonce'));
         $attempts = (int) get_transient($rate_key);
         if ($attempts >= 10) {
             wp_send_json_error(['message' => I18n::text('error', $language)], 429);
         }
         set_transient($rate_key, $attempts + 1, MINUTE_IN_SECONDS);
-        $provider = sanitize_key((string) ($_POST['provider'] ?? 'stripe'));
-        $intention = sanitize_key((string) ($_POST['intention'] ?? 'health'));
-        $names = self::clean_names((string) wp_unslash($_POST['names'] ?? ''));
-        $email = sanitize_email((string) wp_unslash($_POST['donor_email'] ?? ''));
-        $service_ids = array_values(array_unique(array_map('absint', (array) ($_POST['services'] ?? []))));
+        $provider = sanitize_key((string) (Input::post('provider') ?? 'stripe'));
+        $intention = sanitize_key((string) (Input::post('intention') ?? 'health'));
+        $names = self::clean_names((string) Input::textarea('names') ?? '');
+        $email = sanitize_email((string) Input::post('donor_email') ?? '');
+        $service_ids = array_values(array_unique(array_map('absint', (array) (Input::post_list('services') ?? []))));
         $enabled_methods = (array) get_option('klp_payment_methods', ['stripe', 'paypal']);
         if (!$names || !is_email($email) || strlen($email) > 190 || !$service_ids || count($service_ids) > 30 || !in_array($provider, $enabled_methods, true) || !in_array($intention, ['health', 'rest'], true)) {
             wp_send_json_error(['message' => I18n::text('required', $language)], 422);
         }
 
         $order = self::create_order([
-            'form_id' => absint($_POST['form_id'] ?? 0), 'language' => $language, 'intention' => $intention,
-            'names' => implode("\n", $names), 'note' => sanitize_textarea_field((string) wp_unslash($_POST['note'] ?? '')),
-            'donor_name' => sanitize_text_field((string) wp_unslash($_POST['donor_name'] ?? '')), 'donor_email' => $email,
+            'form_id' => absint(Input::post('form_id') ?? 0), 'language' => $language, 'intention' => $intention,
+            'names' => implode("\n", $names), 'note' => sanitize_textarea_field((string) Input::textarea('note') ?? ''),
+            'donor_name' => sanitize_text_field((string) Input::post('donor_name') ?? ''), 'donor_email' => $email,
             'provider' => $provider, 'service_ids' => $service_ids, 'return_url' => self::safe_return_url(),
         ]);
         if (is_wp_error($order)) {
@@ -108,7 +110,8 @@ final class Payments
         global $wpdb;
         $services_table = Database::table('services');
         $placeholders = implode(',', array_fill(0, count($data['service_ids']), '%d'));
-        $services = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$services_table} WHERE is_active=1 AND id IN ({$placeholders})", ...$data['service_ids']));
+        // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- One %d for each validated service ID, plus the %i table identifier; variadic count is tested on real WordPress.
+        $services = $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE is_active=1 AND id IN ({$placeholders})", $services_table, ...$data['service_ids']));
         if (!$services || count($services) !== count($data['service_ids'])) {
             return new WP_Error('invalid_services', I18n::text('error', $data['language']));
         }
@@ -152,7 +155,7 @@ final class Payments
                 'subtotal_cents' => $subtotal,
             ]);
         }
-        return $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . Database::table('orders') . ' WHERE id=%d', $order_id));
+        return $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'), $order_id));
     }
 
     private static function return_url(object $order, string $status): string
@@ -189,7 +192,7 @@ final class Payments
     public static function refresh_customer(int $id): bool
     {
         global $wpdb;
-        $order=$wpdb->get_row($wpdb->prepare('SELECT * FROM '.Database::table('orders').' WHERE id=%d',$id));
+        $order=$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'),$id));
         if(!$order || $order->payment_provider!=='stripe' || !preg_match('/^cs_(live|test)_[A-Za-z0-9]+$/',(string)$order->payment_id))return false;
         $secret=trim((string)get_option('klp_stripe_secret'));
         if($secret==='')return false;
@@ -247,7 +250,7 @@ final class Payments
     private static function payment_label(object $order): string
     {
         global $wpdb;
-        $items = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM ' . Database::table('order_items') . ' WHERE order_id=%d ORDER BY id', (int) $order->id));
+        $items = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d ORDER BY id', Database::table('order_items'), (int) $order->id));
         $prefix = $order->language === 'ru' ? 'Молитвенная записка: ' : 'Gebetsanliegen: ';
         return mb_substr($prefix . implode(', ', $items), 0, 120);
     }
@@ -261,6 +264,11 @@ final class Payments
         if (!is_array($event) || empty($event['id'])) return new WP_REST_Response(['error' => 'Invalid payload'], 400);
         $object = $event['data']['object'] ?? [];
         $order_id = (int) ($object['metadata']['order_id'] ?? $object['client_reference_id'] ?? 0);
+        if (($event['type'] ?? '') === 'checkout.session.completed' && ($object['payment_status'] ?? '') === 'paid') {
+            global $wpdb;
+            $order = $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'), $order_id));
+            if (!$order || !self::stripe_session_matches($order, $object)) return new WP_REST_Response(['error' => 'Payment does not match order'], 400);
+        }
         if (!self::record_event('stripe', (string) $event['id'], (string) ($event['type'] ?? ''), $order_id, $payload)) return new WP_REST_Response(['received' => true], 200);
         if (($event['type'] ?? '') === 'checkout.session.completed' && ($object['payment_status'] ?? '') === 'paid') {
             self::store_customer_details($order_id, (array) ($object['customer_details'] ?? []));
@@ -285,14 +293,14 @@ final class Payments
         global $wpdb;
         $public_id = sanitize_text_field((string) $request->get_param('order'));
         $token_id = sanitize_text_field((string) $request->get_param('token'));
-        $order = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . Database::table('orders') . ' WHERE public_id=%s', $public_id));
-        if (!$order || !$token_id) { wp_safe_redirect(home_url('/')); exit; }
+        $order = $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE public_id=%s', Database::table('orders'), $public_id));
+        if (!$order || $order->payment_provider !== 'paypal' || !$token_id || !hash_equals((string)$order->payment_id, $token_id)) { wp_safe_redirect(home_url('/')); exit; }
         $token = self::paypal_access_token();
         if (!is_wp_error($token)) {
             $base = get_option('klp_paypal_mode', 'live') === 'sandbox' ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
             $response = wp_remote_post($base . '/v2/checkout/orders/' . rawurlencode($token_id) . '/capture', ['timeout' => 25, 'headers' => ['Authorization' => 'Bearer ' . $token, 'Content-Type' => 'application/json'], 'body' => '{}']);
             $json = !is_wp_error($response) ? json_decode((string) wp_remote_retrieve_body($response), true) : [];
-            if (($json['status'] ?? '') === 'COMPLETED') self::mark_paid((int) $order->id, $token_id);
+            if (is_array($json) && self::paypal_return_matches($order, $json)) self::mark_paid((int) $order->id, $token_id);
         }
         wp_safe_redirect(self::return_url($order, 'success')); exit;
     }
@@ -308,13 +316,52 @@ final class Payments
         $order_id = (int) ($resource['custom_id'] ?? 0);
         if (!$order_id && !empty($resource['supplementary_data']['related_ids']['order_id'])) {
             global $wpdb;
-            $order_id = (int) $wpdb->get_var($wpdb->prepare('SELECT id FROM ' . Database::table('orders') . ' WHERE payment_provider=\'paypal\' AND payment_id=%s', (string) $resource['supplementary_data']['related_ids']['order_id']));
+            $order_id = (int) $wpdb->get_var($wpdb->prepare('SELECT id FROM %i WHERE payment_provider=\'paypal\' AND payment_id=%s', Database::table('orders'), (string) $resource['supplementary_data']['related_ids']['order_id']));
+        }
+        if (($payload['event_type'] ?? '') === 'PAYMENT.CAPTURE.COMPLETED') {
+            global $wpdb;
+            $order = $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'), $order_id));
+            if (!$order || !self::paypal_capture_matches($order, $resource)) return new WP_REST_Response(['error' => 'Payment does not match order'], 400);
         }
         if (self::record_event('paypal', $event_id, (string) ($payload['event_type'] ?? ''), $order_id, $request->get_body())) {
             if (($payload['event_type'] ?? '') === 'PAYMENT.CAPTURE.COMPLETED') self::mark_paid($order_id, (string) ($resource['id'] ?? ''));
             if (($payload['event_type'] ?? '') === 'PAYMENT.CAPTURE.REFUNDED' && $order_id > 0) self::set_status($order_id, 'refunded');
         }
         return new WP_REST_Response(['received' => true], 200);
+    }
+
+    private static function stripe_session_matches(object $order, array $session): bool
+    {
+        return $order->payment_provider === 'stripe' && ($session['payment_status'] ?? '') === 'paid'
+            && ($session['currency'] ?? '') === 'eur' && is_int($session['amount_total'] ?? null)
+            && $session['amount_total'] === (int)$order->amount_cents
+            && (string)$order->payment_id !== '' && ($session['id'] ?? '') === (string)$order->payment_id;
+    }
+
+    private static function paypal_capture_matches(object $order, array $capture): bool
+    {
+        $amount = $capture['amount'] ?? [];
+        $value = (string)($amount['value'] ?? '');
+        if ($order->payment_provider !== 'paypal' || ($capture['status'] ?? '') !== 'COMPLETED'
+            || ($amount['currency_code'] ?? '') !== 'EUR' || !preg_match('/^\d{1,12}(?:\.\d{1,2})?$/D', $value)) return false;
+        [$units,$fraction] = array_pad(explode('.', $value, 2), 2, '');
+        $cents = (int)$units * 100 + (int)str_pad($fraction, 2, '0');
+        $related = (string)($capture['supplementary_data']['related_ids']['order_id'] ?? '');
+        $capture_id = (string)($capture['id'] ?? '');
+        return $cents === (int)$order->amount_cents && $capture_id !== ''
+            && ((string)$order->payment_id === $related || (string)$order->payment_id === $capture_id)
+            && (!isset($capture['custom_id']) || (string)$capture['custom_id'] === (string)$order->id);
+    }
+
+    private static function paypal_return_matches(object $order, array $response): bool
+    {
+        if (($response['status'] ?? '') !== 'COMPLETED' || ($response['id'] ?? '') !== (string)$order->payment_id
+            || count($response['purchase_units'] ?? []) !== 1) return false;
+        $unit = $response['purchase_units'][0];
+        if (($unit['reference_id'] ?? '') !== (string)$order->public_id || count($unit['payments']['captures'] ?? []) !== 1) return false;
+        $capture = $unit['payments']['captures'][0];
+        $capture['supplementary_data']['related_ids']['order_id'] = $response['id'];
+        return self::paypal_capture_matches($order, $capture);
     }
 
     private static function verify_paypal_webhook(WP_REST_Request $request, array $event): bool
@@ -331,7 +378,7 @@ final class Payments
     private static function record_event(string $provider, string $event_id, string $type, int $order_id, string $payload): bool
     {
         global $wpdb;
-        return (bool) $wpdb->query($wpdb->prepare('INSERT IGNORE INTO ' . Database::table('payment_events') . ' (provider,event_id,event_type,order_id,payload_hash,processed,created_at) VALUES (%s,%s,%s,%d,%s,1,%s)', $provider, $event_id, $type, $order_id ?: null, hash('sha256', $payload), current_time('mysql')));
+        return (bool) $wpdb->query($wpdb->prepare('INSERT IGNORE INTO %i (provider,event_id,event_type,order_id,payload_hash,processed,created_at) VALUES (%s,%s,%s,%d,%s,1,%s)', Database::table('payment_events'), $provider, $event_id, $type, $order_id ?: null, hash('sha256', $payload), current_time('mysql')));
     }
 
     private static function set_payment_id(int $order_id, string $payment_id): void { global $wpdb; $wpdb->update(Database::table('orders'), ['payment_id' => $payment_id], ['id' => $order_id]); }
@@ -354,12 +401,12 @@ final class Payments
         global $wpdb;
         if ($order_id <= 0) return;
         $table = Database::table('orders');
-        $wpdb->query($wpdb->prepare("UPDATE {$table} SET payment_status='paid',payment_id=COALESCE(NULLIF(%s,''),payment_id),paid_at=COALESCE(paid_at,%s) WHERE id=%d AND payment_status<>'paid'", $payment_id, current_time('mysql'), $order_id));
+        $wpdb->query($wpdb->prepare("UPDATE %i SET payment_status='paid',payment_id=COALESCE(NULLIF(%s,''),payment_id),paid_at=COALESCE(paid_at,%s) WHERE id=%d AND payment_status<>'paid'", $table, $payment_id, current_time('mysql'), $order_id));
         if ($wpdb->rows_affected > 0) {
             Notifications::enqueue($order_id);
             Order_Workflow::log($order_id,'paid','Оплата подтверждена');
         }
-        $order = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$table} WHERE id=%d", $order_id));
+        $order = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id=%d", $table, $order_id));
         if ($order && !$order->confirmation_sent_at) self::send_confirmation($order);
         Notifications::send($order_id);
     }
@@ -368,7 +415,7 @@ final class Payments
     {
         Notifications::retry();
         global $wpdb;
-        $rows = $wpdb->get_results("SELECT * FROM " . Database::table('orders') . " WHERE payment_status='paid' AND confirmation_sent_at IS NULL ORDER BY paid_at ASC LIMIT 25");
+        $rows = $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE payment_status='paid' AND confirmation_sent_at IS NULL ORDER BY paid_at ASC LIMIT 25", Database::table('orders')));
         foreach ($rows as $order) self::send_confirmation($order);
     }
 
@@ -376,25 +423,25 @@ final class Payments
     {
         global $wpdb;
         $cutoff = wp_date('Y-m-d H:i:s', time() - 7 * DAY_IN_SECONDS);
-        $wpdb->query($wpdb->prepare("UPDATE " . Database::table('orders') . " SET payment_status='cancelled' WHERE payment_status='pending' AND created_at < %s", $cutoff));
+        $wpdb->query($wpdb->prepare("UPDATE %i SET payment_status='cancelled' WHERE payment_status='pending' AND created_at < %s", Database::table('orders'), $cutoff));
     }
 
     public static function resend_confirmation(int $order_id): bool
     {
         global $wpdb;
         $table = Database::table('orders');
-        $order = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$table} WHERE id=%d AND payment_status='paid'", $order_id));
+        $order = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id=%d AND payment_status='paid'", $table, $order_id));
         if (!$order) return false;
         $wpdb->update($table, ['confirmation_sent_at' => null], ['id' => $order_id]);
         self::send_confirmation($order);
-        return (bool) $wpdb->get_var($wpdb->prepare("SELECT confirmation_sent_at FROM {$table} WHERE id=%d", $order_id));
+        return (bool) $wpdb->get_var($wpdb->prepare("SELECT confirmation_sent_at FROM %i WHERE id=%d", $table, $order_id));
     }
 
     private static function send_confirmation(object $order): void
     {
         global $wpdb;
         $orders = Database::table('orders');
-        $claimed = $wpdb->query($wpdb->prepare("UPDATE {$orders} SET confirmation_sent_at=%s WHERE id=%d AND confirmation_sent_at IS NULL", current_time('mysql'), (int) $order->id));
+        $claimed = $wpdb->query($wpdb->prepare("UPDATE %i SET confirmation_sent_at=%s WHERE id=%d AND confirmation_sent_at IS NULL", $orders, current_time('mysql'), (int) $order->id));
         if (!$claimed) return;
         $lang = in_array($order->language, ['de','ru','uk','pl'], true) ? $order->language : 'de';
         $site_name = wp_specialchars_decode((string) get_bloginfo('name'), ENT_QUOTES);
@@ -402,13 +449,12 @@ final class Payments
         $logo_url = $logo_id ? (string) wp_get_attachment_image_url($logo_id, 'medium') : (string) get_site_icon_url(512);
         $subjects=['de'=>'Ihr Gebetsanliegen ist eingegangen','ru'=>'Ваша молитвенная записка получена','uk'=>'Вашу молитовну записку отримано','pl'=>'Otrzymaliśmy Twoją intencję modlitewną']; $greets=['de'=>'Guten Tag','ru'=>'Здравствуйте','uk'=>'Вітаємо','pl'=>'Dzień dobry'];
         $subject=$subjects[$lang]; $greeting=$greets[$lang].($order->donor_name?', '.esc_html($order->donor_name):'').'!';
-        $items = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM ' . Database::table('order_items') . ' WHERE order_id=%d', (int) $order->id));
+        $items = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d', Database::table('order_items'), (int) $order->id));
         $intention = I18n::text($order->intention === 'rest' ? 'rest' : 'health', $lang);
         $amount = number_format_i18n(((int) $order->amount_cents) / 100, 2) . ' €';
         $labels=['de'=>['Gebetsanliegen','Gebetsart','Spendensumme','Namen'],'ru'=>['Треба','Тип записки','Сумма пожертвования','Имена'],'uk'=>['Треба','Тип записки','Сума пожертви','Імена'],'pl'=>['Intencja','Rodzaj modlitwy','Kwota darowizny','Imiona']][$lang];
         $footer = ['de'=>'Mit Dankbarkeit und Gebet,<br>','ru'=>'С благодарностью и молитвой,<br>','uk'=>'Із вдячністю та молитвою,<br>','pl'=>'Z wdzięcznością i modlitwą,<br>'][$lang] . esc_html($site_name);
-        $body = '<!doctype html><html><body style="margin:0;background:#f3f5f7;font-family:Arial,sans-serif;color:#202936"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding:28px 12px"><table role="presentation" width="620" cellspacing="0" cellpadding="0" style="max-width:620px;width:100%;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 8px 30px rgba(25,40,55,.10)"><tr><td align="center" style="padding:28px 30px 22px;border-top:5px solid #198fd9"><img src="https://georg-kloster.ru/wp-content/uploads/2023/03/logo2t.png" width="360" alt="Kloster St. Georg" style="display:block;max-width:100%;height:auto"></td></tr><tr><td style="padding:8px 42px 38px"><h1 style="margin:0 0 18px;font-size:25px;line-height:1.3;text-align:center">'.esc_html($subject).'</h1><p style="font-size:16px;line-height:1.65">'.$greeting.'</p><p style="font-size:16px;line-height:1.65">'.esc_html(I18n::text('thanks',$lang)).'</p><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:24px 0;border:1px solid #dce4ea;border-radius:5px"><tr><td style="padding:12px 16px;background:#f5f9fc"><strong>'.esc_html($labels[0]).'</strong></td><td style="padding:12px 16px;background:#f5f9fc;text-align:right">'.esc_html(implode(', ',$items)).'</td></tr><tr><td style="padding:12px 16px;border-top:1px solid #dce4ea"><strong>'.esc_html($labels[1]).'</strong></td><td style="padding:12px 16px;border-top:1px solid #dce4ea;text-align:right">'.esc_html($intention).'</td></tr><tr><td style="padding:12px 16px;border-top:1px solid #dce4ea"><strong>'.esc_html($labels[2]).'</strong></td><td style="padding:12px 16px;border-top:1px solid #dce4ea;text-align:right"><strong>'.esc_html($amount).'</strong></td></tr></table><h2 style="font-size:17px;margin:25px 0 10px">'.esc_html($labels[3]).'</h2><div style="padding:17px 20px;background:#f8fafb;border-left:4px solid #198fd9;font-size:16px;line-height:1.7">'.nl2br(esc_html($order->names)).'</div><p style="margin:28px 0 0;color:#53606d;font-size:15px;line-height:1.6">'.$footer.'</p></td></tr><tr><td style="padding:17px 30px;background:#202936;color:#cfd6dc;text-align:center;font-size:12px">Götschendorf · <a href="https://georg-kloster.ru/" style="color:#fff">georg-kloster.ru</a></td></tr></table></td></tr></table></body></html>';
-        $body = str_replace(['https://georg-kloster.ru/wp-content/uploads/2023/03/logo2t.png','Kloster St. Georg','Götschendorf','https://georg-kloster.ru/','georg-kloster.ru'], [esc_url($logo_url),esc_attr($site_name),esc_html($site_name),esc_url(home_url('/')),esc_html((string) (wp_parse_url(home_url('/'),PHP_URL_HOST) ?: $site_name))], $body);
+        $body = '<!doctype html><html><body style="margin:0;background:#f3f5f7;font-family:Arial,sans-serif;color:#202936"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding:28px 12px"><table role="presentation" width="620" cellspacing="0" cellpadding="0" style="max-width:620px;width:100%;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 8px 30px rgba(25,40,55,.10)"><tr><td align="center" style="padding:28px 30px 22px;border-top:5px solid #198fd9">'.($logo_url!==''?'<img src="'.esc_url($logo_url).'" width="360" alt="'.esc_attr($site_name).'" style="display:block;max-width:100%;height:auto">':'<strong>'.esc_html($site_name).'</strong>').'</td></tr><tr><td style="padding:8px 42px 38px"><h1 style="margin:0 0 18px;font-size:25px;line-height:1.3;text-align:center">'.esc_html($subject).'</h1><p style="font-size:16px;line-height:1.65">'.$greeting.'</p><p style="font-size:16px;line-height:1.65">'.esc_html(I18n::text('thanks',$lang)).'</p><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:24px 0;border:1px solid #dce4ea;border-radius:5px"><tr><td style="padding:12px 16px;background:#f5f9fc"><strong>'.esc_html($labels[0]).'</strong></td><td style="padding:12px 16px;background:#f5f9fc;text-align:right">'.esc_html(implode(', ',$items)).'</td></tr><tr><td style="padding:12px 16px;border-top:1px solid #dce4ea"><strong>'.esc_html($labels[1]).'</strong></td><td style="padding:12px 16px;border-top:1px solid #dce4ea;text-align:right">'.esc_html($intention).'</td></tr><tr><td style="padding:12px 16px;border-top:1px solid #dce4ea"><strong>'.esc_html($labels[2]).'</strong></td><td style="padding:12px 16px;border-top:1px solid #dce4ea;text-align:right"><strong>'.esc_html($amount).'</strong></td></tr></table><h2 style="font-size:17px;margin:25px 0 10px">'.esc_html($labels[3]).'</h2><div style="padding:17px 20px;background:#f8fafb;border-left:4px solid #198fd9;font-size:16px;line-height:1.7">'.nl2br(esc_html($order->names)).'</div><p style="margin:28px 0 0;color:#53606d;font-size:15px;line-height:1.6">'.$footer.'</p></td></tr><tr><td style="padding:17px 30px;background:#202936;color:#cfd6dc;text-align:center;font-size:12px"><a href="'.esc_url(home_url('/')).'" style="color:#fff">'.esc_html($site_name).'</a></td></tr></table></td></tr></table></body></html>';
         if (!wp_mail($order->donor_email, $subject, $body, ['Content-Type: text/html; charset=UTF-8'])) { $wpdb->update($orders, ['confirmation_sent_at' => null], ['id' => (int) $order->id]); Order_Workflow::log((int)$order->id,'email_failed','Не удалось передать письмо почтовой системе'); } else { Order_Workflow::log((int)$order->id,'email_sent','Подтверждение передано почтовой системе'); }
     }
 }

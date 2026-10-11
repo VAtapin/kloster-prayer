@@ -31,11 +31,11 @@ final class Public_Form
         $atts = shortcode_atts(['id' => 0, 'slug' => '', 'layout' => '', 'lang' => '', 'header' => 'yes'], $atts, 'kloster_form');
         $forms = Database::table('forms');
         if ((int) $atts['id'] > 0) {
-            $form = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$forms} WHERE id=%d AND is_active=1", (int) $atts['id']));
+            $form = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id=%d AND is_active=1", $forms, (int) $atts['id']));
         } elseif ($atts['slug'] !== '') {
-            $form = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$forms} WHERE slug=%s AND is_active=1", sanitize_title($atts['slug'])));
+            $form = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE slug=%s AND is_active=1", $forms, sanitize_title($atts['slug'])));
         } else {
-            $form = $wpdb->get_row("SELECT * FROM {$forms} WHERE slug='gebetsanliegen' AND is_active=1 ORDER BY id LIMIT 1");
+            $form = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE slug='gebetsanliegen' AND is_active=1 ORDER BY id LIMIT 1", $forms));
         }
         if (!$form) {
             return current_user_can('manage_options') ? '<p>' . esc_html__('Kloster: form not found.', 'kloster-prayer') . '</p>' : '';
@@ -49,8 +49,8 @@ final class Public_Form
         $atts = shortcode_atts(['id' => 0, 'slug' => '', 'layout' => 'compact', 'lang' => ''], $atts, 'kloster_service');
         $services = Database::table('services');
         $service = (int) $atts['id'] > 0
-            ? $wpdb->get_row($wpdb->prepare("SELECT * FROM {$services} WHERE id=%d AND is_active=1", (int) $atts['id']))
-            : $wpdb->get_row($wpdb->prepare("SELECT * FROM {$services} WHERE slug=%s AND is_active=1", sanitize_title($atts['slug'])));
+            ? $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id=%d AND is_active=1", $services, (int) $atts['id']))
+            : $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE slug=%s AND is_active=1", $services, sanitize_title($atts['slug'])));
         if (!$service) {
             return '';
         }
@@ -65,7 +65,7 @@ final class Public_Form
         if ($fixed_services === null) {
             $services_table = Database::table('services');
             $links = Database::table('form_services');
-            $services = $wpdb->get_results($wpdb->prepare("SELECT s.* FROM {$services_table} s INNER JOIN {$links} fs ON fs.service_id=s.id WHERE fs.form_id=%d AND s.is_active=1 ORDER BY fs.sort_order,s.sort_order", (int) $form->id));
+            $services = $wpdb->get_results($wpdb->prepare("SELECT s.* FROM %i s INNER JOIN %i fs ON fs.service_id=s.id WHERE fs.form_id=%d AND s.is_active=1 ORDER BY fs.sort_order,s.sort_order", $services_table, $links, (int) $form->id));
         } else {
             $services = $fixed_services;
         }
@@ -89,54 +89,54 @@ final class Public_Form
         }
         ob_start();
         ?>
-        <section class="klp-form klp-form--<?= esc_attr($layout) ?>" data-currency="EUR" data-lang="<?= esc_attr($lang) ?>">
+        <section class="klp-form klp-form--<?php echo  esc_attr($layout) ?>" data-currency="EUR" data-lang="<?php echo  esc_attr($lang) ?>">
             <?php if (($atts['header'] ?? 'yes') !== 'no') : ?><header class="klp-form__header">
-                <h2><?= esc_html($form->{$title_key}) ?></h2>
-                <?php if (!empty($form->{$intro_key})) : ?><p><?= esc_html($form->{$intro_key}) ?></p><?php endif; ?>
+                <h2><?php echo  esc_html($form->{$title_key}) ?></h2>
+                <?php if (!empty($form->{$intro_key})) : ?><p><?php echo  esc_html($form->{$intro_key}) ?></p><?php endif; ?>
             </header><?php endif; ?>
             <form class="klp-form__body" novalidate>
                 <input type="hidden" name="action" value="klp_create_payment">
-                <input type="hidden" name="nonce" value="<?= esc_attr(wp_create_nonce('klp_payment')) ?>">
-                <input type="hidden" name="form_id" value="<?= (int) $form->id ?>">
-                <input type="hidden" name="language" value="<?= esc_attr($lang) ?>">
+                <input type="hidden" name="nonce" value="<?php echo  esc_attr(wp_create_nonce('klp_payment')) ?>">
+                <input type="hidden" name="form_id" value="<?php echo  (int) $form->id ?>">
+                <input type="hidden" name="language" value="<?php echo  esc_attr($lang) ?>">
                 <input class="klp-honeypot" type="text" name="website" value="" tabindex="-1" autocomplete="off" aria-hidden="true">
                 <?php $modes = array_unique(array_column($services, 'intention_mode')); $show_both = in_array('both', $modes, true) || (in_array('health', $modes, true) && in_array('rest', $modes, true)); ?>
-                <fieldset class="klp-intention<?= $show_both ? '' : ' klp-intention--single' ?>">
-                    <legend class="screen-reader-text"><?= esc_html($lang === 'de' ? 'Gebetsart' : 'Тип молитвы') ?></legend>
-                    <?php if ($show_both || in_array('health', $modes, true)) : ?><label><input type="radio" name="intention" value="health" <?= checked($form->default_intention, 'health', false) ?>><span>☦ <?= esc_html(I18n::text('health', $lang)) ?></span></label><?php endif; ?>
-                    <?php if ($show_both || in_array('rest', $modes, true)) : ?><label><input type="radio" name="intention" value="rest" <?= checked($form->default_intention, 'rest', false) ?>><span>☦ <?= esc_html(I18n::text('rest', $lang)) ?></span></label><?php endif; ?>
+                <fieldset class="klp-intention<?php echo  $show_both ? '' : ' klp-intention--single' ?>">
+                    <legend class="screen-reader-text"><?php echo  esc_html($lang === 'de' ? 'Gebetsart' : 'Тип молитвы') ?></legend>
+                    <?php if ($show_both || in_array('health', $modes, true)) : ?><label><input type="radio" name="intention" value="health" <?php echo  checked($form->default_intention, 'health', false) ?>><span>☦ <?php echo  esc_html(I18n::text('health', $lang)) ?></span></label><?php endif; ?>
+                    <?php if ($show_both || in_array('rest', $modes, true)) : ?><label><input type="radio" name="intention" value="rest" <?php echo  checked($form->default_intention, 'rest', false) ?>><span>☦ <?php echo  esc_html(I18n::text('rest', $lang)) ?></span></label><?php endif; ?>
                 </fieldset>
                 <fieldset class="klp-services">
-                    <legend><?= esc_html(I18n::text('choose', $lang)) ?></legend>
+                    <legend><?php echo  esc_html(I18n::text('choose', $lang)) ?></legend>
                     <?php foreach ($services as $service) : $service_title = $service->{$title_key} ?: $service->title_de; $description_key = 'description_' . $lang; $image=$layout==='cards'?Service_Images::url($service):''; ?>
-                        <label class="klp-service" style="--klp-service-bg:url('<?= esc_url($image) ?>')" data-mode="<?= esc_attr($service->pricing_mode) ?>" data-price="<?= (int) $service->price_cents ?>" data-limit="<?= (int) $service->names_per_sheet ?>" data-intention="<?= esc_attr($service->intention_mode) ?>">
-                            <input type="checkbox" name="services[]" value="<?= (int) $service->id ?>">
+                        <label class="klp-service" style="--klp-service-bg:url('<?php echo  esc_url($image) ?>')" data-mode="<?php echo  esc_attr($service->pricing_mode) ?>" data-price="<?php echo  (int) $service->price_cents ?>" data-limit="<?php echo  (int) $service->names_per_sheet ?>" data-intention="<?php echo  esc_attr($service->intention_mode) ?>">
+                            <input type="checkbox" name="services[]" value="<?php echo  (int) $service->id ?>">
                             <span class="klp-service__check" aria-hidden="true"></span>
-                            <span class="klp-service__name"><?= esc_html($service_title) ?><small><?= esc_html($service->{$description_key} ?: I18n::text($service->pricing_mode, $lang)) ?></small></span>
-                            <strong><?= esc_html(number_format_i18n($service->price_cents / 100, 2)) ?> €</strong>
+                            <span class="klp-service__name"><?php echo  esc_html($service_title) ?><small><?php echo  esc_html($service->{$description_key} ?: I18n::text($service->pricing_mode, $lang)) ?></small></span>
+                            <strong><?php echo  esc_html(number_format_i18n($service->price_cents / 100, 2)) ?> €</strong>
                         </label>
                     <?php endforeach; ?>
                 </fieldset>
                 <div class="klp-field">
-                    <label for="klp-names-<?= (int) $form->id ?>"><?= esc_html(I18n::text('names', $lang)) ?> <span>*</span></label>
-                    <textarea id="klp-names-<?= (int) $form->id ?>" name="names" rows="<?= $layout === 'compact' ? 4 : 6 ?>" required placeholder="<?= esc_attr(I18n::text('names_placeholder', $lang)) ?>"></textarea>
-                    <small><?= esc_html(I18n::text('names_help', $lang)) ?></small>
+                    <label for="klp-names-<?php echo  (int) $form->id ?>"><?php echo  esc_html(I18n::text('names', $lang)) ?> <span>*</span></label>
+                    <textarea id="klp-names-<?php echo  (int) $form->id ?>" name="names" rows="<?php echo  $layout === 'compact' ? 4 : 6 ?>" required placeholder="<?php echo  esc_attr(I18n::text('names_placeholder', $lang)) ?>"></textarea>
+                    <small><?php echo  esc_html(I18n::text('names_help', $lang)) ?></small>
                 </div>
-                <div class="klp-field"><label><?= esc_html(I18n::text('note', $lang)) ?></label><textarea name="note" rows="<?= $layout === 'compact' ? 1 : 2 ?>"></textarea></div>
+                <div class="klp-field"><label><?php echo  esc_html(I18n::text('note', $lang)) ?></label><textarea name="note" rows="<?php echo  $layout === 'compact' ? 1 : 2 ?>"></textarea></div>
                 <div class="klp-grid">
-                    <div class="klp-field"><label><?= esc_html(I18n::text('donor_name', $lang)) ?></label><input type="text" name="donor_name" autocomplete="name"></div>
-                    <div class="klp-field"><label><?= esc_html(I18n::text('email', $lang)) ?> <span>*</span></label><input type="email" name="donor_email" required autocomplete="email"><small><?= esc_html(I18n::text('email_help', $lang)) ?></small></div>
+                    <div class="klp-field"><label><?php echo  esc_html(I18n::text('donor_name', $lang)) ?></label><input type="text" name="donor_name" autocomplete="name"></div>
+                    <div class="klp-field"><label><?php echo  esc_html(I18n::text('email', $lang)) ?> <span>*</span></label><input type="email" name="donor_email" required autocomplete="email"><small><?php echo  esc_html(I18n::text('email_help', $lang)) ?></small></div>
                 </div>
                 <?php if (count($enabled) > 1) : ?>
-                    <fieldset class="klp-payment"><legend><?= esc_html(I18n::text('provider', $lang)) ?></legend>
+                    <fieldset class="klp-payment"><legend><?php echo  esc_html(I18n::text('provider', $lang)) ?></legend>
                     <?php foreach ($enabled as $index => $provider) : if (!in_array($provider, ['stripe', 'paypal'], true)) continue; ?>
-                        <label><input type="radio" name="provider" value="<?= esc_attr($provider) ?>" <?= checked($index, 0, false) ?>><span><?= esc_html(I18n::text($provider, $lang)) ?></span></label>
+                        <label><input type="radio" name="provider" value="<?php echo  esc_attr($provider) ?>" <?php echo  checked($index, 0, false) ?>><span><?php echo  esc_html(I18n::text($provider, $lang)) ?></span></label>
                     <?php endforeach; ?></fieldset>
-                <?php else : ?><input type="hidden" name="provider" value="<?= esc_attr($enabled[0] ?? 'stripe') ?>"><?php endif; ?>
-                <div class="klp-summary"><span><?= esc_html(I18n::text('total', $lang)) ?></span><strong><output>0,00 €</output></strong></div>
+                <?php else : ?><input type="hidden" name="provider" value="<?php echo  esc_attr($enabled[0] ?? 'stripe') ?>"><?php endif; ?>
+                <div class="klp-summary"><span><?php echo  esc_html(I18n::text('total', $lang)) ?></span><strong><output>0,00 €</output></strong></div>
                 <div class="klp-error" role="alert" hidden></div>
-                <button class="klp-submit" type="submit"><span><?= esc_html(I18n::text('submit', $lang)) ?></span><b aria-hidden="true">→</b></button>
-                <p class="klp-secure">♙ <?= esc_html(I18n::text('secure', $lang)) ?></p>
+                <button class="klp-submit" type="submit"><span><?php echo  esc_html(I18n::text('submit', $lang)) ?></span><b aria-hidden="true">→</b></button>
+                <p class="klp-secure">♙ <?php echo  esc_html(I18n::text('secure', $lang)) ?></p>
             </form>
         </section>
         <?php
@@ -146,7 +146,7 @@ final class Public_Form
     public static function result_shortcode(): string
     {
         global $wpdb;
-        $status = sanitize_key($_GET['kloster_payment'] ?? '');
+        $status = sanitize_key(Input::get('kloster_payment') ?? '');
         if (!in_array($status, ['success', 'cancelled'], true)) {
             return '';
         }
@@ -154,8 +154,8 @@ final class Public_Form
         $state = 'cancelled';
         $lang = I18n::language();
         if ($status === 'success') {
-            $public_id = sanitize_text_field((string) ($_GET['kloster_order'] ?? ''));
-            $order = $public_id !== '' ? $wpdb->get_row($wpdb->prepare('SELECT payment_status,language FROM ' . Database::table('orders') . ' WHERE public_id=%s', $public_id)) : null;
+            $public_id = sanitize_text_field((string) (Input::get('kloster_order') ?? ''));
+            $order = $public_id !== '' ? $wpdb->get_row($wpdb->prepare('SELECT payment_status,language FROM %i WHERE public_id=%s', Database::table('orders'), $public_id)) : null;
             $paid = $order && $order->payment_status === 'paid';
             if ($order && in_array($order->language, ['de','ru'], true)) $lang = $order->language;
             $key = $paid ? 'thanks' : 'processing';

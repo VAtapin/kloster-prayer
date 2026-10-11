@@ -26,7 +26,7 @@ final class Pdf
         if (!current_user_can('manage_options')) wp_die('Forbidden', 403);
         check_admin_referer('klp_pdf');
         if (!class_exists(Dompdf::class)) require_once DIR . '/includes/lib/dompdf/autoload.inc.php';
-        $cards = !empty($_GET['blank']) ? [['intention' => ($_GET['intention'] ?? '') === 'rest' ? 'rest' : 'health', 'language' => ($_GET['language'] ?? '') === 'de' ? 'de' : 'ru', 'title' => '', 'names' => [], 'note' => '']] : self::cards();
+        $cards = !empty(Input::get('blank')) ? [['intention' => (Input::get('intention') ?? '') === 'rest' ? 'rest' : 'health', 'language' => (Input::get('language') ?? '') === 'de' ? 'de' : 'ru', 'title' => '', 'names' => [], 'note' => '']] : self::cards();
         if (!$cards) wp_die('Нет записок для выбранного фильтра.');
         $options = new Options(); $options->set('isRemoteEnabled', false); $options->set('isHtml5ParserEnabled', true); $options->set('defaultFont', 'DejaVu Sans'); $options->setChroot(DIR);
         $dompdf = new Dompdf($options); $dompdf->setPaper('A4', 'landscape'); $dompdf->loadHtml(self::modern_html($cards), 'UTF-8'); $dompdf->render();
@@ -39,24 +39,26 @@ final class Pdf
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="zapiski-'.wp_date('Ymd-His').'.pdf"');
         header('Content-Length: '.strlen($output));
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Dompdf-generated binary PDF, validated above; HTML escaping corrupts the file.
         echo $output; exit;
     }
 
     private static function cards(): array
     {
         global $wpdb; $where=[]; $args=[];
-        $status=sanitize_key((string)($_GET['payment_status']??'')); $intention=sanitize_key((string)($_GET['intention']??'')); $printed=sanitize_key((string)($_GET['printed']??''));
-        $ids=array_filter(array_map('absint',explode(',',(string)($_GET['order_ids']??''))));
+        $status=sanitize_key((string)(Input::get('payment_status')??'')); $intention=sanitize_key((string)(Input::get('intention')??'')); $printed=sanitize_key((string)(Input::get('printed')??''));
+        $ids=array_filter(array_map('absint',explode(',',(string)(Input::get('order_ids')??''))));
         if($ids){$where[]='o.id IN ('.implode(',',array_fill(0,count($ids),'%d')).')';array_push($args,...$ids);}
         // Explicit selections may include archived orders. Only whole-list exports
         // use the archive view, so downloading never requires restoring an order.
-        else $where[]=($_GET['archive']??'')==='yes'?'o.archived_at IS NOT NULL':'o.archived_at IS NULL';
+        else $where[]=(Input::get('archive')??'')==='yes'?'o.archived_at IS NOT NULL':'o.archived_at IS NULL';
         if(in_array($status,['pending','paid','failed','refunded','cancelled'],true)){ $where[]='o.payment_status=%s';$args[]=$status; }
         if(in_array($intention,['health','rest'],true)){ $where[]='o.intention=%s';$args[]=$intention; }
         if($printed==='yes')$where[]='o.printed_at IS NOT NULL';elseif($printed==='no')$where[]='o.printed_at IS NULL';
-        $sql='SELECT o.*,i.service_title,i.service_id,s.slug AS service_slug FROM '.Database::table('orders').' o INNER JOIN '.Database::table('order_items').' i ON i.order_id=o.id LEFT JOIN '.Database::table('services').' s ON s.id=i.service_id WHERE '.implode(' AND ',$where).' ORDER BY o.intention,o.created_at';
-        $rows=$wpdb->get_results($args?$wpdb->prepare($sql,...$args):$sql); $cards=[];
-        foreach($rows as $row){ $limit=(int)$wpdb->get_var($wpdb->prepare('SELECT names_per_sheet FROM '.Database::table('services').' WHERE id=%d',(int)$row->service_id))?:10; $names=Payments::split_names((string)$row->names); foreach(array_chunk($names,$limit) as $chunk)$cards[]=['order_date'=>self::order_date($row),'order_id'=>(int)$row->id,'printed_at'=>$row->printed_at,'intention'=>$row->intention,'language'=>$row->language==='ru'?'ru':'de','title'=>$row->service_title,'names'=>$chunk,'note'=>$row->note]; }
+        $sql='SELECT o.*,i.service_title,i.service_id,s.slug AS service_slug FROM %i o INNER JOIN %i i ON i.order_id=o.id LEFT JOIN %i s ON s.id=i.service_id WHERE '.implode(' AND ',$where).' ORDER BY o.intention,o.created_at';
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Fixed filter clauses only; all identifiers and user values use placeholders.
+        $rows=$wpdb->get_results($wpdb->prepare($sql,...array_merge([Database::table('orders'),Database::table('order_items'),Database::table('services')],$args))); $cards=[];
+        foreach($rows as $row){ $limit=(int)$wpdb->get_var($wpdb->prepare('SELECT names_per_sheet FROM %i WHERE id=%d', Database::table('services'),(int)$row->service_id))?:10; $names=Payments::split_names((string)$row->names); foreach(array_chunk($names,$limit) as $chunk)$cards[]=['order_date'=>self::order_date($row),'order_id'=>(int)$row->id,'printed_at'=>$row->printed_at,'intention'=>$row->intention,'language'=>$row->language==='ru'?'ru':'de','title'=>$row->service_title,'names'=>$chunk,'note'=>$row->note]; }
         return $cards;
     }
 

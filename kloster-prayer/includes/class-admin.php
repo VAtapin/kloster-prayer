@@ -30,28 +30,30 @@ final class Admin
 
     public static function handle_actions(): void
     {
-        if (!current_user_can('manage_options') || empty($_POST['klp_action'])) return;
+        if (!current_user_can('manage_options') || empty(Input::post('klp_action'))) return;
         check_admin_referer('klp_admin_action', '_klp_nonce');
         global $wpdb;
-        $action = sanitize_key((string) $_POST['klp_action']);
+        $action = sanitize_key((string) Input::post('klp_action'));
         if ($action === 'refresh_customer') {
-            $id=absint($_POST['order_id']??0);$ok=Payments::refresh_customer($id);
+            $id=absint(Input::post('order_id')??0);$ok=Payments::refresh_customer($id);
             wp_safe_redirect(add_query_arg(['page'=>'kloster-prayer','view'=>$id,'customer_sync'=>$ok?'ok':'unavailable'],admin_url('admin.php')));exit;
         }
         if ($action === 'catalog_bulk') {
-            $kind=in_array($_POST['catalog']??'', ['forms','services'],true)?$_POST['catalog']:'forms';
-            $operation=($_POST['action']??'-1')!=='-1'?$_POST['action']:($_POST['action2']??'');
-            if(in_array($operation,['enable','disable'],true))foreach(array_filter(array_map('absint',(array)($_POST['ids']??[]))) as $item_id) $wpdb->update(Database::table($kind),['is_active'=>$operation==='enable'?1:0,'updated_at'=>current_time('mysql')],['id'=>$item_id]);
+            $kind=in_array(Input::post('catalog')??'', ['forms','services'],true)?Input::post('catalog'):'forms';
+            $operation=(Input::post('action')??'-1')!=='-1'?Input::post('action'):(Input::post('action2')??'');
+            if(in_array($operation,['enable','disable'],true))foreach(array_filter(array_map('absint',(array)(Input::post_list('ids')??[]))) as $item_id) $wpdb->update(Database::table($kind),['is_active'=>$operation==='enable'?1:0,'updated_at'=>current_time('mysql')],['id'=>$item_id]);
             self::redirect('kloster-prayer-'.$kind,'updated');
         }
-        if ($action === 'orders_bulk') $action=($_POST['action']??'-1')!=='-1'?sanitize_key($_POST['action']):sanitize_key($_POST['action2']??'');
+        if ($action === 'orders_bulk') $action=(Input::post('action')??'-1')!=='-1'?sanitize_key(Input::post('action')):sanitize_key(Input::post('action2')??'');
         if ($action === 'generate_pdf') {
-            $ids = array_filter(array_map('absint', (array) ($_POST['order_ids'] ?? [])));
+            $ids = array_filter(array_map('absint', (array) (Input::post_list('order_ids') ?? [])));
             if (!$ids) {
                 require_once DIR.'/includes/class-orders-table.php';
-                [$where,$args]=Orders_Table::where($_POST);
-                $query='SELECT id FROM '.Database::table('orders').' WHERE '.$where;
-                $ids=array_map('intval',$wpdb->get_col($args?$wpdb->prepare($query,...$args):$query));
+                [$where,$args]=Orders_Table::where(Input::post_all());
+                $query='SELECT id FROM %i WHERE '.$where;
+                // WHERE is built only from fixed clauses and placeholders in Orders_Table::where().
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- All identifiers and filter values are bound below.
+                $ids=array_map('intval',$wpdb->get_col($wpdb->prepare($query,...array_merge([Database::table('orders')],$args))));
                 if (!$ids) wp_die('Нет записок для выбранного фильтра.');
             }
             $filters = ['order_ids' => $ids];
@@ -59,51 +61,51 @@ final class Admin
             wp_safe_redirect(Pdf::url($filters)); exit;
         }
         if ($action === 'resend_confirmation') {
-            $ok = Payments::resend_confirmation(absint($_POST['order_id'] ?? 0));
+            $ok = Payments::resend_confirmation(absint(Input::post('order_id') ?? 0));
             self::redirect('kloster-prayer', $ok ? 'email_sent' : 'email_failed');
         }
         if ($action === 'save_settings') {
             if (isset($_POST['notification_email'])) {
-                try { $recipient = Notifications::validate_recipient((string) wp_unslash($_POST['notification_email'])); }
+                try { $recipient = Notifications::validate_recipient((string) Input::post('notification_email')); }
                 catch (\InvalidArgumentException $e) { wp_die(esc_html__('Укажите один корректный email для уведомлений или оставьте поле пустым.', 'kloster-prayer')); }
                 update_option('klp_notification_email', $recipient);
             }
             if (isset($_POST['api_origin'])) {
-                try { $origin = Payments::normalize_api_origin((string)wp_unslash($_POST['api_origin'])); }
+                try { $origin = Payments::normalize_api_origin((string)Input::post('api_origin')); }
                 catch (\InvalidArgumentException $e) { wp_die(esc_html(__('Укажите HTTPS-домен без пути, параметров и логина, например https://example.org. Для автоматического выбора оставьте поле пустым.', 'kloster-prayer'))); }
                 update_option('klp_api_origin', $origin);
             }
-            if (!empty($_POST['stripe_secret'])) update_option('klp_stripe_secret', sanitize_text_field((string) wp_unslash($_POST['stripe_secret'])));
-            if (!empty($_POST['stripe_webhook_secret'])) update_option('klp_stripe_webhook_secret', sanitize_text_field((string) wp_unslash($_POST['stripe_webhook_secret'])));
-            update_option('klp_paypal_mode', in_array($_POST['paypal_mode'] ?? '', ['live', 'sandbox'], true) ? $_POST['paypal_mode'] : 'live');
-            update_option('klp_paypal_client_id', sanitize_text_field((string) wp_unslash($_POST['paypal_client_id'] ?? '')));
-            if (!empty($_POST['paypal_secret'])) update_option('klp_paypal_secret', sanitize_text_field((string) wp_unslash($_POST['paypal_secret'])));
-            update_option('klp_paypal_webhook_id', sanitize_text_field((string) wp_unslash($_POST['paypal_webhook_id'] ?? '')));
-            $methods = array_values(array_intersect(['stripe', 'paypal'], (array) ($_POST['methods'] ?? [])));
+            if (!empty(Input::post('stripe_secret'))) update_option('klp_stripe_secret', sanitize_text_field((string) Input::post('stripe_secret')));
+            if (!empty(Input::post('stripe_webhook_secret'))) update_option('klp_stripe_webhook_secret', sanitize_text_field((string) Input::post('stripe_webhook_secret')));
+            update_option('klp_paypal_mode', in_array(Input::post('paypal_mode') ?? '', ['live', 'sandbox'], true) ? Input::post('paypal_mode') : 'live');
+            update_option('klp_paypal_client_id', sanitize_text_field((string) Input::post('paypal_client_id') ?? ''));
+            if (!empty(Input::post('paypal_secret'))) update_option('klp_paypal_secret', sanitize_text_field((string) Input::post('paypal_secret')));
+            update_option('klp_paypal_webhook_id', sanitize_text_field((string) Input::post('paypal_webhook_id') ?? ''));
+            $methods = array_values(array_intersect(['stripe', 'paypal'], (array) (Input::post_list('methods') ?? [])));
             update_option('klp_payment_methods', $methods ?: ['stripe']);
             self::redirect('kloster-prayer-settings', 'saved');
         }
         if ($action === 'save_service') {
-            $id = absint($_POST['id'] ?? 0); $price = (int) round(((float) str_replace(',', '.', (string) ($_POST['price'] ?? '0'))) * 100);
-            $data = ['slug' => sanitize_title((string) ($_POST['slug'] ?? '')), 'title_ru' => sanitize_text_field((string) wp_unslash($_POST['title_ru'] ?? '')), 'title_de' => sanitize_text_field((string) wp_unslash($_POST['title_de'] ?? '')), 'title_uk' => sanitize_text_field((string) wp_unslash($_POST['title_uk'] ?? '')), 'title_pl' => sanitize_text_field((string) wp_unslash($_POST['title_pl'] ?? '')), 'description_ru' => sanitize_textarea_field((string) wp_unslash($_POST['description_ru'] ?? '')), 'description_de' => sanitize_textarea_field((string) wp_unslash($_POST['description_de'] ?? '')), 'description_uk' => sanitize_textarea_field((string) wp_unslash($_POST['description_uk'] ?? '')), 'description_pl' => sanitize_textarea_field((string) wp_unslash($_POST['description_pl'] ?? '')), 'image_id' => absint($_POST['image_id'] ?? 0), 'intention_mode' => in_array($_POST['intention_mode'] ?? '', ['both','health','rest','none'], true) ? $_POST['intention_mode'] : 'both', 'pricing_mode' => in_array($_POST['pricing_mode'] ?? '', ['flat','per_person','per_sheet'], true) ? $_POST['pricing_mode'] : 'flat', 'price_cents' => max(0, $price), 'names_per_sheet' => max(1, absint($_POST['names_per_sheet'] ?? 10)), 'is_active' => isset($_POST['is_active']) ? 1 : 0, 'sort_order' => (int) ($_POST['sort_order'] ?? 0), 'updated_at' => current_time('mysql')];
+            $id = absint(Input::post('id') ?? 0); $price = (int) round(((float) str_replace(',', '.', (string) (Input::post('price') ?? '0'))) * 100);
+            $data = ['slug' => sanitize_title((string) (Input::post('slug') ?? '')), 'title_ru' => sanitize_text_field((string) Input::post('title_ru') ?? ''), 'title_de' => sanitize_text_field((string) Input::post('title_de') ?? ''), 'title_uk' => sanitize_text_field((string) Input::post('title_uk') ?? ''), 'title_pl' => sanitize_text_field((string) Input::post('title_pl') ?? ''), 'description_ru' => sanitize_textarea_field((string) Input::textarea('description_ru') ?? ''), 'description_de' => sanitize_textarea_field((string) Input::textarea('description_de') ?? ''), 'description_uk' => sanitize_textarea_field((string) Input::textarea('description_uk') ?? ''), 'description_pl' => sanitize_textarea_field((string) Input::textarea('description_pl') ?? ''), 'image_id' => absint(Input::post('image_id') ?? 0), 'intention_mode' => in_array(Input::post('intention_mode') ?? '', ['both','health','rest','none'], true) ? Input::post('intention_mode') : 'both', 'pricing_mode' => in_array(Input::post('pricing_mode') ?? '', ['flat','per_person','per_sheet'], true) ? Input::post('pricing_mode') : 'flat', 'price_cents' => max(0, $price), 'names_per_sheet' => max(1, absint(Input::post('names_per_sheet') ?? 10)), 'is_active' => isset($_POST['is_active']) ? 1 : 0, 'sort_order' => (int) (Input::post('sort_order') ?? 0), 'updated_at' => current_time('mysql')];
             $data = self::preserve_translations($data);
             if ($id) $wpdb->update(Database::table('services'), $data, ['id' => $id]); else { $data['created_at'] = current_time('mysql'); $wpdb->insert(Database::table('services'), $data); }
             self::redirect('kloster-prayer-services', 'saved');
         }
         if ($action === 'save_form') {
-            $id = absint($_POST['id'] ?? 0);
-            $current_intention = $id ? (string) $wpdb->get_var($wpdb->prepare('SELECT default_intention FROM ' . Database::table('forms') . ' WHERE id=%d', $id)) : 'health';
-            $default_intention = isset($_POST['default_intention']) ? (($_POST['default_intention'] === 'rest') ? 'rest' : 'health') : $current_intention;
-            $layouts=['standard','compact','wide','two_columns','cards','minimal']; $layout=in_array($_POST['layout']??'',$layouts,true)?$_POST['layout']:'standard';
-            $data = ['slug' => sanitize_title((string) ($_POST['slug'] ?? '')), 'title_ru' => sanitize_text_field((string) wp_unslash($_POST['title_ru'] ?? '')), 'title_de' => sanitize_text_field((string) wp_unslash($_POST['title_de'] ?? '')), 'title_uk' => sanitize_text_field((string) wp_unslash($_POST['title_uk'] ?? '')), 'title_pl' => sanitize_text_field((string) wp_unslash($_POST['title_pl'] ?? '')), 'intro_ru' => sanitize_textarea_field((string) wp_unslash($_POST['intro_ru'] ?? '')), 'intro_de' => sanitize_textarea_field((string) wp_unslash($_POST['intro_de'] ?? '')), 'intro_uk' => sanitize_textarea_field((string) wp_unslash($_POST['intro_uk'] ?? '')), 'intro_pl' => sanitize_textarea_field((string) wp_unslash($_POST['intro_pl'] ?? '')), 'layout' => $layout, 'default_intention' => $default_intention, 'is_active' => isset($_POST['is_active']) ? 1 : 0, 'updated_at' => current_time('mysql')];
+            $id = absint(Input::post('id') ?? 0);
+            $current_intention = $id ? (string) $wpdb->get_var($wpdb->prepare('SELECT default_intention FROM %i WHERE id=%d', Database::table('forms'), $id)) : 'health';
+            $default_intention = isset($_POST['default_intention']) ? ((Input::post('default_intention') === 'rest') ? 'rest' : 'health') : $current_intention;
+            $layouts=['standard','compact','wide','two_columns','cards','minimal']; $layout=in_array(Input::post('layout')??'',$layouts,true)?Input::post('layout'):'standard';
+            $data = ['slug' => sanitize_title((string) (Input::post('slug') ?? '')), 'title_ru' => sanitize_text_field((string) Input::post('title_ru') ?? ''), 'title_de' => sanitize_text_field((string) Input::post('title_de') ?? ''), 'title_uk' => sanitize_text_field((string) Input::post('title_uk') ?? ''), 'title_pl' => sanitize_text_field((string) Input::post('title_pl') ?? ''), 'intro_ru' => sanitize_textarea_field((string) Input::textarea('intro_ru') ?? ''), 'intro_de' => sanitize_textarea_field((string) Input::textarea('intro_de') ?? ''), 'intro_uk' => sanitize_textarea_field((string) Input::textarea('intro_uk') ?? ''), 'intro_pl' => sanitize_textarea_field((string) Input::textarea('intro_pl') ?? ''), 'layout' => $layout, 'default_intention' => $default_intention, 'is_active' => isset($_POST['is_active']) ? 1 : 0, 'updated_at' => current_time('mysql')];
             $data = self::preserve_translations($data);
             if ($id) $wpdb->update(Database::table('forms'), $data, ['id' => $id]); else { $data['created_at'] = current_time('mysql'); $wpdb->insert(Database::table('forms'), $data); $id = (int) $wpdb->insert_id; }
             $wpdb->delete(Database::table('form_services'), ['form_id' => $id]);
-            foreach (array_map('absint', (array) ($_POST['services'] ?? [])) as $sort => $service_id) $wpdb->insert(Database::table('form_services'), ['form_id' => $id, 'service_id' => $service_id, 'sort_order' => $sort]);
+            foreach (array_map('absint', (array) (Input::post_list('services') ?? [])) as $sort => $service_id) $wpdb->insert(Database::table('form_services'), ['form_id' => $id, 'service_id' => $service_id, 'sort_order' => $sort]);
             self::redirect('kloster-prayer-forms', 'saved');
         }
         if (in_array($action, ['mark_printed','mark_unprinted','delete_order','archive_order','restore_order'], true)) {
-            $ids = array_filter(array_map('absint', (array) ($_POST['order_ids'] ?? [])));
+            $ids = array_filter(array_map('absint', (array) (Input::post_list('order_ids') ?? [])));
             foreach ($ids as $id) {
                 Order_Workflow::change($id, $action);
             }
@@ -119,22 +121,22 @@ final class Admin
     private static function header(string $title): void
     {
         echo '<div class="wrap klp-admin"><h1>' . esc_html($title) . '</h1>';
-        if (!empty($_GET['klp_notice'])) echo '<div class="notice notice-success is-dismissible"><p>Сохранено.</p></div>';
+        if (!empty(Input::get('klp_notice'))) echo '<div class="notice notice-success is-dismissible"><p>Сохранено.</p></div>';
     }
 
     public static function orders(): void
     {
         require_once DIR.'/includes/class-orders-table.php';
         global $wpdb; self::header('Молитвенные записки');
-        $view=absint($_GET['view']??0);
+        $view=absint(Input::get('view')??0);
         if($view){
-            $detail=$wpdb->get_row($wpdb->prepare('SELECT * FROM '.Database::table('orders').' WHERE id=%d',$view));
-            if($detail){$detail_items=$wpdb->get_results($wpdb->prepare('SELECT * FROM '.Database::table('order_items').' WHERE order_id=%d',$view));$address=json_decode((string)$detail->billing_address,true)?:[]; ?>
-            <div class="klp-card"><h2>Оплата и записка №<?= (int)$detail->id?></h2><div class="klp-stats"><div><small>Жертвователь</small><strong><?=esc_html($detail->billing_name?:$detail->donor_name?:'—')?></strong></div><div><small>E-mail</small><strong><?=esc_html($detail->billing_email?:$detail->donor_email)?></strong></div><div><small>Телефон</small><strong><?=esc_html($detail->billing_phone?:'—')?></strong></div><div><small>Сумма</small><strong><?=number_format_i18n($detail->amount_cents/100,2)?> €</strong></div></div><table class="widefat striped"><tbody><tr><th>Требы</th><td><?=esc_html(implode(', ',array_column($detail_items,'service_title')))?></td></tr><tr><th>Тип</th><td><?=$detail->intention==='rest'?'Об упокоении':'О здравии'?></td></tr><tr><th>Адрес плательщика</th><td><?=esc_html(implode(', ',array_filter([$address['line1']??'',$address['line2']??'',$address['postal_code']??'',$address['city']??'',$address['state']??'',$address['country']??''])))?:'—'?></td></tr><tr><th>Stripe / PayPal ID</th><td><code><?=esc_html($detail->payment_id?:'—')?></code></td></tr><tr><th>Оплачено</th><td><?=esc_html($detail->paid_at?:'—')?></td></tr><tr><th>Имена</th><td><?=nl2br(esc_html($detail->names))?></td></tr><tr><th><?=esc_html__('Комментарий к записке','kloster-prayer')?></th><td><?=Orders_Table::comment_html((string)($detail->note??''))?:esc_html__('Комментарий не указан','kloster-prayer')?></td></tr></tbody></table><p><a class="button" href="<?=esc_url(admin_url('admin.php?page=kloster-prayer'))?>">← К списку записок</a></p></div><?php }
+            $detail=$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'),$view));
+            if($detail){$detail_items=$wpdb->get_results($wpdb->prepare('SELECT * FROM %i WHERE order_id=%d', Database::table('order_items'),$view));$address=json_decode((string)$detail->billing_address,true)?:[]; ?>
+            <div class="klp-card"><h2>Оплата и записка №<?php echo  (int)$detail->id?></h2><div class="klp-stats"><div><small>Жертвователь</small><strong><?php echo esc_html($detail->billing_name?:$detail->donor_name?:'—')?></strong></div><div><small>E-mail</small><strong><?php echo esc_html($detail->billing_email?:$detail->donor_email)?></strong></div><div><small>Телефон</small><strong><?php echo esc_html($detail->billing_phone?:'—')?></strong></div><div><small>Сумма</small><strong><?php echo esc_html(number_format_i18n($detail->amount_cents/100,2))?> €</strong></div></div><table class="widefat striped"><tbody><tr><th>Требы</th><td><?php echo esc_html(implode(', ',array_column($detail_items,'service_title')))?></td></tr><tr><th>Тип</th><td><?php echo $detail->intention==='rest'?'Об упокоении':'О здравии'?></td></tr><tr><th>Адрес плательщика</th><td><?php echo esc_html(implode(', ',array_filter([$address['line1']??'',$address['line2']??'',$address['postal_code']??'',$address['city']??'',$address['state']??'',$address['country']??''])))?:'—'?></td></tr><tr><th>Stripe / PayPal ID</th><td><code><?php echo esc_html($detail->payment_id?:'—')?></code></td></tr><tr><th>Оплачено</th><td><?php echo esc_html($detail->paid_at?:'—')?></td></tr><tr><th>Имена</th><td><?php echo nl2br(esc_html($detail->names))?></td></tr><tr><th><?php echo esc_html__('Комментарий к записке','kloster-prayer')?></th><td><?php echo wp_kses_post(Orders_Table::comment_html((string)($detail->note??'')))?:esc_html__('Комментарий не указан','kloster-prayer')?></td></tr></tbody></table><p><a class="button" href="<?php echo esc_url(admin_url('admin.php?page=kloster-prayer'))?>">← К списку записок</a></p></div><?php }
         }
         if ($view) {
             if(isset($detail)&&$detail) Order_Workflow::detail($detail);
-            if(isset($_GET['customer_sync']))echo '<div class="notice notice-info"><p>'.($_GET['customer_sync']==='ok'?'Данные обновлены из Stripe.':'Stripe не вернул данные плательщика.').'</p></div>';
+            if((Input::get('customer_sync') !== null))echo '<div class="notice notice-info"><p>'.(Input::get('customer_sync')==='ok'?'Данные обновлены из Stripe.':'Stripe не вернул данные плательщика.').'</p></div>';
             if(isset($detail)&&$detail&&$detail->payment_provider==='stripe'){
                 echo '<form method="post">';wp_nonce_field('klp_admin_action', '_klp_nonce');
                 echo '<input type="hidden" name="klp_action" value="refresh_customer"><input type="hidden" name="order_id" value="'.(int)$view.'"><button class="button">Получить данные плательщика из Stripe</button></form>';
@@ -156,11 +158,11 @@ final class Admin
         }
         echo '</p>';
         echo '<form method="get"><input type="hidden" name="page" value="kloster-prayer">';
-        if (($_GET['archive']??'') === 'yes') echo '<input type="hidden" name="archive" value="yes">';
+        if ((Input::get('archive')??'') === 'yes') echo '<input type="hidden" name="archive" value="yes">';
         $table->search_box('Поиск записок','klp-orders');echo '</form>';
         echo '<form method="post">';wp_nonce_field('klp_admin_action', '_klp_nonce');
         echo '<input type="hidden" name="page" value="kloster-prayer"><input type="hidden" name="klp_action" value="orders_bulk">';
-        foreach(['provider','month','service_id','s'] as $key) if(isset($_GET[$key]))echo '<input type="hidden" name="'.esc_attr($key).'" value="'.esc_attr(sanitize_text_field($_GET[$key])).'">';
+        foreach(['provider','month','service_id','s'] as $key) if((Input::get($key)!==null))echo '<input type="hidden" name="'.esc_attr($key).'" value="'.esc_attr((Input::get($key)??'')).'">';
         $table->display();echo '</form></div>';
     }
 
@@ -169,20 +171,20 @@ final class Admin
 
     private static function services_native(): void
     {
-        global $wpdb; $id=absint($_GET['edit']??0); $editing=$id||isset($_GET['new']);
+        global $wpdb; $id=absint(Input::get('edit')??0); $editing=$id||(Input::get('new') !== null);
         if (!$editing) { self::catalog('services'); return; }
-        $r=$id?$wpdb->get_row($wpdb->prepare('SELECT * FROM '.Database::table('services').' WHERE id=%d',$id)):null; self::header($r?'Редактировать требу':'Добавить требу'); ?>
-        <form method="post" class="klp-native-editor"><?php wp_nonce_field('klp_admin_action', '_klp_nonce');?><input type="hidden" name="klp_action" value="save_service"><input type="hidden" name="id" value="<?= (int)($r->id??0) ?>"><table class="form-table" role="presentation"><tbody>
-        <?php foreach(self::editor_languages() as $code=>$label):?><tr><th colspan="2"><h2><?=esc_html($label)?></h2></th></tr><tr><th><label for="title_<?=$code?>">Название</label></th><td><input class="regular-text" id="title_<?=$code?>" name="title_<?=$code?>" value="<?=esc_attr($r->{'title_'.$code}??'')?>"></td></tr><tr><th><label for="description_<?=$code?>">Описание</label></th><td><textarea class="large-text" rows="2" id="description_<?=$code?>" name="description_<?=$code?>"><?=esc_textarea($r->{'description_'.$code}??'')?></textarea></td></tr><?php endforeach;?>
-        <tr><th><label for="slug">Код</label></th><td><input class="regular-text code" id="slug" name="slug" required value="<?=esc_attr($r->slug??'')?>"></td></tr><tr><th>Фоновое изображение</th><td><input type="hidden" name="image_id" id="klp-image-id" value="<?= (int)($r->image_id??0) ?>"><?php Service_Images::preview($r); ?><button type="button" class="button" id="klp-image-select">Выбрать из медиатеки</button> <button type="button" class="button-link-delete" id="klp-image-clear">Сбросить к стандартному</button><p class="description">Без выбора используется встроенный тематический фон.</p></td></tr>
-        <tr><th>Назначение</th><td><select name="intention_mode"><?php foreach(['both'=>'Оба','health'=>'Только о здравии','rest'=>'Только об упокоении','none'=>'Без типа'] as $v=>$l):?><option value="<?=$v?>" <?=selected($r->intention_mode??'both',$v,false)?>><?=$l?></option><?php endforeach;?></select></td></tr><tr><th>Расчёт</th><td><select name="pricing_mode"><?php foreach(['flat'=>'Фиксированно','per_person'=>'За имя','per_sheet'=>'За записку'] as $v=>$l):?><option value="<?=$v?>" <?=selected($r->pricing_mode??'flat',$v,false)?>><?=$l?></option><?php endforeach;?></select></td></tr><tr><th>Пожертвование, EUR</th><td><input name="price" type="number" min="0" step="0.01" value="<?=esc_attr(isset($r->price_cents)?number_format($r->price_cents/100,2,'.',''):'')?>"></td></tr><tr><th>Имён в записке</th><td><input name="names_per_sheet" type="number" min="1" value="<?= (int)($r->names_per_sheet??10) ?>"></td></tr><tr><th>Порядок</th><td><input name="sort_order" type="number" value="<?= (int)($r->sort_order??10) ?>"></td></tr><tr><th>Статус</th><td><label><input type="checkbox" name="is_active" value="1" <?=checked($r->is_active??1,1,false)?>> Активна</label></td></tr></tbody></table><?php submit_button($r?'Сохранить изменения':'Добавить требу');?><a class="button" href="<?=esc_url(admin_url('admin.php?page=kloster-prayer-services'))?>">Отмена</a></form></div><?php
+        $r=$id?$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('services'),$id)):null; self::header($r?'Редактировать требу':'Добавить требу'); ?>
+        <form method="post" class="klp-native-editor"><?php wp_nonce_field('klp_admin_action', '_klp_nonce');?><input type="hidden" name="klp_action" value="save_service"><input type="hidden" name="id" value="<?php echo  (int)($r->id??0) ?>"><table class="form-table" role="presentation"><tbody>
+        <?php foreach(self::editor_languages() as $code=>$label):?><tr><th colspan="2"><h2><?php echo esc_html($label)?></h2></th></tr><tr><th><label for="title_<?php echo esc_attr($code)?>">Название</label></th><td><input class="regular-text" id="title_<?php echo esc_attr($code)?>" name="title_<?php echo esc_attr($code)?>" value="<?php echo esc_attr($r->{'title_'.$code}??'')?>"></td></tr><tr><th><label for="description_<?php echo esc_attr($code)?>">Описание</label></th><td><textarea class="large-text" rows="2" id="description_<?php echo esc_attr($code)?>" name="description_<?php echo esc_attr($code)?>"><?php echo esc_textarea($r->{'description_'.$code}??'')?></textarea></td></tr><?php endforeach;?>
+        <tr><th><label for="slug">Код</label></th><td><input class="regular-text code" id="slug" name="slug" required value="<?php echo esc_attr($r->slug??'')?>"></td></tr><tr><th>Фоновое изображение</th><td><input type="hidden" name="image_id" id="klp-image-id" value="<?php echo  (int)($r->image_id??0) ?>"><?php Service_Images::preview($r); ?><button type="button" class="button" id="klp-image-select">Выбрать из медиатеки</button> <button type="button" class="button-link-delete" id="klp-image-clear">Сбросить к стандартному</button><p class="description">Без выбора используется встроенный тематический фон.</p></td></tr>
+        <tr><th>Назначение</th><td><select name="intention_mode"><?php foreach(['both'=>'Оба','health'=>'Только о здравии','rest'=>'Только об упокоении','none'=>'Без типа'] as $v=>$l):?><option value="<?php echo esc_attr($v)?>" <?php echo selected($r->intention_mode??'both',$v,false)?>><?php echo esc_html($l)?></option><?php endforeach;?></select></td></tr><tr><th>Расчёт</th><td><select name="pricing_mode"><?php foreach(['flat'=>'Фиксированно','per_person'=>'За имя','per_sheet'=>'За записку'] as $v=>$l):?><option value="<?php echo esc_attr($v)?>" <?php echo selected($r->pricing_mode??'flat',$v,false)?>><?php echo esc_html($l)?></option><?php endforeach;?></select></td></tr><tr><th>Пожертвование, EUR</th><td><input name="price" type="number" min="0" step="0.01" value="<?php echo esc_attr(isset($r->price_cents)?number_format($r->price_cents/100,2,'.',''):'')?>"></td></tr><tr><th>Имён в записке</th><td><input name="names_per_sheet" type="number" min="1" value="<?php echo  (int)($r->names_per_sheet??10) ?>"></td></tr><tr><th>Порядок</th><td><input name="sort_order" type="number" value="<?php echo  (int)($r->sort_order??10) ?>"></td></tr><tr><th>Статус</th><td><label><input type="checkbox" name="is_active" value="1" <?php echo checked($r->is_active??1,1,false)?>> Активна</label></td></tr></tbody></table><?php submit_button($r?'Сохранить изменения':'Добавить требу');?><a class="button" href="<?php echo esc_url(admin_url('admin.php?page=kloster-prayer-services'))?>">Отмена</a></form></div><?php
     }
 
     private static function forms_native(): void
     {
-        global $wpdb; $id=absint($_GET['edit']??0); $editing=$id||isset($_GET['new']);
+        global $wpdb; $id=absint(Input::get('edit')??0); $editing=$id||(Input::get('new') !== null);
         if (!$editing) { self::catalog('forms'); return; }
-        $r=$id?$wpdb->get_row($wpdb->prepare('SELECT * FROM '.Database::table('forms').' WHERE id=%d',$id)):null;$services=$wpdb->get_results('SELECT * FROM '.Database::table('services').' ORDER BY sort_order');$selected=$r?array_map('intval',$wpdb->get_col($wpdb->prepare('SELECT service_id FROM '.Database::table('form_services').' WHERE form_id=%d ORDER BY sort_order',$id))):[];self::header($r?'Редактировать форму':'Добавить форму');?><form method="post" class="klp-native-editor"><?php wp_nonce_field('klp_admin_action', '_klp_nonce');?><input type="hidden" name="klp_action" value="save_form"><input type="hidden" name="id" value="<?= (int)($r->id??0) ?>"><table class="form-table" role="presentation"><tbody><?php foreach(self::editor_languages() as $code=>$label):?><tr><th colspan="2"><h2><?=esc_html($label)?></h2></th></tr><tr><th>Название</th><td><input class="regular-text" name="title_<?=$code?>" value="<?=esc_attr($r->{'title_'.$code}??'')?>"></td></tr><tr><th>Введение</th><td><textarea class="large-text" rows="2" name="intro_<?=$code?>"><?=esc_textarea($r->{'intro_'.$code}??'')?></textarea></td></tr><?php endforeach;?><tr><th>Код</th><td><input class="regular-text code" required name="slug" value="<?=esc_attr($r->slug??'')?>"></td></tr><tr><th>Требы в форме</th><td><fieldset class="klp-service-checklist"><?php foreach($services as $s):?><label><input type="checkbox" name="services[]" value="<?=$s->id?>" <?=checked(in_array((int)$s->id,$selected,true),true,false)?>> <?=esc_html($s->title_ru)?> <span>— <?=esc_html($s->title_de)?></span></label><?php endforeach;?></fieldset></td></tr><tr><th>Шаблон</th><td><select name="layout"><?php foreach(['standard'=>'Классический','compact'=>'Компактный','wide'=>'Широкий: 3 карточки','two_columns'=>'Две колонки','cards'=>'Карточки с изображениями','minimal'=>'Минималистичный'] as $v=>$l):?><option value="<?=$v?>" <?=selected($r->layout??'standard',$v,false)?>><?=$l?></option><?php endforeach;?></select><p class="description">Внешняя ширина всегда 100% блока шорткода; шаблон меняет внутреннюю компоновку.</p></td></tr><tr><th>Тип по умолчанию</th><td><select name="default_intention"><option value="health" <?=selected($r->default_intention??'health','health',false)?>>О здравии</option><option value="rest" <?=selected($r->default_intention??'health','rest',false)?>>Об упокоении</option></select></td></tr><tr><th>Статус</th><td><label><input type="checkbox" name="is_active" value="1" <?=checked($r->is_active??1,1,false)?>> Активна</label></td></tr></tbody></table><?php submit_button($r?'Сохранить изменения':'Добавить форму');?><a class="button" href="<?=esc_url(admin_url('admin.php?page=kloster-prayer-forms'))?>">Отмена</a></form></div><?php
+        $r=$id?$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('forms'),$id)):null;$services=$wpdb->get_results($wpdb->prepare('SELECT * FROM %i ORDER BY sort_order',Database::table('services')));$selected=$r?array_map('intval',$wpdb->get_col($wpdb->prepare('SELECT service_id FROM %i WHERE form_id=%d ORDER BY sort_order', Database::table('form_services'),$id))):[];self::header($r?'Редактировать форму':'Добавить форму');?><form method="post" class="klp-native-editor"><?php wp_nonce_field('klp_admin_action', '_klp_nonce');?><input type="hidden" name="klp_action" value="save_form"><input type="hidden" name="id" value="<?php echo  (int)($r->id??0) ?>"><table class="form-table" role="presentation"><tbody><?php foreach(self::editor_languages() as $code=>$label):?><tr><th colspan="2"><h2><?php echo esc_html($label)?></h2></th></tr><tr><th>Название</th><td><input class="regular-text" name="title_<?php echo esc_attr($code)?>" value="<?php echo esc_attr($r->{'title_'.$code}??'')?>"></td></tr><tr><th>Введение</th><td><textarea class="large-text" rows="2" name="intro_<?php echo esc_attr($code)?>"><?php echo esc_textarea($r->{'intro_'.$code}??'')?></textarea></td></tr><?php endforeach;?><tr><th>Код</th><td><input class="regular-text code" required name="slug" value="<?php echo esc_attr($r->slug??'')?>"></td></tr><tr><th>Требы в форме</th><td><fieldset class="klp-service-checklist"><?php foreach($services as $s):?><label><input type="checkbox" name="services[]" value="<?php echo (int)$s->id?>" <?php echo checked(in_array((int)$s->id,$selected,true),true,false)?>> <?php echo esc_html($s->title_ru)?> <span>— <?php echo esc_html($s->title_de)?></span></label><?php endforeach;?></fieldset></td></tr><tr><th>Шаблон</th><td><select name="layout"><?php foreach(['standard'=>'Классический','compact'=>'Компактный','wide'=>'Широкий: 3 карточки','two_columns'=>'Две колонки','cards'=>'Карточки с изображениями','minimal'=>'Минималистичный'] as $v=>$l):?><option value="<?php echo esc_attr($v)?>" <?php echo selected($r->layout??'standard',$v,false)?>><?php echo esc_html($l)?></option><?php endforeach;?></select><p class="description">Внешняя ширина всегда 100% блока шорткода; шаблон меняет внутреннюю компоновку.</p></td></tr><tr><th>Тип по умолчанию</th><td><select name="default_intention"><option value="health" <?php echo selected($r->default_intention??'health','health',false)?>>О здравии</option><option value="rest" <?php echo selected($r->default_intention??'health','rest',false)?>>Об упокоении</option></select></td></tr><tr><th>Статус</th><td><label><input type="checkbox" name="is_active" value="1" <?php echo checked($r->is_active??1,1,false)?>> Активна</label></td></tr></tbody></table><?php submit_button($r?'Сохранить изменения':'Добавить форму');?><a class="button" href="<?php echo esc_url(admin_url('admin.php?page=kloster-prayer-forms'))?>">Отмена</a></form></div><?php
     }
 
     public static function reports(): void { Admin_Screens::reports(); }
@@ -193,10 +195,11 @@ final class Admin
         if (!current_user_can('manage_options')) wp_die('Forbidden', 403);
         check_admin_referer('klp_csv');
         global $wpdb;
-        $rows=$wpdb->get_results('SELECT * FROM '.Database::table('orders').' ORDER BY created_at DESC',ARRAY_A);
+        $rows=$wpdb->get_results($wpdb->prepare('SELECT * FROM %i ORDER BY created_at DESC',Database::table('orders')),ARRAY_A);
         nocache_headers(); header('Content-Type: text/csv; charset=UTF-8'); header('Content-Disposition: attachment; filename="kloster-orders-'.wp_date('Ymd-His').'.csv"');
-        $out=fopen('php://output','wb'); fwrite($out,"\xEF\xBB\xBF"); fputcsv($out,['ID','Дата','Статус','Оплата','Сумма EUR','Тип','Имена','Примечание','Имя жертвователя','E-mail','Распечатано','Имя плательщика','E-mail плательщика','Телефон','Адрес плательщика'],';','"','');
+        $out=fopen('php://output','wb'); echo "\xEF\xBB\xBF"; fputcsv($out,['ID','Дата','Статус','Оплата','Сумма EUR','Тип','Имена','Примечание','Имя жертвователя','E-mail','Распечатано','Имя плательщика','E-mail плательщика','Телефон','Адрес плательщика'],';','"','');
         foreach($rows as $row)fputcsv($out,[$row['id'],$row['created_at'],$row['payment_status'],$row['payment_provider'],number_format(((int)$row['amount_cents'])/100,2,',',''),$row['intention'],$row['names'],$row['note'],$row['donor_name'],$row['donor_email'],$row['printed_at'],$row['billing_name']??'',$row['billing_email']??'',$row['billing_phone']??'',implode(', ',(array)(json_decode((string)($row['billing_address']??''),true)?:[]))],';','"','');
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing php://output, not a filesystem file.
         fclose($out); exit;
     }
 
@@ -216,9 +219,9 @@ final class Admin
             'Таблицы базы данных'=>$wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s',Database::table('orders')))===Database::table('orders'),
             'Dompdf'=>is_file(DIR.'/includes/lib/dompdf/autoload.inc.php'),
         ];
-        $events=$wpdb->get_results('SELECT provider,event_type,order_id,processed,error_message,created_at FROM '.Database::table('payment_events').' ORDER BY id DESC LIMIT 20'); ?>
-        <div class="klp-card"><table class="widefat striped"><tbody><?php foreach($checks as $name=>$ok): $inactive=(str_starts_with($name,'Stripe')&&!in_array('stripe',$enabled,true))||(str_starts_with($name,'PayPal')&&!in_array('paypal',$enabled,true)); ?><tr><th><?=esc_html($name)?></th><td><strong style="color:<?=$inactive?'#646970':($ok?'#15803d':'#b91c1c')?>"><?=$inactive?'Отключён — настройка не требуется':($ok?'Готово':'Проверьте настройку')?></strong></td></tr><?php endforeach;?></tbody></table></div>
-        <div class="klp-card"><h2>Последние события оплаты</h2><table class="widefat striped"><thead><tr><th>Дата</th><th>Провайдер</th><th>Событие</th><th>Записка</th><th>Результат</th></tr></thead><tbody><?php foreach($events as $event):?><tr><td><?=esc_html($event->created_at)?></td><td><?=esc_html($event->provider)?></td><td><?=esc_html($event->event_type)?></td><td><?= (int)$event->order_id?></td><td><?=$event->processed?'Обработано':esc_html($event->error_message?:'Ошибка')?></td></tr><?php endforeach;if(!$events):?><tr><td colspan="5">Событий пока нет.</td></tr><?php endif;?></tbody></table></div></div><?php
+        $events=$wpdb->get_results($wpdb->prepare('SELECT provider,event_type,order_id,processed,error_message,created_at FROM %i ORDER BY id DESC LIMIT 20',Database::table('payment_events'))); ?>
+        <div class="klp-card"><table class="widefat striped"><tbody><?php foreach($checks as $name=>$ok): $inactive=(str_starts_with($name,'Stripe')&&!in_array('stripe',$enabled,true))||(str_starts_with($name,'PayPal')&&!in_array('paypal',$enabled,true)); ?><tr><th><?php echo esc_html($name)?></th><td><strong style="color:<?php echo $inactive?'#646970':($ok?'#15803d':'#b91c1c')?>"><?php echo $inactive?'Отключён — настройка не требуется':($ok?'Готово':'Проверьте настройку')?></strong></td></tr><?php endforeach;?></tbody></table></div>
+        <div class="klp-card"><h2>Последние события оплаты</h2><table class="widefat striped"><thead><tr><th>Дата</th><th>Провайдер</th><th>Событие</th><th>Записка</th><th>Результат</th></tr></thead><tbody><?php foreach($events as $event):?><tr><td><?php echo esc_html($event->created_at)?></td><td><?php echo esc_html($event->provider)?></td><td><?php echo esc_html($event->event_type)?></td><td><?php echo  (int)$event->order_id?></td><td><?php echo $event->processed?'Обработано':esc_html($event->error_message?:'Ошибка')?></td></tr><?php endforeach;if(!$events):?><tr><td colspan="5">Событий пока нет.</td></tr><?php endif;?></tbody></table></div></div><?php
     }
 
 
@@ -244,6 +247,7 @@ final class Admin
         $locales=[];
         if(function_exists('pll_languages_list')) $locales=pll_languages_list(['fields'=>'locale','hide_empty'=>0]);
         if(!$locales) {
+            // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Existing WPML integration hook, not a plugin-defined hook.
             $wpml=apply_filters('wpml_active_languages',null,['skip_missing'=>0]);
             if(is_array($wpml)) foreach($wpml as $code=>$language) $locales[]=$language['default_locale']??$code;
         }
@@ -255,10 +259,10 @@ final class Admin
 
     private static function preserve_translations(array $data): array
     {
-        if (empty($_POST['id'])) return $data;
+        if (empty(Input::post('id'))) return $data;
         foreach(['ru','de','uk','pl'] as $code)foreach(['title','intro','description'] as $field){
             $key=$field.'_'.$code;
-            if(!array_key_exists($key,$_POST)) unset($data[$key]);
+            if(Input::post($key)===null) unset($data[$key]);
         }
         return $data;
     }

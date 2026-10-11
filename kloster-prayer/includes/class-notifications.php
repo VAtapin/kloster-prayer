@@ -27,7 +27,7 @@ final class Notifications
         if ($order_id <= 0 || self::recipient() === '') return;
         global $wpdb;
         $wpdb->query($wpdb->prepare(
-            'INSERT IGNORE INTO ' . Database::table('notifications') . ' (order_id,created_at) VALUES (%d,%s)',
+            'INSERT IGNORE INTO %i (order_id,created_at) VALUES (%d,%s)', Database::table('notifications'),
             $order_id, gmdate('Y-m-d H:i:s')
         ));
     }
@@ -37,7 +37,7 @@ final class Notifications
         if (self::recipient() === '') return;
         global $wpdb;
         $ids = $wpdb->get_col($wpdb->prepare(
-            'SELECT order_id FROM ' . Database::table('notifications') . ' WHERE sent_at IS NULL AND (locked_at IS NULL OR locked_at < %s) AND (last_attempt_at IS NULL OR last_attempt_at < %s) ORDER BY COALESCE(last_attempt_at,created_at),order_id LIMIT 25',
+            'SELECT order_id FROM %i WHERE sent_at IS NULL AND (locked_at IS NULL OR locked_at < %s) AND (last_attempt_at IS NULL OR last_attempt_at < %s) ORDER BY COALESCE(last_attempt_at,created_at),order_id LIMIT 25', Database::table('notifications'),
             gmdate('Y-m-d H:i:s', time() - 900), gmdate('Y-m-d H:i:s', time() - 3600)
         ));
         foreach ($ids as $id) self::send((int) $id);
@@ -51,16 +51,17 @@ final class Notifications
         $table = Database::table('notifications');
         $now = gmdate('Y-m-d H:i:s');
         $claimed = $wpdb->query($wpdb->prepare(
-            "UPDATE {$table} SET locked_at=%s,last_attempt_at=%s,attempts=attempts+1 WHERE order_id=%d AND sent_at IS NULL AND (locked_at IS NULL OR locked_at < %s)",
+            "UPDATE %i SET locked_at=%s,last_attempt_at=%s,attempts=attempts+1 WHERE order_id=%d AND sent_at IS NULL AND (locked_at IS NULL OR locked_at < %s)", $table,
             $now, $now, $order_id, gmdate('Y-m-d H:i:s', time() - 900)
         ));
         if (!$claimed) return false;
-        $order = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . Database::table('orders') . ' WHERE id=%d', $order_id));
+        $order = $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'), $order_id));
         if (!$order || $order->payment_status !== 'paid') {
             $wpdb->update($table, ['locked_at' => null], ['order_id' => $order_id]);
             return false;
         }
-        $titles = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM ' . Database::table('order_items') . ' WHERE order_id=%d', $order_id));
+        $titles = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d', Database::table('order_items'), $order_id));
+        /* translators: %d: prayer order ID. */
         $subject = sprintf(__('Оплачена молитвенная записка №%d', 'kloster-prayer'), $order_id);
         $fields = [
             __('Дата заказа', 'kloster-prayer') => $order->created_at,

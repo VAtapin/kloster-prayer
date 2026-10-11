@@ -1,9 +1,215 @@
+# Copyright (C) 2026 atapin.de
+# This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Orthodox Prayer Notes and Donations 1.1.0\n"
+"Project-Id-Version: Orthodox Prayer Notes and Donations 1.2.11\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kloster-prayer\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Text-Domain: kloster-prayer\n"
+"POT-Creation-Date: 2026-10-11T15:18:12+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: kloster-prayer\n"
 
+#. Plugin Name of the plugin
+#: kloster-prayer.php
+msgid "Orthodox Prayer Notes and Donations"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: kloster-prayer.php
+msgid "https://atapin.de/"
+msgstr ""
+
+#. Description of the plugin
+#: kloster-prayer.php
+msgid "Orthodox prayer requests and donations with Stripe, PayPal, printable prayer slips and reports."
+msgstr ""
+
+#. Author of the plugin
+#: kloster-prayer.php
+msgid "atapin.de"
+msgstr ""
+
+#: includes/class-admin-screens.php:15
+msgid "Уведомления о записках"
+msgstr ""
+
+#: includes/class-admin-screens.php:15
+msgid "Email получателя"
+msgstr ""
+
+#: includes/class-admin-screens.php:15
+msgid "На этот адрес отправляется отдельное письмо после подтверждения оплаты новой записки. Пустое поле отключает уведомления; email администратора не используется. Старые заказы автоматически не рассылаются. Неотправленные уведомления повторяются через планировщик WordPress на текущий указанный адрес."
+msgstr ""
+
+#: includes/class-admin-screens.php:16
+msgid "Домен API"
+msgstr ""
+
+#: includes/class-admin-screens.php:16
+msgid "Необязательно. Пустое поле — использовать домен WordPress автоматически. Только HTTPS-домен, без /wp-json/ и других путей. Указанный домен должен обслуживать этот же сайт WordPress с действующим HTTPS."
+msgstr ""
+
+#: includes/class-admin-screens.php:16
+msgid "После смены домена сохраните настройки и обновите Webhook URL в кабинетах Stripe и PayPal. Плагин не меняет их автоматически. Старый домен оставьте доступным для незавершённых оплат."
+msgstr ""
+
+#: includes/class-admin.php:70
+msgid "Укажите один корректный email для уведомлений или оставьте поле пустым."
+msgstr ""
+
+#: includes/class-admin.php:75
+msgid "Укажите HTTPS-домен без пути, параметров и логина, например https://example.org. Для автоматического выбора оставьте поле пустым."
+msgstr ""
+
+#: includes/class-admin.php:135
+#: includes/class-orders-table.php:30
+msgid "Комментарий к записке"
+msgstr ""
+
+#: includes/class-admin.php:135
+msgid "Комментарий не указан"
+msgstr ""
+
+#: includes/class-admin.php:152
+msgid "Текущие записки"
+msgstr ""
+
+#: includes/class-admin.php:152
+msgid "Архив"
+msgstr ""
+
+#. translators: %d: prayer order ID.
+#: includes/class-notifications.php:65
+#, php-format
+msgid "Оплачена молитвенная записка №%d"
+msgstr ""
+
+#: includes/class-notifications.php:67
+msgid "Дата заказа"
+msgstr ""
+
+#: includes/class-notifications.php:68
+msgid "Требы"
+msgstr ""
+
+#: includes/class-notifications.php:69
+msgid "Тип записки"
+msgstr ""
+
+#: includes/class-notifications.php:69
+msgid "Об упокоении"
+msgstr ""
+
+#: includes/class-notifications.php:69
+msgid "О здравии"
+msgstr ""
+
+#: includes/class-notifications.php:70
+msgid "Жертвователь"
+msgstr ""
+
+#: includes/class-notifications.php:71
+msgid "E-mail жертвователя"
+msgstr ""
+
+#: includes/class-notifications.php:72
+msgid "Сумма"
+msgstr ""
+
+#: includes/class-notifications.php:73
+msgid "Способ оплаты"
+msgstr ""
+
+#: includes/class-notifications.php:78
+msgid "Имена"
+msgstr ""
+
+#: includes/class-notifications.php:79
+msgid "Примечание"
+msgstr ""
+
+#: includes/class-notifications.php:80
+msgid "Открыть записку в WordPress"
+msgstr ""
+
+#: includes/class-notifications.php:85
+msgid "Уведомление получателю записок передано почтовой системе."
+msgstr ""
+
+#: includes/class-notifications.php:86
+msgid "Ошибка уведомления получателю записок. Будет повторная попытка."
+msgstr ""
+
+#: includes/class-paypal-help.php:9
+msgid "Как подключить PayPal — пошаговая инструкция"
+msgstr ""
+
+#: includes/class-paypal-help.php:10
+msgid "Для реальных платежей нужен PayPal Business аккаунт получателя. Email, пароль аккаунта, App ID и Stripe whsec не заменяют ключи PayPal. Плагин использует REST API Orders v2, а не старые кнопки оплаты по email или IPN."
+msgstr ""
+
+#: includes/class-paypal-help.php:11
+msgid "Откройте Apps & Credentials в PayPal Developer Dashboard и войдите в аккаунт получателя. Выберите Sandbox для проверки или Live для настоящих платежей."
+msgstr ""
+
+#: includes/class-paypal-help.php:12
+msgid "Открыть Apps & Credentials"
+msgstr ""
+
+#: includes/class-paypal-help.php:13
+msgid "Откройте своё REST API приложение или создайте его через Create App. Для Sandbox выберите тестовый Business аккаунт продавца; для Live используйте приложение нужного реального получателя."
+msgstr ""
+
+#: includes/class-paypal-help.php:14
+msgid "На странице приложения скопируйте Client ID и раскройте Secret. Вставьте их в одноимённые поля плагина. Выберите тот же режим Live или Sandbox. Все три значения — Client ID, Secret и Webhook ID — должны принадлежать одному приложению и одному режиму."
+msgstr ""
+
+#: includes/class-paypal-help.php:15
+msgid "На странице этого же приложения найдите Webhooks и нажмите Add Webhook. Вставьте точный Webhook URL из настроек ниже. Адрес должен быть публичным HTTPS на порту 443, без пароля, блокировки POST и промежуточной страницы защиты."
+msgstr ""
+
+#: includes/class-paypal-help.php:17
+msgid "Выберите PAYMENT.CAPTURE.COMPLETED и PAYMENT.CAPTURE.REFUNDED и сохраните webhook. Первое событие подтверждает оплату, второе отмечает возврат. Выбирать все события, CHECKOUT.ORDER.APPROVED или IPN для этой интеграции не нужно."
+msgstr ""
+
+#: includes/class-paypal-help.php:18
+msgid "Скопируйте ID созданного webhook из раздела Webhooks в поле Webhook ID плагина. Это не Client ID и не ID отдельного события WH-…. Поставьте «Включить PayPal» и сохраните настройки. Secret после сохранения не показывается: пустое поле оставляет прежний секрет."
+msgstr ""
+
+#: includes/class-paypal-help.php:19
+msgid "Для проверки сначала используйте Sandbox: в Testing Tools → Sandbox Accounts найдите отдельный Personal аккаунт покупателя и Business аккаунт продавца. Подайте тестовую записку и оплатите её тестовым покупателем, не своим реальным аккаунтом. Проверьте статус «Оплачено», событие в диагностике и письма при настроенной почте. Sandbox не переводит настоящие деньги."
+msgstr ""
+
+#: includes/class-paypal-help.php:20
+msgid "Для запуска замените Client ID, Secret и Webhook ID на значения приложения Live и переключите режим на Live. Плагин хранит один комплект ключей, не два. При смене приложения или режима обязательно введите новый Secret: пустое поле сохраняет старый."
+msgstr ""
+
+#: includes/class-paypal-help.php:21
+msgid "Webhooks Simulator создаёт искусственные события: PayPal не поддерживает их проверку через verify-webhook-signature, которую использует плагин. Ошибка подписи такого события не доказывает поломку интеграции. Проверяйте реальную Sandbox оплату и доставку события в том же приложении."
+msgstr ""
+
+#: includes/class-paypal-help.php:22
+msgid "Если оплата или webhook не работают: проверьте одинаковый режим и приложение у всех ключей, точный URL и доступность HTTPS/POST. При переносе домена обновите webhook в PayPal. Отключённый PayPal настраивать не обязательно. Диагностика наличия ключей не проверяет их действительность в PayPal. Не публикуйте Secret в письмах, скриншотах или переписке."
+msgstr ""
+
+#: includes/class-paypal-help.php:23
+msgid "Документация PayPal: аккаунт и ключи"
+msgstr ""
+
+#: includes/class-paypal-help.php:24
+msgid "Документация PayPal: webhook и проверка подписи"
+msgstr ""
+
+#: includes/class-public-form.php:41
 msgid "Kloster: form not found."
+msgstr ""
+
+#: kloster-prayer.php:56
+msgid "Настройки"
 msgstr ""

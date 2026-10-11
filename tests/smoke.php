@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
 
 function esc_attr(string $value): string { return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 function esc_html(string $value): string { return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
