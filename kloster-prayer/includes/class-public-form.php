@@ -64,7 +64,7 @@ final class Public_Form
         $atts = shortcode_atts(['layout' => 'compact', 'lang' => '', 'header' => 'yes'], $atts, 'kloster_donation');
         $atts['request_type'] = 'donation';
         $form = (object) ['id' => 0, 'layout' => 'compact'];
-        foreach (['de', 'ru', 'uk', 'pl'] as $lang) {
+        foreach (['en', 'de', 'ru', 'uk', 'pl'] as $lang) {
             $form->{'title_' . $lang} = I18n::donation_text('title', $lang);
             $form->{'intro_' . $lang} = '';
         }
@@ -74,7 +74,7 @@ final class Public_Form
     private static function render(object $form, array $atts, ?array $fixed_services): string
     {
         global $wpdb;
-        $lang = in_array($atts['lang'], ['de', 'ru', 'uk', 'pl'], true) ? $atts['lang'] : I18n::language();
+        $lang = in_array($atts['lang'], ['en', 'de', 'ru', 'uk', 'pl'], true) ? $atts['lang'] : I18n::language();
         $donation = ($atts['request_type'] ?? '') === 'donation';
         if ($fixed_services === null) {
             $services_table = Database::table('services');
@@ -95,8 +95,10 @@ final class Public_Form
 
         $layouts = ['standard','compact','wide','two_columns','cards','minimal'];
         $layout = in_array($atts['layout'], $layouts, true) ? $atts['layout'] : (in_array($form->layout, $layouts, true) ? $form->layout : 'standard');
-        $title_key = 'title_' . $lang;
-        $intro_key = 'intro_' . $lang;
+        // Configured service/form content is data, not a gettext source string.
+        $content_language = $donation ? $lang : ($lang === 'en' ? 'de' : $lang);
+        $title_key = 'title_' . $content_language;
+        $intro_key = 'intro_' . $content_language;
         $enabled = get_option('klp_payment_methods', ['stripe', 'paypal']);
         if (!is_array($enabled)) {
             $enabled = ['stripe'];
@@ -119,13 +121,13 @@ final class Public_Form
                 <?php if (!$donation) : ?>
                 <?php $modes = array_unique(array_column($services, 'intention_mode')); $show_both = in_array('both', $modes, true) || (in_array('health', $modes, true) && in_array('rest', $modes, true)); ?>
                 <fieldset class="klp-intention<?php echo  $show_both ? '' : ' klp-intention--single' ?>">
-                    <legend class="screen-reader-text"><?php echo  esc_html($lang === 'de' ? 'Gebetsart' : 'Тип молитвы') ?></legend>
+                    <legend class="screen-reader-text"><?php echo esc_html(I18n::text('prayer_type', $lang)) ?></legend>
                     <?php if ($show_both || in_array('health', $modes, true)) : ?><label><input type="radio" name="intention" value="health" <?php echo  checked($form->default_intention, 'health', false) ?>><span>☦ <?php echo  esc_html(I18n::text('health', $lang)) ?></span></label><?php endif; ?>
                     <?php if ($show_both || in_array('rest', $modes, true)) : ?><label><input type="radio" name="intention" value="rest" <?php echo  checked($form->default_intention, 'rest', false) ?>><span>☦ <?php echo  esc_html(I18n::text('rest', $lang)) ?></span></label><?php endif; ?>
                 </fieldset>
                 <fieldset class="klp-services">
                     <legend><?php echo  esc_html(I18n::text('choose', $lang)) ?></legend>
-                    <?php foreach ($services as $service) : $service_title = $service->{$title_key} ?: $service->title_de; $description_key = 'description_' . $lang; $image=$layout==='cards'?Service_Images::url($service):''; ?>
+                    <?php foreach ($services as $service) : $service_title = $service->{$title_key} ?: $service->title_de; $description_key = 'description_' . $content_language; $image=$layout==='cards'?Service_Images::url($service):''; ?>
                         <label class="klp-service" style="--klp-service-bg:url('<?php echo  esc_url($image) ?>')" data-mode="<?php echo  esc_attr($service->pricing_mode) ?>" data-price="<?php echo  (int) $service->price_cents ?>" data-limit="<?php echo  (int) $service->names_per_sheet ?>" data-intention="<?php echo  esc_attr($service->intention_mode) ?>">
                             <input type="checkbox" name="services[]" value="<?php echo  (int) $service->id ?>">
                             <span class="klp-service__check" aria-hidden="true"></span>
@@ -182,7 +184,7 @@ final class Public_Form
         $order = $public_id !== '' ? $wpdb->get_row($wpdb->prepare('SELECT payment_status,language,intention FROM %i WHERE public_id=%s', Database::table('orders'), $public_id)) : null;
         if ($status === 'success' || ($order && $order->payment_status === 'paid')) {
             $paid = $order && $order->payment_status === 'paid';
-            if ($order && in_array($order->language, ['de','ru'], true)) $lang = $order->language;
+            if ($order && in_array($order->language, ['en','de','ru','uk','pl'], true)) $lang = $order->language;
             $key = $paid ? 'thanks' : 'processing';
             $state = $paid ? 'success' : 'processing';
         }

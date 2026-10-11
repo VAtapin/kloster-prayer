@@ -3,7 +3,7 @@
  * Plugin Name: Orthodox Prayer Notes and Donations
  * Plugin URI: https://atapin.de/
  * Description: Orthodox prayer requests and donations with Stripe, PayPal, printable prayer slips and reports.
- * Version: 1.2.12
+ * Version: 1.2.13
  * Author: atapin.de
  * Author URI: https://atapin.de/
  * Text Domain: kloster-prayer
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const VERSION = '1.2.12';
+const VERSION = '1.2.13';
 const FILE = __FILE__;
 const DIR = __DIR__;
 
@@ -53,6 +53,6 @@ add_action('plugins_loaded', static function (): void {
 add_action('init', [I18n::class, 'init']);
 
 add_filter('plugin_action_links_' . plugin_basename(FILE), static function (array $links): array {
-    array_unshift($links, '<a href="' . esc_url(admin_url('admin.php?page=kloster-prayer-settings')) . '">' . esc_html__('Настройки', 'kloster-prayer') . '</a>');
+    array_unshift($links, '<a href="' . esc_url(admin_url('admin.php?page=kloster-prayer-settings')) . '">' . esc_html__('Settings', 'kloster-prayer') . '</a>');
     return $links;
 });

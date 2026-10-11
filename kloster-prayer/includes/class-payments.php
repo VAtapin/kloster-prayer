@@ -54,7 +54,7 @@ final class Payments
     public static function create_payment(): void
     {
         check_ajax_referer('klp_payment', 'nonce');
-        $language = in_array(Input::post('language') ?? '', ['de', 'ru', 'uk', 'pl'], true) ? (string) Input::post('language') : I18n::language();
+        $language = in_array(Input::post('language') ?? '', ['en', 'de', 'ru', 'uk', 'pl'], true) ? (string) Input::post('language') : I18n::language();
         if (!empty(Input::post('website'))) {
             wp_send_json_error(['message' => I18n::text('error', $language)], 422);
         }
@@ -278,7 +278,7 @@ final class Payments
         if (($order->intention ?? '') === 'none') return I18n::donation_text('title', $order->language);
         global $wpdb;
         $items = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d ORDER BY id', Database::table('order_items'), (int) $order->id));
-        $prefix = $order->language === 'ru' ? 'Молитвенная записка: ' : 'Gebetsanliegen: ';
+        $prefix = I18n::text('payment_prefix', $order->language) . ' ';
         return mb_substr($prefix . implode(', ', $items), 0, 120);
     }
 
@@ -409,7 +409,7 @@ final class Payments
     }
 
     private static function set_payment_id(int $order_id, string $payment_id): void { global $wpdb; $wpdb->update(Database::table('orders'), ['payment_id' => $payment_id], ['id' => $order_id]); }
-    private static function set_status(int $order_id, string $status): void { global $wpdb; $changed=$wpdb->update(Database::table('orders'), ['payment_status' => $status], ['id' => $order_id]); if($changed) Order_Workflow::log($order_id,'payment_status','Статус оплаты: '.$status); }
+    private static function set_status(int $order_id, string $status): void { global $wpdb; $changed=$wpdb->update(Database::table('orders'), ['payment_status' => $status], ['id' => $order_id]); if($changed) Order_Workflow::log($order_id,'payment_status',__('Payment status:', 'kloster-prayer').' '.$status); }
 
     private static function store_customer_details(int $order_id, array $details): void
     {
@@ -431,7 +431,7 @@ final class Payments
         $wpdb->query($wpdb->prepare("UPDATE %i SET payment_status='paid',payment_id=COALESCE(NULLIF(%s,''),payment_id),paid_at=COALESCE(paid_at,%s) WHERE id=%d AND payment_status<>'paid'", $table, $payment_id, current_time('mysql'), $order_id));
         if ($wpdb->rows_affected > 0) {
             Notifications::enqueue($order_id);
-            Order_Workflow::log($order_id,'paid','Оплата подтверждена');
+            Order_Workflow::log($order_id,'paid',__('Payment confirmed', 'kloster-prayer'));
         }
         $order = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id=%d", $table, $order_id));
         if ($order && !$order->confirmation_sent_at) self::send_confirmation($order);
@@ -478,19 +478,18 @@ final class Payments
                 . esc_html(number_format_i18n(((int) $order->amount_cents) / 100, 2) . ' ' . $order->currency)
                 . '</strong></p><p>' . esc_html($site_name) . '</p></body></html>';
         } else {
-        $lang = in_array($order->language, ['de','ru','uk','pl'], true) ? $order->language : 'de';
+        $lang = in_array($order->language, ['en','de','ru','uk','pl'], true) ? $order->language : 'en';
         $site_name = wp_specialchars_decode((string) get_bloginfo('name'), ENT_QUOTES);
         $logo_id = (int) get_theme_mod('custom_logo');
         $logo_url = $logo_id ? (string) wp_get_attachment_image_url($logo_id, 'medium') : (string) get_site_icon_url(512);
-        $subjects=['de'=>'Ihr Gebetsanliegen ist eingegangen','ru'=>'Ваша молитвенная записка получена','uk'=>'Вашу молитовну записку отримано','pl'=>'Otrzymaliśmy Twoją intencję modlitewną']; $greets=['de'=>'Guten Tag','ru'=>'Здравствуйте','uk'=>'Вітаємо','pl'=>'Dzień dobry'];
-        $subject=$subjects[$lang]; $greeting=$greets[$lang].($order->donor_name?', '.esc_html($order->donor_name):'').'!';
+        $subject=I18n::text('mail_subject',$lang); $greeting=esc_html(I18n::text('greeting',$lang)).($order->donor_name?', '.esc_html($order->donor_name):'').'!';
         $items = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d', Database::table('order_items'), (int) $order->id));
         $intention = I18n::text($order->intention === 'rest' ? 'rest' : 'health', $lang);
         $amount = number_format_i18n(((int) $order->amount_cents) / 100, 2) . ' €';
-        $labels=['de'=>['Gebetsanliegen','Gebetsart','Spendensumme','Namen'],'ru'=>['Треба','Тип записки','Сумма пожертвования','Имена'],'uk'=>['Треба','Тип записки','Сума пожертви','Імена'],'pl'=>['Intencja','Rodzaj modlitwy','Kwota darowizny','Imiona']][$lang];
-        $footer = ['de'=>'Mit Dankbarkeit und Gebet,<br>','ru'=>'С благодарностью и молитвой,<br>','uk'=>'Із вдячністю та молитвою,<br>','pl'=>'Z wdzięcznością i modlitwą,<br>'][$lang] . esc_html($site_name);
+        $labels=array_map(static fn($key)=>I18n::text($key,$lang),['service','request_type','total','names_label']);
+        $footer = esc_html(I18n::text('footer',$lang)) . '<br>' . esc_html($site_name);
         $body = '<!doctype html><html><body style="margin:0;background:#f3f5f7;font-family:Arial,sans-serif;color:#202936"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding:28px 12px"><table role="presentation" width="620" cellspacing="0" cellpadding="0" style="max-width:620px;width:100%;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 8px 30px rgba(25,40,55,.10)"><tr><td align="center" style="padding:28px 30px 22px;border-top:5px solid #198fd9">'.($logo_url!==''?'<img src="'.esc_url($logo_url).'" width="360" alt="'.esc_attr($site_name).'" style="display:block;max-width:100%;height:auto">':'<strong>'.esc_html($site_name).'</strong>').'</td></tr><tr><td style="padding:8px 42px 38px"><h1 style="margin:0 0 18px;font-size:25px;line-height:1.3;text-align:center">'.esc_html($subject).'</h1><p style="font-size:16px;line-height:1.65">'.$greeting.'</p><p style="font-size:16px;line-height:1.65">'.esc_html(I18n::text('thanks',$lang)).'</p><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:24px 0;border:1px solid #dce4ea;border-radius:5px"><tr><td style="padding:12px 16px;background:#f5f9fc"><strong>'.esc_html($labels[0]).'</strong></td><td style="padding:12px 16px;background:#f5f9fc;text-align:right">'.esc_html(implode(', ',$items)).'</td></tr><tr><td style="padding:12px 16px;border-top:1px solid #dce4ea"><strong>'.esc_html($labels[1]).'</strong></td><td style="padding:12px 16px;border-top:1px solid #dce4ea;text-align:right">'.esc_html($intention).'</td></tr><tr><td style="padding:12px 16px;border-top:1px solid #dce4ea"><strong>'.esc_html($labels[2]).'</strong></td><td style="padding:12px 16px;border-top:1px solid #dce4ea;text-align:right"><strong>'.esc_html($amount).'</strong></td></tr></table><h2 style="font-size:17px;margin:25px 0 10px">'.esc_html($labels[3]).'</h2><div style="padding:17px 20px;background:#f8fafb;border-left:4px solid #198fd9;font-size:16px;line-height:1.7">'.nl2br(esc_html($order->names)).'</div><p style="margin:28px 0 0;color:#53606d;font-size:15px;line-height:1.6">'.$footer.'</p></td></tr><tr><td style="padding:17px 30px;background:#202936;color:#cfd6dc;text-align:center;font-size:12px"><a href="'.esc_url(home_url('/')).'" style="color:#fff">'.esc_html($site_name).'</a></td></tr></table></td></tr></table></body></html>';
         }
-        if (!wp_mail($order->donor_email, $subject, $body, ['Content-Type: text/html; charset=UTF-8'])) { $wpdb->update($orders, ['confirmation_sent_at' => null], ['id' => (int) $order->id]); Order_Workflow::log((int)$order->id,'email_failed','Не удалось передать письмо почтовой системе'); } else { Order_Workflow::log((int)$order->id,'email_sent','Подтверждение передано почтовой системе'); }
+        if (!wp_mail($order->donor_email, $subject, $body, ['Content-Type: text/html; charset=UTF-8'])) { $wpdb->update($orders, ['confirmation_sent_at' => null], ['id' => (int) $order->id]); Order_Workflow::log((int)$order->id,'email_failed',__('Could not hand the email to the mail system', 'kloster-prayer')); } else { Order_Workflow::log((int)$order->id,'email_sent',__('Confirmation handed to the mail system', 'kloster-prayer')); }
     }
 }

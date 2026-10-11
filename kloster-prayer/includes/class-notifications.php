@@ -62,16 +62,16 @@ final class Notifications
         }
         $titles = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d', Database::table('order_items'), $order_id));
         /* translators: %d: prayer order ID. */
-        $subject = sprintf(__('Оплачена молитвенная записка №%d', 'kloster-prayer'), $order_id);
+        $subject = sprintf(__('Prayer request #%d paid', 'kloster-prayer'), $order_id);
         if (($order->intention ?? '') === 'none') $subject = I18n::donation_text('subject') . ' #' . $order_id;
         $fields = [
-            __('Дата заказа', 'kloster-prayer') => $order->created_at,
-            __('Требы', 'kloster-prayer') => implode(', ', $titles),
-            __('Тип записки', 'kloster-prayer') => $order->intention === 'rest' ? __('Об упокоении', 'kloster-prayer') : __('О здравии', 'kloster-prayer'),
-            __('Жертвователь', 'kloster-prayer') => $order->donor_name ?: '—',
-            __('E-mail жертвователя', 'kloster-prayer') => $order->donor_email,
-            __('Сумма', 'kloster-prayer') => number_format_i18n($order->amount_cents / 100, 2) . ' ' . $order->currency,
-            __('Способ оплаты', 'kloster-prayer') => ucfirst($order->payment_provider),
+            __('Order date', 'kloster-prayer') => $order->created_at,
+            __('Services', 'kloster-prayer') => implode(', ', $titles),
+            __('Request type', 'kloster-prayer') => $order->intention === 'rest' ? __('For the departed', 'kloster-prayer') : __('For the living', 'kloster-prayer'),
+            __('Donor', 'kloster-prayer') => $order->donor_name ?: '—',
+            __('Donor email', 'kloster-prayer') => $order->donor_email,
+            __('Amount', 'kloster-prayer') => number_format_i18n($order->amount_cents / 100, 2) . ' ' . $order->currency,
+            __('Payment method', 'kloster-prayer') => ucfirst($order->payment_provider),
         ];
         if (($order->intention ?? '') === 'none') {
             $fields = [
@@ -85,16 +85,16 @@ final class Notifications
         $rows = '';
         foreach ($fields as $label => $value) $rows .= '<tr><th align="left" style="padding:8px;border-bottom:1px solid #ddd">' . esc_html($label) . '</th><td style="padding:8px;border-bottom:1px solid #ddd">' . esc_html((string) $value) . '</td></tr>';
         $url = add_query_arg(['page' => 'kloster-prayer', 'view' => $order_id], admin_url('admin.php'));
-        $body = '<!doctype html><html><body style="font-family:Arial,sans-serif;color:#222"><div style="max-width:640px;margin:auto;padding:24px;border-top:4px solid #8c2633"><p>' . esc_html(get_bloginfo('name')) . '</p><h1 style="font-size:24px">' . esc_html($subject) . '</h1><table style="width:100%;border-collapse:collapse">' . $rows . '</table><h2 style="font-size:18px">' . esc_html__('Имена', 'kloster-prayer') . '</h2><p>' . nl2br(esc_html(implode("\n", Payments::split_names((string) $order->names)))) . '</p>';
+        $body = '<!doctype html><html><body style="font-family:Arial,sans-serif;color:#222"><div style="max-width:640px;margin:auto;padding:24px;border-top:4px solid #8c2633"><p>' . esc_html(get_bloginfo('name')) . '</p><h1 style="font-size:24px">' . esc_html($subject) . '</h1><table style="width:100%;border-collapse:collapse">' . $rows . '</table><h2 style="font-size:18px">' . esc_html__('Names', 'kloster-prayer') . '</h2><p>' . nl2br(esc_html(implode("\n", Payments::split_names((string) $order->names)))) . '</p>';
         if (($order->intention ?? '') === 'none') $body = substr($body, 0, strpos($body, '<h2'));
-        if ($order->note !== '') $body .= '<h2 style="font-size:18px">' . esc_html__('Примечание', 'kloster-prayer') . '</h2><p>' . nl2br(esc_html($order->note)) . '</p>';
-        $body .= '<p><a href="' . esc_url($url) . '">' . esc_html__('Открыть записку в WordPress', 'kloster-prayer') . '</a></p></div></body></html>';
+        if ($order->note !== '') $body .= '<h2 style="font-size:18px">' . esc_html__('Note', 'kloster-prayer') . '</h2><p>' . nl2br(esc_html($order->note)) . '</p>';
+        $body .= '<p><a href="' . esc_url($url) . '">' . esc_html__('Open request in WordPress', 'kloster-prayer') . '</a></p></div></body></html>';
         try { $sent = wp_mail($recipient, $subject, $body, ['Content-Type: text/html; charset=UTF-8']); }
         catch (\Throwable $e) { $sent = false; }
         $wpdb->update($table, ['sent_at' => $sent ? $now : null, 'locked_at' => null], ['order_id' => $order_id]);
         Order_Workflow::log($order_id, $sent ? 'notification_sent' : 'notification_failed', $sent
-            ? __('Уведомление получателю записок передано почтовой системе.', 'kloster-prayer')
-            : __('Ошибка уведомления получателю записок. Будет повторная попытка.', 'kloster-prayer'));
+            ? __('The recipient notification was handed to the mail system.', 'kloster-prayer')
+            : __('Recipient notification failed. It will be retried.', 'kloster-prayer'));
         return $sent;
     }
 }

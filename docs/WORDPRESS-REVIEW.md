@@ -1,4 +1,4 @@
-# WordPress.org preparation — 1.2.11
+# WordPress.org preparation — 1.2.13
 
 Prepared on 2026-10-11. Requested directory slug: `kloster-prayer`.
 Repository, ZIP folder, text domain, database names, shortcodes and webhook routes
@@ -14,9 +14,11 @@ if the submission suggests another slug, request `kloster-prayer` before approva
 - Readable PHP/JS/CSS included; no custom updater or downloaded executable code.
 - Bundled upstream libraries and font/artwork notices in `third-party-notices.txt`.
 - Original prayer-slip ownership/GPL permission confirmed by the owner on 2026-10-11.
-- Bundled POT/PO/MO files; four prayer-form languages and translated plugin metadata.
-  Existing administration screens are still mainly Russian; do not advertise a
-  fully translated four-language administration interface.
+- US English gettext source strings, complete Russian/German/Ukrainian/Polish
+  POT/PO/MO catalogs, including admin screens, PayPal help and donation messages.
+  English WordPress installations default to English, not German. Saved prayer
+  names/comments and configured localized service/form content remain data and
+  are not rewritten or translated automatically.
 - No remote monastery-logo reference; mail uses the site's own logo/name.
 - Database and settings are retained on uninstall, explicitly disclosed.
 
@@ -60,6 +62,11 @@ archive/comments, shortcode joins, reports and PDF queries. External HTTP and ma
 are intercepted in the integration test. PDF rendering and visual review preserve
 the original prayer slips.
 
+Version 1.2.13 also checks all 269 extracted English source messages against all
+four compiled catalogs and preserves the previous prayer-form/donation wording.
+Real WordPress gettext, admin/help/form/donation rendering, explicit email/PDF
+languages, decimal donation validation and both browser scenarios are verified.
+
 The real WordPress integration test is local only:
 
 ```text
@@ -73,7 +80,6 @@ fake credentials are not shipped or committed. MySQL/Plesk execution, actual
 Stripe/PayPal test-mode transactions and real SMTP delivery still need separate
 site-owner verification; passing Plugin Check is not a security guarantee.
 
-No WordPress.org submission, SVN publication, Git tag or production deployment
-is performed by this preparation task. Install/test the ZIP separately before
-updating the working donation site. Do not replace the existing calendar-plugin
-review submission with this unrelated plugin.
+The 1.2.13 release is separate from WordPress.org submission/SVN publication.
+Production is not updated: the owner installs the ZIP through WordPress.
+Do not replace the existing calendar-plugin review submission with this unrelated plugin.

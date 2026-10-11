@@ -1,7 +1,780 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: kloster-prayer 1.2.13\n"
 "Language: pl_PL\n"
 "Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+msgid "Payment settings"
+msgstr "Ustawienia płatności"
+
+msgid "Settings saved."
+msgstr "Ustawienia zapisano."
+
+msgid "Prayer request notifications"
+msgstr "Powiadomienia o intencjach"
+
+msgid "Recipient email"
+msgstr "E-mail odbiorcy"
+
+msgid "API domain"
+msgstr "Domena API"
+
+msgid "Enable"
+msgstr "Włącz"
+
+msgid "Mode"
+msgstr "Tryb"
+
+msgid "Saved — leave blank to keep unchanged"
+msgstr "Zapisano — pozostaw puste, aby zachować"
+
+msgid "Configuration is required only for enabled payment methods."
+msgstr "Konfiguracja jest wymagana tylko dla włączonych metod płatności."
+
+msgid "Save settings"
+msgstr "Zapisz ustawienia"
+
+msgid "Reports"
+msgstr "Raporty"
+
+msgid "Month"
+msgstr "Miesiąc"
+
+msgid "Show"
+msgstr "Pokaż"
+
+msgid "Requests received"
+msgstr "Otrzymane intencje"
+
+msgid "Paid"
+msgstr "Opłacono"
+
+msgid "Printed"
+msgstr "Wydrukowano"
+
+msgid "Donations received"
+msgstr "Otrzymane darowizny"
+
+msgid "By payment method"
+msgstr "Według metody płatności"
+
+msgid "Method"
+msgstr "Metoda"
+
+msgid "Requests"
+msgstr "Intencje"
+
+msgid "By service"
+msgstr "Według nabożeństwa"
+
+msgid "Service"
+msgstr "Nabożeństwo"
+
+msgid "Donations and donors"
+msgstr "Darowizny i ofiarodawcy"
+
+msgid "Request"
+msgstr "Intencja"
+
+msgid "Payer"
+msgstr "Płatnik"
+
+msgid "Address"
+msgstr "Adres"
+
+msgid "Services"
+msgstr "Nabożeństwa"
+
+msgid "Amount"
+msgstr "Kwota"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Pending"
+msgstr "Oczekuje"
+
+msgid "Error"
+msgstr "Błąd"
+
+msgid "Refunded"
+msgstr "Zwrócono"
+
+msgid "Canceled"
+msgstr "Anulowano"
+
+msgid "No requests for the selected month."
+msgstr "Brak intencji w wybranym miesiącu."
+
+msgid "Prayer notes"
+msgstr "Kartki modlitewne"
+
+msgid "Kloster – Prayer notes"
+msgstr "Kloster – Kartki modlitewne"
+
+msgid "Forms"
+msgstr "Formularze"
+
+msgid "Settings"
+msgstr "Ustawienia"
+
+msgid "Diagnostics"
+msgstr "Diagnostyka"
+
+msgid "No requests match the selected filter."
+msgstr "Brak intencji pasujących do filtra."
+
+msgid "Enter one valid notification email or leave the field blank."
+msgstr "Podaj jeden poprawny e-mail do powiadomień lub pozostaw pole puste."
+
+msgid "Saved."
+msgstr "Zapisano."
+
+msgid "Prayer requests"
+msgstr "Intencje modlitewne"
+
+msgid "Payment and request #"
+msgstr "Płatność i intencja nr"
+
+msgid "Donor"
+msgstr "Ofiarodawca"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Type"
+msgstr "Rodzaj"
+
+msgid "For the departed"
+msgstr "Za zmarłych"
+
+msgid "For the living"
+msgstr "Za żywych"
+
+msgid "Billing address"
+msgstr "Adres płatnika"
+
+msgid "Names"
+msgstr "Imiona"
+
+msgid "Request comment"
+msgstr "Komentarz do intencji"
+
+msgid "No comment provided"
+msgstr "Brak komentarza"
+
+msgid "← Back to requests"
+msgstr "← Powrót do intencji"
+
+msgid "Customer details refreshed from Stripe."
+msgstr "Dane zaktualizowano ze Stripe."
+
+msgid "Stripe did not return payer details."
+msgstr "Stripe nie zwrócił danych płatnika."
+
+msgid "Retrieve payer details from Stripe"
+msgstr "Pobierz dane płatnika ze Stripe"
+
+msgid "Resend confirmation"
+msgstr "Wyślij potwierdzenie ponownie"
+
+msgid "Request PDF"
+msgstr "PDF intencji"
+
+msgid "Current requests"
+msgstr "Bieżące intencje"
+
+msgid "Archive"
+msgstr "Archiwum"
+
+msgid "Blank PDF forms:"
+msgstr "Puste formularze PDF:"
+
+msgid "Search requests"
+msgstr "Szukaj intencji"
+
+msgid "Edit service"
+msgstr "Edytuj nabożeństwo"
+
+msgid "Add service"
+msgstr "Dodaj nabożeństwo"
+
+msgid "Title"
+msgstr "Nazwa"
+
+msgid "Description"
+msgstr "Opis"
+
+msgid "Slug"
+msgstr "Uproszczona nazwa"
+
+msgid "Background image"
+msgstr "Obraz tła"
+
+msgid "Choose from Media Library"
+msgstr "Wybierz z biblioteki mediów"
+
+msgid "Reset to default"
+msgstr "Przywróć domyślne"
+
+msgid "The bundled thematic background is used when no image is selected."
+msgstr "Bez wybranego obrazu używane jest dołączone tło tematyczne."
+
+msgid "Intention"
+msgstr "Intencja"
+
+msgid "Both"
+msgstr "Oba"
+
+msgid "Living only"
+msgstr "Tylko za żywych"
+
+msgid "Departed only"
+msgstr "Tylko za zmarłych"
+
+msgid "No type"
+msgstr "Bez rodzaju"
+
+msgid "Pricing"
+msgstr "Naliczanie"
+
+msgid "Fixed amount"
+msgstr "Stała kwota"
+
+msgid "Per name"
+msgstr "Za imię"
+
+msgid "Per request"
+msgstr "Za kartkę"
+
+msgid "Donation, EUR"
+msgstr "Darowizna, EUR"
+
+msgid "Names per slip"
+msgstr "Imiona na kartkę"
+
+msgid "Sort order"
+msgstr "Kolejność"
+
+msgid "Active"
+msgstr "Aktywna"
+
+msgid "Save changes"
+msgstr "Zapisz zmiany"
+
+msgid "Cancel"
+msgstr "Anuluj"
+
+msgid "Edit form"
+msgstr "Edytuj formularz"
+
+msgid "Add form"
+msgstr "Dodaj formularz"
+
+msgid "Introduction"
+msgstr "Wprowadzenie"
+
+msgid "Services in this form"
+msgstr "Nabożeństwa w formularzu"
+
+msgid "Layout"
+msgstr "Układ"
+
+msgid "Classic"
+msgstr "Klasyczny"
+
+msgid "Compact"
+msgstr "Kompaktowy"
+
+msgid "Wide: 3 cards"
+msgstr "Szeroki: 3 karty"
+
+msgid "Two columns"
+msgstr "Dwie kolumny"
+
+msgid "Image cards"
+msgstr "Karty z obrazami"
+
+msgid "Minimal"
+msgstr "Minimalistyczny"
+
+msgid "The form always fills 100% of the shortcode block; the layout changes its internal arrangement."
+msgstr "Formularz zawsze zajmuje 100% bloku shortcode; układ zmienia rozmieszczenie wewnętrzne."
+
+msgid "Default type"
+msgstr "Domyślny rodzaj"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Payment"
+msgstr "Płatność"
+
+msgid "Amount EUR"
+msgstr "Kwota EUR"
+
+msgid "Note"
+msgstr "Uwaga"
+
+msgid "Donor name"
+msgstr "Imię ofiarodawcy"
+
+msgid "Payer name"
+msgstr "Imię płatnika"
+
+msgid "Payer email"
+msgstr "E-mail płatnika"
+
+msgid "PHP 8.4 or later"
+msgstr "PHP 8.4 lub nowszy"
+
+msgid "WordPress 7.1 or later"
+msgstr "WordPress 7.1 lub nowszy"
+
+msgid "Email retry scheduler"
+msgstr "Harmonogram ponawiania wiadomości"
+
+msgid "Database tables"
+msgstr "Tabele bazy danych"
+
+msgid "Disabled — no configuration required"
+msgstr "Wyłączono — konfiguracja niewymagana"
+
+msgid "Ready"
+msgstr "Gotowe"
+
+msgid "Check configuration"
+msgstr "Sprawdź konfigurację"
+
+msgid "Recent payment events"
+msgstr "Ostatnie zdarzenia płatności"
+
+msgid "Provider"
+msgstr "Dostawca"
+
+msgid "Event"
+msgstr "Zdarzenie"
+
+msgid "Result"
+msgstr "Wynik"
+
+msgid "Processed"
+msgstr "Przetworzono"
+
+msgid "No events yet."
+msgstr "Brak zdarzeń."
+
+msgid "Russian"
+msgstr "Rosyjski"
+
+msgid "Ukrainian"
+msgstr "Ukraiński"
+
+msgid "Add new"
+msgstr "Dodaj nową"
+
+msgid "Search"
+msgstr "Szukaj"
+
+msgid "Shortcode"
+msgstr "Shortcode"
+
+msgid "Donation"
+msgstr "Darowizna"
+
+msgid "Updated"
+msgstr "Zmieniono"
+
+msgid "Disable"
+msgstr "Wyłącz"
+
+msgid "Select"
+msgstr "Wybierz"
+
+msgid "Edit"
+msgstr "Edytuj"
+
+msgid "Disabled"
+msgstr "Wyłączona"
+
+msgid "All"
+msgstr "Wszystkie"
+
+msgid "Active items"
+msgstr "Aktywne"
+
+msgid "Disabled items"
+msgstr "Wyłączone"
+
+msgid "Prayer request #%d paid"
+msgstr "Intencja modlitewna nr %d opłacona"
+
+msgid "Order date"
+msgstr "Data zamówienia"
+
+msgid "Request type"
+msgstr "Rodzaj intencji"
+
+msgid "Donor email"
+msgstr "E-mail ofiarodawcy"
+
+msgid "Payment method"
+msgstr "Sposób płatności"
+
+msgid "Open request in WordPress"
+msgstr "Otwórz intencję w WordPress"
+
+msgid "The recipient notification was handed to the mail system."
+msgstr "Powiadomienie odbiorcy przekazano systemowi pocztowemu."
+
+msgid "Recipient notification failed. It will be retried."
+msgstr "Powiadomienie odbiorcy nie powiodło się. Zostanie ponowione."
+
+msgid "The PDF is ready, but the print status could not be saved. Please try again."
+msgstr "PDF jest gotowy, ale nie zapisano statusu druku. Spróbuj ponownie."
+
+msgid "PDF generated; the printed status was set automatically."
+msgstr "PDF utworzono; status wydruku ustawiono automatycznie."
+
+msgid "Enter a valid date and a duration between 1 and 36500 days."
+msgstr "Podaj poprawną datę i okres od 1 do 36500 dni."
+
+msgid "Not assigned"
+msgstr "Nie przypisano"
+
+msgid "Starts"
+msgstr "Rozpocznie się"
+
+msgid "Completed"
+msgstr "Zakończono"
+
+msgid "In progress · days remaining:"
+msgstr "W toku · pozostało dni:"
+
+msgid "Service not found."
+msgstr "Nie znaleziono nabożeństwa."
+
+msgid "Restore the request from the archive first."
+msgstr "Najpierw przywróć intencję z archiwum."
+
+msgid "Could not save the period."
+msgstr "Nie zapisano okresu."
+
+msgid "period removed"
+msgstr "okres usunięto"
+
+msgid "Moved to archive"
+msgstr "Przeniesiono do archiwum"
+
+msgid "Restored from archive"
+msgstr "Przywrócono z archiwum"
+
+msgid "Staff member confirmed printing"
+msgstr "Pracownik potwierdził wydruk"
+
+msgid "Print status cleared"
+msgstr "Status druku usunięto"
+
+msgid "Could not save the change."
+msgstr "Nie zapisano zmiany."
+
+msgid "Printing and archive"
+msgstr "Druk i archiwum"
+
+msgid "Last PDF generation / print:"
+msgstr "Ostatnie utworzenie PDF / wydruk:"
+
+msgid "None"
+msgstr "Brak"
+
+msgid "Clear print status"
+msgstr "Usuń status druku"
+
+msgid "Archive request"
+msgstr "Archiwizuj"
+
+msgid "Restore"
+msgstr "Przywróć"
+
+msgid "Request history"
+msgstr "Historia intencji"
+
+msgid "For older requests, available dates are shown; the detailed log starts after the update."
+msgstr "Dla starszych intencji pokazano zachowane daty; szczegółowy dziennik jest prowadzony po aktualizacji."
+
+msgid "Staff member"
+msgstr "Pracownik"
+
+msgid "Request received"
+msgstr "Intencję otrzymano"
+
+msgid "Payment confirmed"
+msgstr "Płatność potwierdzono"
+
+msgid "Last confirmation sent"
+msgstr "Ostatnie potwierdzenie wysłano"
+
+msgid "Last print status"
+msgstr "Ostatni status druku"
+
+msgid "System"
+msgstr "System"
+
+msgid "Commemoration"
+msgstr "Wspominanie"
+
+msgid "Paid requests outside the archive. Expired periods do not automatically archive requests."
+msgstr "Opłacone intencje poza archiwum. Koniec okresu nie archiwizuje intencji automatycznie."
+
+msgid "Read on this date"
+msgstr "Czytaj tego dnia"
+
+msgid "Ending on this date"
+msgstr "Kończą się tego dnia"
+
+msgid "Upcoming"
+msgstr "Nadchodzące"
+
+msgid "Finished"
+msgstr "Zakończone"
+
+msgid "No period"
+msgstr "Bez okresu"
+
+msgid "Request / service"
+msgstr "Intencja / nabożeństwo"
+
+msgid "Start"
+msgstr "Początek"
+
+msgid "End"
+msgstr "Koniec"
+
+msgid "Status on the selected date"
+msgstr "Status w wybranym dniu"
+
+msgid "No requests."
+msgstr "Brak intencji."
+
+msgid "← Previous"
+msgstr "← Wstecz"
+
+msgid "Next →"
+msgstr "Dalej →"
+
+msgid "Printing"
+msgstr "Druk"
+
+msgid "Restore from archive"
+msgstr "Przywróć z archiwum"
+
+msgid "Open"
+msgstr "Otwórz"
+
+msgid "All payments"
+msgstr "Wszystkie płatności"
+
+msgid "Both types"
+msgstr "Oba rodzaje"
+
+msgid "All print statuses"
+msgstr "Wszystkie statusy druku"
+
+msgid "Not printed"
+msgstr "Nie wydrukowano"
+
+msgid "Filter"
+msgstr "Filtruj"
+
+msgid "Prayer request:"
+msgstr "Intencja modlitewna:"
+
+msgid "Payment status:"
+msgstr "Status płatności:"
+
+msgid "Your prayer request has been received"
+msgstr "Otrzymaliśmy Twoją intencję modlitewną"
+
+msgid "Hello"
+msgstr "Dzień dobry"
+
+msgid "Donation amount"
+msgstr "Kwota darowizny"
+
+msgid "With gratitude and prayer,"
+msgstr "Z wdzięcznością i modlitwą,"
+
+msgid "Could not hand the email to the mail system"
+msgstr "Nie przekazano wiadomości systemowi pocztowemu"
+
+msgid "Confirmation handed to the mail system"
+msgstr "Potwierdzenie przekazano systemowi pocztowemu"
+
+msgid "PayPal setup — step-by-step instructions"
+msgstr "Konfiguracja PayPal — krok po kroku"
+
+msgid "Open Apps & Credentials"
+msgstr "Otwórz Apps & Credentials"
+
+msgid "PayPal documentation: account and credentials"
+msgstr "Dokumentacja PayPal: konto i klucze"
+
+msgid "PayPal documentation: webhooks and signature verification"
+msgstr "Dokumentacja PayPal: webhooki i weryfikacja podpisu"
+
+msgid "Could not generate the PDF."
+msgstr "Nie utworzono PDF."
+
+msgid "Could not send the PDF: headers have already been sent."
+msgstr "Nie wysłano PDF: nagłówki już wysłano."
+
+msgid "Order date:"
+msgstr "Data zamówienia:"
+
+msgid "Prayer type"
+msgstr "Rodzaj modlitwy"
+
+msgid "Open background image"
+msgstr "Otwórz obraz tła"
+
+msgid "Service background image"
+msgstr "Obraz tła nabożeństwa"
+
+msgid "View image ↗"
+msgstr "Zobacz obraz ↗"
+
+msgid "No image selected."
+msgstr "Nie wybrano obrazu."
+
+msgid "Use image"
+msgstr "Użyj obrazu"
+
+msgid "German"
+msgstr "Niemiecki"
+
+msgid "Polish"
+msgstr "Polski"
+
+msgid "A separate email is sent to this address after a new prayer request is paid. Leave blank to disable notifications; the administrator email is not used. Older orders are not emailed automatically. Failed notifications are retried by WordPress cron using the currently configured address."
+msgstr "Na ten adres wysyłana jest osobna wiadomość po opłaceniu nowej intencji. Puste pole wyłącza powiadomienia; adres administratora nie jest używany. Starsze zamówienia nie są wysyłane automatycznie. Nieudane powiadomienia są ponawiane przez harmonogram WordPress na aktualny adres."
+
+msgid "Optional. Leave blank to use the WordPress domain automatically. Enter an HTTPS domain only, without /wp-json/ or other paths. This domain must serve the same WordPress site with valid HTTPS."
+msgstr "Opcjonalnie. Puste pole automatycznie używa domeny WordPress. Podaj tylko domenę HTTPS, bez /wp-json/ i innych ścieżek. Domena musi obsługiwać tę samą witrynę WordPress z poprawnym HTTPS."
+
+msgid "After changing domains, save the settings and update the webhook URLs in Stripe and PayPal. The plugin does not change them automatically. Keep the old domain available for unfinished payments."
+msgstr "Po zmianie domeny zapisz ustawienia i zaktualizuj adresy webhooków w Stripe i PayPal. Wtyczka nie zmienia ich automatycznie. Zachowaj dostęp do starej domeny dla niedokończonych płatności."
+
+msgid "Enter an HTTPS domain without a path, query or credentials, for example https://example.org. Leave blank for automatic selection."
+msgstr "Podaj domenę HTTPS bez ścieżki, parametrów ani danych logowania, np. https://example.org. Pozostaw puste dla automatycznego wyboru."
+
+msgid "Live payments require the recipient's PayPal Business account. Email, account password, App ID and Stripe whsec are not substitutes for PayPal credentials. The plugin uses REST API Orders v2, not legacy email payment buttons or IPN."
+msgstr "Rzeczywiste płatności wymagają konta PayPal Business odbiorcy. E-mail, hasło konta, App ID i Stripe whsec nie zastępują kluczy PayPal. Wtyczka używa REST API Orders v2, nie starych przycisków płatności przez e-mail ani IPN."
+
+msgid "Open Apps & Credentials in the PayPal Developer Dashboard and sign in to the recipient's account. Select Sandbox for testing or Live for real payments."
+msgstr "Otwórz Apps & Credentials w PayPal Developer Dashboard i zaloguj się na konto odbiorcy. Wybierz Sandbox do testów lub Live do rzeczywistych płatności."
+
+msgid "Open your REST API app or create one using Create App. For Sandbox, select the test seller's Business account; for Live, use the intended recipient's live app."
+msgstr "Otwórz aplikację REST API lub utwórz ją przez Create App. Dla Sandbox wybierz testowe konto Business sprzedawcy; dla Live użyj aplikacji właściwego odbiorcy."
+
+msgid "On the app page, copy the Client ID and reveal the Secret. Paste them into the matching plugin fields. Select the same Live or Sandbox mode. Client ID, Secret and Webhook ID must all belong to the same app and environment."
+msgstr "Na stronie aplikacji skopiuj Client ID i odsłoń Secret. Wklej je do odpowiednich pól wtyczki. Wybierz ten sam tryb Live lub Sandbox. Client ID, Secret i Webhook ID muszą należeć do jednej aplikacji i środowiska."
+
+msgid "In the same app, find Webhooks and click Add Webhook. Paste the exact webhook URL shown below. It must be public HTTPS on port 443, without password protection, POST blocking or an intermediate security page."
+msgstr "W tej samej aplikacji znajdź Webhooks i kliknij Add Webhook. Wklej dokładny adres webhooka podany niżej. Musi to być publiczny HTTPS na porcie 443, bez hasła, blokowania POST ani pośredniej strony zabezpieczeń."
+
+msgid "Select PAYMENT.CAPTURE.COMPLETED and PAYMENT.CAPTURE.REFUNDED, then save the webhook. The first confirms payment; the second records refunds. All events, CHECKOUT.ORDER.APPROVED and IPN are not needed for this integration."
+msgstr "Wybierz PAYMENT.CAPTURE.COMPLETED i PAYMENT.CAPTURE.REFUNDED, następnie zapisz webhook. Pierwsze potwierdza płatność, drugie zapisuje zwroty. Wszystkie zdarzenia, CHECKOUT.ORDER.APPROVED i IPN nie są potrzebne."
+
+msgid "Copy the new webhook's ID from Webhooks into the plugin's Webhook ID field. This is not the Client ID or an individual WH-… event ID. Enable PayPal and save. The saved Secret is hidden; a blank field keeps the previous secret."
+msgstr "Skopiuj ID nowego webhooka z Webhooks do pola Webhook ID wtyczki. To nie Client ID ani ID pojedynczego zdarzenia WH-…. Włącz PayPal i zapisz. Zapisany Secret jest ukryty; puste pole zachowuje poprzedni sekret."
+
+msgid "Test with Sandbox first: under Testing Tools → Sandbox Accounts, find separate Personal buyer and Business seller accounts. Submit a test prayer request and pay with the test buyer, not your real account. Check the Paid status, diagnostics event and emails if mail is configured. Sandbox does not transfer real money."
+msgstr "Najpierw przetestuj Sandbox: w Testing Tools → Sandbox Accounts znajdź osobne konta Personal kupującego i Business sprzedawcy. Złóż testową intencję i zapłać testowym kupującym, nie prawdziwym kontem. Sprawdź status Opłacono, zdarzenie diagnostyczne i e-maile przy skonfigurowanej poczcie. Sandbox nie przesyła prawdziwych pieniędzy."
+
+msgid "To go live, replace Client ID, Secret and Webhook ID with the Live app's values and select Live. The plugin stores one set of credentials, not two. Always enter a new Secret when changing apps or environments; a blank field preserves the old one."
+msgstr "Aby uruchomić Live, zastąp Client ID, Secret i Webhook ID wartościami aplikacji Live i wybierz Live. Wtyczka przechowuje jeden zestaw kluczy, nie dwa. Przy zmianie aplikacji lub środowiska zawsze podaj nowy Secret; puste pole zachowuje stary."
+
+msgid "Webhooks Simulator generates artificial events. PayPal does not support verifying these through verify-webhook-signature, which the plugin uses. A signature failure for such an event does not prove the integration is broken. Test a real Sandbox payment and event delivery in the same app."
+msgstr "Webhooks Simulator tworzy sztuczne zdarzenia. PayPal nie obsługuje ich weryfikacji przez verify-webhook-signature używane przez wtyczkę. Błąd podpisu takiego zdarzenia nie dowodzi awarii integracji. Sprawdź prawdziwą płatność Sandbox i dostarczenie zdarzenia w tej samej aplikacji."
+
+msgid "If payment or webhooks fail, check the app/environment for all credentials, the exact URL and HTTPS/POST access. Update the PayPal webhook after a domain move. Disabled PayPal needs no configuration. Diagnostics checks whether credentials exist, not whether PayPal accepts them. Never publish the Secret in emails, screenshots or messages."
+msgstr "Jeśli płatność lub webhook nie działa, sprawdź aplikację i środowisko wszystkich kluczy, dokładny URL i dostęp HTTPS/POST. Po zmianie domeny zaktualizuj webhook PayPal. Wyłączony PayPal nie wymaga konfiguracji. Diagnostyka sprawdza obecność kluczy, nie ich akceptację przez PayPal. Nigdy nie publikuj Secret w e-mailach, zrzutach ani wiadomościach."
+
+msgid "Choose prayer services"
+msgstr "Wybierz intencje"
+
+msgid "Names, one person per line"
+msgstr "Imiona, jedna osoba w każdym wierszu"
+
+msgid ""
+"Name\n"
+"Name\n"
+"Name"
+msgstr ""
+"Imię\n"
+"Imię\n"
+"Imię"
+
+msgid "Please use baptismal names. Prayer slips are automatically divided into groups."
+msgstr "Prosimy podać imiona chrzcielne. Kartki zostaną automatycznie podzielone na grupy."
+
+msgid "Comment (optional)"
+msgstr "Uwagi (opcjonalnie)"
+
+msgid "Your name (optional)"
+msgstr "Imię ofiarodawcy (opcjonalnie)"
+
+msgid "Email address"
+msgstr "Adres e-mail"
+
+msgid "Confirmation is sent only after payment is received."
+msgstr "Potwierdzenie zostanie wysłane dopiero po otrzymaniu płatności."
+
+msgid "Card / Stripe"
+msgstr "Karta / Stripe"
+
+msgid "PayPal"
+msgstr "PayPal"
+
+msgid "Submit prayer request and donate"
+msgstr "Prześlij intencję i złóż darowiznę"
+
+msgid "Secure payment. Your information is used only to process your prayer request."
+msgstr "Bezpieczna płatność. Dane są używane wyłącznie do obsługi intencji modlitewnej."
+
+msgid "Please complete all required fields."
+msgstr "Prosimy wypełnić wymagane pola."
+
+msgid "The request could not be processed. Please try again."
+msgstr "Nie udało się przetworzyć zgłoszenia. Spróbuj ponownie."
+
+msgid "Thank you. Your payment is confirmed and your prayer request has been received."
+msgstr "Dziękujemy. Płatność została potwierdzona, a intencja przekazana do modlitwy."
+
+msgid "Thank you. Payment is still being confirmed. We will email you once the funds have arrived."
+msgstr "Dziękujemy. Płatność jest jeszcze potwierdzana. Po zaksięgowaniu środków wyślemy wiadomość e-mail."
+
+msgid "Payment was not completed. Your prayer request is temporarily saved."
+msgstr "Płatność nie została zakończona. Intencja została tymczasowo zapisana."
+
+msgid "Payment successful"
+msgstr "Płatność zakończona pomyślnie"
+
+msgid "Checking payment"
+msgstr "Sprawdzamy płatność"
+
+msgid "Payment not completed"
+msgstr "Płatność nie została zakończona"
+
+msgid "Understood"
+msgstr "Rozumiem"
+
+msgid "per name"
+msgstr "za imię"
+
+msgid "per 10 names"
+msgstr "za 10 imion"
 
 msgid "Orthodox Prayer Notes and Donations"
 msgstr "Prawosławne intencje modlitewne i darowizny"
@@ -11,3 +784,39 @@ msgstr "Prawosławne intencje i darowizny: Stripe, PayPal, wydruk kartek modlite
 
 msgid "Kloster: form not found."
 msgstr "Nie znaleziono formularza intencji modlitewnych."
+
+msgid "Prayer service"
+msgstr "Intencja"
+
+msgid "Forbidden"
+msgstr "Dostęp zabroniony"
+
+msgid "https://atapin.de/"
+msgstr "https://atapin.de/"
+
+msgid "atapin.de"
+msgstr "atapin.de"
+
+msgid "Donation for the church"
+msgstr "Darowizna na potrzeby cerkwi"
+
+msgid "Donate"
+msgstr "Przekaż darowiznę"
+
+msgid "Secure payment. Your information is used only to process your donation."
+msgstr "Bezpieczna płatność. Dane są używane wyłącznie do obsługi darowizny."
+
+msgid "Thank you. Your donation is confirmed."
+msgstr "Dziękujemy. Twoja darowizna została potwierdzona."
+
+msgid "Payment was not completed. Your donation has not been received."
+msgstr "Płatność nie została zakończona. Darowizna jeszcze nie wpłynęła."
+
+msgid "Thank you for your donation"
+msgstr "Dziękujemy za Twoją darowiznę"
+
+msgid "Amount in EUR: 0.50 to 999,999.99. Up to two decimal places."
+msgstr "Kwota w EUR: od 0,50 do 999 999,99. Maksymalnie dwa miejsca po przecinku."
+
+msgid "Enter a valid amount between 0.50 and 999,999.99 EUR."
+msgstr "Podaj prawidłową kwotę od 0,50 do 999 999,99 EUR."

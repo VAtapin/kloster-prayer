@@ -4,7 +4,7 @@ Tags: orthodox, prayer, donations, stripe, paypal
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.2.12
+Stable tag: 1.2.13
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Accept Orthodox prayer requests and donations on a parish, church, cathedral or 
 Visitors select services, submit names and optional comments, and pay through the site's own Stripe or PayPal account.
 
 * Configurable services, amounts, forms and six responsive layouts.
-* Russian, German, Ukrainian and Polish prayer forms.
+* English interface source strings with Russian, German, Ukrainian and Polish translations.
 * Names separated by commas are normalized to one person per line.
 * Payment confirmation emails and an optional designated recipient for paid requests.
 * Reports, payer details, CSV export, archive and restore.
@@ -164,6 +164,16 @@ No. Payment records and settings are retained to prevent accidental loss.
 Manage retention and backups according to your site's policy.
 
 == Changelog ==
+
+= 1.2.13 =
+* Use US English gettext source strings throughout the interface, email, PDF labels and PayPal help.
+* Preserve all four prayer-form and donation translations in complete PO/MO catalogs.
+* Use English by default on English WordPress installations; keep the saved request language for confirmations.
+* Include standalone donations from 1.2.12 without changing webhook paths or stored requests.
+
+= 1.2.12 =
+* Add standalone one-time donations with exact EUR amount validation, existing Stripe/PayPal checkout and separate confirmations.
+* Include donations in protected lists, archive and overall reports; exclude them from prayer-slip PDFs.
 
 = 1.2.11 =
 * Prepare directory metadata, English readme, source and third-party license notices.

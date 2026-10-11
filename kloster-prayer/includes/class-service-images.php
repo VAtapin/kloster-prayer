@@ -21,8 +21,8 @@ final class Service_Images
         $service??=(object)['slug'=>''];$fallback=self::bundled((string)$service->slug);
         $thumb=self::url($service,'medium');$view=self::url($service);
         echo '<div id="klp-image-preview" data-default="'.esc_url($fallback).'">';
-        if($thumb)echo '<a href="'.esc_url($view).'" target="_blank" rel="noopener noreferrer" aria-label="Открыть фоновое изображение"><img src="'.esc_url($thumb).'" alt="Фоновое изображение требы" width="240" decoding="async"><span>Просмотреть изображение ↗</span></a>';
-        else echo '<span class="description">Изображение не выбрано.</span>';
+        if($thumb)echo '<a href="'.esc_url($view).('" target="_blank" rel="noopener noreferrer" aria-label="'.esc_attr__('Open background image', 'kloster-prayer').'"><img src="').esc_url($thumb).('" alt="'.esc_attr__('Service background image', 'kloster-prayer').'" width="240" decoding="async"><span>'.esc_html__('View image ↗', 'kloster-prayer').'</span></a>');
+        else echo ('<span class="description">'.esc_html__('No image selected.', 'kloster-prayer').'</span>');
         echo '</div>';
     }
 }

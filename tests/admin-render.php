@@ -8,6 +8,7 @@ define('KlosterPrayer\\FILE',KlosterPrayer\DIR.'/kloster-prayer.php');
 require KlosterPrayer\DIR.'/includes/class-payments.php';
 require KlosterPrayer\DIR.'/includes/class-notifications.php';
 require KlosterPrayer\DIR.'/includes/class-service-images.php';
+require __DIR__.'/bootstrap-i18n.php';
 function sanitize_file_name($s){return preg_replace('/[^a-z0-9-]/','',$s);}
 function plugins_url($path,$file){return '../kloster-prayer/'.$path;}
 function wp_get_attachment_image_url($id,$size){return false;}
@@ -15,11 +16,11 @@ $_SERVER['HTTP_HOST']='localhost';$_SERVER['REQUEST_URI']='/admin';$_SERVER['HTT
 $GLOBALS['fixture_languages']=['ru_RU','de_DE'];
 function pll_languages_list($args){return $GLOBALS['fixture_languages'];}
 function get_locale(){return 'ru_RU';}function determine_locale(){return get_locale();}
-function __($v,...$args){return $v;}function _x($v,...$args){return $v;}function _e($v,...$args){echo $v;}function _n($a,$b,$n){return $n==1?$a:$b;}
-function esc_html__($v,...$args){return esc_html($v);}
+function __($v,$domain='kloster-prayer'){return fixture_translate($v,$domain);}function _x($v,...$args){return $v;}function _e($v,...$args){echo $v;}function _n($a,$b,$n){return $n==1?$a:$b;}
+function esc_html__($v,...$args){return esc_html(__($v,...$args));}
 function esc_attr($v){return htmlspecialchars((string)$v,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');}function esc_html($v){return esc_attr($v);}function esc_textarea($v){return esc_attr($v);}function esc_url($v){return esc_attr($v);}
 function sanitize_key($v){return preg_replace('/[^a-z0-9_-]/','',strtolower((string)$v));}function sanitize_text_field($v){return strip_tags((string)$v);}function wp_unslash($v){return $v;}function absint($v){return abs((int)$v);}function wp_parse_args($args,$defaults=[]){return array_merge($defaults,(array)$args);}
-function add_filter(...$args){}function add_action(...$args){}function apply_filters($hook,$value,...$args){return $value;}function current_user_can(...$args){return true;}
+function add_filter($hook,$callback,...$args){if($hook==='gettext')$GLOBALS['fixture_gettext_filters'][]=$callback;}function add_action(...$args){}function apply_filters($hook,$value,...$args){return $value;}function current_user_can(...$args){return true;}
 function wp_nonce_field(...$args){echo '<input type="hidden" name="_wpnonce" value="fixture">';}function wp_create_nonce($a){return 'fixture';}function wp_nonce_url($url,...$args){return $url;}
 function admin_url($path=''){return 'http://localhost/wp-admin/'.$path;}function rest_url($path=''){return 'https://example.org/wp-json/'.$path;}function plugin_basename($f){return 'kloster-prayer/kloster-prayer.php';}
 function add_query_arg($args,$url=''){if(!is_array($args))return (string)$url;return ($url?:'http://localhost/admin').(str_contains($url,'?')?'&':'?').http_build_query($args);}function remove_query_arg($args,$url=''){return $url?:'http://localhost/admin';}function set_url_scheme($u){return $u;}
@@ -44,7 +45,7 @@ class FixtureDB {
     public function get_results($q){return [$this->row()];}
 }
 $wpdb=new FixtureDB();
-require KlosterPrayer\DIR.'/includes/class-order-workflow.php';require KlosterPrayer\DIR.'/includes/class-database.php';require KlosterPrayer\DIR.'/includes/class-i18n.php';require KlosterPrayer\DIR.'/includes/class-admin.php';require KlosterPrayer\DIR.'/includes/class-admin-screens.php';require KlosterPrayer\DIR.'/includes/class-pdf.php';
+require KlosterPrayer\DIR.'/includes/class-order-workflow.php';require KlosterPrayer\DIR.'/includes/class-database.php';require_once KlosterPrayer\DIR.'/includes/class-i18n.php';require KlosterPrayer\DIR.'/includes/class-admin.php';require KlosterPrayer\DIR.'/includes/class-admin-screens.php';require KlosterPrayer\DIR.'/includes/class-pdf.php';
 $pages=['detail'=>['orders',['view'=>1]],'settings'=>['settings',[]],'diagnostics'=>['diagnostics',[]],'reports'=>['reports',[]],'forms'=>['forms',[]],'services'=>['services',[]],'edit-form'=>['forms',['edit'=>1]],'edit-service'=>['services',['edit'=>1]],'orders'=>['orders',[]]];
 foreach($pages as $name=>[$method,$query]){
     $_GET=$query;$_POST=[];$_REQUEST=$query;ob_start();KlosterPrayer\Admin::$method();$body=ob_get_clean();

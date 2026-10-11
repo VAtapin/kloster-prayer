@@ -27,13 +27,13 @@ final class Pdf
         check_admin_referer('klp_pdf');
         if (!class_exists(Dompdf::class)) require_once DIR . '/includes/lib/dompdf/autoload.inc.php';
         $cards = !empty(Input::get('blank')) ? [['intention' => (Input::get('intention') ?? '') === 'rest' ? 'rest' : 'health', 'language' => (Input::get('language') ?? '') === 'de' ? 'de' : 'ru', 'title' => '', 'names' => [], 'note' => '']] : self::cards();
-        if (!$cards) wp_die('Нет записок для выбранного фильтра.');
+        if (!$cards) wp_die((esc_html__('No requests match the selected filter.', 'kloster-prayer')));
         $options = new Options(); $options->set('isRemoteEnabled', false); $options->set('isHtml5ParserEnabled', true); $options->set('defaultFont', 'DejaVu Sans'); $options->setChroot(DIR);
         $dompdf = new Dompdf($options); $dompdf->setPaper('A4', 'landscape'); $dompdf->loadHtml(self::modern_html($cards), 'UTF-8'); $dompdf->render();
         // Serialize successfully before changing print state. Rendering/output errors leave it unchanged.
         $output = $dompdf->output();
-        if (!str_starts_with($output, '%PDF-')) wp_die('Не удалось сформировать PDF.');
-        if (headers_sent()) wp_die('Не удалось отправить PDF: заголовки уже отправлены.');
+        if (!str_starts_with($output, '%PDF-')) wp_die((esc_html__('Could not generate the PDF.', 'kloster-prayer')));
+        if (headers_sent()) wp_die((esc_html__('Could not send the PDF: headers have already been sent.', 'kloster-prayer')));
         Order_Workflow::pdf_generated($cards);
         nocache_headers();
         header('Content-Type: application/pdf');
@@ -100,7 +100,7 @@ final class Pdf
             foreach ($page as $index => $card) {
                 $html .= '<div class="card '.($rest?'rest':'health').'" style="left:'.($index*94).'mm">';
                 // Only translate the heading; the original cross, border and ruled lines stay untouched.
-                if ($card['language'] === 'de') $html .= '<div class="kind" style="color:'.($rest?'#595959':'#ad5754').'">'.($rest?'FÜR VERSTORBENE':'FÜR LEBENDE').'</div>';
+                if ($card['language'] === 'de') $html .= '<div class="kind" style="color:'.($rest?'#595959':'#ad5754').'">'.esc_html(mb_strtoupper(I18n::text($rest?'rest':'health', 'de'))).'</div>';
                 $html .= '<div class="service">'.esc_html($card['title']).'</div>';
                 foreach ($card['names'] as $line => $name) {
                     $size = mb_strlen($name) > 35 ? 8 : (mb_strlen($name) > 27 ? 9 : 11);
@@ -108,7 +108,7 @@ final class Pdf
                     $top = (573 + $line * 128.55) * 282 / 3540 - 5.3;
                     $html .= '<div class="name" style="top:'.$top.'mm;font-size:'.$size.'pt">'.esc_html($name).'</div>';
                 }
-                if (!empty($card['order_date'])) $html .= '<div class="order-date">'.esc_html(($card['language']==='de'?'Bestelldatum: ':'Дата заказа: ').$card['order_date']).'</div>';
+                if (!empty($card['order_date'])) $html .= '<div class="order-date">'.esc_html(I18n::text('order_date', $card['language']).' '.$card['order_date']).'</div>';
                 if ($card['note_lines']) {
                     $noteTop = (573 + max(0, count($card['names']) - 1) * 128.55) * 282 / 3540 - 5.3 + (count($card['names']) ? 7 : 0);
                     foreach ($card['note_lines'] as $line => $text) {

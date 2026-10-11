@@ -30,6 +30,8 @@ jobs:
           stable="$(sed -n 's/^Stable tag: \(.*\)$/\1/p' kloster-prayer/readme.txt)"
           test "$TAG" = "$version"
           test "$TAG" = "$stable"
+          mkdir -p tmp/admin-check-core
+          curl --fail --location --silent --show-error https://wordpress.org/wordpress-7.1.tar.gz | tar -xz -C tmp/admin-check-core
           find kloster-prayer tests -name '*.php' -print0 | xargs -0 -n1 php -l
           mkdir -p tmp/pdfs output/pdf
           php -d zend.assertions=1 -d assert.exception=1 tests/smoke.php
@@ -38,6 +40,7 @@ jobs:
           php tests/pdf-notes.php --render
           php -d zend.assertions=1 -d assert.exception=1 tests/api-domain.php
           php -d zend.assertions=1 -d assert.exception=1 tests/payment-binding.php
+          php -d zend.assertions=1 -d assert.exception=1 tests/i18n.php
 
       - name: Build installation ZIP
         env:
