@@ -1,0 +1,31 @@
+<?php
+declare(strict_types=1);
+// Verify isolation from the previous plugin on a disposable WordPress database.
+$site=realpath($argv[1]??'');
+if(!$site||!str_contains(str_replace('\\','/',$site),'/tmp/wporg-review/wordpress'))throw new RuntimeException('Local review WordPress required');
+$source=realpath($argv[2]??dirname(__DIR__));
+if(!$source||!is_file($source.'/georg-kloster-orthodox-donate/georg-kloster-orthodox-donate.php'))throw new RuntimeException('Plugin source required');
+$file='fresh-parish-'.bin2hex(random_bytes(6)).'.sqlite';
+$db=new PDO('sqlite:'.$site.'/wp-content/database/.ht.sqlite');
+$db->exec('VACUUM INTO '.$db->quote($site.'/wp-content/database/'.$file));unset($db);
+define('DB_FILE',$file);define('WP_PLUGIN_DIR',$source);
+require $site.'/wp-load.php';
+if(!class_exists(KlosterPrayer\Database::class))require $source.'/georg-kloster-orthodox-donate/georg-kloster-orthodox-donate.php';
+global $wpdb;
+update_option('klp_stripe_secret','legacy-key-that-must-not-be-imported');
+$legacyTables=$wpdb->get_col($wpdb->prepare('SHOW TABLES LIKE %s',$wpdb->esc_like($wpdb->prefix.'klp_').'%'));
+$before=[];foreach($legacyTables as $table)$before[$table]=hash('sha256',serialize($wpdb->get_results($wpdb->prepare('SELECT * FROM %i',$table))));
+KlosterPrayer\Database::activate();
+if(KlosterPrayer\Database::table('orders')!==$wpdb->prefix.'gkod_orders')throw new RuntimeException('Separate database namespace required');
+if((int)$wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i',KlosterPrayer\Database::table('orders')))!==0)throw new RuntimeException('Old orders imported');
+if(get_option('gkod_stripe_secret',false)!==false)throw new RuntimeException('Old credentials imported');
+if(get_option('klp_stripe_secret')!=='legacy-key-that-must-not-be-imported')throw new RuntimeException('Old settings changed');
+foreach($legacyTables as $table)if($before[$table]!==hash('sha256',serialize($wpdb->get_results($wpdb->prepare('SELECT * FROM %i',$table)))))throw new RuntimeException('Old database changed');
+if(get_option('gkod_db_version')!=='1.0.0')throw new RuntimeException('Wrong schema version');
+require_once ABSPATH.'wp-admin/includes/plugin.php';
+$metadata=get_plugin_data(KlosterPrayer\FILE,false,false);
+if($metadata['TextDomain']!=='georg-kloster-orthodox-donate'||$metadata['Version']!=='1.0.0')throw new RuntimeException('Plugin metadata mismatch');
+load_textdomain('georg-kloster-orthodox-donate',KlosterPrayer\DIR.'/languages/georg-kloster-orthodox-donate-ru_RU.mo');
+if(get_plugin_data(KlosterPrayer\FILE,false,true)['Name']!=='Приход — записки, требы и пожертвования')throw new RuntimeException('Russian plugin name not translated by WordPress');
+if($wpdb->last_error!=='')throw new RuntimeException('Database error');
+echo "PASS fresh installation: separate tables and settings, no order or credential import, previous data untouched\n";

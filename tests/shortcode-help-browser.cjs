@@ -9,9 +9,9 @@ const {chromium} = require(path.resolve(__dirname, '../../Kalendar/node_modules/
     const errors=[];page.on('pageerror',e=>errors.push(e.message));
     await page.setContent(fs.readFileSync(path.resolve(__dirname,'../tmp/shortcode-help-preview.html'),'utf8'));
     await page.addStyleTag({content:'body{font:14px Arial;margin:20px;background:#f0f0f1}.screen-reader-text{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}.widefat{width:100%;border-collapse:collapse}th,td{padding:8px;text-align:left}.klp-card{background:white;border:1px solid #ccc}input{padding:6px}button,.button{padding:6px 12px}nav a{text-decoration:none;color:#2271b1;border:1px solid #2271b1;background:white}h1{font-size:24px}code{font-size:13px}'});
-    await page.addStyleTag({path:path.resolve(__dirname,'../kloster-prayer/assets/css/admin-native.css')});
+    await page.addStyleTag({path:path.resolve(__dirname,'../georg-kloster-orthodox-donate/assets/css/admin-native.css')});
     await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>{window.copied=value;}}}));
-    await page.addScriptTag({path:path.resolve(__dirname,'../kloster-prayer/assets/js/admin-shortcodes.js')});
+    await page.addScriptTag({path:path.resolve(__dirname,'../georg-kloster-orthodox-donate/assets/js/admin-shortcodes.js')});
     await page.evaluate(()=>document.dispatchEvent(new Event('DOMContentLoaded')));
     const first=page.locator('.klp-copy-shortcode').first();
     await first.click();
@@ -21,7 +21,7 @@ const {chromium} = require(path.resolve(__dirname, '../../Kalendar/node_modules/
     await first.click();
     await page.waitForFunction(()=>document.querySelector('.klp-copy-status').textContent.includes('вручную'));
     assert.equal(await page.evaluate(()=>document.activeElement.selectionEnd-document.activeElement.selectionStart),await page.locator('.klp-shortcode-example input').first().inputValue().then(s=>s.length));
-    assert.equal(await page.locator('nav a').count(),5);
+    assert.equal(await page.locator('nav a').count(),0);
     await page.setViewportSize({width:1200,height:900});await page.screenshot({path:path.resolve(__dirname,'../tmp/shortcode-help-desktop.png'),fullPage:true});
     await page.setViewportSize({width:390,height:844});
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),'Mobile guide fits page');

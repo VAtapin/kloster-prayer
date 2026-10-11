@@ -1,7 +1,7 @@
 <?php
 // Lossless geometry and full source resolution; opaque palette avoids Dompdf's RGBA memory overhead.
 foreach (['ZDRAVIE', 'UPOKOI'] as $name) {
-    $base = dirname(__DIR__).'/kloster-prayer/assets/img/'.$name;
+    $base = dirname(__DIR__).'/georg-kloster-orthodox-donate/assets/img/'.$name;
     $source = imagecreatefrompng($base.'.png');
     $image = imagecreatetruecolor(imagesx($source), imagesy($source));
     imagefill($image, 0, 0, imagecolorallocate($image, 255, 255, 255));

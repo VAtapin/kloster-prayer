@@ -14,7 +14,7 @@ const {chromium} = require(path.resolve(__dirname, '../../Kalendar/node_modules/
         return {json: async () => ({success: false, data: {message: 'Server validation'}})};
       };
     });
-    await page.addScriptTag({path: process.argv[2] ? path.resolve(process.argv[2]) : path.resolve(__dirname, '../kloster-prayer/assets/js/public.js')});
+    await page.addScriptTag({path: process.argv[2] ? path.resolve(process.argv[2]) : path.resolve(__dirname, '../georg-kloster-orthodox-donate/assets/js/public.js')});
     await page.evaluate(() => document.dispatchEvent(new Event('DOMContentLoaded')));
     const amount = page.locator('[name="donation_amount"]');
     await page.locator('[name="donor_email"]').fill('donor@example.invalid');

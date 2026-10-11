@@ -1,0 +1,1472 @@
+# Copyright (C) 2026 atapin.de
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: georg-kloster-orthodox-donate 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/georg-kloster-orthodox-donate\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-11T18:01:14+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: georg-kloster-orthodox-donate\n"
+
+#. Plugin Name of the plugin
+#: georg-kloster-orthodox-donate.php
+msgid "Parish — Prayer Requests, Services and Donations"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: georg-kloster-orthodox-donate.php
+msgid "https://atapin.de/"
+msgstr ""
+
+#. Description of the plugin
+#: georg-kloster-orthodox-donate.php
+msgid "Orthodox prayer requests and donations with Stripe, PayPal, printable prayer slips and reports."
+msgstr ""
+
+#. Author of the plugin
+#: georg-kloster-orthodox-donate.php
+msgid "atapin.de"
+msgstr ""
+
+#: includes/class-admin-screens.php:12
+msgid "Payment settings"
+msgstr ""
+
+#: includes/class-admin-screens.php:13
+msgid "Settings saved."
+msgstr ""
+
+#: includes/class-admin-screens.php:15
+msgid "Prayer request notifications"
+msgstr ""
+
+#: includes/class-admin-screens.php:15
+msgid "Recipient email"
+msgstr ""
+
+#: includes/class-admin-screens.php:15
+msgid "A separate email is sent to this address after a new prayer request is paid. Leave blank to disable notifications; the administrator email is not used. Older orders are not emailed automatically. Failed notifications are retried by WordPress cron using the currently configured address."
+msgstr ""
+
+#: includes/class-admin-screens.php:16
+msgid "API domain"
+msgstr ""
+
+#: includes/class-admin-screens.php:16
+msgid "Optional. Leave blank to use the WordPress domain automatically. Enter an HTTPS domain only, without /wp-json/ or other paths. This domain must serve the same WordPress site with valid HTTPS."
+msgstr ""
+
+#: includes/class-admin-screens.php:16
+msgid "After changing domains, save the settings and update the webhook URLs in Stripe and PayPal. The plugin does not change them automatically. Keep the old domain available for unfinished payments."
+msgstr ""
+
+#: includes/class-admin-screens.php:19
+#: includes/class-catalog-table.php:14
+msgid "Enable"
+msgstr ""
+
+#: includes/class-admin-screens.php:20
+msgid "Mode"
+msgstr ""
+
+#: includes/class-admin-screens.php:23
+#: includes/class-admin.php:296
+msgid "Saved — leave blank to keep unchanged"
+msgstr ""
+
+#: includes/class-admin-screens.php:26
+msgid "Configuration is required only for enabled payment methods."
+msgstr ""
+
+#: includes/class-admin-screens.php:30
+msgid "Save settings"
+msgstr ""
+
+#: includes/class-admin-screens.php:44
+#: includes/class-admin.php:38
+msgid "Reports"
+msgstr ""
+
+#: includes/class-admin-screens.php:44
+msgid "Month"
+msgstr ""
+
+#: includes/class-admin-screens.php:44
+#: includes/class-order-workflow.php:118
+msgid "Show"
+msgstr ""
+
+#: includes/class-admin-screens.php:45
+msgid "Requests received"
+msgstr ""
+
+#: includes/class-admin-screens.php:45
+#: includes/class-admin-screens.php:48
+#: includes/class-admin-screens.php:50
+#: includes/class-admin-screens.php:58
+#: includes/class-admin.php:147
+#: includes/class-orders-table.php:22
+#: includes/class-orders-table.php:53
+msgid "Paid"
+msgstr ""
+
+#: includes/class-admin-screens.php:45
+#: includes/class-admin.php:213
+#: includes/class-orders-table.php:23
+#: includes/class-orders-table.php:53
+msgid "Printed"
+msgstr ""
+
+#: includes/class-admin-screens.php:45
+msgid "Donations received"
+msgstr ""
+
+#: includes/class-admin-screens.php:48
+msgid "By payment method"
+msgstr ""
+
+#: includes/class-admin-screens.php:48
+#: includes/class-admin-screens.php:56
+msgid "Method"
+msgstr ""
+
+#: includes/class-admin-screens.php:48
+#: includes/class-admin-screens.php:50
+msgid "Requests"
+msgstr ""
+
+#: includes/class-admin-screens.php:50
+msgid "By service"
+msgstr ""
+
+#: includes/class-admin-screens.php:50
+msgid "Service"
+msgstr ""
+
+#: includes/class-admin-screens.php:53
+msgid "Donations and donors"
+msgstr ""
+
+#: includes/class-admin-screens.php:56
+#: includes/class-admin.php:237
+#: includes/class-orders-table.php:9
+#: includes/class-orders-table.php:12
+msgid "Request"
+msgstr ""
+
+#: includes/class-admin-screens.php:56
+#: includes/class-orders-table.php:9
+msgid "Payer"
+msgstr ""
+
+#: includes/class-admin-screens.php:56
+msgid "Address"
+msgstr ""
+
+#: includes/class-admin-screens.php:56
+#: includes/class-admin.php:36
+#: includes/class-admin.php:147
+#: includes/class-admin.php:286
+#: includes/class-notifications.php:69
+#: includes/class-orders-table.php:9
+msgid "Services"
+msgstr ""
+
+#: includes/class-admin-screens.php:56
+#: includes/class-admin.php:147
+#: includes/class-notifications.php:73
+#: includes/class-orders-table.php:9
+msgid "Amount"
+msgstr ""
+
+#: includes/class-admin-screens.php:56
+#: includes/class-admin.php:193
+#: includes/class-admin.php:200
+#: includes/class-admin.php:213
+#: includes/class-catalog-table.php:12
+msgid "Status"
+msgstr ""
+
+#: includes/class-admin-screens.php:58
+#: includes/class-orders-table.php:22
+#: includes/class-orders-table.php:53
+msgid "Pending"
+msgstr ""
+
+#: includes/class-admin-screens.php:58
+#: includes/class-admin.php:237
+#: includes/class-orders-table.php:22
+#: includes/class-orders-table.php:53
+msgid "Error"
+msgstr ""
+
+#: includes/class-admin-screens.php:58
+#: includes/class-orders-table.php:22
+#: includes/class-orders-table.php:53
+msgid "Refunded"
+msgstr ""
+
+#: includes/class-admin-screens.php:58
+#: includes/class-orders-table.php:22
+#: includes/class-orders-table.php:53
+msgid "Canceled"
+msgstr ""
+
+#: includes/class-admin-screens.php:60
+msgid "No requests for the selected month."
+msgstr ""
+
+#: includes/class-admin.php:22
+#: includes/class-service-images.php:25
+msgid "No image selected."
+msgstr ""
+
+#: includes/class-admin.php:23
+#: includes/class-service-images.php:24
+msgid "Open background image"
+msgstr ""
+
+#: includes/class-admin.php:24
+#: includes/class-service-images.php:24
+msgid "Service background image"
+msgstr ""
+
+#: includes/class-admin.php:25
+#: includes/class-service-images.php:24
+msgid "View image ↗"
+msgstr ""
+
+#: includes/class-admin.php:26
+msgid "Use image"
+msgstr ""
+
+#: includes/class-admin.php:34
+msgid "Parish"
+msgstr ""
+
+#: includes/class-admin.php:35
+msgid "Prayer notes"
+msgstr ""
+
+#: includes/class-admin.php:37
+#: includes/class-admin.php:286
+msgid "Forms"
+msgstr ""
+
+#: includes/class-admin.php:39
+#: georg-kloster-orthodox-donate.php:56
+msgid "Settings"
+msgstr ""
+
+#: includes/class-admin.php:40
+#: includes/class-admin.php:221
+msgid "Diagnostics"
+msgstr ""
+
+#: includes/class-admin.php:69
+#: includes/class-pdf.php:30
+msgid "No requests match the selected filter."
+msgstr ""
+
+#: includes/class-admin.php:82
+msgid "Enter one valid notification email or leave the field blank."
+msgstr ""
+
+#: includes/class-admin.php:87
+msgid "Enter an HTTPS domain without a path, query or credentials, for example https://example.org. Leave blank for automatic selection."
+msgstr ""
+
+#: includes/class-admin.php:136
+msgid "Saved."
+msgstr ""
+
+#: includes/class-admin.php:142
+msgid "Prayer requests"
+msgstr ""
+
+#: includes/class-admin.php:147
+msgid "Payment and request #"
+msgstr ""
+
+#: includes/class-admin.php:147
+#: includes/class-notifications.php:71
+msgid "Donor"
+msgstr ""
+
+#: includes/class-admin.php:147
+#: includes/class-admin.php:213
+msgid "Phone"
+msgstr ""
+
+#: includes/class-admin.php:147
+#: includes/class-admin.php:213
+#: includes/class-order-workflow.php:118
+msgid "Type"
+msgstr ""
+
+#: includes/class-admin.php:147
+#: includes/class-admin.php:168
+#: includes/class-admin.php:200
+#: includes/class-i18n.php:69
+#: includes/class-notifications.php:70
+#: includes/class-order-workflow.php:119
+#: includes/class-orders-table.php:53
+msgid "For the departed"
+msgstr ""
+
+#: includes/class-admin.php:147
+#: includes/class-admin.php:168
+#: includes/class-admin.php:200
+#: includes/class-i18n.php:68
+#: includes/class-notifications.php:70
+#: includes/class-order-workflow.php:119
+#: includes/class-orders-table.php:53
+msgid "For the living"
+msgstr ""
+
+#: includes/class-admin.php:147
+#: includes/class-admin.php:213
+msgid "Billing address"
+msgstr ""
+
+#: includes/class-admin.php:147
+#: includes/class-i18n.php:80
+msgid "PayPal"
+msgstr ""
+
+#: includes/class-admin.php:147
+#: includes/class-admin.php:213
+#: includes/class-i18n.php:99
+#: includes/class-notifications.php:88
+#: includes/class-order-workflow.php:118
+#: includes/class-orders-table.php:9
+msgid "Names"
+msgstr ""
+
+#: includes/class-admin.php:147
+#: includes/class-orders-table.php:30
+msgid "Request comment"
+msgstr ""
+
+#: includes/class-admin.php:147
+msgid "No comment provided"
+msgstr ""
+
+#: includes/class-admin.php:147
+msgid "← Back to requests"
+msgstr ""
+
+#: includes/class-admin.php:151
+msgid "Customer details refreshed from Stripe."
+msgstr ""
+
+#: includes/class-admin.php:151
+msgid "Stripe did not return payer details."
+msgstr ""
+
+#: includes/class-admin.php:154
+msgid "Retrieve payer details from Stripe"
+msgstr ""
+
+#: includes/class-admin.php:158
+msgid "Resend confirmation"
+msgstr ""
+
+#: includes/class-admin.php:159
+msgid "Request PDF"
+msgstr ""
+
+#: includes/class-admin.php:165
+#: includes/class-orders-table.php:53
+msgid "Current requests"
+msgstr ""
+
+#: includes/class-admin.php:165
+#: includes/class-order-workflow.php:89
+#: includes/class-orders-table.php:53
+msgid "Archive"
+msgstr ""
+
+#: includes/class-admin.php:166
+msgid "Blank PDF forms:"
+msgstr ""
+
+#: includes/class-admin.php:175
+msgid "Search requests"
+msgstr ""
+
+#: includes/class-admin.php:189
+msgid "Edit service"
+msgstr ""
+
+#: includes/class-admin.php:189
+#: includes/class-admin.php:193
+msgid "Add service"
+msgstr ""
+
+#: includes/class-admin.php:191
+#: includes/class-admin.php:200
+#: includes/class-catalog-table.php:12
+msgid "Title"
+msgstr ""
+
+#: includes/class-admin.php:191
+msgid "Description"
+msgstr ""
+
+#: includes/class-admin.php:192
+#: includes/class-admin.php:200
+#: includes/class-catalog-table.php:12
+msgid "Slug"
+msgstr ""
+
+#: includes/class-admin.php:192
+msgid "Background image"
+msgstr ""
+
+#: includes/class-admin.php:192
+msgid "Choose from Media Library"
+msgstr ""
+
+#: includes/class-admin.php:192
+msgid "Reset to default"
+msgstr ""
+
+#: includes/class-admin.php:192
+msgid "The bundled thematic background is used when no image is selected."
+msgstr ""
+
+#: includes/class-admin.php:193
+msgid "Intention"
+msgstr ""
+
+#: includes/class-admin.php:193
+msgid "Both"
+msgstr ""
+
+#: includes/class-admin.php:193
+msgid "Living only"
+msgstr ""
+
+#: includes/class-admin.php:193
+msgid "Departed only"
+msgstr ""
+
+#: includes/class-admin.php:193
+msgid "No type"
+msgstr ""
+
+#: includes/class-admin.php:193
+msgid "Pricing"
+msgstr ""
+
+#: includes/class-admin.php:193
+#: includes/class-i18n.php:105
+msgid "Fixed amount"
+msgstr ""
+
+#: includes/class-admin.php:193
+msgid "Per name"
+msgstr ""
+
+#: includes/class-admin.php:193
+msgid "Per request"
+msgstr ""
+
+#: includes/class-admin.php:193
+msgid "Donation, EUR"
+msgstr ""
+
+#: includes/class-admin.php:193
+msgid "Names per slip"
+msgstr ""
+
+#: includes/class-admin.php:193
+msgid "Sort order"
+msgstr ""
+
+#: includes/class-admin.php:193
+#: includes/class-admin.php:200
+#: includes/class-catalog-table.php:23
+msgid "Active"
+msgstr ""
+
+#: includes/class-admin.php:193
+#: includes/class-admin.php:200
+msgid "Save changes"
+msgstr ""
+
+#: includes/class-admin.php:193
+#: includes/class-admin.php:200
+msgid "Cancel"
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "Edit form"
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "Add form"
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "Introduction"
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "Services in this form"
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "Layout"
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "Classic"
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "Compact"
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "Wide: 3 cards"
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "Two columns"
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "Image cards"
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "Minimal"
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "The form always fills 100% of the shortcode block; the layout changes its internal arrangement."
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "Default type"
+msgstr ""
+
+#: includes/class-admin.php:213
+#: includes/class-admin.php:237
+#: includes/class-order-workflow.php:93
+#: includes/class-orders-table.php:9
+msgid "Date"
+msgstr ""
+
+#: includes/class-admin.php:213
+#: includes/class-orders-table.php:9
+msgid "Payment"
+msgstr ""
+
+#: includes/class-admin.php:213
+msgid "Amount EUR"
+msgstr ""
+
+#: includes/class-admin.php:213
+#: includes/class-notifications.php:90
+msgid "Note"
+msgstr ""
+
+#: includes/class-admin.php:213
+msgid "Donor name"
+msgstr ""
+
+#: includes/class-admin.php:213
+msgid "Payer name"
+msgstr ""
+
+#: includes/class-admin.php:213
+msgid "Payer email"
+msgstr ""
+
+#: includes/class-admin.php:224
+msgid "PHP 8.4 or later"
+msgstr ""
+
+#: includes/class-admin.php:225
+msgid "WordPress 7.1 or later"
+msgstr ""
+
+#: includes/class-admin.php:231
+msgid "Email retry scheduler"
+msgstr ""
+
+#: includes/class-admin.php:232
+msgid "Database tables"
+msgstr ""
+
+#: includes/class-admin.php:236
+msgid "Disabled — no configuration required"
+msgstr ""
+
+#: includes/class-admin.php:236
+msgid "Ready"
+msgstr ""
+
+#: includes/class-admin.php:236
+msgid "Check configuration"
+msgstr ""
+
+#: includes/class-admin.php:237
+msgid "Recent payment events"
+msgstr ""
+
+#: includes/class-admin.php:237
+msgid "Provider"
+msgstr ""
+
+#: includes/class-admin.php:237
+#: includes/class-order-workflow.php:93
+msgid "Event"
+msgstr ""
+
+#: includes/class-admin.php:237
+msgid "Result"
+msgstr ""
+
+#: includes/class-admin.php:237
+msgid "Processed"
+msgstr ""
+
+#: includes/class-admin.php:237
+msgid "No events yet."
+msgstr ""
+
+#: includes/class-admin.php:259
+msgid "Russian"
+msgstr ""
+
+#: includes/class-admin.php:259
+#: includes/class-admin.php:270
+msgid "German"
+msgstr ""
+
+#: includes/class-admin.php:259
+msgid "Ukrainian"
+msgstr ""
+
+#: includes/class-admin.php:259
+msgid "Polish"
+msgstr ""
+
+#: includes/class-admin.php:287
+msgid "Add new"
+msgstr ""
+
+#: includes/class-admin.php:290
+msgid "Search"
+msgstr ""
+
+#: includes/class-catalog-table.php:12
+msgid "Shortcode"
+msgstr ""
+
+#: includes/class-catalog-table.php:12
+msgid "Donation"
+msgstr ""
+
+#: includes/class-catalog-table.php:12
+msgid "Updated"
+msgstr ""
+
+#: includes/class-catalog-table.php:14
+msgid "Disable"
+msgstr ""
+
+#: includes/class-catalog-table.php:15
+msgid "Select"
+msgstr ""
+
+#: includes/class-catalog-table.php:19
+msgid "Edit"
+msgstr ""
+
+#: includes/class-catalog-table.php:23
+msgid "Disabled"
+msgstr ""
+
+#: includes/class-catalog-table.php:30
+msgid "All"
+msgstr ""
+
+#: includes/class-catalog-table.php:30
+msgid "Active items"
+msgstr ""
+
+#: includes/class-catalog-table.php:30
+msgid "Disabled items"
+msgstr ""
+
+#: includes/class-i18n.php:22
+msgid "Donation for the church"
+msgstr ""
+
+#: includes/class-i18n.php:23
+msgid "Donate"
+msgstr ""
+
+#: includes/class-i18n.php:24
+msgid "Secure payment. Your information is used only to process your donation."
+msgstr ""
+
+#: includes/class-i18n.php:25
+msgid "Thank you. Your donation is confirmed."
+msgstr ""
+
+#: includes/class-i18n.php:26
+msgid "Payment was not completed. Your donation has not been received."
+msgstr ""
+
+#: includes/class-i18n.php:27
+msgid "Thank you for your donation"
+msgstr ""
+
+#: includes/class-i18n.php:28
+msgid "Amount in EUR: 0.50 to 999,999.99. Up to two decimal places."
+msgstr ""
+
+#: includes/class-i18n.php:29
+msgid "Enter a valid amount between 0.50 and 999,999.99 EUR."
+msgstr ""
+
+#: includes/class-i18n.php:70
+msgid "Choose prayer services"
+msgstr ""
+
+#: includes/class-i18n.php:71
+msgid "Names, one person per line"
+msgstr ""
+
+#: includes/class-i18n.php:72
+msgid ""
+"Name\n"
+"Name\n"
+"Name"
+msgstr ""
+
+#: includes/class-i18n.php:73
+msgid "Please use baptismal names. Prayer slips are automatically divided into groups."
+msgstr ""
+
+#: includes/class-i18n.php:74
+msgid "Comment (optional)"
+msgstr ""
+
+#: includes/class-i18n.php:75
+msgid "Your name (optional)"
+msgstr ""
+
+#: includes/class-i18n.php:76
+msgid "Email address"
+msgstr ""
+
+#: includes/class-i18n.php:77
+msgid "Confirmation is sent only after payment is received."
+msgstr ""
+
+#: includes/class-i18n.php:78
+#: includes/class-notifications.php:74
+msgid "Payment method"
+msgstr ""
+
+#: includes/class-i18n.php:79
+msgid "Card / Stripe"
+msgstr ""
+
+#: includes/class-i18n.php:81
+msgid "Donation amount"
+msgstr ""
+
+#: includes/class-i18n.php:82
+msgid "Submit prayer request and donate"
+msgstr ""
+
+#: includes/class-i18n.php:83
+msgid "Secure payment. Your information is used only to process your prayer request."
+msgstr ""
+
+#: includes/class-i18n.php:84
+msgid "Please complete all required fields."
+msgstr ""
+
+#: includes/class-i18n.php:85
+msgid "The request could not be processed. Please try again."
+msgstr ""
+
+#: includes/class-i18n.php:86
+msgid "Thank you. Your payment is confirmed and your prayer request has been received."
+msgstr ""
+
+#: includes/class-i18n.php:87
+msgid "Thank you. Payment is still being confirmed. We will email you once the funds have arrived."
+msgstr ""
+
+#: includes/class-i18n.php:88
+msgid "Payment was not completed. Your prayer request is temporarily saved."
+msgstr ""
+
+#: includes/class-i18n.php:89
+msgid "Payment successful"
+msgstr ""
+
+#: includes/class-i18n.php:90
+msgid "Checking payment"
+msgstr ""
+
+#: includes/class-i18n.php:91
+msgid "Payment not completed"
+msgstr ""
+
+#: includes/class-i18n.php:92
+msgid "Understood"
+msgstr ""
+
+#: includes/class-i18n.php:93
+msgid "per name"
+msgstr ""
+
+#: includes/class-i18n.php:94
+msgid "per 10 names"
+msgstr ""
+
+#: includes/class-i18n.php:95
+msgid "Your prayer request has been received"
+msgstr ""
+
+#: includes/class-i18n.php:96
+msgid "Hello"
+msgstr ""
+
+#: includes/class-i18n.php:97
+msgid "Prayer service"
+msgstr ""
+
+#: includes/class-i18n.php:98
+#: includes/class-notifications.php:70
+msgid "Request type"
+msgstr ""
+
+#: includes/class-i18n.php:100
+msgid "With gratitude and prayer,"
+msgstr ""
+
+#: includes/class-i18n.php:101
+msgid "Order date:"
+msgstr ""
+
+#: includes/class-i18n.php:102
+msgid "Prayer type"
+msgstr ""
+
+#: includes/class-i18n.php:103
+msgid "Prayer request:"
+msgstr ""
+
+#: includes/class-i18n.php:104
+#: includes/class-payments.php:412
+msgid "Payment status:"
+msgstr ""
+
+#. translators: %d: prayer order ID.
+#: includes/class-notifications.php:65
+#, php-format
+msgid "Prayer request #%d paid"
+msgstr ""
+
+#: includes/class-notifications.php:68
+msgid "Order date"
+msgstr ""
+
+#: includes/class-notifications.php:72
+msgid "Donor email"
+msgstr ""
+
+#: includes/class-notifications.php:91
+msgid "Open request in WordPress"
+msgstr ""
+
+#: includes/class-notifications.php:96
+msgid "The recipient notification was handed to the mail system."
+msgstr ""
+
+#: includes/class-notifications.php:97
+msgid "Recipient notification failed. It will be retried."
+msgstr ""
+
+#: includes/class-order-workflow.php:23
+msgid "The PDF is ready, but the print status could not be saved. Please try again."
+msgstr ""
+
+#: includes/class-order-workflow.php:25
+msgid "PDF generated; the printed status was set automatically."
+msgstr ""
+
+#: includes/class-order-workflow.php:33
+msgid "Enter a valid date and a duration between 1 and 36500 days."
+msgstr ""
+
+#: includes/class-order-workflow.php:40
+msgid "Not assigned"
+msgstr ""
+
+#: includes/class-order-workflow.php:41
+msgid "Starts"
+msgstr ""
+
+#: includes/class-order-workflow.php:42
+msgid "Completed"
+msgstr ""
+
+#: includes/class-order-workflow.php:44
+msgid "In progress · days remaining:"
+msgstr ""
+
+#: includes/class-order-workflow.php:53
+msgid "Service not found."
+msgstr ""
+
+#: includes/class-order-workflow.php:55
+msgid "Restore the request from the archive first."
+msgstr ""
+
+#: includes/class-order-workflow.php:62
+msgid "Could not save the period."
+msgstr ""
+
+#: includes/class-order-workflow.php:63
+msgid "period removed"
+msgstr ""
+
+#: includes/class-order-workflow.php:76
+msgid "Moved to archive"
+msgstr ""
+
+#: includes/class-order-workflow.php:76
+msgid "Restored from archive"
+msgstr ""
+
+#: includes/class-order-workflow.php:79
+msgid "Staff member confirmed printing"
+msgstr ""
+
+#: includes/class-order-workflow.php:79
+msgid "Print status cleared"
+msgstr ""
+
+#: includes/class-order-workflow.php:81
+msgid "Could not save the change."
+msgstr ""
+
+#: includes/class-order-workflow.php:89
+msgid "Printing and archive"
+msgstr ""
+
+#: includes/class-order-workflow.php:89
+msgid "Last PDF generation / print:"
+msgstr ""
+
+#: includes/class-order-workflow.php:89
+msgid "None"
+msgstr ""
+
+#: includes/class-order-workflow.php:92
+#: includes/class-orders-table.php:11
+msgid "Clear print status"
+msgstr ""
+
+#: includes/class-order-workflow.php:92
+#: includes/class-orders-table.php:11
+msgid "Archive request"
+msgstr ""
+
+#: includes/class-order-workflow.php:92
+msgid "Restore"
+msgstr ""
+
+#: includes/class-order-workflow.php:93
+msgid "Request history"
+msgstr ""
+
+#: includes/class-order-workflow.php:93
+msgid "For older requests, available dates are shown; the detailed log starts after the update."
+msgstr ""
+
+#: includes/class-order-workflow.php:93
+msgid "Staff member"
+msgstr ""
+
+#: includes/class-order-workflow.php:94
+msgid "Request received"
+msgstr ""
+
+#: includes/class-order-workflow.php:94
+#: includes/class-payments.php:434
+msgid "Payment confirmed"
+msgstr ""
+
+#: includes/class-order-workflow.php:94
+msgid "Last confirmation sent"
+msgstr ""
+
+#: includes/class-order-workflow.php:94
+msgid "Last print status"
+msgstr ""
+
+#: includes/class-order-workflow.php:98
+msgid "System"
+msgstr ""
+
+#: includes/class-order-workflow.php:116
+msgid "Commemoration"
+msgstr ""
+
+#: includes/class-order-workflow.php:116
+msgid "Paid requests outside the archive. Expired periods do not automatically archive requests."
+msgstr ""
+
+#: includes/class-order-workflow.php:117
+msgid "Read on this date"
+msgstr ""
+
+#: includes/class-order-workflow.php:117
+msgid "Ending on this date"
+msgstr ""
+
+#: includes/class-order-workflow.php:117
+msgid "Upcoming"
+msgstr ""
+
+#: includes/class-order-workflow.php:117
+msgid "Finished"
+msgstr ""
+
+#: includes/class-order-workflow.php:117
+msgid "No period"
+msgstr ""
+
+#: includes/class-order-workflow.php:118
+msgid "Request / service"
+msgstr ""
+
+#: includes/class-order-workflow.php:118
+msgid "Start"
+msgstr ""
+
+#: includes/class-order-workflow.php:118
+msgid "End"
+msgstr ""
+
+#: includes/class-order-workflow.php:118
+msgid "Status on the selected date"
+msgstr ""
+
+#: includes/class-order-workflow.php:120
+msgid "No requests."
+msgstr ""
+
+#: includes/class-order-workflow.php:122
+msgid "← Previous"
+msgstr ""
+
+#: includes/class-order-workflow.php:122
+msgid "Next →"
+msgstr ""
+
+#: includes/class-orders-table.php:9
+msgid "Printing"
+msgstr ""
+
+#: includes/class-orders-table.php:11
+msgid "Restore from archive"
+msgstr ""
+
+#: includes/class-orders-table.php:13
+msgid "Open"
+msgstr ""
+
+#: includes/class-orders-table.php:53
+msgid "All payments"
+msgstr ""
+
+#: includes/class-orders-table.php:53
+msgid "Both types"
+msgstr ""
+
+#: includes/class-orders-table.php:53
+msgid "All print statuses"
+msgstr ""
+
+#: includes/class-orders-table.php:53
+msgid "Not printed"
+msgstr ""
+
+#: includes/class-orders-table.php:54
+msgid "Filter"
+msgstr ""
+
+#: includes/class-payments.php:493
+msgid "Could not hand the email to the mail system"
+msgstr ""
+
+#: includes/class-payments.php:493
+msgid "Confirmation handed to the mail system"
+msgstr ""
+
+#: includes/class-paypal-help.php:9
+msgid "PayPal setup — step-by-step instructions"
+msgstr ""
+
+#: includes/class-paypal-help.php:10
+msgid "Live payments require the recipient's PayPal Business account. Email, account password, App ID and Stripe whsec are not substitutes for PayPal credentials. The plugin uses REST API Orders v2, not legacy email payment buttons or IPN."
+msgstr ""
+
+#: includes/class-paypal-help.php:11
+msgid "Open Apps & Credentials in the PayPal Developer Dashboard and sign in to the recipient's account. Select Sandbox for testing or Live for real payments."
+msgstr ""
+
+#: includes/class-paypal-help.php:12
+msgid "Open Apps & Credentials"
+msgstr ""
+
+#: includes/class-paypal-help.php:13
+msgid "Open your REST API app or create one using Create App. For Sandbox, select the test seller's Business account; for Live, use the intended recipient's live app."
+msgstr ""
+
+#: includes/class-paypal-help.php:14
+msgid "On the app page, copy the Client ID and reveal the Secret. Paste them into the matching plugin fields. Select the same Live or Sandbox mode. Client ID, Secret and Webhook ID must all belong to the same app and environment."
+msgstr ""
+
+#: includes/class-paypal-help.php:15
+msgid "In the same app, find Webhooks and click Add Webhook. Paste the exact webhook URL shown below. It must be public HTTPS on port 443, without password protection, POST blocking or an intermediate security page."
+msgstr ""
+
+#: includes/class-paypal-help.php:17
+msgid "Select PAYMENT.CAPTURE.COMPLETED and PAYMENT.CAPTURE.REFUNDED, then save the webhook. The first confirms payment; the second records refunds. All events, CHECKOUT.ORDER.APPROVED and IPN are not needed for this integration."
+msgstr ""
+
+#: includes/class-paypal-help.php:18
+msgid "Copy the new webhook's ID from Webhooks into the plugin's Webhook ID field. This is not the Client ID or an individual WH-… event ID. Enable PayPal and save. The saved Secret is hidden; a blank field keeps the previous secret."
+msgstr ""
+
+#: includes/class-paypal-help.php:19
+msgid "Test with Sandbox first: under Testing Tools → Sandbox Accounts, find separate Personal buyer and Business seller accounts. Submit a test prayer request and pay with the test buyer, not your real account. Check the Paid status, diagnostics event and emails if mail is configured. Sandbox does not transfer real money."
+msgstr ""
+
+#: includes/class-paypal-help.php:20
+msgid "To go live, replace Client ID, Secret and Webhook ID with the Live app's values and select Live. The plugin stores one set of credentials, not two. Always enter a new Secret when changing apps or environments; a blank field preserves the old one."
+msgstr ""
+
+#: includes/class-paypal-help.php:21
+msgid "Webhooks Simulator generates artificial events. PayPal does not support verifying these through verify-webhook-signature, which the plugin uses. A signature failure for such an event does not prove the integration is broken. Test a real Sandbox payment and event delivery in the same app."
+msgstr ""
+
+#: includes/class-paypal-help.php:22
+msgid "If payment or webhooks fail, check the app/environment for all credentials, the exact URL and HTTPS/POST access. Update the PayPal webhook after a domain move. Disabled PayPal needs no configuration. Diagnostics checks whether credentials exist, not whether PayPal accepts them. Never publish the Secret in emails, screenshots or messages."
+msgstr ""
+
+#: includes/class-paypal-help.php:23
+msgid "PayPal documentation: account and credentials"
+msgstr ""
+
+#: includes/class-paypal-help.php:24
+msgid "PayPal documentation: webhooks and signature verification"
+msgstr ""
+
+#: includes/class-pdf.php:35
+msgid "Could not generate the PDF."
+msgstr ""
+
+#: includes/class-pdf.php:36
+msgid "Could not send the PDF: headers have already been sent."
+msgstr ""
+
+#: includes/class-public-form.php:42
+msgid "Kloster: form not found."
+msgstr ""
+
+msgid "Forbidden"
+msgstr ""
+
+msgid "Campaign not found."
+msgstr ""
+
+msgid "Goal"
+msgstr ""
+
+msgid "Expenses"
+msgstr ""
+
+msgid "Balance"
+msgstr ""
+
+msgid "Campaign progress"
+msgstr ""
+
+msgid "Deadline"
+msgstr ""
+
+msgid "This campaign is closed."
+msgstr ""
+
+msgid "Campaigns"
+msgstr ""
+
+msgid "Campaign"
+msgstr ""
+
+msgid "Report"
+msgstr ""
+
+msgid "Edit campaign"
+msgstr ""
+
+msgid "New campaign"
+msgstr ""
+
+msgid "Save campaign"
+msgstr ""
+
+msgid "Record expense"
+msgstr ""
+
+msgid "Expenses are entered separately; payment providers do not report how funds are spent."
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+msgid "Closed"
+msgstr ""
+
+msgid "Log in to view your donations."
+msgstr ""
+
+msgid "Your donations"
+msgstr ""
+
+msgid "Only payments made while signed in to this account are shown. Guest payments are not linked by email."
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "For regular support, also enable these webhook events:"
+msgstr ""
+
+msgid "Partially refunded"
+msgstr ""
+
+msgid "Log in and confirm recurring support before continuing."
+msgstr ""
+
+msgid "Regular support"
+msgstr ""
+
+msgid "Frequency"
+msgstr ""
+
+msgid "Monthly"
+msgstr ""
+
+msgid "Yearly"
+msgstr ""
+
+msgid "Repeat this amount at the selected interval until I cancel. I can cancel in my donation history."
+msgstr ""
+
+msgid "Start regular support"
+msgstr ""
+
+msgid "Stripe is not configured."
+msgstr ""
+
+msgid "PayPal is not configured or authentication failed."
+msgstr ""
+
+msgid "The payment provider is unavailable. Please try again."
+msgstr ""
+
+msgid "The payment provider could not complete this operation."
+msgstr ""
+
+msgid "Invalid payment provider response."
+msgstr ""
+
+msgid "PayPal is preparing recurring support. Please try again shortly."
+msgstr ""
+
+msgid "Log in to start regular support."
+msgstr ""
+
+msgid "Payment overdue"
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Cancel regular support"
+msgstr ""
+
+msgid "Closing a campaign prevents new submissions. Existing regular support continues until cancelled."
+msgstr ""
+
+msgid "Help → Shortcodes"
+msgstr ""
+
+msgid "Help"
+msgstr ""
+
+msgid "Prayer form. Without id or slug, uses the active gebetsanliegen form. An id takes precedence over a slug."
+msgstr ""
+
+msgid "Alias of kloster_form with the same parameters and behavior."
+msgstr ""
+
+msgid "Form for one active service. Specify its id or slug; an id takes precedence. Find these values in Services."
+msgstr ""
+
+msgid "One-time donation without prayer names or services. The donor enters an amount from 0.50 to 999,999.99 EUR."
+msgstr ""
+
+msgid "Monthly or yearly support. Requires login and explicit consent. The owner can cancel in donation history; configure recurring webhooks and WP-Cron first."
+msgstr ""
+
+msgid "Published campaigns with progress, totals and donation forms. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
+msgstr ""
+
+msgid "Public report for one published campaign: goal, confirmed receipts after refunds, separately recorded expenses and balance. Does not disclose donor data or include a payment form."
+msgstr ""
+
+msgid "Private payment history and regular-support cancellation for the signed-in account. Guest and historical payments are not assigned by email. Exclude this page from external full-page caches."
+msgstr ""
+
+msgid "Payment result for the returned order, using its saved language. Has no shortcode parameters. Forms already include this block; use it separately on a custom return page. A return URL alone does not confirm payment."
+msgstr ""
+
+msgid "Numeric form, service or campaign ID. Find it in the corresponding admin section. Required for a campaign report; optional for the campaign list."
+msgstr ""
+
+msgid "Saved form or service slug. Used only when id is omitted or zero."
+msgstr ""
+
+msgid "Layout: standard, compact, wide, two_columns, cards or minimal. Prayer forms default to their saved layout; other forms default to compact."
+msgstr ""
+
+msgid "Language: en, ru, de, uk or pl. Omit it to use the current WordPress language. Existing prayer form/service content uses German as the English fallback."
+msgstr ""
+
+msgid "yes (default) shows the form heading; no hides it. Not supported by kloster_service."
+msgstr ""
+
+msgid "Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired."
+msgstr ""
+
+msgid "Compatibility parameter for kloster_donation: no (default) means one-time payment; yes displays recurring choices. Prefer kloster_support, which also checks login before showing the form."
+msgstr ""
+
+msgid "Copied."
+msgstr ""
+
+msgid "The example is selected. Copy it manually."
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "Add a Shortcode block to a WordPress page and paste an example. Replace example IDs and slugs with your saved values. Publish the page to display the form or report."
+msgstr ""
+
+msgid "Choose a language above to translate this guide and the lang parameter in its examples. Keep shortcode names and parameter values unchanged."
+msgstr ""
+
+msgid "Parameters"
+msgstr ""
+
+msgid "No parameters."
+msgstr ""
+
+msgid "Examples to copy"
+msgstr ""
+
+msgid "Shortcode example"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "English"
+msgstr ""
+
+msgid "Stripe setup — step-by-step instructions"
+msgstr ""
+
+msgid "Sign in to the Stripe account that will receive donations. Choose a Sandbox or test environment first. The API key and webhook must belong to the same account and environment."
+msgstr ""
+
+msgid "Open Stripe API keys"
+msgstr ""
+
+msgid "Reveal or create a Secret key on the API keys page and paste it into Secret Key. Test keys start with sk_test_, live keys with sk_live_. A pk_ publishable key, account password or whsec_ signing secret cannot replace it."
+msgstr ""
+
+msgid "Open Stripe Webhooks / Workbench"
+msgstr ""
+
+msgid "In Workbench → Webhooks, choose Create an event destination (or Add destination / Add endpoint in older dashboards). Choose Your account, the Snapshot payload format and Webhook endpoint as the destination. This plugin does not process Thin events."
+msgstr ""
+
+msgid "Paste the exact Endpoint URL below. It must be publicly accessible over HTTPS and accept POST requests without login, redirects or a security challenge. Do not enter the WordPress settings-page URL."
+msgstr ""
+
+msgid "For one-time donations and prayer requests, select checkout.session.completed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
+msgstr ""
+
+msgid "Open the saved destination and reveal its Signing secret, starting with whsec_. Paste it into Webhook Secret. Use the secret of this exact endpoint and environment, not a Stripe CLI listener secret. Enable Stripe and save the plugin settings."
+msgstr ""
+
+msgid "A blank Secret Key or Webhook Secret field preserves the saved value. When switching to Live, replace both values with the Live account key and Live endpoint signing secret. The plugin stores one set of Stripe credentials."
+msgstr ""
+
+msgid "Submit a real checkout from a page on your test site. In the test environment, use a Stripe test card from the official testing guide, not a real card. Verify Paid status and configured emails. For regular support, also test a payment cycle, cancellation and refunds."
+msgstr ""
+
+msgid "Stripe test cards and testing guide"
+msgstr ""
+
+msgid "In the destination, inspect event deliveries and their HTTP responses. A successful delivery should return 2xx. Fix the cause before resending a failed event: 400 can indicate a wrong signing secret, payload format or payment mismatch; 404 indicates a wrong endpoint URL; 403 or a security page can indicate blocked POST requests."
+msgstr ""
+
+msgid "Opening the webhook URL in a browser sends GET and is not a payment test. A Dashboard sample event may not match a saved plugin order. Test a checkout created by this plugin and inspect its event delivery. A success return URL alone does not confirm payment."
+msgstr ""
+
+msgid "After a domain move, update the destination URL in Stripe. Never publish API keys or signing secrets. Plugin diagnostics checks whether settings exist, not whether Stripe accepts them."
+msgstr ""
+
+msgid "Stripe documentation: API keys"
+msgstr ""
+
+msgid "Stripe documentation: webhook setup and signatures"
+msgstr ""
+
+msgid "Language override: en, ru, de, uk or pl. Usually omit it: the site follows the current WPML/Polylang language, or WordPress without a language plugin. Existing prayer form/service content uses German as the English fallback."
+msgstr ""

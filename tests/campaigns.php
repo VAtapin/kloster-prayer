@@ -12,7 +12,7 @@ $id=Campaigns::save($input); donation_assert(is_int($id)&&$id>0,'Create campaign
 $campaign=Campaigns::get($id); donation_assert(Campaigns::accepting($campaign),'Open campaign accepts donations');
 $dieHandler=static fn()=>static function(){throw new RuntimeException('campaign-nonce-rejected');};
 remove_filter('wp_doing_ajax','__return_true');add_filter('wp_die_handler',$dieHandler);
-$_POST=['klp_campaign_action'=>'save','_wpnonce'=>'invalid'];$_REQUEST=$_POST;
+$_POST=['gkod_campaign_action'=>'save','_wpnonce'=>'invalid'];$_REQUEST=$_POST;
 try { Donation_Pages::actions(); throw new RuntimeException('Missing campaign nonce enforcement'); }
 catch(RuntimeException $e){donation_assert($e->getMessage()==='campaign-nonce-rejected','Invalid campaign nonce rejected');}
 remove_filter('wp_die_handler',$dieHandler);add_filter('wp_doing_ajax','__return_true');$_POST=[];$_REQUEST=[];
@@ -24,7 +24,7 @@ add_filter('pre_http_request',static function($value,$args,$url){
     if(str_ends_with($url,'/v1/checkout/sessions'))return ['headers'=>[],'body'=>wp_json_encode(['id'=>'cs_campaign_'.$args['body']['metadata[order_id]'],'url'=>'https://checkout.stripe.com/c/pay/campaign']),'response'=>['code'=>200],'cookies'=>[]];
     return new WP_Error('blocked','Unexpected network request');
 },10,3);
-delete_transient('klp_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
+delete_transient('gkod_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
 $result=donation_ajax(array_replace($base,['campaign_id'=>(string)$id]));
 donation_assert($result['success']??false,'Targeted checkout');
 $targeted=$wpdb->get_row('SELECT * FROM '.Database::table('orders').' ORDER BY id DESC LIMIT 1');
@@ -56,7 +56,7 @@ Campaigns::save(array_replace($input,['campaign_id'=>$id,'status'=>'draft']));
 donation_assert(do_shortcode('[kloster_campaign_report id="'.$id.'"]')===''&&do_shortcode('[kloster_campaigns id="'.$id.'"]')==='<div class="klp-campaigns"></div>','Draft campaigns are private');
 $wpdb->update(Database::table('orders'),['payment_status'=>'refunded'],['id'=>$targeted->id]);
 donation_assert(Campaigns::totals($id)['received']===0,'Refunded payments are excluded');
-update_option('klp_db_version','1.2.13');Database::maybe_upgrade();
+update_option('gkod_db_version','1.2.13');Database::maybe_upgrade();
 donation_assert((int)$wpdb->get_var($wpdb->prepare('SELECT campaign_id FROM %i WHERE id=%d',Database::table('orders'),$targeted->id))===$id,'Upgrade preserves allocations');
 donation_assert($wpdb->last_error==='','No SQL errors');
 echo "PASS campaigns: compatible schema, deadlines/status, allocation, confirmed income/expenses/refunds, public privacy, authenticated history and access rejection\n";

@@ -10,7 +10,7 @@ const {chromium} = require(path.resolve(__dirname, '../../Kalendar/node_modules/
     page.on('pageerror', error => errors.push(error.message));
     await page.setContent(fs.readFileSync(path.resolve(__dirname, '../tmp/support-preview.html'), 'utf8'));
     await page.addStyleTag({content: 'body{font-family:Arial,sans-serif;margin:24px;max-width:860px}input,select,textarea{font:inherit}table{margin-bottom:20px}'});
-    await page.addStyleTag({path: path.resolve(__dirname, '../kloster-prayer/assets/css/public.css')});
+    await page.addStyleTag({path: path.resolve(__dirname, '../georg-kloster-orthodox-donate/assets/css/public.css')});
     await page.evaluate(() => {
       window.klosterPrayer = {required: 'Заполните обязательные поля.', error: 'Ошибка', ajaxUrl: '/fixture'};
       window.sent = [];
@@ -19,7 +19,7 @@ const {chromium} = require(path.resolve(__dirname, '../../Kalendar/node_modules/
         return {json: async () => ({success: false, data: {message: 'Fixture validation'}})};
       };
     });
-    await page.addScriptTag({path: path.resolve(__dirname, '../kloster-prayer/assets/js/public.js')});
+    await page.addScriptTag({path: path.resolve(__dirname, '../georg-kloster-orthodox-donate/assets/js/public.js')});
     await page.evaluate(() => document.dispatchEvent(new Event('DOMContentLoaded')));
     const form = page.locator('.klp-form form');
     await form.locator('[name="donation_amount"]').fill('10,00');

@@ -13,7 +13,7 @@ add_filter('pre_http_request',static function($value,$args,$url)use(&$requests,&
     $body=$args['body']??[];$json=is_string($body)?json_decode($body,true):$body;$code=200;
     if(str_ends_with($url,'/v1/oauth2/token'))$data=['access_token'=>'local-fixture-token'];
     elseif(str_ends_with($url,'/v1/notifications/verify-webhook-signature'))$data=['verification_status'=>$paypal_verified?'SUCCESS':'FAILURE'];
-    elseif(str_ends_with($url,'/v1/checkout/sessions'))$data=['id'=>'cs_support_'.$body['metadata[klp_subscription]'],'url'=>'https://checkout.stripe.com/c/pay/support'];
+    elseif(str_ends_with($url,'/v1/checkout/sessions'))$data=['id'=>'cs_support_'.$body['metadata[gkod_subscription]'],'url'=>'https://checkout.stripe.com/c/pay/support'];
     elseif(str_ends_with($url,'/v1/catalogs/products'))$data=['id'=>'PROD-support'];
     elseif(str_ends_with($url,'/v1/billing/plans'))$data=['id'=>'P-support','status'=>'ACTIVE'];
     elseif(str_ends_with($url,'/v1/billing/subscriptions')){
@@ -30,35 +30,35 @@ add_filter('pre_http_request',static function($value,$args,$url)use(&$requests,&
 },10,3);
 function support_event(string $type,array $object,string $id,?int $created=null): WP_REST_Response {
     $payload=wp_json_encode(['id'=>$id,'type'=>$type,'created'=>$created??time(),'data'=>['object'=>$object]]);
-    $r=new WP_REST_Request('POST','/kloster-prayer/v1/stripe/webhook');$r->set_body($payload);$t=time();
+    $r=new WP_REST_Request('POST','/georg-kloster-orthodox-donate/v1/stripe/webhook');$r->set_body($payload);$t=time();
     $r->set_header('stripe-signature','t='.$t.',v1='.hash_hmac('sha256',$t.'.'.$payload,'local-fixture-signing'));
     return KlosterPrayer\Payments::stripe_webhook($r);
 }
 function support_paypal(string $type,array $object,string $id): WP_REST_Response {
     $payload=['id'=>$id,'event_type'=>$type,'create_time'=>gmdate('Y-m-d\TH:i:s\Z'),'resource'=>$object];
-    $r=new WP_REST_Request('POST','/kloster-prayer/v1/paypal/webhook');$r->set_body(wp_json_encode($payload));$r->set_header('content-type','application/json');
+    $r=new WP_REST_Request('POST','/georg-kloster-orthodox-donate/v1/paypal/webhook');$r->set_body(wp_json_encode($payload));$r->set_header('content-type','application/json');
     foreach(['auth-algo'=>'SHA256withRSA','cert-url'=>'https://api-m.sandbox.paypal.com/fixture','transmission-id'=>'fixture','transmission-sig'=>'fixture','transmission-time'=>gmdate('c')]as$k=>$v)$r->set_header('paypal-'.$k,$v);
     return KlosterPrayer\Payments::paypal_webhook($r);
 }
-wp_set_current_user(1);update_option('klp_payment_methods',['stripe','paypal']);update_option('klp_paypal_mode','sandbox');update_option('klp_paypal_webhook_id','local-fixture-webhook');
-delete_transient('klp_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
+wp_set_current_user(1);update_option('gkod_payment_methods',['stripe','paypal']);update_option('gkod_paypal_mode','sandbox');update_option('gkod_paypal_webhook_id','local-fixture-webhook');
+delete_transient('gkod_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
 $support_campaign=KlosterPrayer\Campaigns::save($input);
 $support=array_replace($base,['frequency'=>'month','recurring_consent'=>'1','donation_amount'=>'10.00','campaign_id'=>$support_campaign]);
 donation_assert(!(donation_ajax(array_replace($support,['recurring_consent'=>'']))['success']??true),'Explicit repeat-payment consent required');
 donation_assert(!(donation_ajax(array_replace($support,['frequency'=>'week']))['success']??true),'Unsupported interval rejected');
 wp_set_current_user(0);
 donation_assert(str_contains(Support_Pages::form(),'Log in'),'Guest support form requires authentication');
-donation_assert(!(donation_ajax(array_replace($support,['nonce'=>wp_create_nonce('klp_payment')]))['success']??true),'Guests cannot create subscriptions');
+donation_assert(!(donation_ajax(array_replace($support,['nonce'=>wp_create_nonce('gkod_payment')]))['success']??true),'Guests cannot create subscriptions');
 wp_set_current_user(1);
 foreach(['ru','de','uk','pl','en']as$lang)donation_assert(str_contains(Support_Pages::form(['lang'=>$lang]),'name="recurring_consent"'),'Localized recurring form and consent');
 $result=donation_ajax($support);donation_assert($result['success']??false,'Stripe subscription checkout');
 $sub=$wpdb->get_row('SELECT * FROM '.Database::table('subscriptions').' ORDER BY id DESC LIMIT 1');
 $initial=$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d',Database::table('orders'),$sub->initial_order_id));
 $checkout=end($requests)[1]['body'];
-donation_assert($checkout['mode']==='subscription'&&$checkout['line_items[0][price_data][recurring][interval]']==='month'&&$checkout['subscription_data[metadata][klp_subscription]']===$sub->public_id,'Correct Stripe recurring payload and binding');
+donation_assert($checkout['mode']==='subscription'&&$checkout['line_items[0][price_data][recurring][interval]']==='month'&&$checkout['subscription_data[metadata][gkod_subscription]']===$sub->public_id,'Correct Stripe recurring payload and binding');
 donation_assert($initial->payment_status==='pending','Checkout does not count as income');
 $count=(int)$wpdb->get_var('SELECT COUNT(*) FROM '.Database::table('orders'));$mail_count=count($mail);
-$remote_agreements['sub_support']=['id'=>'sub_support','metadata'=>['klp_subscription'=>$sub->public_id],'status'=>'active'];
+$remote_agreements['sub_support']=['id'=>'sub_support','metadata'=>['gkod_subscription'=>$sub->public_id],'status'=>'active'];
 $invoice=['id'=>'in_first','subscription'=>'sub_support','status'=>'paid','amount_paid'=>1000,'currency'=>'eur','payment_intent'=>'pi_first'];
 $bad=$invoice;$bad['amount_paid']=1;donation_assert(support_event('invoice.payment_succeeded',$bad,'evt_support_wrong')->get_status()===400,'Recurring amount mismatch rejected');
 $bad=$invoice;$bad['currency']='usd';donation_assert(support_event('invoice.payment_succeeded',$bad,'evt_support_currency')->get_status()===400,'Recurring currency mismatch rejected');
@@ -67,11 +67,11 @@ donation_assert(support_event('invoice.payment_succeeded',$invoice,'evt_support_
 donation_assert((int)$wpdb->get_var('SELECT COUNT(*) FROM '.Database::table('orders'))===$count&&count($mail)===$mail_count+2,'First invoice uses original order and sends two confirmations');
 donation_assert(KlosterPrayer\Campaigns::totals($support_campaign)['received']===1000,'Recurring payment allocated to its campaign');
 donation_assert(Subscriptions::get((int)$sub->id)->provider_id==='sub_support','Out-of-order invoice discovers remote metadata');
-$session=['id'=>$sub->checkout_id,'mode'=>'subscription','metadata'=>['klp_subscription'=>$sub->public_id],'subscription'=>'sub_support','amount_total'=>1000,'currency'=>'eur','payment_status'=>'paid'];
+$session=['id'=>$sub->checkout_id,'mode'=>'subscription','metadata'=>['gkod_subscription'=>$sub->public_id],'subscription'=>'sub_support','amount_total'=>1000,'currency'=>'eur','payment_status'=>'paid'];
 donation_assert(support_event('checkout.session.completed',$session,'evt_support_checkout')->get_status()===200,'Late Checkout binds without double-counting');
 support_event('invoice.payment_succeeded',$invoice,'evt_support_first');support_event('invoice.payment_succeeded',$invoice,'evt_support_duplicate_new_id');
 donation_assert((int)$wpdb->get_var('SELECT COUNT(*) FROM '.Database::table('orders'))===$count&&count($mail)===$mail_count+2,'Invoice transaction ID deduplicates different event IDs');
-$modern=['id'=>'in_second','parent'=>['subscription_details'=>['subscription'=>'sub_support','metadata'=>['klp_subscription'=>$sub->public_id]]],'status'=>'paid','amount_paid'=>1000,'currency'=>'eur'];
+$modern=['id'=>'in_second','parent'=>['subscription_details'=>['subscription'=>'sub_support','metadata'=>['gkod_subscription'=>$sub->public_id]]],'status'=>'paid','amount_paid'=>1000,'currency'=>'eur'];
 KlosterPrayer\Campaigns::save(array_replace($input,['campaign_id'=>$support_campaign,'status'=>'closed']));
 donation_assert(support_event('invoice.payment_succeeded',$modern,'evt_support_second')->get_status()===200,'Modern invoice parent and invoice payment lookup');
 donation_assert((int)$wpdb->get_var('SELECT COUNT(*) FROM '.Database::table('orders'))===$count+1,'Renewal creates one new payment');
@@ -99,9 +99,9 @@ donation_assert(Subscriptions::get((int)$sub->id)->status==='cancelled','Cancell
 donation_assert(Subscriptions::cancel((int)$sub->id)===true,'Repeated cancellation is harmless');
 $paypal_support=array_replace($support,['provider'=>'paypal','frequency'=>'year','donation_amount'=>'20.00','campaign_id'=>0]);
 delete_option(Recurring_Gateways::plan_key(2000,'year'));
-delete_transient('klp_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
+delete_transient('gkod_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
 $result=donation_ajax($paypal_support);donation_assert(!($result['success']??true),'Unprovisioned PayPal plan is prepared asynchronously');
-$key=Recurring_Gateways::plan_key(2000,'year');donation_assert((bool)wp_next_scheduled('klp_prepare_recurring_plan',[2000,'year',$key,0]),'Plan preparation queued');
+$key=Recurring_Gateways::plan_key(2000,'year');donation_assert((bool)wp_next_scheduled('gkod_prepare_recurring_plan',[2000,'year',$key,0]),'Plan preparation queued');
 Recurring_Gateways::prepare_plan(2000,'year',$key);donation_assert(get_option($key)==='P-support','Real product and plan API payloads provisioned by worker');
 $plan_payload=json_decode(end($requests)[1]['body'],true);
 donation_assert($plan_payload['billing_cycles'][0]['frequency']['interval_unit']==='YEAR'&&$plan_payload['billing_cycles'][0]['pricing_scheme']['fixed_price']['value']==='20.00','PayPal recurring amount/interval');
@@ -145,10 +145,10 @@ $dieHandler=static fn()=>static function(){throw new RuntimeException('support-n
 $_POST=['subscription_id'=>(string)$sub->id,'_wpnonce'=>'invalid'];$_REQUEST=$_POST;
 try{Support_Pages::cancel_action();throw new RuntimeException('Missing cancel nonce');}catch(RuntimeException $e){donation_assert($e->getMessage()==='support-nonce-rejected','Cancellation CSRF rejected');}
 remove_filter('wp_die_handler',$dieHandler);$_POST=[];$_REQUEST=[];
-update_option('klp_db_version','1.2.14');Database::maybe_upgrade();donation_assert(Subscriptions::get((int)$sub->id)->status==='cancelled','Upgrade preserves subscriptions');
+update_option('gkod_db_version','1.2.14');Database::maybe_upgrade();donation_assert(Subscriptions::get((int)$sub->id)->status==='cancelled','Upgrade preserves subscriptions');
 donation_assert($wpdb->last_error==='','No database errors');
-wp_schedule_single_event(time()+600,'klp_prepare_recurring_plan',[1000,'month','fixture-key',0]);
-wp_schedule_single_event(time()+600,'klp_sync_recurring_refunds',['ch_fixture','pi_fixture','',0]);
-do_action('deactivate_kloster-prayer/kloster-prayer.php');
-donation_assert(!wp_next_scheduled('klp_prepare_recurring_plan',[1000,'month','fixture-key',0])&&!wp_next_scheduled('klp_sync_recurring_refunds',['ch_fixture','pi_fixture','',0]),'Deactivation clears background events with arguments');
+wp_schedule_single_event(time()+600,'gkod_prepare_recurring_plan',[1000,'month','fixture-key',0]);
+wp_schedule_single_event(time()+600,'gkod_sync_recurring_refunds',['ch_fixture','pi_fixture','',0]);
+do_action('deactivate_georg-kloster-orthodox-donate/georg-kloster-orthodox-donate.php');
+donation_assert(!wp_next_scheduled('gkod_prepare_recurring_plan',[1000,'month','fixture-key',0])&&!wp_next_scheduled('gkod_sync_recurring_refunds',['ch_fixture','pi_fixture','',0]),'Deactivation clears background events with arguments');
 echo "PASS recurring support: consent/login, Stripe/PayPal API payloads, signed events, out-of-order events, cycle/refund idempotency, ownership, cancellation/failure handling, background provisioning and compatible schema; HTTP/mail intercepted\n";

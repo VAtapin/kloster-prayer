@@ -8,8 +8,8 @@ const {chromium}=require(path.resolve(__dirname,'../../Kalendar/node_modules/pla
     const page=await browser.newPage({viewport:{width:1200,height:900}});
     await page.setContent(fs.readFileSync(path.resolve(__dirname,'../tmp/admin-settings.html'),'utf8'));
     for(const css of ['wp-includes/css/buttons.css','wp-admin/css/common.css','wp-admin/css/forms.css'])await page.addStyleTag({path:path.resolve(__dirname,'../tmp/admin-check-core/wordpress',css)});
-    await page.addStyleTag({path:path.resolve(__dirname,'../kloster-prayer/assets/css/admin.css')});
-    await page.addStyleTag({path:path.resolve(__dirname,'../kloster-prayer/assets/css/admin-native.css')});
+    await page.addStyleTag({path:path.resolve(__dirname,'../georg-kloster-orthodox-donate/assets/css/admin.css')});
+    await page.addStyleTag({path:path.resolve(__dirname,'../georg-kloster-orthodox-donate/assets/css/admin-native.css')});
     await page.addStyleTag({content:'@media(max-width:782px){body{padding:12px}aside{display:none}}'});
     const help=page.locator('.klp-stripe-help');
     assert.equal(await help.getAttribute('open'),null);

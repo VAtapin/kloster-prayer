@@ -5,14 +5,14 @@ define('ABSPATH', dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
 require __DIR__.'/bootstrap-i18n.php';
 function ensure($ok,$message){if(!$ok)throw new RuntimeException($message);}
 require_once ABSPATH.'wp-includes/pomo/po.php';
-$root=dirname(__DIR__).'/kloster-prayer';
-$pot=new PO();ensure($pot->import_from_file($root.'/languages/kloster-prayer.pot'),'POT loads');
+$root=dirname(__DIR__).'/georg-kloster-orthodox-donate';
+$pot=new PO();ensure($pot->import_from_file($root.'/languages/georg-kloster-orthodox-donate.pot'),'POT loads');
 $old=json_decode(file_get_contents(__DIR__.'/fixtures/public-translations.json'),true,512,JSON_THROW_ON_ERROR);
 $donation=json_decode(file_get_contents(__DIR__.'/fixtures/donation-translations.json'),true,512,JSON_THROW_ON_ERROR);
 foreach(['ru'=>'ru_RU','de'=>'de_DE','uk'=>'uk','pl'=>'pl_PL'] as $language=>$locale){
     $po=new PO();$mo=new MO();
-    ensure($po->import_from_file($root.'/languages/kloster-prayer-'.$locale.'.po'),'PO loads: '.$locale);
-    ensure($mo->import_from_file($root.'/languages/kloster-prayer-'.$locale.'.mo'),'MO loads: '.$locale);
+    ensure($po->import_from_file($root.'/languages/georg-kloster-orthodox-donate-'.$locale.'.po'),'PO loads: '.$locale);
+    ensure($mo->import_from_file($root.'/languages/georg-kloster-orthodox-donate-'.$locale.'.mo'),'MO loads: '.$locale);
     foreach($pot->entries as $entry){
         ensure(!preg_match('/[А-Яа-яЁёІіЇїЄє]/u',$entry->singular),'English msgid: '.$entry->singular);
         $translated=$po->translate_entry($entry);

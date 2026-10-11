@@ -18,11 +18,11 @@ foreach(Shortcode_Help::entries() as $tag=>$entry){
 }
 $titles=['en'=>'Help → Shortcodes','ru'=>'Помощь → Шорткоды','de'=>'Hilfe → Shortcodes','uk'=>'Допомога → Шорткоди','pl'=>'Pomoc → Shortcode’y'];
 foreach($titles as $lang=>$title){
-    $_GET=['help_lang'=>$lang];ob_start();Shortcode_Help::page();$html=ob_get_clean();
+    $_GET=['help_lang'=>'ignored'];$html=I18n::in_language(static function(){ob_start();Shortcode_Help::page();return ob_get_clean();},$lang);
     donation_assert(str_contains($html,esc_html($title)),'Guide is translated: '.$lang);
     foreach($documented as $tag)donation_assert(str_contains($html,'['.$tag),'Shortcode present: '.$tag);
     donation_assert(substr_count($html,'class="button klp-copy-shortcode"')===15,'All examples are copyable');
-    donation_assert(str_contains($html,esc_attr('lang="'.$lang.'"')),'Examples use selected language');
+    donation_assert(!str_contains($html,'lang=&quot;')&&!str_contains($html,'<nav'),'No forced shortcode language or custom language switcher');
     donation_assert(str_contains($html,'readonly')&&str_contains($html,'role="status"'),'Manual and accessible copy feedback');
     if($lang==='ru')file_put_contents(dirname(__DIR__).'/tmp/shortcode-help-preview.html',$html);
 }
@@ -32,7 +32,7 @@ $_GET=['help_lang'=>'ru'];
 require_once ABSPATH.'wp-admin/includes/plugin.php';
 if(!defined('WP_ADMIN'))define('WP_ADMIN',true);
 KlosterPrayer\Admin::init();KlosterPrayer\Admin::menu();
-$hook=get_plugin_page_hookname('kloster-prayer-help','kloster-prayer');
+$hook=get_plugin_page_hookname('georg-kloster-orthodox-donate-help','georg-kloster-orthodox-donate');
 do_action('admin_enqueue_scripts',$hook);
 donation_assert(wp_script_is('klp-admin-shortcodes','enqueued'),'Copy script loads on the actual translated admin hook');
 wp_set_current_user(0);remove_filter('wp_doing_ajax','__return_true');

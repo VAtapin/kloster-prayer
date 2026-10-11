@@ -4,7 +4,7 @@ declare(strict_types=1);
 $site = realpath($argv[1] ?? '');
 if (!$site || !str_contains(str_replace('\\', '/', $site), '/tmp/wporg-review/wordpress')) throw new RuntimeException('Local review WordPress required');
 $source = realpath($argv[2] ?? dirname(__DIR__));
-if (!$source || !is_file($source . '/kloster-prayer/kloster-prayer.php')) throw new RuntimeException('Plugin source required');
+if (!$source || !is_file($source . '/georg-kloster-orthodox-donate/georg-kloster-orthodox-donate.php')) throw new RuntimeException('Plugin source required');
 // Clone the disposable database; leave the existing review site unchanged.
 $database = 'donation-check-' . bin2hex(random_bytes(6)) . '.sqlite';
 $db = new PDO('sqlite:' . $site . '/wp-content/database/.ht.sqlite');
@@ -13,8 +13,8 @@ unset($db);
 define('DB_FILE', $database);
 define('WP_PLUGIN_DIR', $source);
 require $site . '/wp-load.php';
-if (!class_exists(KlosterPrayer\Payments::class)) require $source . '/kloster-prayer/kloster-prayer.php';
-require_once $source . '/kloster-prayer/includes/class-orders-table.php';
+if (!class_exists(KlosterPrayer\Payments::class)) require $source . '/georg-kloster-orthodox-donate/georg-kloster-orthodox-donate.php';
+require_once $source . '/georg-kloster-orthodox-donate/includes/class-orders-table.php';
 function donation_assert(bool $ok, string $message): void { if (!$ok) throw new RuntimeException($message); }
 use KlosterPrayer\Database;
 use KlosterPrayer\Payments;
@@ -33,13 +33,13 @@ add_filter('pre_http_request', static function ($value, $args, $url) use (&$http
     else return new WP_Error('blocked', 'Unexpected external call blocked');
     return ['headers'=>[], 'body'=>wp_json_encode($body), 'response'=>['code'=>200,'message'=>'OK'], 'cookies'=>[]];
 }, 10, 3);
-update_option('klp_payment_methods', ['stripe','paypal']);
-update_option('klp_stripe_secret','local-fixture');
-update_option('klp_stripe_webhook_secret','local-fixture-signing');
-update_option('klp_paypal_client_id','local-fixture');
-update_option('klp_paypal_secret','local-fixture');
-update_option('klp_paypal_mode','sandbox');
-update_option('klp_notification_email','office@example.invalid');
+update_option('gkod_payment_methods', ['stripe','paypal']);
+update_option('gkod_stripe_secret','local-fixture');
+update_option('gkod_stripe_webhook_secret','local-fixture-signing');
+update_option('gkod_paypal_client_id','local-fixture');
+update_option('gkod_paypal_secret','local-fixture');
+update_option('gkod_paypal_mode','sandbox');
+update_option('gkod_notification_email','office@example.invalid');
 foreach (['0.50'=>50,'0,50'=>50,'12'=>1200,'12,3'=>1230,'12.34'=>1234,'999999.99'=>99999999,' 1.00 '=>100] as $raw=>$expected) donation_assert(Payments::donation_cents((string)$raw)===$expected, 'Exact decimal cents');
 foreach (['','0','0.49','-1','+1','1e3','1.234','1,234.56','1000000','NaN','1.00 trailing',"1\n2"] as $raw) donation_assert(Payments::donation_cents($raw)===null, 'Reject invalid amount: '.$raw);
 foreach (['ru','de','uk','pl'] as $lang) {
@@ -62,11 +62,11 @@ function donation_ajax(array $input): array {
     catch (DonationJson $e) { return $e->json; }
     finally { ob_end_clean(); $_POST=[]; $_REQUEST=[]; }
 }
-$base=['nonce'=>wp_create_nonce('klp_payment'), 'request_type'=>'donation', 'donation_amount'=>'12,34', 'donor_email'=>'donor@example.invalid', 'language'=>'ru', 'provider'=>'stripe'];
+$base=['nonce'=>wp_create_nonce('gkod_payment'), 'request_type'=>'donation', 'donation_amount'=>'12,34', 'donor_email'=>'donor@example.invalid', 'language'=>'ru', 'provider'=>'stripe'];
 $count=(int)$wpdb->get_var('SELECT COUNT(*) FROM '.Database::table('orders'));
 foreach ([['donation_amount'=>'0.49'],['donation_amount'=>'1e3'],['donation_amount'=>['12']],['donor_email'=>'bad'],['services'=>['1']],['names'=>'Мария'],['provider'=>'none'],['request_type'=>'unknown']] as $bad) donation_assert(!(donation_ajax(array_replace($base,$bad))['success']??true), 'Server rejects malformed/mixed requests');
 donation_assert((int)$wpdb->get_var('SELECT COUNT(*) FROM '.Database::table('orders'))===$count,'Invalid requests create no order');
-delete_transient('klp_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
+delete_transient('gkod_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
 $result=donation_ajax($base);
 donation_assert(($result['success']??false) && str_starts_with($result['data']['redirect'],'https://checkout.stripe.com/'),'Stripe donation AJAX checkout');
 $order=$wpdb->get_row('SELECT * FROM '.Database::table('orders').' ORDER BY id DESC LIMIT 1');
@@ -78,7 +78,7 @@ $_GET=['kloster_payment'=>'success','kloster_order'=>$order->public_id];
 donation_assert(!str_contains(Public_Form::result_shortcode(),KlosterPrayer\I18n::donation_text('thanks','ru')),'Return URL cannot claim an unpaid donation');
 function donation_event(object $order, int $amount, string $id): WP_REST_Response {
     $payload=wp_json_encode(['id'=>$id,'type'=>'checkout.session.completed','data'=>['object'=>['id'=>$order->payment_id,'metadata'=>['order_id'=>(string)$order->id],'payment_intent'=>'pi_donation_fixture','payment_status'=>'paid','currency'=>'eur','amount_total'=>$amount]]]);
-    $r=new WP_REST_Request('POST','/kloster-prayer/v1/stripe/webhook'); $r->set_body($payload); $time=time();
+    $r=new WP_REST_Request('POST','/georg-kloster-orthodox-donate/v1/stripe/webhook'); $r->set_body($payload); $time=time();
     $r->set_header('stripe-signature','t='.$time.',v1='.hash_hmac('sha256',$time.'.'.$payload,'local-fixture-signing'));
     return Payments::stripe_webhook($r);
 }
@@ -97,11 +97,11 @@ donation_assert((new ReflectionMethod(KlosterPrayer\Pdf::class,'cards'))->invoke
 $_GET=['intention'=>'none']; $table=new KlosterPrayer\Orders_Table();$table->prepare_items();
 donation_assert(in_array((int)$order->id,array_map(static fn($r)=>(int)$r->id,$table->items),true),'Admin donation filter');
 $_GET=['view'=>(string)$order->id]; ob_start(); KlosterPrayer\Admin::orders(); $detail=ob_get_clean();
-donation_assert(!str_contains($detail,'action=klp_pdf') && str_contains($detail,KlosterPrayer\I18n::donation_text('title')),'Donation detail has correct type and no prayer PDF action');
+donation_assert(!str_contains($detail,'action=gkod_pdf') && str_contains($detail,KlosterPrayer\I18n::donation_text('title')),'Donation detail has correct type and no prayer PDF action');
 $_GET=['month'=>wp_date('Y-m')]; ob_start();KlosterPrayer\Admin_Screens::reports();$reports=ob_get_clean();
 donation_assert(str_contains($reports,'donor@example.invalid') && $wpdb->last_error==='','Existing donor reports include donation');
 $_GET=[];
-delete_transient('klp_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
+delete_transient('gkod_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
 $result=donation_ajax(array_replace($base,['provider'=>'paypal','donation_amount'=>'5.00']));
 donation_assert(($result['success']??false) && str_contains($result['data']['redirect'],'sandbox.paypal.com'),'PayPal donation AJAX checkout');
 $paypal=json_decode(end($http)[1]['body'],true);
@@ -110,7 +110,7 @@ $pending=$wpdb->get_row('SELECT * FROM '.Database::table('orders').' ORDER BY id
 $_GET=['kloster_payment'=>'cancelled','kloster_order'=>$pending->public_id];
 donation_assert(str_contains(Public_Form::result_shortcode(),KlosterPrayer\I18n::donation_text('cancelled','ru')),'Unpaid donation cancellation text');
 $_GET=[];
-update_option('klp_payment_methods',['stripe']);
+update_option('gkod_payment_methods',['stripe']);
 donation_assert(!(donation_ajax(array_replace($base,['provider'=>'paypal']))['success']??true),'Disabled provider rejected');
 donation_assert($wpdb->last_error==='','No database errors');
 echo "PASS donations: exact amounts, four languages, AJAX validation, Stripe/PayPal checkout, signed webhook, idempotency, email, protected admin/filter, reports and PDF exclusion; HTTP/mail intercepted\n";

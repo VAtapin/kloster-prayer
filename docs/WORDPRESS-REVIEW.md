@@ -1,11 +1,12 @@
-# WordPress.org preparation — 1.2.13
+# WordPress.org preparation — new series 1.0.0
 
-Prepared on 2026-10-11. Requested directory slug: `kloster-prayer`.
-Repository, ZIP folder, text domain, database names, shortcodes and webhook routes
-are retained. The canonical English name is **Orthodox Prayer Notes and Donations**;
+Prepared on 2026-10-11. Requested directory slug: `georg-kloster-orthodox-donate`.
+ZIP folder, main filename and text domain match the requested slug. New `gkod_`
+database tables, settings, hooks and webhook routes do not import the previous installation.
+The Git repository is retained. The canonical English name is **Parish — Prayer Requests, Services and Donations**;
 bundled metadata translations retain the owner's Russian name.
 Directory acceptance and the assigned slug remain decisions of the Plugins Team;
-if the submission suggests another slug, request `kloster-prayer` before approval.
+if the submission suggests another slug, request `georg-kloster-orthodox-donate` before approval.
 
 ## Package and disclosure
 
@@ -36,6 +37,20 @@ if the submission suggests another slug, request `kloster-prayer` before approva
   a compatible recheck/addition without deleting records or dropping tables.
 
 ## Verification
+
+New series 1.0.0: Plugin Check 2.1.0 on a cloned WordPress 7.1/SQLite database
+with PHP 8.4 and runtime preparation: **0 errors, 254 warnings**, no exclusions.
+133 direct-query and 120 no-caching warnings cover custom financial/administrative
+tables; one bundled text-domain loader warning supports manual ZIP installation.
+New list queries bind every identifier, owner and pagination value. Official WPML
+hooks and the cache privacy flag have narrowly documented naming exceptions.
+360 English messages have complete RU/DE/UK/PL PO/MO catalogs. Normal WordPress
+gettext loads UI translations; content uses the installed language plugin context.
+Actual WPML/Polylang installations are not present in the local fixture: their public
+language hooks are simulated. Fresh installation, backend, browser and rendered PDF
+checks pass; live provider/production tests and directory acceptance remain pending.
+
+Historical checks of the previous plugin:
 
 Plugin Check 2.1.0 on WordPress 7.1 / PHP 8.4, with `cli.php` required for runtime
 checks: **0 errors, 170 warnings**. No categories or files were excluded.

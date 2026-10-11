@@ -4,7 +4,7 @@ declare(strict_types=1);
 $site=realpath($argv[1]??'');
 if(!$site||!str_contains(str_replace('\\','/',$site),'/tmp/wporg-review/wordpress'))throw new RuntimeException('Local review site required');
 require $site.'/wp-load.php';
-require_once $site.'/wp-content/plugins/kloster-prayer/includes/class-orders-table.php';
+require_once $site.'/wp-content/plugins/georg-kloster-orthodox-donate/includes/class-orders-table.php';
 use KlosterPrayer\Database;
 use KlosterPrayer\Payments;
 use KlosterPrayer\Input;
@@ -19,9 +19,9 @@ add_filter('pre_http_request',static function($value,$args,$url){
 },10,3);
 wp_set_current_user(1);
 Database::activate();
-update_option('klp_notification_email','office@example.invalid');
-update_option('klp_stripe_webhook_secret','local-fixture-signing-secret');
-update_option('klp_paypal_client_id','local-fixture-client');update_option('klp_paypal_secret','local-fixture-secret');update_option('klp_paypal_webhook_id','local-fixture-webhook');
+update_option('gkod_notification_email','office@example.invalid');
+update_option('gkod_stripe_webhook_secret','local-fixture-signing-secret');
+update_option('gkod_paypal_client_id','local-fixture-client');update_option('gkod_paypal_secret','local-fixture-secret');update_option('gkod_paypal_webhook_id','local-fixture-webhook');
 $order=(new ReflectionMethod(Payments::class,'create_order'))->invoke(null,['language'=>'ru','provider'=>'stripe','intention'=>'health','names'=>"Мария\nИоанн",'note'=>"Первая строка\n<script>fixture</script>",'donor_name'=>'Review donor','donor_email'=>'donor@example.invalid','form_id'=>0,'service_ids'=>[(int)$wpdb->get_var('SELECT id FROM '.Database::table('services').' LIMIT 1')],'return_url'=>home_url('/')]);
 review_assert(!is_wp_error($order),'Create real database order');
 $_GET=['month'=>['malformed'],'s'=>'<b>search</b>'];
@@ -39,18 +39,18 @@ add_filter('wp_doing_ajax','__return_true');
 try{Payments::create_payment();throw new RuntimeException('Missing AJAX nonce enforcement');}catch(ReviewWpDie $e){}
 remove_filter('wp_doing_ajax','__return_true');
 review_assert((int)$wpdb->get_var('SELECT COUNT(*) FROM '.Database::table('orders'))===$before,'Rejected AJAX nonce cannot create order');
-$_POST=['klp_action'=>'save_settings','_klp_nonce'=>'invalid'];$_REQUEST=$_POST;
+$_POST=['gkod_action'=>'save_settings','_gkod_nonce'=>'invalid'];$_REQUEST=$_POST;
 try{KlosterPrayer\Admin::handle_actions();throw new RuntimeException('Missing admin nonce enforcement');}catch(ReviewWpDie $e){}
-review_assert(get_option('klp_notification_email')==='office@example.invalid','Rejected admin nonce cannot save settings');
+review_assert(get_option('gkod_notification_email')==='office@example.invalid','Rejected admin nonce cannot save settings');
 wp_set_current_user(0);KlosterPrayer\Admin::handle_actions();wp_set_current_user(1);
-review_assert(get_option('klp_notification_email')==='office@example.invalid','Anonymous admin action cannot save settings');
+review_assert(get_option('gkod_notification_email')==='office@example.invalid','Anonymous admin action cannot save settings');
 remove_filter('wp_die_handler',$die);remove_filter('wp_die_ajax_handler',$die);
 $_POST=[];$_GET=[];$_REQUEST=[];
 $order->payment_id='cs_test_review_'.$order->id;
 $wpdb->update(Database::table('orders'),['payment_id'=>$order->payment_id],['id'=>$order->id]);
 function stripe_event(object $order,int $amount,string $id): WP_REST_Response {
     $payload=wp_json_encode(['id'=>$id.'_'.$order->id,'type'=>'checkout.session.completed','data'=>['object'=>['id'=>$order->payment_id,'metadata'=>['order_id'=>(string)$order->id],'payment_status'=>'paid','currency'=>'eur','amount_total'=>$amount,'customer_details'=>['email'=>'donor@example.invalid','name'=>'Review payer']]]]);
-    $request=new WP_REST_Request('POST','/kloster-prayer/v1/stripe/webhook');$request->set_body($payload);
+    $request=new WP_REST_Request('POST','/georg-kloster-orthodox-donate/v1/stripe/webhook');$request->set_body($payload);
     $time=time();$request->set_header('stripe-signature','t='.$time.',v1='.hash_hmac('sha256',$time.'.'.$payload,'local-fixture-signing-secret'));
     return Payments::stripe_webhook($request);
 }
@@ -69,7 +69,7 @@ $_GET=['view'=>$order->id];$_REQUEST=$_GET;ob_start();KlosterPrayer\Admin::order
 review_assert(str_contains($html,'Первая строка')&&!str_contains($html,'<script>fixture</script>'),'Detail escaping');
 $_GET=['order_ids'=>(string)$order->id];$cards=(new ReflectionMethod(KlosterPrayer\Pdf::class,'cards'))->invoke(null);
 review_assert(count($cards)>=1&&$cards[0]['note']===$order->note,'Archived PDF real query');
-update_option('klp_db_version','1.2.4');Database::maybe_upgrade();
+update_option('gkod_db_version','1.2.4');Database::maybe_upgrade();
 review_assert((int)$wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i WHERE id=%d',Database::table('orders'),$order->id))===1,'Upgrade preserves order');
 review_assert($wpdb->last_error==='','No database errors');
 $form=do_shortcode('[kloster_form]');

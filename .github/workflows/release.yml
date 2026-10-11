@@ -3,7 +3,7 @@ name: Build and release WordPress plugin
 on:
   push:
     tags:
-      - '*'
+      - 'georg-kloster-orthodox-donate-*'
 
 permissions:
   contents: write
@@ -26,13 +26,13 @@ jobs:
         env:
           TAG: ${{ github.ref_name }}
         run: |
-          version="$(sed -n 's/^ \* Version: \(.*\)$/\1/p' kloster-prayer/kloster-prayer.php)"
-          stable="$(sed -n 's/^Stable tag: \(.*\)$/\1/p' kloster-prayer/readme.txt)"
-          test "$TAG" = "$version"
-          test "$TAG" = "$stable"
+          version="$(sed -n 's/^ \* Version: \(.*\)$/\1/p' georg-kloster-orthodox-donate/georg-kloster-orthodox-donate.php)"
+          stable="$(sed -n 's/^Stable tag: \(.*\)$/\1/p' georg-kloster-orthodox-donate/readme.txt)"
+          test "${TAG#georg-kloster-orthodox-donate-}" = "$version"
+          test "${TAG#georg-kloster-orthodox-donate-}" = "$stable"
           mkdir -p tmp/admin-check-core
           curl --fail --location --silent --show-error https://wordpress.org/wordpress-7.1.tar.gz | tar -xz -C tmp/admin-check-core
-          find kloster-prayer tests -name '*.php' -print0 | xargs -0 -n1 php -l
+          find georg-kloster-orthodox-donate tests -name '*.php' -print0 | xargs -0 -n1 php -l
           mkdir -p tmp/pdfs output/pdf
           php -d zend.assertions=1 -d assert.exception=1 tests/smoke.php
           php tests/notifications.php
@@ -46,17 +46,19 @@ jobs:
         env:
           TAG: ${{ github.ref_name }}
         run: |
-          package="$RUNNER_TEMP/kloster-prayer-package"
-          mkdir -p "$package/kloster-prayer"
+          package="$RUNNER_TEMP/georg-kloster-orthodox-donate-package"
+          mkdir -p "$package/georg-kloster-orthodox-donate"
           rsync -a --exclude-from=.distignore ./ "$package/"
-          (cd "$package" && zip -qr "$GITHUB_WORKSPACE/kloster-prayer-$TAG.zip" kloster-prayer)
-          cp "kloster-prayer-$TAG.zip" kloster-prayer.zip
+          version="${TAG#georg-kloster-orthodox-donate-}"
+          (cd "$package" && zip -qr "$GITHUB_WORKSPACE/georg-kloster-orthodox-donate-$version.zip" georg-kloster-orthodox-donate)
+          cp "georg-kloster-orthodox-donate-$version.zip" georg-kloster-orthodox-donate.zip
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.ref_name }}
         run: |
-          gh release create "$TAG" "kloster-prayer-$TAG.zip" kloster-prayer.zip \
-            --title "Православные молитвенные записки и пожертвования $TAG" \
+          version="${TAG#georg-kloster-orthodox-donate-}"
+          gh release create "$TAG" "georg-kloster-orthodox-donate-$version.zip" georg-kloster-orthodox-donate.zip \
+            --title "Приход — записки, требы и пожертвования $TAG" \
             --generate-notes
