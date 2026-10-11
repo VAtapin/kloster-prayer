@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 
 /** Subscription lifecycle. Webhook entry points verify signatures before calling this class. */
 final class Subscriptions

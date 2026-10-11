@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 if (!defined('ABSPATH')) exit;
 if (!class_exists('\WP_List_Table')) require_once ABSPATH.'wp-admin/includes/class-wp-list-table.php';
 
@@ -10,7 +10,7 @@ final class Donation_Admin_Table extends \WP_List_Table
     public function __construct(private string $kind, private int $campaign_id=0)
     {
         if (!in_array($kind,['campaigns','subscriptions','campaign_expenses'],true)) throw new \InvalidArgumentException('Unknown list');
-        parent::__construct(['singular'=>'klp-donation-record','plural'=>'klp-donation-records','ajax'=>false]);
+        parent::__construct(['singular'=>'gkod-donation-record','plural'=>'gkod-donation-records','ajax'=>false]);
     }
     public function get_columns()
     {

@@ -4,9 +4,9 @@ $site=realpath($argv[1]??'');
 if(!$site||!str_contains(str_replace('\\','/',$site),'/tmp/wporg-review/wordpress'))throw new RuntimeException('Local review site required');
 require $site.'/wp-load.php';
 require_once ABSPATH.'wp-admin/includes/template.php';
-use KlosterPrayer\I18n;
-use KlosterPrayer\Admin_Screens;
-use KlosterPrayer\Public_Form;
+use GeorgKlosterOrthodoxDonate\I18n;
+use GeorgKlosterOrthodoxDonate\Admin_Screens;
+use GeorgKlosterOrthodoxDonate\Public_Form;
 function ensure_i18n($ok,$message){if(!$ok)throw new RuntimeException($message);}
 wp_set_current_user(1);
 $before=determine_locale();

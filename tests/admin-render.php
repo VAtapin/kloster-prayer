@@ -3,11 +3,11 @@
 // only storage, authentication and environment functions are replaced.
 declare(strict_types=1);
 define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
-define('KlosterPrayer\\DIR',dirname(__DIR__).'/georg-kloster-orthodox-donate');
-define('KlosterPrayer\\FILE',KlosterPrayer\DIR.'/georg-kloster-orthodox-donate.php');
-require KlosterPrayer\DIR.'/includes/class-payments.php';
-require KlosterPrayer\DIR.'/includes/class-notifications.php';
-require KlosterPrayer\DIR.'/includes/class-service-images.php';
+define('GeorgKlosterOrthodoxDonate\\DIR',dirname(__DIR__).'/georg-kloster-orthodox-donate');
+define('GeorgKlosterOrthodoxDonate\\FILE',GeorgKlosterOrthodoxDonate\DIR.'/georg-kloster-orthodox-donate.php');
+require GeorgKlosterOrthodoxDonate\DIR.'/includes/class-payments.php';
+require GeorgKlosterOrthodoxDonate\DIR.'/includes/class-notifications.php';
+require GeorgKlosterOrthodoxDonate\DIR.'/includes/class-service-images.php';
 require __DIR__.'/bootstrap-i18n.php';
 function sanitize_file_name($s){return preg_replace('/[^a-z0-9-]/','',$s);}
 function plugins_url($path,$file){return '../georg-kloster-orthodox-donate/'.$path;}
@@ -46,16 +46,16 @@ class FixtureDB {
     public function get_results($q){return [$this->row()];}
 }
 $wpdb=new FixtureDB();
-require KlosterPrayer\DIR.'/includes/class-order-workflow.php';require KlosterPrayer\DIR.'/includes/class-database.php';require_once KlosterPrayer\DIR.'/includes/class-i18n.php';require KlosterPrayer\DIR.'/includes/class-admin.php';require KlosterPrayer\DIR.'/includes/class-admin-screens.php';require KlosterPrayer\DIR.'/includes/class-pdf.php';
+require GeorgKlosterOrthodoxDonate\DIR.'/includes/class-order-workflow.php';require GeorgKlosterOrthodoxDonate\DIR.'/includes/class-database.php';require_once GeorgKlosterOrthodoxDonate\DIR.'/includes/class-i18n.php';require GeorgKlosterOrthodoxDonate\DIR.'/includes/class-admin.php';require GeorgKlosterOrthodoxDonate\DIR.'/includes/class-admin-screens.php';require GeorgKlosterOrthodoxDonate\DIR.'/includes/class-pdf.php';
 $pages=['detail'=>['orders',['view'=>1]],'settings'=>['settings',[]],'diagnostics'=>['diagnostics',[]],'reports'=>['reports',[]],'forms'=>['forms',[]],'services'=>['services',[]],'edit-form'=>['forms',['edit'=>1]],'edit-service'=>['services',['edit'=>1]],'orders'=>['orders',[]]];
 foreach($pages as $name=>[$method,$query]){
-    $_GET=$query;$_POST=[];$_REQUEST=$query;ob_start();KlosterPrayer\Admin::$method();$body=ob_get_clean();
+    $_GET=$query;$_POST=[];$_REQUEST=$query;ob_start();GeorgKlosterOrthodoxDonate\Admin::$method();$body=ob_get_clean();
     if(str_contains($name,'edit-')){if(str_contains($body,'name="title_uk"')||str_contains($body,'name="title_pl"'))throw new Exception('Inactive languages displayed');}
     if($name==='diagnostics'&&!str_contains($body,'Отключён — настройка не требуется'))throw new Exception('Inactive PayPal error');
     if($name==='reports'&&!preg_match('/<a[^>]+view%5D|view=1[^>]*>—<\/a>/',$body))throw new Exception('Missing donor not linked');
     $html='<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="admin-check-core/wordpress/wp-includes/css/dashicons.css"><link rel="stylesheet" href="admin-check-core/wordpress/wp-includes/css/buttons.css"><link rel="stylesheet" href="admin-check-core/wordpress/wp-admin/css/edit.css"><link rel="stylesheet" href="admin-check-core/wordpress/wp-admin/css/common.css"><link rel="stylesheet" href="admin-check-core/wordpress/wp-admin/css/forms.css"><link rel="stylesheet" href="admin-check-core/wordpress/wp-admin/css/list-tables.css"><link rel="stylesheet" href="../georg-kloster-orthodox-donate/assets/css/admin.css"><link rel="stylesheet" href="../georg-kloster-orthodox-donate/assets/css/admin-native.css"><style>body{background:#f0f0f1;margin:0;padding:32px 20px 20px 180px;font:13px Arial;color:#1d2327}aside{position:fixed;left:0;top:0;bottom:0;width:160px;background:#1d2327;color:white;padding-top:40px}aside p{padding:8px 15px}</style></head><body class="wp-admin wp-core-ui"><aside><p>WordPress</p><p>Записки</p><p>Требы</p><p>Формы</p><p>Отчёты</p><p>Настройки</p><p>Диагностика</p></aside>'.$body.'</body></html>';
     file_put_contents(dirname(__DIR__).'/tmp/admin-'.$name.'.html',$html);echo $name." OK\n";
 }
-$GLOBALS['fixture_languages']=['uk','pl_PL'];$GLOBALS['fixture_current_language']='uk';if(array_keys(KlosterPrayer\Admin::editor_languages())!==['uk'])throw new Exception('Current language selection');
-$preserve=new ReflectionMethod(KlosterPrayer\Admin::class,'preserve_translations');$_POST=['id'=>1,'title_ru'=>'changed'];$saved=$preserve->invoke(null,['title_ru'=>'changed','title_uk'=>'','title_pl'=>'']);if(isset($saved['title_uk'])||isset($saved['title_pl']))throw new Exception('Hidden translations overwritten');
+$GLOBALS['fixture_languages']=['uk','pl_PL'];$GLOBALS['fixture_current_language']='uk';if(array_keys(GeorgKlosterOrthodoxDonate\Admin::editor_languages())!==['uk'])throw new Exception('Current language selection');
+$preserve=new ReflectionMethod(GeorgKlosterOrthodoxDonate\Admin::class,'preserve_translations');$_POST=['id'=>1,'title_ru'=>'changed'];$saved=$preserve->invoke(null,['title_ru'=>'changed','title_uk'=>'','title_pl'=>'']);if(isset($saved['title_uk'])||isset($saved['title_pl']))throw new Exception('Hidden translations overwritten');
 echo "Language activation and preservation OK\n";

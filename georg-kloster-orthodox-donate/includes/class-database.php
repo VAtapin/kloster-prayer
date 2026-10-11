@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 
 final class Database
 {
-    private const DB_VERSION = '1.0.0';
+    private const DB_VERSION = '1.0.1';
 
     public static function table(string $name): string
     {

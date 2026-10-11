@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 if (!defined('ABSPATH')) exit;
 if(!class_exists('\WP_List_Table'))require_once ABSPATH.'wp-admin/includes/class-wp-list-table.php';
 final class Orders_Table extends \WP_List_Table
 {
-    public function __construct(){parent::__construct(['singular'=>'klp-order','plural'=>'klp-orders','ajax'=>false]);}
+    public function __construct(){parent::__construct(['singular'=>'gkod-order','plural'=>'gkod-orders','ajax'=>false]);}
     public function get_columns(){return ['cb'=>'<input type="checkbox">','id'=>(__('Request', 'georg-kloster-orthodox-donate')),'donor'=>(__('Payer', 'georg-kloster-orthodox-donate')),'services'=>(__('Services', 'georg-kloster-orthodox-donate')),'names'=>(__('Names', 'georg-kloster-orthodox-donate')),'amount_cents'=>(__('Amount', 'georg-kloster-orthodox-donate')),'payment_status'=>(__('Payment', 'georg-kloster-orthodox-donate')),'printed_at'=>(__('Printing', 'georg-kloster-orthodox-donate')),'created_at'=>(__('Date', 'georg-kloster-orthodox-donate'))];}
     protected function get_sortable_columns(){return ['id'=>['id',true],'amount_cents'=>['amount_cents',false],'created_at'=>['created_at',true]];}
     protected function get_bulk_actions(){return ['mark_unprinted'=>(__('Clear print status', 'georg-kloster-orthodox-donate')),'archive_order'=>(__('Archive request', 'georg-kloster-orthodox-donate')),'restore_order'=>(__('Restore from archive', 'georg-kloster-orthodox-donate'))];}
@@ -17,7 +17,7 @@ final class Orders_Table extends \WP_List_Table
         switch($column){
             case 'donor': return $this->link($item,$item->billing_name?:$item->donor_name?:'—').'<br>'.esc_html($item->billing_email?:$item->donor_email?:'—');
             case 'services':if (($item->intention ?? '') === 'none') return $this->link($item,I18n::donation_text('title')); return $this->link($item,implode(', ',$wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d', Database::table('order_items'),$item->id))));
-            case 'names':return '<div class="klp-names">'.nl2br(esc_html($item->names)).'</div>'.self::comment_html((string)($item->note??''));
+            case 'names':return '<div class="gkod-names">'.nl2br(esc_html($item->names)).'</div>'.self::comment_html((string)($item->note??''));
             case 'amount_cents':return $this->link($item,number_format_i18n($item->amount_cents/100,2).' €');
             case 'payment_status':return $this->link($item,['paid'=>(__('Paid', 'georg-kloster-orthodox-donate')),'pending'=>(__('Pending', 'georg-kloster-orthodox-donate')),'failed'=>(__('Error', 'georg-kloster-orthodox-donate')),'refunded'=>(__('Refunded', 'georg-kloster-orthodox-donate')),'cancelled'=>(__('Canceled', 'georg-kloster-orthodox-donate'))][$item->payment_status]??$item->payment_status).'<br>'.$this->link($item,ucfirst($item->payment_provider));
             case 'printed_at':return $item->printed_at?(esc_html__('Printed', 'georg-kloster-orthodox-donate').'<br>').esc_html($item->printed_at):'—';
@@ -27,7 +27,7 @@ final class Orders_Table extends \WP_List_Table
     public static function comment_html(string $note): string {
         $note=trim($note);
         if($note==='')return '';
-        return '<div class="klp-order-comment"><strong>'.esc_html__('Request comment','georg-kloster-orthodox-donate').'</strong><div>'.nl2br(esc_html($note)).'</div></div>';
+        return '<div class="gkod-order-comment"><strong>'.esc_html__('Request comment','georg-kloster-orthodox-donate').'</strong><div>'.nl2br(esc_html($note)).'</div></div>';
     }
     public static function where(array $input): array {
         global $wpdb;$where=[($input['archive']??'')==='yes'?'archived_at IS NOT NULL':'archived_at IS NULL'];$args=[];
@@ -49,7 +49,7 @@ final class Orders_Table extends \WP_List_Table
     }
     protected function extra_tablenav($which){
         if($which!=='top')return;
-        echo '<div class="alignleft actions klp-order-filters">';
+        echo '<div class="alignleft actions gkod-order-filters">';
         foreach(['archive'=>[''=>(__('Current requests', 'georg-kloster-orthodox-donate')),'yes'=>(__('Archive', 'georg-kloster-orthodox-donate'))],'payment_status'=>[''=>(__('All payments', 'georg-kloster-orthodox-donate')),'paid'=>(__('Paid', 'georg-kloster-orthodox-donate')),'pending'=>(__('Pending', 'georg-kloster-orthodox-donate')),'failed'=>(__('Error', 'georg-kloster-orthodox-donate')),'refunded'=>(__('Refunded', 'georg-kloster-orthodox-donate')),'cancelled'=>(__('Canceled', 'georg-kloster-orthodox-donate'))],'intention'=>['none'=>I18n::donation_text('title'),''=>(__('Both types', 'georg-kloster-orthodox-donate')),'health'=>(__('For the living', 'georg-kloster-orthodox-donate')),'rest'=>(__('For the departed', 'georg-kloster-orthodox-donate'))],'printed'=>[''=>(__('All print statuses', 'georg-kloster-orthodox-donate')),'yes'=>(__('Printed', 'georg-kloster-orthodox-donate')),'no'=>(__('Not printed', 'georg-kloster-orthodox-donate'))]] as $name=>$options){echo '<select aria-label="'.esc_attr($options['']).'" name="'.esc_attr($name).'">';foreach($options as $v=>$label)echo '<option value="'.esc_attr($v).'" '.selected(Input::get($name)??'',$v,false).'>'.esc_html($label).'</option>';echo '</select>';}
         echo ('<button class="button" formmethod="get">'.esc_html__('Filter', 'georg-kloster-orthodox-donate').'</button> <button class="button" name="gkod_action" value="generate_pdf">PDF</button> <a class="button" href="').esc_url(wp_nonce_url(admin_url('admin-post.php?action=gkod_csv'),'gkod_csv')).'">CSV</a></div>';
     }

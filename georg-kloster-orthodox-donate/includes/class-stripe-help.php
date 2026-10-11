@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 
 final class Stripe_Help
 {
     public static function render(): void
     {
-        echo '<details class="klp-stripe-help"><summary>'.esc_html__('Stripe setup — step-by-step instructions','georg-kloster-orthodox-donate').'</summary><ol>';
+        echo '<details class="gkod-stripe-help"><summary>'.esc_html__('Stripe setup — step-by-step instructions','georg-kloster-orthodox-donate').'</summary><ol>';
         self::step(__('Sign in to the Stripe account that will receive donations. Choose a Sandbox or test environment first. The API key and webhook must belong to the same account and environment.','georg-kloster-orthodox-donate'));
         echo '<li>';self::link('https://dashboard.stripe.com/apikeys',__('Open Stripe API keys','georg-kloster-orthodox-donate'));echo '</li>';
         self::step(__('Reveal or create a Secret key on the API keys page and paste it into Secret Key. Test keys start with sk_test_, live keys with sk_live_. A pk_ publishable key, account password or whsec_ signing secret cannot replace it.','georg-kloster-orthodox-donate'));

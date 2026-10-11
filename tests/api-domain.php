@@ -2,7 +2,7 @@
 declare(strict_types=1);
 define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
 require dirname(__DIR__).'/georg-kloster-orthodox-donate/includes/class-payments.php';
-use KlosterPrayer\Payments;
+use GeorgKlosterOrthodoxDonate\Payments;
 $origin='';$base='https://old.example/wp-json/';
 function get_option($key,$default=''){global $origin;return $key==='gkod_api_origin'?$origin:$default;}
 function rest_url($path){global $base;return $base.$path;}

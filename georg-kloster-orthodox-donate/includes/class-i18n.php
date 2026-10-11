@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 
 final class I18n
 {

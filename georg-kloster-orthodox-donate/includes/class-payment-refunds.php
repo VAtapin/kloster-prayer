@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 
 /** Verified refunds for both one-time donations and recurring payments. */
 final class Payment_Refunds

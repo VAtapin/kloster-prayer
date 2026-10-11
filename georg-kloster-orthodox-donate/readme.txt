@@ -4,7 +4,7 @@ Tags: orthodox, prayer, donations, stripe, paypal
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,12 +92,12 @@ Bundled libraries retain their own GPL-compatible licenses and notices.
 == Installation ==
 
 1. Back up the site and database before updating.
-2. Deactivate the previous Kloster plugin before installing this new series. Previous records, translations and payment settings are not imported.
+2. The previous Kloster plugin can remain active. This independent plugin uses separate PHP namespaces, gkod_* shortcodes, styles/scripts, settings and tables; previous data is not imported or changed.
 3. Upload the ZIP using Plugins → Add New → Upload Plugin, or install from the directory when available.
 4. Activate Parish — Prayer Requests, Services and Donations.
 5. Open Parish → Settings; configure only the payment providers you intend to enable, using fresh settings for this installation.
 6. Register the exact webhook URL shown for each provider in that provider's dashboard.
-7. Insert [kloster_form] into a page and test the full payment flow with test credentials before going Live.
+7. Insert [gkod_form] into a page and test the full payment flow with test credentials before going Live.
 
 = PayPal setup =
 
@@ -140,9 +140,9 @@ Mail acceptance does not prove Inbox delivery; a crash after mail acceptance can
 
 = Regular support setup =
 
-Add [kloster_support lang="ru"] to a page; campaign_id="1" optionally allocates support to a campaign.
+Add [gkod_support lang="ru"] to a page; campaign_id="1" optionally allocates support to a campaign.
 The donor must sign in, choose a monthly or yearly amount and explicitly consent to repeated payments.
-They approve the agreement on the provider's site and cancel it through [kloster_donation_history].
+They approve the agreement on the provider's site and cancel it through [gkod_donation_history].
 Staff with manage_options can inspect/cancel agreements in Regular support.
 Closing a campaign prevents new agreements; existing agreements continue until cancelled.
 
@@ -167,11 +167,11 @@ with copy buttons. The guide uses the WordPress admin language; examples omit la
 Content editors show only the current WPML/Polylang language (or WordPress language without them).
 Other saved translations are preserved. Campaigns do not require an English title.
 
-[kloster_campaigns lang="ru"] — public campaigns and donation forms.
-[kloster_campaigns id="1"] — one published campaign.
-[kloster_campaign_report id="1"] — public totals without donor details.
-[kloster_donation campaign_id="1"] — donate to an open, unexpired campaign.
-[kloster_donation_history] — donations made while signed in to the current account.
+[gkod_campaigns lang="ru"] — public campaigns and donation forms.
+[gkod_campaigns id="1"] — one published campaign.
+[gkod_campaign_report id="1"] — public totals without donor details.
+[gkod_donation campaign_id="1"] — donate to an open, unexpired campaign.
+[gkod_donation_history] — donations made while signed in to the current account.
 Guests and historical payments are never assigned by email. Staff access remains
 restricted to manage_options. Campaign expenses are entered separately in Campaigns;
 pending, failed and refunded payments are excluded from received totals.
@@ -181,21 +181,21 @@ The schema upgrade adds campaign records and optional ownership/allocation colum
 without deleting existing prayer notes or linking old records to users.
 Version 1.2.15 adds subscriptions, verified refund records and optional payment-reference columns.
 
-[kloster_support lang="ru"] — signed-in monthly/yearly support with explicit consent.
-[kloster_support campaign_id="1"] — regular support allocated to an accepting campaign.
+[gkod_support lang="ru"] — signed-in monthly/yearly support with explicit consent.
+[gkod_support campaign_id="1"] — regular support allocated to an accepting campaign.
 The account history also shows owned support agreements and cancellation controls.
 
-[kloster_donation lang="ru"] — standalone one-time donation without prayer names or services.
+[gkod_donation lang="ru"] — standalone one-time donation without prayer names or services.
 Amounts: EUR 0.50–999,999.99; comma or dot decimals, up to two decimal places.
 Uses the same enabled Stripe/PayPal providers, verified webhooks and email settings.
 Donations appear in the protected request list (type filter), total/donor reports and archive;
 they have no service items, remembrance schedule or prayer-slip PDF.
 
-[kloster_form] — general prayer form.
-[kloster_form id="2"] — existing compatible form by ID.
-[kloster_prayer_form slug="gebetsanliegen"] — form by slug.
-[kloster_service slug="altar-candle"] — form for one service.
-[kloster_payment_result] — payment-result block; standard forms already display it.
+[gkod_form] — general prayer form.
+[gkod_form id="2"] — existing compatible form by ID.
+[gkod_prayer_form slug="gebetsanliegen"] — form by slug.
+[gkod_service slug="altar-candle"] — form for one service.
+[gkod_payment_result] — payment-result block; standard forms already display it.
 
 Layouts: standard, compact, wide, two_columns, cards, minimal.
 header="no" hides the internal heading. Forms fill the shortcode's available container width.
@@ -227,6 +227,10 @@ No. Payment records and settings are retained to prevent accidental loss.
 Manage retention and backups according to your site's policy.
 
 == Changelog ==
+
+= 1.0.1 =
+* Fully isolate PHP namespaces, nine gkod_* shortcodes, frontend selectors, JavaScript globals and payment return parameters from the previous plugin.
+* Verify both plugins active together in both startup orders and both payment forms on the same page.
 
 = 1.0.0 (new series) =
 * Restart the version numbering with native WordPress administration. Migration from the previous installation is outside this version's scope.
@@ -361,6 +365,6 @@ Manage retention and backups according to your site's policy.
 = 1.0.1 =
 * Производственная доработка админки, PDF, экспорта, диагностики и доставки писем.
 
-= 1.0.0 =
+= 1.0.1 =
 * Полная новая реализация для WordPress 7.1 и PHP 8.4.
 * Двуязычные формы, новая админка, платежи, письма, PDF и отчеты.

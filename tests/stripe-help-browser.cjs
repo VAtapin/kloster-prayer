@@ -11,7 +11,7 @@ const {chromium}=require(path.resolve(__dirname,'../../Kalendar/node_modules/pla
     await page.addStyleTag({path:path.resolve(__dirname,'../georg-kloster-orthodox-donate/assets/css/admin.css')});
     await page.addStyleTag({path:path.resolve(__dirname,'../georg-kloster-orthodox-donate/assets/css/admin-native.css')});
     await page.addStyleTag({content:'@media(max-width:782px){body{padding:12px}aside{display:none}}'});
-    const help=page.locator('.klp-stripe-help');
+    const help=page.locator('.gkod-stripe-help');
     assert.equal(await help.getAttribute('open'),null);
     await help.locator('summary').click();
     assert.ok(await help.evaluate(e=>e.open));

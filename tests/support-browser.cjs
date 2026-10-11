@@ -12,7 +12,7 @@ const {chromium} = require(path.resolve(__dirname, '../../Kalendar/node_modules/
     await page.addStyleTag({content: 'body{font-family:Arial,sans-serif;margin:24px;max-width:860px}input,select,textarea{font:inherit}table{margin-bottom:20px}'});
     await page.addStyleTag({path: path.resolve(__dirname, '../georg-kloster-orthodox-donate/assets/css/public.css')});
     await page.evaluate(() => {
-      window.klosterPrayer = {required: 'Заполните обязательные поля.', error: 'Ошибка', ajaxUrl: '/fixture'};
+      window.georgKlosterOrthodoxDonate = {required: 'Заполните обязательные поля.', error: 'Ошибка', ajaxUrl: '/fixture'};
       window.sent = [];
       window.fetch = async (_, options) => {
         window.sent.push(Object.fromEntries(options.body));
@@ -21,22 +21,22 @@ const {chromium} = require(path.resolve(__dirname, '../../Kalendar/node_modules/
     });
     await page.addScriptTag({path: path.resolve(__dirname, '../georg-kloster-orthodox-donate/assets/js/public.js')});
     await page.evaluate(() => document.dispatchEvent(new Event('DOMContentLoaded')));
-    const form = page.locator('.klp-form form');
+    const form = page.locator('.gkod-form form');
     await form.locator('[name="donation_amount"]').fill('10,00');
     await form.locator('[name="donor_email"]').fill('donor@example.invalid');
-    await form.locator('.klp-submit').click();
+    await form.locator('.gkod-submit').click();
     assert.equal(await page.evaluate(() => window.sent.length), 0, 'Unchecked consent blocks submission');
     await form.locator('[name="recurring_consent"]').check();
     await form.locator('[name="frequency"]').selectOption('year');
-    await form.locator('.klp-submit').click();
+    await form.locator('.gkod-submit').click();
     await page.waitForFunction(() => window.sent.length === 1);
     const payload = await page.evaluate(() => window.sent[0]);
     assert.equal(payload.frequency, 'year');
     assert.equal(payload.recurring_consent, '1');
     assert.equal(payload.donation_amount, '10,00');
     assert.equal('names' in payload, false);
-    await page.waitForFunction(() => !document.querySelector('.klp-submit').disabled);
-    assert.equal(await form.locator('.klp-error').textContent(), 'Fixture validation');
+    await page.waitForFunction(() => !document.querySelector('.gkod-submit').disabled);
+    assert.equal(await form.locator('.gkod-error').textContent(), 'Fixture validation');
     assert.ok(await page.locator('input[name="subscription_id"]').count(), 'History has cancellation controls');
     assert.ok(await page.locator('input[name="_wpnonce"]').count(), 'Cancellation nonce retained');
     assert.deepEqual(errors, []);

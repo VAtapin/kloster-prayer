@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 
 /** Campaign records and public, anonymous financial summaries. */
 final class Campaigns
 {
     public static function init(): void
     {
-        add_shortcode('kloster_campaigns', [self::class, 'shortcode']);
-        add_shortcode('kloster_campaign_report', [self::class, 'report_shortcode']);
+        add_shortcode('gkod_campaigns', [self::class, 'shortcode']);
+        add_shortcode('gkod_campaign_report', [self::class, 'report_shortcode']);
     }
 
     public static function get(int $id): ?object
@@ -88,7 +88,7 @@ final class Campaigns
     {
         $totals = self::totals((int) $campaign->id);
         $rows = [__('Goal', 'georg-kloster-orthodox-donate') => (int) $campaign->goal_cents, __('Donations received', 'georg-kloster-orthodox-donate') => $totals['received'], __('Expenses', 'georg-kloster-orthodox-donate') => $totals['spent'], __('Balance', 'georg-kloster-orthodox-donate') => $totals['balance']];
-        $html = '<dl class="klp-campaign-summary">';
+        $html = '<dl class="gkod-campaign-summary">';
         foreach ($rows as $label => $cents) $html .= '<dt>' . esc_html($label) . '</dt><dd>' . esc_html(number_format_i18n($cents / 100, 2) . ' EUR') . '</dd>';
         $ratio = min(100, max(0, (int) floor($totals['received'] * 100 / max(1, (int) $campaign->goal_cents))));
         return $html . '</dl><progress max="100" value="' . $ratio . '" aria-label="' . esc_attr__('Campaign progress', 'georg-kloster-orthodox-donate') . '">' . $ratio . '%</progress>';
@@ -96,25 +96,25 @@ final class Campaigns
 
     public static function report_shortcode(array|string $atts = []): string
     {
-        $atts = shortcode_atts(['id' => 0, 'lang' => ''], $atts, 'kloster_campaign_report');
+        $atts = shortcode_atts(['id' => 0, 'lang' => ''], $atts, 'gkod_campaign_report');
         $campaign = self::get(absint($atts['id']));
         if (!$campaign || !in_array($campaign->status, ['open', 'closed'], true)) return '';
         $lang = in_array($atts['lang'], ['en','ru','de','uk','pl'], true) ? $atts['lang'] : I18n::language();
-        return I18n::in_language(static fn(): string => '<section class="klp-campaign"><h2>' . esc_html(self::title($campaign, $lang)) . '</h2>' . self::summary($campaign) . '</section>', $lang);
+        return I18n::in_language(static fn(): string => '<section class="gkod-campaign"><h2>' . esc_html(self::title($campaign, $lang)) . '</h2>' . self::summary($campaign) . '</section>', $lang);
     }
 
     public static function shortcode(array|string $atts = []): string
     {
         global $wpdb;
-        $atts = shortcode_atts(['id' => 0, 'lang' => ''], $atts, 'kloster_campaigns');
+        $atts = shortcode_atts(['id' => 0, 'lang' => ''], $atts, 'gkod_campaigns');
         $lang = in_array($atts['lang'], ['en','ru','de','uk','pl'], true) ? $atts['lang'] : I18n::language();
         $rows = $atts['id'] ? array_filter([self::get(absint($atts['id']))]) : $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE status IN ('open','closed') ORDER BY id DESC LIMIT 100", Database::table('campaigns')));
         return I18n::in_language(static function () use ($rows, $lang): string {
-            $html = '<div class="klp-campaigns">';
+            $html = '<div class="gkod-campaigns">';
             foreach ($rows as $campaign) {
                 if (!in_array($campaign->status, ['open', 'closed'], true)) continue;
                 $description = $campaign->{'description_' . $lang} ?: $campaign->description_en;
-                $html .= '<section class="klp-campaign"><h2>' . esc_html(self::title($campaign, $lang)) . '</h2><p>' . nl2br(esc_html($description)) . '</p>' . self::summary($campaign);
+                $html .= '<section class="gkod-campaign"><h2>' . esc_html(self::title($campaign, $lang)) . '</h2><p>' . nl2br(esc_html($description)) . '</p>' . self::summary($campaign);
                 if ($campaign->deadline) $html .= '<p>' . esc_html__('Deadline', 'georg-kloster-orthodox-donate') . ': ' . esc_html($campaign->deadline) . '</p>';
                 $html .= self::accepting($campaign) ? Public_Form::donation_shortcode(['campaign_id' => (int) $campaign->id, 'lang' => $lang, 'header' => 'no']) : '<p>' . esc_html__('This campaign is closed.', 'georg-kloster-orthodox-donate') . '</p>';
                 $html .= '</section>';

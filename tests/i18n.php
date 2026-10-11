@@ -21,15 +21,15 @@ foreach(['ru'=>'ru_RU','de'=>'de_DE','uk'=>'uk','pl'=>'pl_PL'] as $language=>$lo
         preg_match_all('/%(?:\d+\$)?[ds]/',$entry->singular,$a);preg_match_all('/%(?:\d+\$)?[ds]/',$translated->translations[0],$b);
         sort($a[0]);sort($b[0]);ensure($a[0]===$b[0],'Format arguments preserved');
     }
-    foreach($old as $key=>$values)ensure(KlosterPrayer\I18n::text($key,$language)===$values[$language],'Existing public translation retained: '.$language.'/'.$key);
-    foreach($donation as $key=>$values)ensure(KlosterPrayer\I18n::donation_text($key,$language)===$values[$language],'Existing donation translation retained: '.$language.'/'.$key);
-    ensure(KlosterPrayer\I18n::text('order_date',$language)===$mo->translate('Order date:'),'PDF date language');
-    ensure(KlosterPrayer\I18n::text('mail_subject',$language)===$mo->translate('Your prayer request has been received'),'Email language');
+    foreach($old as $key=>$values)ensure(GeorgKlosterOrthodoxDonate\I18n::text($key,$language)===$values[$language],'Existing public translation retained: '.$language.'/'.$key);
+    foreach($donation as $key=>$values)ensure(GeorgKlosterOrthodoxDonate\I18n::donation_text($key,$language)===$values[$language],'Existing donation translation retained: '.$language.'/'.$key);
+    ensure(GeorgKlosterOrthodoxDonate\I18n::text('order_date',$language)===$mo->translate('Order date:'),'PDF date language');
+    ensure(GeorgKlosterOrthodoxDonate\I18n::text('mail_subject',$language)===$mo->translate('Your prayer request has been received'),'Email language');
 }
-ensure(KlosterPrayer\I18n::text('health','en')==='For the living','English source without translation');
-ensure(KlosterPrayer\I18n::text('names_placeholder','en')==="Name\nName\nName",'English multiline placeholder');
+ensure(GeorgKlosterOrthodoxDonate\I18n::text('health','en')==='For the living','English source without translation');
+ensure(GeorgKlosterOrthodoxDonate\I18n::text('names_placeholder','en')==="Name\nName\nName",'English multiline placeholder');
 ensure($GLOBALS['fixture_gettext_filters']===[],'Gettext scope restored');
-try{KlosterPrayer\I18n::in_language(static function(){throw new RuntimeException('fixture');},'de');}catch(RuntimeException $e){}
+try{GeorgKlosterOrthodoxDonate\I18n::in_language(static function(){throw new RuntimeException('fixture');},'de');}catch(RuntimeException $e){}
 ensure($GLOBALS['fixture_gettext_filters']===[],'Gettext scope restored after exception');
 foreach(glob($root.'/includes/*.php') as $file){
     if(basename($file)==='class-database.php')continue; // Locale-specific seed data, not interface source strings.

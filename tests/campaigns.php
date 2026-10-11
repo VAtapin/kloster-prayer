@@ -2,10 +2,10 @@
 declare(strict_types=1);
 // Reuse the isolated WordPress database and intercepted HTTP/mail setup.
 require __DIR__ . '/donations.php';
-use KlosterPrayer\Campaigns;
-use KlosterPrayer\Donation_Pages;
-use KlosterPrayer\Database;
-use KlosterPrayer\Payments;
+use GeorgKlosterOrthodoxDonate\Campaigns;
+use GeorgKlosterOrthodoxDonate\Donation_Pages;
+use GeorgKlosterOrthodoxDonate\Database;
+use GeorgKlosterOrthodoxDonate\Payments;
 Campaigns::init(); Donation_Pages::init();
 $input=['title_en'=>'Roof repairs','title_ru'=>'Ремонт кровли','description_en'=>'Repair the roof safely.','goal'=>'100.00','status'=>'open','deadline'=>wp_date('Y-m-d',time()+DAY_IN_SECONDS)];
 $id=Campaigns::save($input); donation_assert(is_int($id)&&$id>0,'Create campaign');
@@ -24,7 +24,7 @@ add_filter('pre_http_request',static function($value,$args,$url){
     if(str_ends_with($url,'/v1/checkout/sessions'))return ['headers'=>[],'body'=>wp_json_encode(['id'=>'cs_campaign_'.$args['body']['metadata[order_id]'],'url'=>'https://checkout.stripe.com/c/pay/campaign']),'response'=>['code'=>200],'cookies'=>[]];
     return new WP_Error('blocked','Unexpected network request');
 },10,3);
-delete_transient('gkod_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
+delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
 $result=donation_ajax(array_replace($base,['campaign_id'=>(string)$id]));
 donation_assert($result['success']??false,'Targeted checkout');
 $targeted=$wpdb->get_row('SELECT * FROM '.Database::table('orders').' ORDER BY id DESC LIMIT 1');
@@ -34,9 +34,9 @@ donation_assert(donation_event($targeted,1234,'evt_campaign_paid')->get_status()
 donation_assert(Campaigns::totals($id)['received']===1234,'Paid donation counted');
 donation_assert(Campaigns::expense(['campaign_id'=>$id,'expense_amount'=>'0.01','expense_description'=>'Small expense','expense_date'=>wp_date('Y-m-d')])===true,'Record separate expense');
 donation_assert(Campaigns::totals($id)===['received'=>1234,'spent'=>1,'balance'=>1233],'Financial totals reconcile');
-$report=do_shortcode('[kloster_campaign_report id="'.$id.'" lang="en"]');
+$report=do_shortcode('[gkod_campaign_report id="'.$id.'" lang="en"]');
 donation_assert(str_contains($report,'12.34')&&!str_contains($report,'donor@example.invalid')&&!str_contains($report,'Small expense'),'Public report contains only aggregates');
-$public=do_shortcode('[kloster_campaigns id="'.$id.'" lang="ru"]');
+$public=do_shortcode('[gkod_campaigns id="'.$id.'" lang="ru"]');
 donation_assert(str_contains($public,'Ремонт кровли')&&str_contains($public,'name="campaign_id"'),'Localized campaign page with linked form');
 $_GET=['donor_user_id'=>'999','donor_email'=>'someone@example.invalid'];
 $history=Donation_Pages::history(); donation_assert(str_contains($history,'12.34'),'Owner history');
@@ -48,12 +48,12 @@ wp_set_current_user(0); donation_assert(str_contains(Donation_Pages::history(),'
 wp_set_current_user(1);$_GET=[];
 donation_assert(Campaigns::save(array_replace($input,['campaign_id'=>$id,'status'=>'closed']))===$id,'Close without deleting records');
 donation_assert(!(donation_ajax(array_replace($base,['campaign_id'=>$id]))['success']??true),'Server rejects closed campaign');
-donation_assert(!str_contains(do_shortcode('[kloster_campaigns id="'.$id.'"]'),'name="donation_amount"'),'Closed campaign hides checkout');
+donation_assert(!str_contains(do_shortcode('[gkod_campaigns id="'.$id.'"]'),'name="donation_amount"'),'Closed campaign hides checkout');
 donation_assert(Campaigns::save(array_replace($input,['campaign_id'=>$id,'status'=>'open','deadline'=>'2020-01-01']))===$id,'Set expired deadline');
 donation_assert(!Campaigns::accepting(Campaigns::get($id)),'Deadline enforced');
 donation_assert(!(donation_ajax(array_replace($base,['campaign_id'=>$id]))['success']??true),'Server rejects expired campaign');
 Campaigns::save(array_replace($input,['campaign_id'=>$id,'status'=>'draft']));
-donation_assert(do_shortcode('[kloster_campaign_report id="'.$id.'"]')===''&&do_shortcode('[kloster_campaigns id="'.$id.'"]')==='<div class="klp-campaigns"></div>','Draft campaigns are private');
+donation_assert(do_shortcode('[gkod_campaign_report id="'.$id.'"]')===''&&do_shortcode('[gkod_campaigns id="'.$id.'"]')==='<div class="gkod-campaigns"></div>','Draft campaigns are private');
 $wpdb->update(Database::table('orders'),['payment_status'=>'refunded'],['id'=>$targeted->id]);
 donation_assert(Campaigns::totals($id)['received']===0,'Refunded payments are excluded');
 update_option('gkod_db_version','1.2.13');Database::maybe_upgrade();

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: georg-kloster-orthodox-donate 1.0.0\n"
+"Project-Id-Version: georg-kloster-orthodox-donate 1.0.1\n"
 "Language: pl_PL\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -959,8 +959,8 @@ msgstr "Pomoc"
 msgid "Prayer form. Without id or slug, uses the active gebetsanliegen form. An id takes precedence over a slug."
 msgstr "Formularz intencji. Bez id lub slug używany jest aktywny formularz gebetsanliegen. id ma pierwszeństwo przed slug."
 
-msgid "Alias of kloster_form with the same parameters and behavior."
-msgstr "Inna nazwa kloster_form z tymi samymi parametrami i działaniem."
+msgid "Alias of gkod_form with the same parameters and behavior."
+msgstr "Inna nazwa gkod_form z tymi samymi parametrami i działaniem."
 
 msgid "Form for one active service. Specify its id or slug; an id takes precedence. Find these values in Services."
 msgstr "Formularz jednej aktywnej posługi. Podaj id lub slug; id ma pierwszeństwo. Wartości znajdziesz w sekcji Posługi."
@@ -995,14 +995,14 @@ msgstr "Układ: standard, compact, wide, two_columns, cards lub minimal. Formula
 msgid "Language: en, ru, de, uk or pl. Omit it to use the current WordPress language. Existing prayer form/service content uses German as the English fallback."
 msgstr "Język: en, ru, de, uk lub pl. Bez parametru używany jest bieżący język WordPress. Istniejące treści formularzy intencji i posług korzystają z niemieckich pól dla języka angielskiego."
 
-msgid "yes (default) shows the form heading; no hides it. Not supported by kloster_service."
-msgstr "yes (domyślnie) pokazuje nagłówek formularza; no go ukrywa. Nieobsługiwane przez kloster_service."
+msgid "yes (default) shows the form heading; no hides it. Not supported by gkod_service."
+msgstr "yes (domyślnie) pokazuje nagłówek formularza; no go ukrywa. Nieobsługiwane przez gkod_service."
 
 msgid "Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired."
 msgstr "Opcjonalny ID zbiórki. Pomiń lub użyj 0 dla ogólnego wsparcia cerkwi. Wskazana zbiórka musi być otwarta i nie może być wygasła."
 
-msgid "Compatibility parameter for kloster_donation: no (default) means one-time payment; yes displays recurring choices. Prefer kloster_support, which also checks login before showing the form."
-msgstr "Parametr zgodności kloster_donation: no (domyślnie) oznacza płatność jednorazową; yes pokazuje opcje regularne. Używaj kloster_support, który sprawdza zalogowanie przed wyświetleniem formularza."
+msgid "Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which also checks login before showing the form."
+msgstr "Parametr zgodności gkod_donation: no (domyślnie) oznacza płatność jednorazową; yes pokazuje opcje regularne. Używaj gkod_support, który sprawdza zalogowanie przed wyświetleniem formularza."
 
 msgid "Copied."
 msgstr "Skopiowano."

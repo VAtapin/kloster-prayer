@@ -1,43 +1,43 @@
 /* Scoped to plugin screens; native WordPress tables keep core spacing. */
-.wrap.klp-admin{max-width:none}
-.klp-admin>h1{display:inline-block;margin-right:8px}
-.klp-admin .klp-card,.klp-admin .klp-card:not(.klp-grow){box-sizing:border-box;width:100%;max-width:none;padding:14px;margin:12px 0;min-width:0}
-.klp-admin .klp-service-checklist label{display:block;margin:0 0 8px;font-weight:normal}
-.klp-admin .klp-payment-settings,.klp-admin .klp-report-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:12px}
-.klp-admin .klp-payment-settings .postbox{min-width:0;margin:0;border:1px solid #c3c4c7;background:#fff}
-.klp-admin .klp-detail-actions{display:inline-block;margin:10px 0}
-.klp-admin .klp-payment-settings h2{margin:0;padding:10px 12px;border-bottom:1px solid #dcdcde;font-size:14px}
-.klp-admin .klp-payment-settings .inside{margin:0;padding:0 12px 12px}
-.klp-admin .klp-payment-settings p{margin:10px 0}
-.klp-admin .klp-payment-settings p>label{display:block;margin-bottom:4px}
-.klp-admin .klp-payment-settings input:not([type=checkbox]),.klp-admin .klp-payment-settings select{width:100%;max-width:none}
-.klp-admin code{overflow-wrap:anywhere}
-.klp-admin .klp-stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:12px 0}
-.klp-admin .klp-stats>div{min-width:0;padding:12px;border-radius:2px}
-.klp-admin .klp-stats strong{font-size:20px;overflow-wrap:anywhere}
-.klp-admin .widefat td,.klp-admin .widefat th{overflow-wrap:anywhere}
-.klp-admin .wp-list-table .column-cb{width:2.2em}
-.klp-admin .wp-list-table .column-title{width:32%}
-.klp-admin .wp-list-table .column-details{width:24%}
-.klp-admin .wp-list-table .column-status{width:10%}
-.klp-admin .wp-list-table .column-updated_at{width:13%}
-.klp-admin .wp-list-table .column-id{width:8%}
-.klp-admin .wp-list-table .column-amount_cents{width:8%}
-.klp-admin .wp-list-table .column-printed_at{width:9%}
-.klp-admin .wp-list-table .column-created_at{width:12%}
-.klp-admin .klp-names{min-width:0;max-height:100px;overflow:auto}
-.klp-admin .tablenav.top{height:auto;min-height:32px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;clear:both;margin:8px 0}
-.klp-admin .tablenav .actions{padding:0;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
-.klp-admin .tablenav .actions select{margin:0;max-width:170px}
-.klp-admin .tablenav .tablenav-pages{margin-left:auto}
-.klp-admin .tablenav .clear{display:none}
-.klp-admin .klp-donors{table-layout:fixed}
-.klp-admin .klp-card>.widefat>tbody>tr>th{width:180px}
-@media(max-width:782px){.klp-admin .klp-payment-settings,.klp-admin .klp-report-groups{grid-template-columns:1fr}.klp-admin .klp-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.klp-admin .klp-donors{display:block;overflow-x:auto}.klp-admin .tablenav .tablenav-pages{margin-left:0}}
-.klp-admin .klp-card input.small-text { display:inline-block; width:80px; max-width:80px; margin:0 8px 0 4px; }
-.klp-admin .klp-card input[type="date"] { display:inline-block; width:150px; margin:0 8px 0 4px; }
-.klp-admin .klp-order-comment{margin-top:8px;padding:6px 8px;border-left:3px solid #c3c4c7;background:#fff;overflow-wrap:anywhere;white-space:normal;font-size:13px;line-height:1.5}
-.klp-admin .klp-order-comment strong{display:block;font-size:12px;color:#50575e}
-.klp-shortcode-example{display:flex;gap:8px;margin:8px 0}.klp-shortcode-example input{flex:1;min-width:0;width:100%}.klp-admin.klp-shortcode-help .klp-card>.widefat>tbody>tr>th{width:100px;vertical-align:top}.klp-shortcode-help td{overflow-wrap:anywhere}.klp-copy-status{min-height:1.5em}
-@media(max-width:600px){.klp-shortcode-help table,.klp-shortcode-help tbody,.klp-shortcode-help tr,.klp-shortcode-help th,.klp-shortcode-help td{display:block}.klp-admin.klp-shortcode-help .klp-card>.widefat>tbody>tr>th{width:auto}.klp-shortcode-help tr{border-bottom:1px solid #dcdcde}}
-.klp-admin #klp-image-preview img{max-width:240px;height:auto;display:block;margin-bottom:8px}
+.wrap.gkod-admin{max-width:none}
+.gkod-admin>h1{display:inline-block;margin-right:8px}
+.gkod-admin .gkod-card,.gkod-admin .gkod-card:not(.gkod-grow){box-sizing:border-box;width:100%;max-width:none;padding:14px;margin:12px 0;min-width:0}
+.gkod-admin .gkod-service-checklist label{display:block;margin:0 0 8px;font-weight:normal}
+.gkod-admin .gkod-payment-settings,.gkod-admin .gkod-report-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:12px}
+.gkod-admin .gkod-payment-settings .postbox{min-width:0;margin:0;border:1px solid #c3c4c7;background:#fff}
+.gkod-admin .gkod-detail-actions{display:inline-block;margin:10px 0}
+.gkod-admin .gkod-payment-settings h2{margin:0;padding:10px 12px;border-bottom:1px solid #dcdcde;font-size:14px}
+.gkod-admin .gkod-payment-settings .inside{margin:0;padding:0 12px 12px}
+.gkod-admin .gkod-payment-settings p{margin:10px 0}
+.gkod-admin .gkod-payment-settings p>label{display:block;margin-bottom:4px}
+.gkod-admin .gkod-payment-settings input:not([type=checkbox]),.gkod-admin .gkod-payment-settings select{width:100%;max-width:none}
+.gkod-admin code{overflow-wrap:anywhere}
+.gkod-admin .gkod-stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:12px 0}
+.gkod-admin .gkod-stats>div{min-width:0;padding:12px;border-radius:2px}
+.gkod-admin .gkod-stats strong{font-size:20px;overflow-wrap:anywhere}
+.gkod-admin .widefat td,.gkod-admin .widefat th{overflow-wrap:anywhere}
+.gkod-admin .wp-list-table .column-cb{width:2.2em}
+.gkod-admin .wp-list-table .column-title{width:32%}
+.gkod-admin .wp-list-table .column-details{width:24%}
+.gkod-admin .wp-list-table .column-status{width:10%}
+.gkod-admin .wp-list-table .column-updated_at{width:13%}
+.gkod-admin .wp-list-table .column-id{width:8%}
+.gkod-admin .wp-list-table .column-amount_cents{width:8%}
+.gkod-admin .wp-list-table .column-printed_at{width:9%}
+.gkod-admin .wp-list-table .column-created_at{width:12%}
+.gkod-admin .gkod-names{min-width:0;max-height:100px;overflow:auto}
+.gkod-admin .tablenav.top{height:auto;min-height:32px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;clear:both;margin:8px 0}
+.gkod-admin .tablenav .actions{padding:0;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.gkod-admin .tablenav .actions select{margin:0;max-width:170px}
+.gkod-admin .tablenav .tablenav-pages{margin-left:auto}
+.gkod-admin .tablenav .clear{display:none}
+.gkod-admin .gkod-donors{table-layout:fixed}
+.gkod-admin .gkod-card>.widefat>tbody>tr>th{width:180px}
+@media(max-width:782px){.gkod-admin .gkod-payment-settings,.gkod-admin .gkod-report-groups{grid-template-columns:1fr}.gkod-admin .gkod-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.gkod-admin .gkod-donors{display:block;overflow-x:auto}.gkod-admin .tablenav .tablenav-pages{margin-left:0}}
+.gkod-admin .gkod-card input.small-text { display:inline-block; width:80px; max-width:80px; margin:0 8px 0 4px; }
+.gkod-admin .gkod-card input[type="date"] { display:inline-block; width:150px; margin:0 8px 0 4px; }
+.gkod-admin .gkod-order-comment{margin-top:8px;padding:6px 8px;border-left:3px solid #c3c4c7;background:#fff;overflow-wrap:anywhere;white-space:normal;font-size:13px;line-height:1.5}
+.gkod-admin .gkod-order-comment strong{display:block;font-size:12px;color:#50575e}
+.gkod-shortcode-example{display:flex;gap:8px;margin:8px 0}.gkod-shortcode-example input{flex:1;min-width:0;width:100%}.gkod-admin.gkod-shortcode-help .gkod-card>.widefat>tbody>tr>th{width:100px;vertical-align:top}.gkod-shortcode-help td{overflow-wrap:anywhere}.gkod-copy-status{min-height:1.5em}
+@media(max-width:600px){.gkod-shortcode-help table,.gkod-shortcode-help tbody,.gkod-shortcode-help tr,.gkod-shortcode-help th,.gkod-shortcode-help td{display:block}.gkod-admin.gkod-shortcode-help .gkod-card>.widefat>tbody>tr>th{width:auto}.gkod-shortcode-help tr{border-bottom:1px solid #dcdcde}}
+.gkod-admin #gkod-image-preview img{max-width:240px;height:auto;display:block;margin-bottom:8px}

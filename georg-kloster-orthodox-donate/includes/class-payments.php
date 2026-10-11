@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 if (!defined('ABSPATH')) exit;
 require_once __DIR__.'/class-input.php';
 
@@ -201,14 +201,14 @@ final class Payments
     private static function return_url(object $order, string $status): string
     {
         $base = !empty($order->return_url) ? (string) $order->return_url : home_url('/');
-        return add_query_arg(['kloster_payment' => $status, 'kloster_order' => $order->public_id], $base);
+        return add_query_arg(['gkod_payment' => $status, 'gkod_order' => $order->public_id], $base);
     }
 
     private static function safe_return_url(): string
     {
         $referer = wp_get_referer();
         if (!$referer || !str_starts_with($referer, home_url('/'))) return home_url('/');
-        return remove_query_arg(['kloster_payment', 'kloster_order'], $referer);
+        return remove_query_arg(['gkod_payment', 'gkod_order'], $referer);
     }
 
     private static function stripe_checkout(object $order): string|WP_Error

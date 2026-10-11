@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;

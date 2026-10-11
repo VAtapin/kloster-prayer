@@ -5,9 +5,9 @@ $site=realpath($argv[1]??'');
 if(!$site||!str_contains(str_replace('\\','/',$site),'/tmp/wporg-review/wordpress'))throw new RuntimeException('Local review site required');
 require $site.'/wp-load.php';
 require_once $site.'/wp-content/plugins/georg-kloster-orthodox-donate/includes/class-orders-table.php';
-use KlosterPrayer\Database;
-use KlosterPrayer\Payments;
-use KlosterPrayer\Input;
+use GeorgKlosterOrthodoxDonate\Database;
+use GeorgKlosterOrthodoxDonate\Payments;
+use GeorgKlosterOrthodoxDonate\Input;
 function review_assert(bool $ok,string $message): void {if(!$ok)throw new RuntimeException($message);}
 global $wpdb;
 $deliveries=[];
@@ -40,9 +40,9 @@ try{Payments::create_payment();throw new RuntimeException('Missing AJAX nonce en
 remove_filter('wp_doing_ajax','__return_true');
 review_assert((int)$wpdb->get_var('SELECT COUNT(*) FROM '.Database::table('orders'))===$before,'Rejected AJAX nonce cannot create order');
 $_POST=['gkod_action'=>'save_settings','_gkod_nonce'=>'invalid'];$_REQUEST=$_POST;
-try{KlosterPrayer\Admin::handle_actions();throw new RuntimeException('Missing admin nonce enforcement');}catch(ReviewWpDie $e){}
+try{GeorgKlosterOrthodoxDonate\Admin::handle_actions();throw new RuntimeException('Missing admin nonce enforcement');}catch(ReviewWpDie $e){}
 review_assert(get_option('gkod_notification_email')==='office@example.invalid','Rejected admin nonce cannot save settings');
-wp_set_current_user(0);KlosterPrayer\Admin::handle_actions();wp_set_current_user(1);
+wp_set_current_user(0);GeorgKlosterOrthodoxDonate\Admin::handle_actions();wp_set_current_user(1);
 review_assert(get_option('gkod_notification_email')==='office@example.invalid','Anonymous admin action cannot save settings');
 remove_filter('wp_die_handler',$die);remove_filter('wp_die_ajax_handler',$die);
 $_POST=[];$_GET=[];$_REQUEST=[];
@@ -60,20 +60,20 @@ $count=count($deliveries);review_assert($count===2,'Separate donor and recipient
 review_assert(stripe_event($order,(int)$order->amount_cents,'evt_review_paid')->get_status()===200&&count($deliveries)===$count,'Webhook idempotency');
 $saved=$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d',Database::table('orders'),$order->id));
 review_assert($saved->payment_status==='paid'&&$saved->note===$order->note,'Paid status and comment retained');
-KlosterPrayer\Order_Workflow::change((int)$order->id,'archive_order');
+GeorgKlosterOrthodoxDonate\Order_Workflow::change((int)$order->id,'archive_order');
 $_GET=['archive'=>'yes'];$_REQUEST=$_GET;
-$table=new KlosterPrayer\Orders_Table();$table->prepare_items();
+$table=new GeorgKlosterOrthodoxDonate\Orders_Table();$table->prepare_items();
 review_assert(count($table->items)>=1,'Archive query on real database');
 review_assert(str_contains($table->column_default($saved,'names'),'&lt;script&gt;'),'Comment escaping');
-$_GET=['view'=>$order->id];$_REQUEST=$_GET;ob_start();KlosterPrayer\Admin::orders();$html=ob_get_clean();
+$_GET=['view'=>$order->id];$_REQUEST=$_GET;ob_start();GeorgKlosterOrthodoxDonate\Admin::orders();$html=ob_get_clean();
 review_assert(str_contains($html,'Первая строка')&&!str_contains($html,'<script>fixture</script>'),'Detail escaping');
-$_GET=['order_ids'=>(string)$order->id];$cards=(new ReflectionMethod(KlosterPrayer\Pdf::class,'cards'))->invoke(null);
+$_GET=['order_ids'=>(string)$order->id];$cards=(new ReflectionMethod(GeorgKlosterOrthodoxDonate\Pdf::class,'cards'))->invoke(null);
 review_assert(count($cards)>=1&&$cards[0]['note']===$order->note,'Archived PDF real query');
 update_option('gkod_db_version','1.2.4');Database::maybe_upgrade();
 review_assert((int)$wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i WHERE id=%d',Database::table('orders'),$order->id))===1,'Upgrade preserves order');
 review_assert($wpdb->last_error==='','No database errors');
-$form=do_shortcode('[kloster_form]');
-review_assert(str_contains($form,'klp-form')&&$wpdb->last_error==='','Real shortcode and service join');
-$_GET=['month'=>wp_date('Y-m')];ob_start();KlosterPrayer\Admin_Screens::reports();$reports=ob_get_clean();
+$form=do_shortcode('[gkod_form]');
+review_assert(str_contains($form,'gkod-form')&&$wpdb->last_error==='','Real shortcode and service join');
+$_GET=['month'=>wp_date('Y-m')];ob_start();GeorgKlosterOrthodoxDonate\Admin_Screens::reports();$reports=ob_get_clean();
 review_assert(str_contains($reports,'cs_test')===false&&$wpdb->last_error==='','Real monthly reports');
 echo "PASS real WordPress install/activation, schema upgrade, signed webhook/binding, duplicate delivery, archive, detail/comment escaping and archived PDF query; no live network or mail\n";

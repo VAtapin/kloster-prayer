@@ -5,9 +5,9 @@ const {chromium} = require(path.resolve(__dirname, '../../Kalendar/node_modules/
   const browser = await chromium.launch({channel: 'msedge'});
   try {
     const page = await browser.newPage();
-    await page.setContent('<div class="klp-form" data-lang="ru" data-request-type="donation"><form novalidate><input name="donation_amount" required><input name="donor_email" type="email" required><output></output><div class="klp-error" hidden></div><button class="klp-submit">Пожертвовать</button></form></div>');
+    await page.setContent('<div class="gkod-form" data-lang="ru" data-request-type="donation"><form novalidate><input name="donation_amount" required><input name="donor_email" type="email" required><output></output><div class="gkod-error" hidden></div><button class="gkod-submit">Пожертвовать</button></form></div>');
     await page.evaluate(() => {
-      window.klosterPrayer = {required: 'Заполните обязательные поля.', error: 'Ошибка', ajaxUrl: '/ajax'};
+      window.georgKlosterOrthodoxDonate = {required: 'Заполните обязательные поля.', error: 'Ошибка', ajaxUrl: '/ajax'};
       window.sent = [];
       window.fetch = async (url, options) => {
         window.sent.push(Object.fromEntries(options.body));
@@ -32,7 +32,7 @@ const {chromium} = require(path.resolve(__dirname, '../../Kalendar/node_modules/
     assert.equal(await page.evaluate(() => window.sent[0].donation_amount), '12,34');
     assert.equal(await page.evaluate(() => 'names' in window.sent[0]), false);
     await page.waitForFunction(() => !document.querySelector('button').disabled);
-    assert.equal(await page.locator('.klp-error').textContent(), 'Server validation');
+    assert.equal(await page.locator('.gkod-error').textContent(), 'Server validation');
     await amount.fill('0.50');
     assert.equal(await amount.evaluate(el => el.checkValidity()), true);
     await amount.fill('999999.99');

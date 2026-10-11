@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 
 final class PayPal_Help
 {
     public static function render(): void
     {
-        echo '<details class="klp-paypal-help"><summary>'.esc_html__('PayPal setup — step-by-step instructions','georg-kloster-orthodox-donate').'</summary>';
+        echo '<details class="gkod-paypal-help"><summary>'.esc_html__('PayPal setup — step-by-step instructions','georg-kloster-orthodox-donate').'</summary>';
         echo '<p>'.esc_html__('Live payments require the recipient\'s PayPal Business account. Email, account password, App ID and Stripe whsec are not substitutes for PayPal credentials. The plugin uses REST API Orders v2, not legacy email payment buttons or IPN.','georg-kloster-orthodox-donate').'</p><ol>';
         self::step(__('Open Apps & Credentials in the PayPal Developer Dashboard and sign in to the recipient\'s account. Select Sandbox for testing or Live for real payments.','georg-kloster-orthodox-donate'));
         echo '<li>';self::link('https://developer.paypal.com/dashboard/applications/',__('Open Apps & Credentials','georg-kloster-orthodox-donate'));echo '</li>';

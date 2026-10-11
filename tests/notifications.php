@@ -5,7 +5,7 @@ require dirname(__DIR__).'/georg-kloster-orthodox-donate/includes/class-database
 require dirname(__DIR__).'/georg-kloster-orthodox-donate/includes/class-payments.php';
 require dirname(__DIR__).'/georg-kloster-orthodox-donate/includes/class-notifications.php';
 require dirname(__DIR__).'/georg-kloster-orthodox-donate/includes/class-order-workflow.php';
-use KlosterPrayer\Notifications as N;
+use GeorgKlosterOrthodoxDonate\Notifications as N;
 function check($value,$message){if(!$value)throw new RuntimeException($message);}
 $recipient='';$deliveries=[];$mail_ok=true;$throws=false;
 function get_option($key,$default=''){global $recipient;check($key==='gkod_notification_email','Must not use admin_email');return $recipient;}
@@ -53,5 +53,5 @@ $wpdb->orders[2]->payment_status='paid';$wpdb->queue[2]['locked_at']=gmdate('Y-m
 $wpdb->queue[2]['locked_at']='2000-01-01 00:00:00';$throws=true;check(!N::send(2),'Mail exception retained for retry');$throws=false;
 $recipient='';check(!N::send(2),'Disabling pauses pending notifications');$recipient='new@example.org';check(N::send(2),'Stale lease recovered');check(end($deliveries)['to']==='new@example.org','Pending mail uses current configured recipient');
 $wpdb->orders[3]=clone $order;$wpdb->orders[3]->id=3;$wpdb->orders[3]->payment_status='pending';
-$paid=new ReflectionMethod(KlosterPrayer\Payments::class,'mark_paid');$paid->invoke(null,3,'cs_test_fixture');$count=count($deliveries);$paid->invoke(null,3,'cs_test_fixture');check(count($deliveries)===$count,'Duplicate webhook did not resend');check(isset($wpdb->queue[3])&&$wpdb->queue[3]['sent_at']!==null,'Paid transition queues and sends');check($wpdb->orders[3]->confirmation_sent_at===$order->confirmation_sent_at,'Donor confirmation untouched');
+$paid=new ReflectionMethod(GeorgKlosterOrthodoxDonate\Payments::class,'mark_paid');$paid->invoke(null,3,'cs_test_fixture');$count=count($deliveries);$paid->invoke(null,3,'cs_test_fixture');check(count($deliveries)===$count,'Duplicate webhook did not resend');check(isset($wpdb->queue[3])&&$wpdb->queue[3]['sent_at']!==null,'Paid transition queues and sends');check($wpdb->orders[3]->confirmation_sent_at===$order->confirmation_sent_at,'Donor confirmation untouched');
 echo "PASS recipient validation, opt-out, HTML, retry/backoff, exception recovery, paid-only delivery, duplicate webhook and donor isolation\n";

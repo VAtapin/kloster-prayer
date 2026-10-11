@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 
 final class Support_Pages
 {
     public static function init(): void
     {
-        add_shortcode('kloster_support', [self::class, 'form']);
+        add_shortcode('gkod_support', [self::class, 'form']);
         add_action('admin_menu', [self::class, 'menu']);
         add_action('admin_post_gkod_cancel_subscription', [self::class, 'cancel_action']);
         add_action('admin_post_nopriv_gkod_cancel_subscription', [self::class, 'cancel_action']);
@@ -19,7 +19,7 @@ final class Support_Pages
 
     public static function form(array|string $atts = []): string
     {
-        $atts = shortcode_atts(['lang' => '', 'campaign_id' => 0, 'layout' => 'compact', 'header' => 'yes'], $atts, 'kloster_support');
+        $atts = shortcode_atts(['lang' => '', 'campaign_id' => 0, 'layout' => 'compact', 'header' => 'yes'], $atts, 'gkod_support');
         $lang = in_array($atts['lang'], ['en','ru','de','uk','pl'], true) ? $atts['lang'] : I18n::language();
         if (!is_user_logged_in()) return I18n::in_language(static fn(): string => '<p><a href="' . esc_url(wp_login_url(get_permalink())) . '">' . esc_html__('Log in to start regular support.', 'georg-kloster-orthodox-donate') . '</a></p>', $lang);
         Donation_Pages::private_page();
@@ -47,7 +47,7 @@ final class Support_Pages
         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Both branches above use complete literal queries with identifiers, ownership and pagination bound by prepare().
         $rows = $wpdb->get_results($query);
         $statuses = ['pending' => __('Pending', 'georg-kloster-orthodox-donate'), 'active' => __('Active', 'georg-kloster-orthodox-donate'), 'past_due' => __('Payment overdue', 'georg-kloster-orthodox-donate'), 'failed' => __('Error', 'georg-kloster-orthodox-donate'), 'cancelled' => __('Canceled', 'georg-kloster-orthodox-donate')];
-        $html = '<section class="klp-donation-history"><h2>' . esc_html__('Regular support', 'georg-kloster-orthodox-donate') . '</h2><table><thead><tr><th>' . esc_html__('Amount', 'georg-kloster-orthodox-donate') . '</th><th>' . esc_html__('Status', 'georg-kloster-orthodox-donate') . '</th><th>' . esc_html__('Payment method', 'georg-kloster-orthodox-donate') . '</th><th>' . esc_html__('Actions', 'georg-kloster-orthodox-donate') . '</th></tr></thead><tbody>';
+        $html = '<section class="gkod-donation-history"><h2>' . esc_html__('Regular support', 'georg-kloster-orthodox-donate') . '</h2><table><thead><tr><th>' . esc_html__('Amount', 'georg-kloster-orthodox-donate') . '</th><th>' . esc_html__('Status', 'georg-kloster-orthodox-donate') . '</th><th>' . esc_html__('Payment method', 'georg-kloster-orthodox-donate') . '</th><th>' . esc_html__('Actions', 'georg-kloster-orthodox-donate') . '</th></tr></thead><tbody>';
         foreach (array_slice($rows, 0, $limit) as $row) {
             $html .= '<tr><td data-label="' . esc_attr__('Amount', 'georg-kloster-orthodox-donate') . '">' . esc_html(number_format_i18n($row->amount_cents / 100, 2) . ' EUR') . ' / ' . esc_html($row->billing_interval === 'year' ? __('Yearly', 'georg-kloster-orthodox-donate') : __('Monthly', 'georg-kloster-orthodox-donate')) . ($admin ? '<br>#' . (int) $row->id . ' / ' . esc_html__('User', 'georg-kloster-orthodox-donate') . ' #' . (int) $row->donor_user_id : '') . '</td><td data-label="' . esc_attr__('Status', 'georg-kloster-orthodox-donate') . '">' . esc_html($statuses[$row->status] ?? $row->status) . '</td><td data-label="' . esc_attr__('Payment method', 'georg-kloster-orthodox-donate') . '">' . esc_html(ucfirst($row->provider)) . '</td><td data-label="' . esc_attr__('Actions', 'georg-kloster-orthodox-donate') . '">';
             if ($row->status !== 'cancelled') $html .= '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '"><input type="hidden" name="action" value="gkod_cancel_subscription"><input type="hidden" name="subscription_id" value="' . (int) $row->id . '">' . wp_nonce_field('gkod_cancel_subscription_' . (int) $row->id, '_wpnonce', true, false) . '<button type="submit">' . esc_html__('Cancel regular support', 'georg-kloster-orthodox-donate') . '</button></form>';
@@ -63,7 +63,7 @@ final class Support_Pages
     {
         if (!current_user_can('manage_options')) wp_die(esc_html__('Forbidden', 'georg-kloster-orthodox-donate'), '', ['response' => 403]);
         require_once DIR.'/includes/class-donation-admin-table.php';
-        echo '<div class="wrap klp-admin"><h1>'.esc_html__('Regular support','georg-kloster-orthodox-donate').'</h1><hr class="wp-header-end">';
+        echo '<div class="wrap gkod-admin"><h1>'.esc_html__('Regular support','georg-kloster-orthodox-donate').'</h1><hr class="wp-header-end">';
         $table=new Donation_Admin_Table('subscriptions');$table->prepare_items();$table->display();echo '</div>';
     }
 

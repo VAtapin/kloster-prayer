@@ -15,7 +15,7 @@ class WorkflowDB extends FixtureDB {
     public function insert($table,$data){$this->history[]=$data;return 1;}
     public function delete(...$args){throw new Exception('Destructive delete must never be called');}
 }
-use KlosterPrayer\Order_Workflow as Flow;
+use GeorgKlosterOrthodoxDonate\Order_Workflow as Flow;
 assert(Flow::period('2026-09-08',40)===['2026-09-08','2026-10-17']);
 assert(Flow::period('2028-02-28',3)===['2028-02-28','2028-03-01']);
 assert(Flow::period('2026-12-31',1)===['2026-12-31','2026-12-31']);
@@ -38,12 +38,12 @@ Flow::change(1,'restore_order');assert($wpdb->stored['archived_at']===null);
 Flow::change(1,'mark_printed');assert($wpdb->stored['printed_at']!==null);
 Flow::change(1,'mark_unprinted');assert($wpdb->stored['printed_at']===null);
 assert(count($wpdb->history)===5);
-[$active]=KlosterPrayer\Orders_Table::where([]);[$archive]=KlosterPrayer\Orders_Table::where(['archive'=>'yes']);
+[$active]=GeorgKlosterOrthodoxDonate\Orders_Table::where([]);[$archive]=GeorgKlosterOrthodoxDonate\Orders_Table::where(['archive'=>'yes']);
 assert(str_contains($active,'archived_at IS NULL'));
 assert(str_contains($archive,'archived_at IS NOT NULL'));
 assert(!str_contains($archive,'archive=%s'));
-$nav=new ReflectionMethod(KlosterPrayer\Orders_Table::class,'extra_tablenav');
-ob_start();$nav->invoke(new KlosterPrayer\Orders_Table(),'top');$archiveNav=ob_get_clean();
+$nav=new ReflectionMethod(GeorgKlosterOrthodoxDonate\Orders_Table::class,'extra_tablenav');
+ob_start();$nav->invoke(new GeorgKlosterOrthodoxDonate\Orders_Table(),'top');$archiveNav=ob_get_clean();
 assert(str_contains($archiveNav,'name="archive"'));
 assert(str_contains($archiveNav,'Архив'));
 echo "Periods, leap year, inclusive dates, archive/restore, payment preservation, print history OK\n";

@@ -2,13 +2,13 @@
 declare(strict_types=1);
 define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
 require __DIR__.'/bootstrap-i18n.php';
-define('KlosterPrayer\\DIR', dirname(__DIR__).'/georg-kloster-orthodox-donate');
-require KlosterPrayer\DIR.'/includes/lib/dompdf/autoload.inc.php';
-require KlosterPrayer\DIR.'/includes/class-pdf.php';
+define('GeorgKlosterOrthodoxDonate\\DIR', dirname(__DIR__).'/georg-kloster-orthodox-donate');
+require GeorgKlosterOrthodoxDonate\DIR.'/includes/lib/dompdf/autoload.inc.php';
+require GeorgKlosterOrthodoxDonate\DIR.'/includes/class-pdf.php';
 function esc_html($v){return htmlspecialchars($v,ENT_QUOTES,'UTF-8');}
 function check($ok,$message){if(!$ok)throw new RuntimeException($message);}
 $base=['intention'=>'health','language'=>'ru','title'=>'Сорокоуст','order_date'=>'10.10.2026','names'=>['Мария'],'note'=>"Просим помолиться о выздоровлении.\nВторая строка комментария."];
-$htmlMethod=new ReflectionMethod(KlosterPrayer\Pdf::class,'modern_html');
+$htmlMethod=new ReflectionMethod(GeorgKlosterOrthodoxDonate\Pdf::class,'modern_html');
 $html=$htmlMethod->invoke(null,[$base]);
 preg_match('/class="note" style="top:([0-9.]+)mm;[^\"]*">(.*?)<\/div>/s',$html,$match);
 $firstName=573*282/3540-5.3;
@@ -30,7 +30,7 @@ check(!str_contains($escaped,'<script>'),'Escape comment markup');
 $blank=$htmlMethod->invoke(null,[array_merge($base,['names'=>[],'note'=>'','order_date'=>''])]);
 check(!str_contains($blank,'class="note"'),'Empty form has no comment');
 if(in_array('--render',$argv,true)){
- $options=new Dompdf\Options();$options->set('isRemoteEnabled',false);$options->set('defaultFont','DejaVu Sans');$options->setChroot(KlosterPrayer\DIR);
+ $options=new Dompdf\Options();$options->set('isRemoteEnabled',false);$options->set('defaultFont','DejaVu Sans');$options->setChroot(GeorgKlosterOrthodoxDonate\DIR);
  $pdf=new Dompdf\Dompdf($options);$pdf->setPaper('A4','landscape');$pdf->loadHtml($htmlMethod->invoke(null,[$base,$dense,$long]),'UTF-8');$pdf->render();
  file_put_contents(dirname(__DIR__).'/tmp/pdfs/comment-placement.pdf',$pdf->output());
  echo 'Rendered pages: '.$pdf->getCanvas()->get_page_count()."\n";

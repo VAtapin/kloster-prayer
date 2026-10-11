@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 require __DIR__ . '/campaigns.php';
-use KlosterPrayer\Database;
-use KlosterPrayer\Subscriptions;
-use KlosterPrayer\Recurring_Gateways;
-use KlosterPrayer\Support_Pages;
+use GeorgKlosterOrthodoxDonate\Database;
+use GeorgKlosterOrthodoxDonate\Subscriptions;
+use GeorgKlosterOrthodoxDonate\Recurring_Gateways;
+use GeorgKlosterOrthodoxDonate\Support_Pages;
 Subscriptions::init();Support_Pages::init();
 $requests=[];$gateway_down=false;$paypal_verified=true;$remote_agreements=[];
 remove_all_filters('pre_http_request');
@@ -32,17 +32,17 @@ function support_event(string $type,array $object,string $id,?int $created=null)
     $payload=wp_json_encode(['id'=>$id,'type'=>$type,'created'=>$created??time(),'data'=>['object'=>$object]]);
     $r=new WP_REST_Request('POST','/georg-kloster-orthodox-donate/v1/stripe/webhook');$r->set_body($payload);$t=time();
     $r->set_header('stripe-signature','t='.$t.',v1='.hash_hmac('sha256',$t.'.'.$payload,'local-fixture-signing'));
-    return KlosterPrayer\Payments::stripe_webhook($r);
+    return GeorgKlosterOrthodoxDonate\Payments::stripe_webhook($r);
 }
 function support_paypal(string $type,array $object,string $id): WP_REST_Response {
     $payload=['id'=>$id,'event_type'=>$type,'create_time'=>gmdate('Y-m-d\TH:i:s\Z'),'resource'=>$object];
     $r=new WP_REST_Request('POST','/georg-kloster-orthodox-donate/v1/paypal/webhook');$r->set_body(wp_json_encode($payload));$r->set_header('content-type','application/json');
     foreach(['auth-algo'=>'SHA256withRSA','cert-url'=>'https://api-m.sandbox.paypal.com/fixture','transmission-id'=>'fixture','transmission-sig'=>'fixture','transmission-time'=>gmdate('c')]as$k=>$v)$r->set_header('paypal-'.$k,$v);
-    return KlosterPrayer\Payments::paypal_webhook($r);
+    return GeorgKlosterOrthodoxDonate\Payments::paypal_webhook($r);
 }
 wp_set_current_user(1);update_option('gkod_payment_methods',['stripe','paypal']);update_option('gkod_paypal_mode','sandbox');update_option('gkod_paypal_webhook_id','local-fixture-webhook');
-delete_transient('gkod_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
-$support_campaign=KlosterPrayer\Campaigns::save($input);
+delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
+$support_campaign=GeorgKlosterOrthodoxDonate\Campaigns::save($input);
 $support=array_replace($base,['frequency'=>'month','recurring_consent'=>'1','donation_amount'=>'10.00','campaign_id'=>$support_campaign]);
 donation_assert(!(donation_ajax(array_replace($support,['recurring_consent'=>'']))['success']??true),'Explicit repeat-payment consent required');
 donation_assert(!(donation_ajax(array_replace($support,['frequency'=>'week']))['success']??true),'Unsupported interval rejected');
@@ -65,27 +65,27 @@ $bad=$invoice;$bad['currency']='usd';donation_assert(support_event('invoice.paym
 $bad=$invoice;$bad['paid_out_of_band']=true;donation_assert(support_event('invoice.payment_succeeded',$bad,'evt_support_manual')->get_status()===400,'Out-of-band invoice cannot confirm a Stripe transfer');
 donation_assert(support_event('invoice.payment_succeeded',$invoice,'evt_support_first')->get_status()===200,'First invoice can arrive before Checkout event');
 donation_assert((int)$wpdb->get_var('SELECT COUNT(*) FROM '.Database::table('orders'))===$count&&count($mail)===$mail_count+2,'First invoice uses original order and sends two confirmations');
-donation_assert(KlosterPrayer\Campaigns::totals($support_campaign)['received']===1000,'Recurring payment allocated to its campaign');
+donation_assert(GeorgKlosterOrthodoxDonate\Campaigns::totals($support_campaign)['received']===1000,'Recurring payment allocated to its campaign');
 donation_assert(Subscriptions::get((int)$sub->id)->provider_id==='sub_support','Out-of-order invoice discovers remote metadata');
 $session=['id'=>$sub->checkout_id,'mode'=>'subscription','metadata'=>['gkod_subscription'=>$sub->public_id],'subscription'=>'sub_support','amount_total'=>1000,'currency'=>'eur','payment_status'=>'paid'];
 donation_assert(support_event('checkout.session.completed',$session,'evt_support_checkout')->get_status()===200,'Late Checkout binds without double-counting');
 support_event('invoice.payment_succeeded',$invoice,'evt_support_first');support_event('invoice.payment_succeeded',$invoice,'evt_support_duplicate_new_id');
 donation_assert((int)$wpdb->get_var('SELECT COUNT(*) FROM '.Database::table('orders'))===$count&&count($mail)===$mail_count+2,'Invoice transaction ID deduplicates different event IDs');
 $modern=['id'=>'in_second','parent'=>['subscription_details'=>['subscription'=>'sub_support','metadata'=>['gkod_subscription'=>$sub->public_id]]],'status'=>'paid','amount_paid'=>1000,'currency'=>'eur'];
-KlosterPrayer\Campaigns::save(array_replace($input,['campaign_id'=>$support_campaign,'status'=>'closed']));
+GeorgKlosterOrthodoxDonate\Campaigns::save(array_replace($input,['campaign_id'=>$support_campaign,'status'=>'closed']));
 donation_assert(support_event('invoice.payment_succeeded',$modern,'evt_support_second')->get_status()===200,'Modern invoice parent and invoice payment lookup');
 donation_assert((int)$wpdb->get_var('SELECT COUNT(*) FROM '.Database::table('orders'))===$count+1,'Renewal creates one new payment');
 $renewal=$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE payment_id=%s',Database::table('orders'),'in_second'));
 donation_assert((int)$renewal->donor_user_id===1&&$renewal->payment_reference==='pi_modern','Renewal preserves account ownership and refund binding');
-donation_assert(KlosterPrayer\Campaigns::totals($support_campaign)['received']===2000,'Existing agreement keeps its allocation after campaign closing');
+donation_assert(GeorgKlosterOrthodoxDonate\Campaigns::totals($support_campaign)['received']===2000,'Existing agreement keeps its allocation after campaign closing');
 $refund=['id'=>'ch_support','payment_intent'=>'pi_modern','refunds'=>['data'=>[['id'=>'re_partial','status'=>'succeeded','amount'=>100,'currency'=>'eur','charge'=>'ch_support']],'has_more'=>false]];
 donation_assert(support_event('charge.refunded',$refund,'evt_support_refund')->get_status()===200,'Partial recurring refund');
 support_event('charge.refunded',$refund,'evt_support_refund_again');
 donation_assert((int)$wpdb->get_var($wpdb->prepare('SELECT refunded_cents FROM %i WHERE id=%d',Database::table('orders'),$renewal->id))===100,'Refund ID deduplicates different event IDs');
-$refund['refunds']['has_more']=true;support_event('charge.refunded',$refund,'evt_support_refund_paginated');KlosterPrayer\Payment_Refunds::sync_refunds('ch_support','pi_modern');
+$refund['refunds']['has_more']=true;support_event('charge.refunded',$refund,'evt_support_refund_paginated');GeorgKlosterOrthodoxDonate\Payment_Refunds::sync_refunds('ch_support','pi_modern');
 donation_assert((int)$wpdb->get_var($wpdb->prepare('SELECT refunded_cents FROM %i WHERE id=%d',Database::table('orders'),$renewal->id))===125,'Background paginated refund reconciliation');
-donation_assert(KlosterPrayer\Campaigns::totals($support_campaign)['received']===1875,'Public totals deduct partial recurring refunds');
-file_put_contents(dirname(__DIR__).'/tmp/support-preview.html',Support_Pages::form(['lang'=>'ru']).KlosterPrayer\Donation_Pages::history(['lang'=>'ru']));
+donation_assert(GeorgKlosterOrthodoxDonate\Campaigns::totals($support_campaign)['received']===1875,'Public totals deduct partial recurring refunds');
+file_put_contents(dirname(__DIR__).'/tmp/support-preview.html',Support_Pages::form(['lang'=>'ru']).GeorgKlosterOrthodoxDonate\Donation_Pages::history(['lang'=>'ru']));
 donation_assert(defined('DONOTCACHEPAGE')&&DONOTCACHEPAGE,'Personalized history disables page caching');
 support_event('invoice.payment_failed',['subscription'=>'sub_support'],'evt_support_old_failure',time()-60);
 donation_assert(Subscriptions::get((int)$sub->id)->status==='active','Stale failure cannot overwrite newer success');
@@ -99,7 +99,7 @@ donation_assert(Subscriptions::get((int)$sub->id)->status==='cancelled','Cancell
 donation_assert(Subscriptions::cancel((int)$sub->id)===true,'Repeated cancellation is harmless');
 $paypal_support=array_replace($support,['provider'=>'paypal','frequency'=>'year','donation_amount'=>'20.00','campaign_id'=>0]);
 delete_option(Recurring_Gateways::plan_key(2000,'year'));
-delete_transient('gkod_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
+delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
 $result=donation_ajax($paypal_support);donation_assert(!($result['success']??true),'Unprovisioned PayPal plan is prepared asynchronously');
 $key=Recurring_Gateways::plan_key(2000,'year');donation_assert((bool)wp_next_scheduled('gkod_prepare_recurring_plan',[2000,'year',$key,0]),'Plan preparation queued');
 Recurring_Gateways::prepare_plan(2000,'year',$key);donation_assert(get_option($key)==='P-support','Real product and plan API payloads provisioned by worker');
@@ -121,8 +121,8 @@ $pay_refund=['id'=>'RF-support','sale_id'=>'SALE-renewal','amount'=>['total'=>'2
 donation_assert(support_paypal('PAYMENT.SALE.REFUNDED',$pay_refund,'evt_paypal_refund')->get_status()===200,'PayPal refund ledger');
 donation_assert($wpdb->get_var($wpdb->prepare('SELECT payment_status FROM %i WHERE payment_provider=%s AND payment_id=%s',Database::table('orders'),'paypal','SALE-renewal'))==='refunded','Full refund removes renewal income');
 donation_assert(Subscriptions::cancel((int)$pay_sub->id)===true,'PayPal owner cancellation requires acknowledged API response');
-$once=KlosterPrayer\Payments::create_order(['form_id'=>0,'language'=>'ru','intention'=>'none','names'=>'','note'=>'','donor_name'=>'','donor_email'=>'donor@example.invalid','provider'=>'stripe','service_ids'=>[],'return_url'=>home_url('/'),'donation_cents'=>1000,'campaign_id'=>0,'payment_id'=>'cs_once','payment_reference'=>'pi_once']);
-KlosterPrayer\Payments::mark_paid((int)$once->id,'cs_once');
+$once=GeorgKlosterOrthodoxDonate\Payments::create_order(['form_id'=>0,'language'=>'ru','intention'=>'none','names'=>'','note'=>'','donor_name'=>'','donor_email'=>'donor@example.invalid','provider'=>'stripe','service_ids'=>[],'return_url'=>home_url('/'),'donation_cents'=>1000,'campaign_id'=>0,'payment_id'=>'cs_once','payment_reference'=>'pi_once']);
+GeorgKlosterOrthodoxDonate\Payments::mark_paid((int)$once->id,'cs_once');
 $once_refund=['id'=>'ch_once','payment_intent'=>'pi_once','refunds'=>['data'=>[['id'=>'re_once_partial','status'=>'succeeded','amount'=>100,'currency'=>'eur','charge'=>'ch_once']],'has_more'=>false]];
 donation_assert(support_event('charge.refunded',$once_refund,'evt_once_partial')->get_status()===200,'One-time partial refund uses the verified ledger');
 support_event('charge.refunded',$once_refund,'evt_once_partial_duplicate');
@@ -130,10 +130,10 @@ $once_record=$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d',Databa
 donation_assert($once_record->payment_status==='paid'&&(int)$once_record->refunded_cents===100,'Partial refund preserves remaining income and deduplicates');
 $once_refund['refunds']['data'][0]['id']='re_once_final';$once_refund['refunds']['data'][0]['amount']=900;
 donation_assert(support_event('charge.refunded',$once_refund,'evt_once_full')->get_status()===200,'Remaining refund completes the return');
-KlosterPrayer\Payments::mark_paid((int)$once->id,'cs_once');
+GeorgKlosterOrthodoxDonate\Payments::mark_paid((int)$once->id,'cs_once');
 donation_assert($wpdb->get_var($wpdb->prepare('SELECT payment_status FROM %i WHERE id=%d',Database::table('orders'),$once->id))==='refunded','Late paid delivery cannot resurrect fully refunded payments');
-$capture=KlosterPrayer\Payments::create_order(['form_id'=>0,'language'=>'ru','intention'=>'none','names'=>'','note'=>'','donor_name'=>'','donor_email'=>'donor@example.invalid','provider'=>'paypal','service_ids'=>[],'return_url'=>home_url('/'),'donation_cents'=>1000,'campaign_id'=>0,'payment_id'=>'ORDER-once','payment_reference'=>'CAPTURE-once']);
-KlosterPrayer\Payments::mark_paid((int)$capture->id,'ORDER-once');
+$capture=GeorgKlosterOrthodoxDonate\Payments::create_order(['form_id'=>0,'language'=>'ru','intention'=>'none','names'=>'','note'=>'','donor_name'=>'','donor_email'=>'donor@example.invalid','provider'=>'paypal','service_ids'=>[],'return_url'=>home_url('/'),'donation_cents'=>1000,'campaign_id'=>0,'payment_id'=>'ORDER-once','payment_reference'=>'CAPTURE-once']);
+GeorgKlosterOrthodoxDonate\Payments::mark_paid((int)$capture->id,'ORDER-once');
 $capture_refund=['id'=>'RF-once','status'=>'PENDING','amount'=>['value'=>'1.00','currency_code'=>'EUR'],'links'=>[['rel'=>'up','href'=>'https://api-m.sandbox.paypal.com/v2/payments/captures/CAPTURE-once']]];
 support_paypal('PAYMENT.CAPTURE.REFUNDED',$capture_refund,'evt_capture_pending');
 donation_assert((int)$wpdb->get_var($wpdb->prepare('SELECT refunded_cents FROM %i WHERE id=%d',Database::table('orders'),$capture->id))===0,'Pending refunds do not change confirmed totals');

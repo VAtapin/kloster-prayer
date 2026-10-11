@@ -6,7 +6,7 @@ require __DIR__.'/bootstrap-i18n.php';
 function esc_attr(string $value): string { return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 function esc_html(string $value): string { return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 
-define('KlosterPrayer\\DIR', dirname(__DIR__) . '/georg-kloster-orthodox-donate');
+define('GeorgKlosterOrthodoxDonate\\DIR', dirname(__DIR__) . '/georg-kloster-orthodox-donate');
 
 require dirname(__DIR__) . '/georg-kloster-orthodox-donate/includes/lib/dompdf/autoload.inc.php';
 require dirname(__DIR__) . '/georg-kloster-orthodox-donate/includes/class-payments.php';
@@ -16,7 +16,7 @@ $payload = '{"id":"evt_test"}';
 $timestamp = time();
 $secret = 'whsec_test_secret';
 $signature = hash_hmac('sha256', $timestamp . '.' . $payload, $secret);
-$verify = new ReflectionMethod(\KlosterPrayer\Payments::class, 'verify_stripe_signature');
+$verify = new ReflectionMethod(\GeorgKlosterOrthodoxDonate\Payments::class, 'verify_stripe_signature');
 assert($verify->invoke(null, $payload, "t={$timestamp},v1={$signature}", $secret) === true);
 assert($verify->invoke(null, $payload . 'x', "t={$timestamp},v1={$signature}", $secret) === false);
 assert($verify->invoke(null, $payload, 't=1,v1=' . $signature, $secret) === false);
@@ -27,12 +27,12 @@ $cards = [
     ['intention' => 'rest', 'language' => 'de', 'title' => 'Panichida', 'names' => ['Alexej', 'Vera', 'Sergij'], 'note' => ''],
     ['intention' => 'rest', 'language' => 'ru', 'title' => 'Сорокоуст', 'names' => ['Анны', 'Владимира'], 'note' => ''],
 ];
-assert(\KlosterPrayer\Payments::split_names(" Мария, Иоанн\nБолящего Леонида,, Анна-Мария;") === ['Мария','Иоанн','Болящего Леонида','Анна-Мария']);
-$cards[0]['names'] = \KlosterPrayer\Payments::split_names('Болящего Леонида, Марии, Иоанна');
-$htmlMethod = new ReflectionMethod(\KlosterPrayer\Pdf::class, 'modern_html');
+assert(\GeorgKlosterOrthodoxDonate\Payments::split_names(" Мария, Иоанн\nБолящего Леонида,, Анна-Мария;") === ['Мария','Иоанн','Болящего Леонида','Анна-Мария']);
+$cards[0]['names'] = \GeorgKlosterOrthodoxDonate\Payments::split_names('Болящего Леонида, Марии, Иоанна');
+$htmlMethod = new ReflectionMethod(\GeorgKlosterOrthodoxDonate\Pdf::class, 'modern_html');
 $html = $htmlMethod->invoke(null, $cards);
-assert(is_file(\KlosterPrayer\DIR.'/assets/img/ZDRAVIE-print.png'));
-assert(is_file(\KlosterPrayer\DIR.'/assets/img/UPOKOI-print.png'));
+assert(is_file(\GeorgKlosterOrthodoxDonate\DIR.'/assets/img/ZDRAVIE-print.png'));
+assert(is_file(\GeorgKlosterOrthodoxDonate\DIR.'/assets/img/UPOKOI-print.png'));
 assert(!str_contains($html, 'data:image/svg'));
 assert(str_contains($html, 'data:image/png;base64,'));
 assert(substr_count($html, 'class="page"') === 4);
@@ -45,7 +45,7 @@ $overflow = $htmlMethod->invoke(null, [array_merge($cards[0], ['names'=>array_ma
 assert(substr_count($overflow, 'class="page"') === 2);
 assert(str_contains($overflow, 'Имя 46'));
 assert(substr_count($mixedHtml, 'Дата заказа:') === 1);
-$dateMethod = new ReflectionMethod(\KlosterPrayer\Pdf::class, 'order_date');
+$dateMethod = new ReflectionMethod(\GeorgKlosterOrthodoxDonate\Pdf::class, 'order_date');
 assert($dateMethod->invoke(null, (object)['service_slug'=>'sorokoust','created_at'=>'2026-09-08 20:00:00']) === '08.09.2026');
 assert($dateMethod->invoke(null, (object)['service_slug'=>'moleben','service_title'=>'Молебен','created_at'=>'2026-09-08']) === '');
 $options = new \Dompdf\Options();

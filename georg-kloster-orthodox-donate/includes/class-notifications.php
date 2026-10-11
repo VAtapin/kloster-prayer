@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 
 /** Separate outbox for the site's designated prayer-request recipient. */
 final class Notifications

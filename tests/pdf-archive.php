@@ -2,10 +2,10 @@
 declare(strict_types=1);
 define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
 require __DIR__.'/bootstrap-i18n.php';
-define('KlosterPrayer\\DIR', dirname(__DIR__).'/georg-kloster-orthodox-donate');
-require KlosterPrayer\DIR.'/includes/class-database.php';
-require KlosterPrayer\DIR.'/includes/class-payments.php';
-require KlosterPrayer\DIR.'/includes/class-pdf.php';
+define('GeorgKlosterOrthodoxDonate\\DIR', dirname(__DIR__).'/georg-kloster-orthodox-donate');
+require GeorgKlosterOrthodoxDonate\DIR.'/includes/class-database.php';
+require GeorgKlosterOrthodoxDonate\DIR.'/includes/class-payments.php';
+require GeorgKlosterOrthodoxDonate\DIR.'/includes/class-pdf.php';
 function sanitize_key($v){return preg_replace('/[^a-z0-9_-]/','',strtolower($v));}
 function sanitize_text_field($v){return strip_tags((string)$v);}
 function wp_unslash($v){return stripslashes((string)$v);}
@@ -32,7 +32,7 @@ class ArchivePdfDB {
  function get_var($sql){return 10;}
  function update(...$args){throw new RuntimeException('Reading PDF cards must not change records');}
 }
-$wpdb=new ArchivePdfDB();$read=new ReflectionMethod(KlosterPrayer\Pdf::class,'cards');
+$wpdb=new ArchivePdfDB();$read=new ReflectionMethod(GeorgKlosterOrthodoxDonate\Pdf::class,'cards');
 $_GET=['order_ids'=>'6'];$archived=$read->invoke(null);
 check(count($archived)===1&&$archived[0]['order_id']===6,'Archived individual PDF');
 check($archived[0]['names']===['Мария','Иоанн'],'Archived names normalized');
@@ -42,12 +42,12 @@ $_GET=[];$active=$read->invoke(null);check(count($active)===1&&$active[0]['order
 $_GET=['archive'=>'yes'];$archiveList=$read->invoke(null);check(count($archiveList)===1&&$archiveList[0]['order_id']===6,'Archive list PDF');
 $_GET=['order_ids'=>'6','payment_status'=>'paid','intention'=>'health','printed'=>'yes'];$read->invoke(null);
 check(str_contains($wpdb->sql,"o.payment_status='paid'")&&str_contains($wpdb->sql,"o.intention='health'")&&str_contains($wpdb->sql,'o.printed_at IS NOT NULL'),'Other PDF filters retained');
-$url=KlosterPrayer\Pdf::url(['archive'=>'yes','order_ids'=>[6]]);check(str_contains($url,'archive=yes')&&str_contains($url,'order_ids=6'),'Archive URL retained');
+$url=GeorgKlosterOrthodoxDonate\Pdf::url(['archive'=>'yes','order_ids'=>[6]]);check(str_contains($url,'archive=yes')&&str_contains($url,'order_ids=6'),'Archive URL retained');
 check($wpdb->rows[1]->archived_at==='2026-10-10 14:00:00','Order remains archived');
 if(in_array('--render',$argv,true)){
- require KlosterPrayer\DIR.'/includes/lib/dompdf/autoload.inc.php';
- $options=new Dompdf\Options();$options->set('isRemoteEnabled',false);$options->set('defaultFont','DejaVu Sans');$options->setChroot(KlosterPrayer\DIR);
- $pdf=new Dompdf\Dompdf($options);$pdf->setPaper('A4','landscape');$pdf->loadHtml((new ReflectionMethod(KlosterPrayer\Pdf::class,'modern_html'))->invoke(null,$archived),'UTF-8');$pdf->render();
+ require GeorgKlosterOrthodoxDonate\DIR.'/includes/lib/dompdf/autoload.inc.php';
+ $options=new Dompdf\Options();$options->set('isRemoteEnabled',false);$options->set('defaultFont','DejaVu Sans');$options->setChroot(GeorgKlosterOrthodoxDonate\DIR);
+ $pdf=new Dompdf\Dompdf($options);$pdf->setPaper('A4','landscape');$pdf->loadHtml((new ReflectionMethod(GeorgKlosterOrthodoxDonate\Pdf::class,'modern_html'))->invoke(null,$archived),'UTF-8');$pdf->render();
  $bytes=$pdf->output();check(str_starts_with($bytes,'%PDF-'),'Actual PDF');check($pdf->getCanvas()->get_page_count()===1,'Archived slip rendered');
  file_put_contents(dirname(__DIR__).'/tmp/pdfs/archived-order-6.pdf',$bytes);
 }

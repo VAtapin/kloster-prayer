@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: georg-kloster-orthodox-donate 1.0.0\n"
+"Project-Id-Version: georg-kloster-orthodox-donate 1.0.1\n"
 "Language: uk\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -959,8 +959,8 @@ msgstr "Допомога"
 msgid "Prayer form. Without id or slug, uses the active gebetsanliegen form. An id takes precedence over a slug."
 msgstr "Форма записок. Без id або slug використовується активна форма gebetsanliegen. Параметр id має пріоритет над slug."
 
-msgid "Alias of kloster_form with the same parameters and behavior."
-msgstr "Інша назва kloster_form із тими самими параметрами та поведінкою."
+msgid "Alias of gkod_form with the same parameters and behavior."
+msgstr "Інша назва gkod_form із тими самими параметрами та поведінкою."
 
 msgid "Form for one active service. Specify its id or slug; an id takes precedence. Find these values in Services."
 msgstr "Форма однієї активної треби. Укажіть її id або slug; id має пріоритет. Значення містяться в розділі «Треби»."
@@ -995,14 +995,14 @@ msgstr "Макет: standard, compact, wide, two_columns, cards або minimal. 
 msgid "Language: en, ru, de, uk or pl. Omit it to use the current WordPress language. Existing prayer form/service content uses German as the English fallback."
 msgstr "Мова: en, ru, de, uk або pl. Без параметра використовується поточна мова WordPress. Для англійської мови тексти наявних форм записок і треб беруться з німецьких полів."
 
-msgid "yes (default) shows the form heading; no hides it. Not supported by kloster_service."
-msgstr "yes (за замовчуванням) показує заголовок форми; no приховує його. Шорткод kloster_service не підтримує цей параметр."
+msgid "yes (default) shows the form heading; no hides it. Not supported by gkod_service."
+msgstr "yes (за замовчуванням) показує заголовок форми; no приховує його. Шорткод gkod_service не підтримує цей параметр."
 
 msgid "Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired."
 msgstr "Необов’язковий ID збору. Без нього або при 0 — підтримка загальних потреб храму. Указаний збір має бути відкритим, а його строк не повинен минути."
 
-msgid "Compatibility parameter for kloster_donation: no (default) means one-time payment; yes displays recurring choices. Prefer kloster_support, which also checks login before showing the form."
-msgstr "Параметр сумісності kloster_donation: no (за замовчуванням) — разовий платіж; yes показує регулярні варіанти. Використовуйте kloster_support: він також перевіряє вхід перед показом форми."
+msgid "Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which also checks login before showing the form."
+msgstr "Параметр сумісності gkod_donation: no (за замовчуванням) — разовий платіж; yes показує регулярні варіанти. Використовуйте gkod_support: він також перевіряє вхід перед показом форми."
 
 msgid "Copied."
 msgstr "Скопійовано."

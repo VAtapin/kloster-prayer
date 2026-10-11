@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 
 /** Normalize request values; authorization/nonces stay at the action entry points. */
 final class Input

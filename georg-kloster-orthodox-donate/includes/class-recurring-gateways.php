@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 
 /** Recurring APIs reuse the plugin's configured payment credentials. */
 final class Recurring_Gateways
@@ -53,8 +53,8 @@ final class Recurring_Gateways
 
     public static function checkout(object $subscription, object $order): array|\WP_Error
     {
-        $success = add_query_arg(['kloster_payment' => 'success', 'kloster_order' => $order->public_id], $order->return_url ?: home_url('/'));
-        $cancel = add_query_arg(['kloster_payment' => 'cancelled', 'kloster_order' => $order->public_id], $order->return_url ?: home_url('/'));
+        $success = add_query_arg(['gkod_payment' => 'success', 'gkod_order' => $order->public_id], $order->return_url ?: home_url('/'));
+        $cancel = add_query_arg(['gkod_payment' => 'cancelled', 'gkod_order' => $order->public_id], $order->return_url ?: home_url('/'));
         if ($subscription->provider === 'stripe') {
             $response = self::request('stripe', 'POST', '/v1/checkout/sessions', [
                 'mode' => 'subscription', 'success_url' => $success, 'cancel_url' => $cancel, 'customer_email' => $order->donor_email,

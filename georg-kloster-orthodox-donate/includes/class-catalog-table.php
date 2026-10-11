@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace KlosterPrayer;
+namespace GeorgKlosterOrthodoxDonate;
 if (!defined('ABSPATH')) exit;
 
 if (!class_exists('\WP_List_Table')) require_once ABSPATH.'wp-admin/includes/class-wp-list-table.php';
@@ -8,7 +8,7 @@ if (!class_exists('\WP_List_Table')) require_once ABSPATH.'wp-admin/includes/cla
 final class Catalog_Table extends \WP_List_Table
 {
     private string $kind;
-    public function __construct(string $kind) { $this->kind=$kind; parent::__construct(['singular'=>'klp-item','plural'=>'klp-items','ajax'=>false]); }
+    public function __construct(string $kind) { $this->kind=$kind; parent::__construct(['singular'=>'gkod-item','plural'=>'gkod-items','ajax'=>false]); }
     public function get_columns() { return ['cb'=>'<input type="checkbox">','title'=>(__('Title', 'georg-kloster-orthodox-donate')),'slug'=>(__('Slug', 'georg-kloster-orthodox-donate')),'details'=>$this->kind==='forms'?(__('Shortcode', 'georg-kloster-orthodox-donate')):(__('Donation', 'georg-kloster-orthodox-donate')),'status'=>(__('Status', 'georg-kloster-orthodox-donate')),'updated_at'=>(__('Updated', 'georg-kloster-orthodox-donate'))]; }
     protected function get_sortable_columns() { return ['title'=>['title_'.array_key_first(Admin::editor_languages()),false],'slug'=>['slug',false],'updated_at'=>['updated_at',true]]; }
     protected function get_bulk_actions() { return ['enable'=>(__('Enable', 'georg-kloster-orthodox-donate')),'disable'=>(__('Disable', 'georg-kloster-orthodox-donate'))]; }
@@ -22,7 +22,7 @@ final class Catalog_Table extends \WP_List_Table
         if($column==='slug')return '<code>'.esc_html($item->slug).'</code>';
         if($column==='status')return $item->is_active?(__('Active', 'georg-kloster-orthodox-donate')):(__('Disabled', 'georg-kloster-orthodox-donate'));
         if($column==='updated_at')return esc_html($item->updated_at);
-        if($column==='details')return $this->kind==='forms'?'<code>[kloster_form id="'.(int)$item->id.'"]</code>':esc_html(number_format_i18n($item->price_cents/100,2)).' €';
+        if($column==='details')return $this->kind==='forms'?'<code>[gkod_form id="'.(int)$item->id.'"]</code>':esc_html(number_format_i18n($item->price_cents/100,2)).' €';
         return '';
     }
     protected function get_views() {

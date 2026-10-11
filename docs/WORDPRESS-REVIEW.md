@@ -1,9 +1,9 @@
-# WordPress.org preparation — new series 1.0.0
+# WordPress.org preparation — new series 1.0.1
 
 Prepared on 2026-10-11. Requested directory slug: `georg-kloster-orthodox-donate`.
 ZIP folder, main filename and text domain match the requested slug. New `gkod_`
 database tables, settings, hooks and webhook routes do not import the previous installation.
-The Git repository is retained. The canonical English name is **Parish — Prayer Requests, Services and Donations**;
+PHP namespace GeorgKlosterOrthodoxDonate, gkod_* shortcodes, DOM/CSS selectors and JavaScript globals are isolated. Both plugins can remain active; integration and browser checks cover coexistence in both load orders. The Git repository is retained. The canonical English name is **Parish — Prayer Requests, Services and Donations**;
 bundled metadata translations retain the owner's Russian name.
 Directory acceptance and the assigned slug remain decisions of the Plugins Team;
 if the submission suggests another slug, request `georg-kloster-orthodox-donate` before approval.
@@ -38,7 +38,7 @@ if the submission suggests another slug, request `georg-kloster-orthodox-donate`
 
 ## Verification
 
-New series 1.0.0: Plugin Check 2.1.0 on a cloned WordPress 7.1/SQLite database
+New series 1.0.1: Plugin Check 2.1.0 on a cloned WordPress 7.1/SQLite database
 with PHP 8.4 and runtime preparation: **0 errors, 254 warnings**, no exclusions.
 133 direct-query and 120 no-caching warnings cover custom financial/administrative
 tables; one bundled text-domain loader warning supports manual ZIP installation.
