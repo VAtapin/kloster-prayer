@@ -5,7 +5,7 @@ namespace KlosterPrayer;
 
 final class Database
 {
-    private const DB_VERSION = '1.2.11';
+    private const DB_VERSION = '1.2.14';
 
     public static function table(string $name): string
     {
@@ -113,6 +113,8 @@ final class Database
             id bigint unsigned NOT NULL AUTO_INCREMENT,
             public_id char(36) NOT NULL,
             form_id bigint unsigned NULL,
+            campaign_id bigint unsigned NULL,
+            donor_user_id bigint unsigned NOT NULL DEFAULT 0,
             language char(2) NOT NULL DEFAULT 'de',
             intention enum('health','rest','none') NOT NULL DEFAULT 'health',
             names longtext NOT NULL,
@@ -139,7 +141,9 @@ final class Database
             UNIQUE KEY provider_payment (payment_provider,payment_id),
             KEY status_created (payment_status,created_at),
             KEY printed_at (printed_at),
-            KEY form_id (form_id)
+            KEY form_id (form_id),
+            KEY campaign_id (campaign_id),
+            KEY donor_user_id (donor_user_id)
         ) {$charset};");
 
         dbDelta("CREATE TABLE {$items} (
@@ -195,6 +199,39 @@ final class Database
             attempts int unsigned NOT NULL DEFAULT 0,
             PRIMARY KEY  (order_id),
             KEY pending_notifications (sent_at,last_attempt_at)
+        ) {$charset};");
+        $campaigns = self::table('campaigns');
+        dbDelta("CREATE TABLE {$campaigns} (
+            id bigint unsigned NOT NULL AUTO_INCREMENT,
+            title_en varchar(255) NOT NULL,
+            title_ru varchar(255) NOT NULL DEFAULT '',
+            title_de varchar(255) NOT NULL DEFAULT '',
+            title_uk varchar(255) NOT NULL DEFAULT '',
+            title_pl varchar(255) NOT NULL DEFAULT '',
+            description_en text NULL,
+            description_ru text NULL,
+            description_de text NULL,
+            description_uk text NULL,
+            description_pl text NULL,
+            goal_cents int unsigned NOT NULL,
+            status varchar(20) NOT NULL DEFAULT 'draft',
+            deadline date NULL,
+            created_at datetime NOT NULL,
+            updated_at datetime NOT NULL,
+            PRIMARY KEY  (id),
+            KEY status (status)
+        ) {$charset};");
+        $expenses = self::table('campaign_expenses');
+        dbDelta("CREATE TABLE {$expenses} (
+            id bigint unsigned NOT NULL AUTO_INCREMENT,
+            campaign_id bigint unsigned NOT NULL,
+            amount_cents int unsigned NOT NULL,
+            description varchar(255) NOT NULL,
+            incurred_on date NOT NULL,
+            user_id bigint unsigned NOT NULL,
+            created_at datetime NOT NULL,
+            PRIMARY KEY  (id),
+            KEY campaign_id (campaign_id)
         ) {$charset};");
         update_option('klp_db_version', self::DB_VERSION, true);
     }

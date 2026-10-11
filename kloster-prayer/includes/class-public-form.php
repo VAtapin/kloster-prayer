@@ -61,11 +61,13 @@ final class Public_Form
 
     public static function donation_shortcode(array|string $atts = []): string
     {
-        $atts = shortcode_atts(['layout' => 'compact', 'lang' => '', 'header' => 'yes'], $atts, 'kloster_donation');
+        $atts = shortcode_atts(['layout' => 'compact', 'lang' => '', 'header' => 'yes', 'campaign_id' => 0], $atts, 'kloster_donation');
+        $campaign = absint($atts['campaign_id']) ? Campaigns::get(absint($atts['campaign_id'])) : null;
+        if (absint($atts['campaign_id']) && (!$campaign || !Campaigns::accepting($campaign))) return I18n::in_language(static fn(): string => '<p>' . esc_html__('This campaign is closed.', 'kloster-prayer') . '</p>', in_array($atts['lang'], ['en','ru','de','uk','pl'], true) ? $atts['lang'] : I18n::language());
         $atts['request_type'] = 'donation';
         $form = (object) ['id' => 0, 'layout' => 'compact'];
         foreach (['en', 'de', 'ru', 'uk', 'pl'] as $lang) {
-            $form->{'title_' . $lang} = I18n::donation_text('title', $lang);
+            $form->{'title_' . $lang} = $campaign ? Campaigns::title($campaign, $lang) : I18n::donation_text('title', $lang);
             $form->{'intro_' . $lang} = '';
         }
         return self::result_shortcode() . self::render($form, $atts, []);
@@ -118,6 +120,7 @@ final class Public_Form
                 <input type="hidden" name="language" value="<?php echo  esc_attr($lang) ?>">
                 <input class="klp-honeypot" type="text" name="website" value="" tabindex="-1" autocomplete="off" aria-hidden="true">
                 <input type="hidden" name="request_type" value="<?php echo $donation ? 'donation' : 'prayer' ?>">
+                <?php if ($donation && !empty($atts['campaign_id'])) : ?><input type="hidden" name="campaign_id" value="<?php echo absint($atts['campaign_id']) ?>"><?php endif; ?>
                 <?php if (!$donation) : ?>
                 <?php $modes = array_unique(array_column($services, 'intention_mode')); $show_both = in_array('both', $modes, true) || (in_array('health', $modes, true) && in_array('rest', $modes, true)); ?>
                 <fieldset class="klp-intention<?php echo  $show_both ? '' : ' klp-intention--single' ?>">

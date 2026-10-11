@@ -68,6 +68,11 @@ final class Payments
         $request_type = Input::post('request_type') ?? 'prayer';
         if (!in_array($request_type, ['prayer', 'donation'], true)) wp_send_json_error(['message' => I18n::text('required', $language)], 422);
         $donation = $request_type === 'donation';
+        $campaign_id = absint(Input::post('campaign_id') ?? 0);
+        if ($campaign_id) {
+            $campaign = Campaigns::get($campaign_id);
+            if (!$donation || !$campaign || !Campaigns::accepting($campaign)) wp_send_json_error(['message' => I18n::in_language(static fn() => __('This campaign is closed.', 'kloster-prayer'), $language)], 422);
+        }
         $intention = sanitize_key((string) (Input::post('intention') ?? 'health'));
         $names = self::clean_names((string) Input::textarea('names') ?? '');
         $email = sanitize_email((string) Input::post('donor_email') ?? '');
@@ -85,6 +90,7 @@ final class Payments
         $order = self::create_order([
             'form_id' => $donation ? 0 : absint(Input::post('form_id') ?? 0), 'language' => $language, 'intention' => $donation ? 'none' : $intention,
             'donation_cents' => $donation_amount,
+            'campaign_id' => $campaign_id,
             'names' => implode("\n", $names), 'note' => sanitize_textarea_field((string) Input::textarea('note') ?? ''),
             'donor_name' => sanitize_text_field((string) Input::post('donor_name') ?? ''), 'donor_email' => $email,
             'provider' => $provider, 'service_ids' => $service_ids, 'return_url' => self::safe_return_url(),
@@ -102,11 +108,11 @@ final class Payments
     }
 
     /** Decimal EUR input to integer cents; never round or accept exponent notation. */
-    public static function donation_cents(string $raw): ?int
+    public static function donation_cents(string $raw, int $minimum = 50): ?int
     {
         if (!preg_match('/^([0-9]{1,6})(?:[.,]([0-9]{1,2}))?$/D', trim($raw), $parts)) return null;
         $cents = (int) $parts[1] * 100 + (int) str_pad($parts[2] ?? '', 2, '0');
-        return $cents >= 50 && $cents <= 99999999 ? $cents : null;
+        return $cents >= $minimum && $cents <= 99999999 ? $cents : null;
     }
 
     /** Shared parser for new submissions and legacy PDF records. Never split spaces inside names. */
@@ -126,6 +132,8 @@ final class Payments
     {
         global $wpdb;
         $donation = $data['intention'] === 'none';
+        $campaign_id = (int) ($data['campaign_id'] ?? 0);
+        if ($campaign_id && (!$donation || !($campaign = Campaigns::get($campaign_id)) || !Campaigns::accepting($campaign))) return new WP_Error('campaign', __('This campaign is closed.', 'kloster-prayer'));
         $services = [];
         if ($donation) {
             if ($data['service_ids'] || $data['names'] !== '' || !is_int($data['donation_cents'] ?? null)
@@ -163,6 +171,7 @@ final class Payments
         $uuid = wp_generate_uuid4();
         $ok = $wpdb->insert(Database::table('orders'), [
             'public_id' => $uuid, 'form_id' => $data['form_id'] ?: null, 'language' => $data['language'],
+            'campaign_id' => $campaign_id ?: null, 'donor_user_id' => get_current_user_id(),
             'intention' => $data['intention'], 'names' => $data['names'], 'note' => $data['note'],
             'donor_name' => $data['donor_name'], 'donor_email' => $data['donor_email'], 'amount_cents' => $amount,
             'currency' => 'EUR', 'payment_status' => 'pending', 'payment_provider' => $data['provider'], 'created_at' => current_time('mysql'),
@@ -275,7 +284,10 @@ final class Payments
 
     private static function payment_label(object $order): string
     {
-        if (($order->intention ?? '') === 'none') return I18n::donation_text('title', $order->language);
+        if (($order->intention ?? '') === 'none') {
+            $campaign = !empty($order->campaign_id) ? Campaigns::get((int) $order->campaign_id) : null;
+            return $campaign ? Campaigns::title($campaign, $order->language) : I18n::donation_text('title', $order->language);
+        }
         global $wpdb;
         $items = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d ORDER BY id', Database::table('order_items'), (int) $order->id));
         $prefix = I18n::text('payment_prefix', $order->language) . ' ';

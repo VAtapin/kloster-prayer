@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: kloster-prayer 1.2.13\n"
+"Project-Id-Version: kloster-prayer 1.2.14\n"
 "Language: de_DE\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -820,3 +820,69 @@ msgstr "Betrag in EUR: 0,50 bis 999.999,99. Maximal zwei Nachkommastellen."
 
 msgid "Enter a valid amount between 0.50 and 999,999.99 EUR."
 msgstr "Bitte geben Sie einen gültigen Betrag zwischen 0,50 und 999.999,99 EUR ein."
+
+msgid "Campaign not found."
+msgstr "Sammlung nicht gefunden."
+
+msgid "Goal"
+msgstr "Ziel"
+
+msgid "Expenses"
+msgstr "Ausgaben"
+
+msgid "Balance"
+msgstr "Saldo"
+
+msgid "Campaign progress"
+msgstr "Fortschritt der Sammlung"
+
+msgid "Deadline"
+msgstr "Enddatum"
+
+msgid "This campaign is closed."
+msgstr "Diese Sammlung nimmt keine Spenden mehr an."
+
+msgid "Campaigns"
+msgstr "Spendenaktionen"
+
+msgid "Campaign"
+msgstr "Spendenaktion"
+
+msgid "Report"
+msgstr "Bericht"
+
+msgid "Edit campaign"
+msgstr "Spendenaktion bearbeiten"
+
+msgid "New campaign"
+msgstr "Neue Spendenaktion"
+
+msgid "Save campaign"
+msgstr "Spendenaktion speichern"
+
+msgid "Record expense"
+msgstr "Ausgabe erfassen"
+
+msgid "Expenses are entered separately; payment providers do not report how funds are spent."
+msgstr "Ausgaben werden separat erfasst; Zahlungsanbieter melden nicht, wie die Mittel ausgegeben werden."
+
+msgid "Draft"
+msgstr "Entwurf"
+
+msgid "Closed"
+msgstr "Geschlossen"
+
+msgid "Log in to view your donations."
+msgstr "Melden Sie sich an, um Ihre Spenden zu sehen."
+
+msgid "Your donations"
+msgstr "Ihre Spenden"
+
+msgid "Only payments made while signed in to this account are shown. Guest payments are not linked by email."
+msgstr "Es werden nur Zahlungen angezeigt, die während der Anmeldung an diesem Konto getätigt wurden. Gastzahlungen werden nicht anhand der E-Mail zugeordnet."
+
+msgid "Previous"
+msgstr "Zurück"
+
+msgid "Next"
+msgstr "Weiter"

@@ -4,7 +4,7 @@ Tags: orthodox, prayer, donations, stripe, paypal
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.2.13
+Stable tag: 1.2.14
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,17 @@ Failures retry through hourly WP-Cron. Pending notifications use the current con
 Mail acceptance does not prove Inbox delivery; a crash after mail acceptance can cause a retry.
 
 = Shortcodes =
+
+[kloster_campaigns lang="ru"] — public campaigns and donation forms.
+[kloster_campaigns id="1"] — one published campaign.
+[kloster_campaign_report id="1"] — public totals without donor details.
+[kloster_donation campaign_id="1"] — donate to an open, unexpired campaign.
+[kloster_donation_history] — donations made while signed in to the current account.
+Guests and historical payments are never assigned by email. Staff access remains
+restricted to manage_options. Campaign expenses are entered separately in Campaigns;
+pending, failed and refunded payments are excluded from received totals.
+The schema upgrade adds campaign records and optional ownership/allocation columns
+without deleting existing prayer notes or linking old records to users.
 
 [kloster_donation lang="ru"] — standalone one-time donation without prayer names or services.
 Amounts: EUR 0.50–999,999.99; comma or dot decimals, up to two decimal places.

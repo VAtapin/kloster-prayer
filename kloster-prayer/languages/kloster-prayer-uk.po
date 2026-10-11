@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: kloster-prayer 1.2.13\n"
+"Project-Id-Version: kloster-prayer 1.2.14\n"
 "Language: uk\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -820,3 +820,69 @@ msgstr "Сума в EUR: від 0,50 до 999 999,99. Не більше двох
 
 msgid "Enter a valid amount between 0.50 and 999,999.99 EUR."
 msgstr "Вкажіть коректну суму від 0,50 до 999 999,99 EUR."
+
+msgid "Campaign not found."
+msgstr "Збір не знайдено."
+
+msgid "Goal"
+msgstr "Мета"
+
+msgid "Expenses"
+msgstr "Витрати"
+
+msgid "Balance"
+msgstr "Залишок"
+
+msgid "Campaign progress"
+msgstr "Перебіг збору"
+
+msgid "Deadline"
+msgstr "Термін завершення"
+
+msgid "This campaign is closed."
+msgstr "Прийом пожертв на цей збір закрито."
+
+msgid "Campaigns"
+msgstr "Цільові збори"
+
+msgid "Campaign"
+msgstr "Збір"
+
+msgid "Report"
+msgstr "Звіт"
+
+msgid "Edit campaign"
+msgstr "Редагувати збір"
+
+msgid "New campaign"
+msgstr "Новий збір"
+
+msgid "Save campaign"
+msgstr "Зберегти збір"
+
+msgid "Record expense"
+msgstr "Записати витрату"
+
+msgid "Expenses are entered separately; payment providers do not report how funds are spent."
+msgstr "Витрати вводяться окремо; платіжні системи не повідомляють, як витрачаються кошти."
+
+msgid "Draft"
+msgstr "Чернетка"
+
+msgid "Closed"
+msgstr "Закритий"
+
+msgid "Log in to view your donations."
+msgstr "Увійдіть, щоб переглянути свої пожертви."
+
+msgid "Your donations"
+msgstr "Ваші пожертви"
+
+msgid "Only payments made while signed in to this account are shown. Guest payments are not linked by email."
+msgstr "Показано лише платежі, зроблені після входу до цього облікового запису. Гостьові платежі не прив’язуються за email."
+
+msgid "Previous"
+msgstr "Назад"
+
+msgid "Next"
+msgstr "Далі"

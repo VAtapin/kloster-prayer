@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Orthodox Prayer Notes and Donations 1.2.13\n"
+"Project-Id-Version: kloster-prayer 1.2.14\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kloster-prayer\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1196,4 +1196,73 @@ msgstr ""
 
 #: includes/class-public-form.php:42
 msgid "Kloster: form not found."
+msgstr ""
+
+msgid "Forbidden"
+msgstr ""
+
+msgid "Campaign not found."
+msgstr ""
+
+msgid "Goal"
+msgstr ""
+
+msgid "Expenses"
+msgstr ""
+
+msgid "Balance"
+msgstr ""
+
+msgid "Campaign progress"
+msgstr ""
+
+msgid "Deadline"
+msgstr ""
+
+msgid "This campaign is closed."
+msgstr ""
+
+msgid "Campaigns"
+msgstr ""
+
+msgid "Campaign"
+msgstr ""
+
+msgid "Report"
+msgstr ""
+
+msgid "Edit campaign"
+msgstr ""
+
+msgid "New campaign"
+msgstr ""
+
+msgid "Save campaign"
+msgstr ""
+
+msgid "Record expense"
+msgstr ""
+
+msgid "Expenses are entered separately; payment providers do not report how funds are spent."
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+msgid "Closed"
+msgstr ""
+
+msgid "Log in to view your donations."
+msgstr ""
+
+msgid "Your donations"
+msgstr ""
+
+msgid "Only payments made while signed in to this account are shown. Guest payments are not linked by email."
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Next"
 msgstr ""

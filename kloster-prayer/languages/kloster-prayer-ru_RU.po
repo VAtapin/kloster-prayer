@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: kloster-prayer 1.2.13\n"
+"Project-Id-Version: kloster-prayer 1.2.14\n"
 "Language: ru_RU\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -820,3 +820,69 @@ msgstr "Сумма в EUR: от 0,50 до 999 999,99. Не более двух �
 
 msgid "Enter a valid amount between 0.50 and 999,999.99 EUR."
 msgstr "Укажите корректную сумму от 0,50 до 999 999,99 EUR."
+
+msgid "Campaign not found."
+msgstr "Сбор не найден."
+
+msgid "Goal"
+msgstr "Цель"
+
+msgid "Expenses"
+msgstr "Расходы"
+
+msgid "Balance"
+msgstr "Остаток"
+
+msgid "Campaign progress"
+msgstr "Ход сбора"
+
+msgid "Deadline"
+msgstr "Срок завершения"
+
+msgid "This campaign is closed."
+msgstr "Приём пожертвований на этот сбор закрыт."
+
+msgid "Campaigns"
+msgstr "Целевые сборы"
+
+msgid "Campaign"
+msgstr "Сбор"
+
+msgid "Report"
+msgstr "Отчёт"
+
+msgid "Edit campaign"
+msgstr "Редактировать сбор"
+
+msgid "New campaign"
+msgstr "Новый сбор"
+
+msgid "Save campaign"
+msgstr "Сохранить сбор"
+
+msgid "Record expense"
+msgstr "Записать расход"
+
+msgid "Expenses are entered separately; payment providers do not report how funds are spent."
+msgstr "Расходы вводятся отдельно; платёжные системы не сообщают, как расходуются средства."
+
+msgid "Draft"
+msgstr "Черновик"
+
+msgid "Closed"
+msgstr "Закрыт"
+
+msgid "Log in to view your donations."
+msgstr "Войдите, чтобы посмотреть свои пожертвования."
+
+msgid "Your donations"
+msgstr "Ваши пожертвования"
+
+msgid "Only payments made while signed in to this account are shown. Guest payments are not linked by email."
+msgstr "Показаны только платежи, сделанные после входа в эту учётную запись. Гостевые платежи не привязываются по email."
+
+msgid "Previous"
+msgstr "Назад"
+
+msgid "Next"
+msgstr "Далее"

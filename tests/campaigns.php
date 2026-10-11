@@ -1,0 +1,62 @@
+<?php
+declare(strict_types=1);
+// Reuse the isolated WordPress database and intercepted HTTP/mail setup.
+require __DIR__ . '/donations.php';
+use KlosterPrayer\Campaigns;
+use KlosterPrayer\Donation_Pages;
+use KlosterPrayer\Database;
+use KlosterPrayer\Payments;
+Campaigns::init(); Donation_Pages::init();
+$input=['title_en'=>'Roof repairs','title_ru'=>'Ремонт кровли','description_en'=>'Repair the roof safely.','goal'=>'100.00','status'=>'open','deadline'=>wp_date('Y-m-d',time()+DAY_IN_SECONDS)];
+$id=Campaigns::save($input); donation_assert(is_int($id)&&$id>0,'Create campaign');
+$campaign=Campaigns::get($id); donation_assert(Campaigns::accepting($campaign),'Open campaign accepts donations');
+$dieHandler=static fn()=>static function(){throw new RuntimeException('campaign-nonce-rejected');};
+remove_filter('wp_doing_ajax','__return_true');add_filter('wp_die_handler',$dieHandler);
+$_POST=['klp_campaign_action'=>'save','_wpnonce'=>'invalid'];$_REQUEST=$_POST;
+try { Donation_Pages::actions(); throw new RuntimeException('Missing campaign nonce enforcement'); }
+catch(RuntimeException $e){donation_assert($e->getMessage()==='campaign-nonce-rejected','Invalid campaign nonce rejected');}
+remove_filter('wp_die_handler',$dieHandler);add_filter('wp_doing_ajax','__return_true');$_POST=[];$_REQUEST=[];
+donation_assert(is_wp_error(Campaigns::save(array_replace($input,['deadline'=>'2026-02-30']))),'Reject invalid calendar date');
+donation_assert(is_wp_error(Campaigns::save(array_replace($input,['status'=>'unknown']))),'Reject invalid status');
+donation_assert(Payments::donation_cents('0.01',1)===1,'Expenses support single cents');
+remove_all_filters('pre_http_request');
+add_filter('pre_http_request',static function($value,$args,$url){
+    if(str_ends_with($url,'/v1/checkout/sessions'))return ['headers'=>[],'body'=>wp_json_encode(['id'=>'cs_campaign_'.$args['body']['metadata[order_id]'],'url'=>'https://checkout.stripe.com/c/pay/campaign']),'response'=>['code'=>200],'cookies'=>[]];
+    return new WP_Error('blocked','Unexpected network request');
+},10,3);
+delete_transient('klp_rate_'.hash('sha256',KlosterPrayer\Input::client_ip().wp_salt('nonce')));
+$result=donation_ajax(array_replace($base,['campaign_id'=>(string)$id]));
+donation_assert($result['success']??false,'Targeted checkout');
+$targeted=$wpdb->get_row('SELECT * FROM '.Database::table('orders').' ORDER BY id DESC LIMIT 1');
+donation_assert((int)$targeted->campaign_id===$id&&(int)$targeted->donor_user_id===1,'Allocation and authenticated ownership stored');
+donation_assert(Campaigns::totals($id)['received']===0,'Pending pledges are not income');
+donation_assert(donation_event($targeted,1234,'evt_campaign_paid')->get_status()===200,'Confirmed target payment');
+donation_assert(Campaigns::totals($id)['received']===1234,'Paid donation counted');
+donation_assert(Campaigns::expense(['campaign_id'=>$id,'expense_amount'=>'0.01','expense_description'=>'Small expense','expense_date'=>wp_date('Y-m-d')])===true,'Record separate expense');
+donation_assert(Campaigns::totals($id)===['received'=>1234,'spent'=>1,'balance'=>1233],'Financial totals reconcile');
+$report=do_shortcode('[kloster_campaign_report id="'.$id.'" lang="en"]');
+donation_assert(str_contains($report,'12.34')&&!str_contains($report,'donor@example.invalid')&&!str_contains($report,'Small expense'),'Public report contains only aggregates');
+$public=do_shortcode('[kloster_campaigns id="'.$id.'" lang="ru"]');
+donation_assert(str_contains($public,'Ремонт кровли')&&str_contains($public,'name="campaign_id"'),'Localized campaign page with linked form');
+$_GET=['donor_user_id'=>'999','donor_email'=>'someone@example.invalid'];
+$history=Donation_Pages::history(); donation_assert(str_contains($history,'12.34'),'Owner history');
+$other=wp_insert_user(['user_login'=>'campaign-other-'.bin2hex(random_bytes(3)),'user_pass'=>wp_generate_password(),'user_email'=>'donor@example.invalid','role'=>'subscriber']);
+wp_set_current_user($other);
+donation_assert(!str_contains(Donation_Pages::history(),'12.34'),'Matching email and query parameters cannot grant ownership');
+donation_assert(is_wp_error(Campaigns::save($input))&&is_wp_error(Campaigns::expense(['campaign_id'=>$id])),'Subscriber cannot administer financial records');
+wp_set_current_user(0); donation_assert(str_contains(Donation_Pages::history(),'Log in'),'Anonymous history requires login');
+wp_set_current_user(1);$_GET=[];
+donation_assert(Campaigns::save(array_replace($input,['campaign_id'=>$id,'status'=>'closed']))===$id,'Close without deleting records');
+donation_assert(!(donation_ajax(array_replace($base,['campaign_id'=>$id]))['success']??true),'Server rejects closed campaign');
+donation_assert(!str_contains(do_shortcode('[kloster_campaigns id="'.$id.'"]'),'name="donation_amount"'),'Closed campaign hides checkout');
+donation_assert(Campaigns::save(array_replace($input,['campaign_id'=>$id,'status'=>'open','deadline'=>'2020-01-01']))===$id,'Set expired deadline');
+donation_assert(!Campaigns::accepting(Campaigns::get($id)),'Deadline enforced');
+donation_assert(!(donation_ajax(array_replace($base,['campaign_id'=>$id]))['success']??true),'Server rejects expired campaign');
+Campaigns::save(array_replace($input,['campaign_id'=>$id,'status'=>'draft']));
+donation_assert(do_shortcode('[kloster_campaign_report id="'.$id.'"]')===''&&do_shortcode('[kloster_campaigns id="'.$id.'"]')==='<div class="klp-campaigns"></div>','Draft campaigns are private');
+$wpdb->update(Database::table('orders'),['payment_status'=>'refunded'],['id'=>$targeted->id]);
+donation_assert(Campaigns::totals($id)['received']===0,'Refunded payments are excluded');
+update_option('klp_db_version','1.2.13');Database::maybe_upgrade();
+donation_assert((int)$wpdb->get_var($wpdb->prepare('SELECT campaign_id FROM %i WHERE id=%d',Database::table('orders'),$targeted->id))===$id,'Upgrade preserves allocations');
+donation_assert($wpdb->last_error==='','No SQL errors');
+echo "PASS campaigns: compatible schema, deadlines/status, allocation, confirmed income/expenses/refunds, public privacy, authenticated history and access rejection\n";

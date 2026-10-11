@@ -33,3 +33,4 @@
 @media(max-width:700px){.klp-form--cards .klp-service{min-height:118px}}
 .klp-form--cards .klp-service{background-image:linear-gradient(90deg,rgba(9,16,25,.88),rgba(9,16,25,.46)),var(--klp-service-bg)}
 .klp-form--cards .klp-service__name small{margin-top:6px;color:rgba(255,255,255,.82);font-size:12px}
+.klp-campaigns{display:grid;gap:2rem}.klp-campaign{border:1px solid #dce4ea;border-radius:8px;padding:1.25rem;margin:1rem 0}.klp-campaign-summary{display:grid;grid-template-columns:1fr auto;gap:.5rem 1rem}.klp-campaign-summary dd{margin:0;font-weight:600}.klp-campaign progress{width:100%;height:1rem}.klp-donation-history table{width:100%;border-collapse:collapse}.klp-donation-history th,.klp-donation-history td{padding:.5rem;text-align:left;border-bottom:1px solid #dce4ea}
