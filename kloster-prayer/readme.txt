@@ -4,7 +4,7 @@ Tags: orthodox, prayer, donations, stripe, paypal
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.2.11
+Stable tag: 1.2.12
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,12 @@ Failures retry through hourly WP-Cron. Pending notifications use the current con
 Mail acceptance does not prove Inbox delivery; a crash after mail acceptance can cause a retry.
 
 = Shortcodes =
+
+[kloster_donation lang="ru"] — standalone one-time donation without prayer names or services.
+Amounts: EUR 0.50–999,999.99; comma or dot decimals, up to two decimal places.
+Uses the same enabled Stripe/PayPal providers, verified webhooks and email settings.
+Donations appear in the protected request list (type filter), total/donor reports and archive;
+they have no service items, remembrance schedule or prayer-slip PDF.
 
 [kloster_form] — general prayer form.
 [kloster_form id="2"] — existing compatible form by ID.

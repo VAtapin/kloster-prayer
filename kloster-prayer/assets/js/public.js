@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.klp-form').forEach(function (root) {
     var form = root.querySelector('form');
     var names = form.elements.names;
+    var donation = root.dataset.requestType === 'donation';
+    var amount = form.elements.donation_amount;
     var output = root.querySelector('output');
     var error = root.querySelector('.klp-error');
     var submit = root.querySelector('.klp-submit');
@@ -28,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var lang = root.dataset.lang === 'ru' ? 'ru-RU' : 'de-DE';
 
     function normalizeNames(finalize) {
+      if (donation) return;
       var start = names.selectionStart, end = names.selectionEnd;
       var convert = function (value) { return value.replace(/[ \t]*[,;，][ \t]*/g, '\n'); };
       var value = convert(names.value);
@@ -43,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return names.value.split(/\r?\n/).map(function (v) { return v.trim(); }).filter(Boolean).length;
     }
     function refreshVisibility() {
+      if (donation) { calculate(); return; }
       var intention = form.querySelector('[name="intention"]:checked').value;
       root.querySelectorAll('.klp-service').forEach(function (row) {
         var mode = row.dataset.intention;
@@ -53,6 +57,15 @@ document.addEventListener('DOMContentLoaded', function () {
       calculate();
     }
     function calculate() {
+      if (donation) {
+        var value = amount.value.trim();
+        var valid = /^[0-9]{1,6}([.,][0-9]{1,2})?$/.test(value);
+        var parts = value.replace(',', '.').split('.');
+        var donationCents = valid ? Number(parts[0]) * 100 + Number(((parts[1] || '') + '00').slice(0, 2)) : 0;
+        amount.setCustomValidity(valid && donationCents >= 50 && donationCents <= 99999999 ? '' : window.klosterPrayer.required);
+        output.textContent = new Intl.NumberFormat(lang, {style: 'currency', currency: currency}).format(donationCents / 100);
+        return;
+      }
       var count = namesCount();
       var cents = 0;
       root.querySelectorAll('.klp-service input:checked').forEach(function (input) {
@@ -68,12 +81,15 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('change', function (event) {
       if (event.target.name === 'intention') refreshVisibility(); else calculate();
     });
+    if (donation) amount.addEventListener('input', calculate);
+    else {
     names.addEventListener('input', function (event) { if (!event.isComposing) normalizeNames(false); calculate(); });
     names.addEventListener('compositionend', function () { normalizeNames(false); calculate(); });
     names.addEventListener('blur', function () { normalizeNames(true); calculate(); });
+    }
     form.addEventListener('submit', function (event) {
       event.preventDefault(); error.hidden = true; normalizeNames(true); calculate();
-      if (!form.checkValidity() || !form.querySelector('.klp-service input:checked')) {
+      if (!form.checkValidity() || (!donation && !form.querySelector('.klp-service input:checked'))) {
         error.textContent = window.klosterPrayer.required; error.hidden = false; form.reportValidity(); return;
       }
       submit.disabled = true;

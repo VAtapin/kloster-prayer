@@ -9,6 +9,7 @@ final class Public_Form
     {
         add_shortcode('kloster_form', [self::class, 'shortcode']);
         add_shortcode('kloster_prayer_form', [self::class, 'shortcode']);
+        add_shortcode('kloster_donation', [self::class, 'donation_shortcode']);
         add_shortcode('kloster_service', [self::class, 'service_shortcode']);
         add_shortcode('kloster_payment_result', [self::class, 'result_shortcode']);
         add_action('wp_enqueue_scripts', [self::class, 'register_assets']);
@@ -58,10 +59,23 @@ final class Public_Form
         return self::result_shortcode() . self::render($form, $atts, [$service]);
     }
 
+    public static function donation_shortcode(array|string $atts = []): string
+    {
+        $atts = shortcode_atts(['layout' => 'compact', 'lang' => '', 'header' => 'yes'], $atts, 'kloster_donation');
+        $atts['request_type'] = 'donation';
+        $form = (object) ['id' => 0, 'layout' => 'compact'];
+        foreach (['de', 'ru', 'uk', 'pl'] as $lang) {
+            $form->{'title_' . $lang} = I18n::donation_text('title', $lang);
+            $form->{'intro_' . $lang} = '';
+        }
+        return self::result_shortcode() . self::render($form, $atts, []);
+    }
+
     private static function render(object $form, array $atts, ?array $fixed_services): string
     {
         global $wpdb;
         $lang = in_array($atts['lang'], ['de', 'ru', 'uk', 'pl'], true) ? $atts['lang'] : I18n::language();
+        $donation = ($atts['request_type'] ?? '') === 'donation';
         if ($fixed_services === null) {
             $services_table = Database::table('services');
             $links = Database::table('form_services');
@@ -69,7 +83,7 @@ final class Public_Form
         } else {
             $services = $fixed_services;
         }
-        if (!$services) {
+        if (!$services && !$donation) {
             return '';
         }
 
@@ -87,9 +101,10 @@ final class Public_Form
         if (!is_array($enabled)) {
             $enabled = ['stripe'];
         }
+        $amount_id = wp_unique_id('klp-donation-');
         ob_start();
         ?>
-        <section class="klp-form klp-form--<?php echo  esc_attr($layout) ?>" data-currency="EUR" data-lang="<?php echo  esc_attr($lang) ?>">
+        <section class="klp-form klp-form--<?php echo  esc_attr($layout) ?>" data-request-type="<?php echo $donation ? 'donation' : 'prayer' ?>" data-currency="EUR" data-lang="<?php echo  esc_attr($lang) ?>">
             <?php if (($atts['header'] ?? 'yes') !== 'no') : ?><header class="klp-form__header">
                 <h2><?php echo  esc_html($form->{$title_key}) ?></h2>
                 <?php if (!empty($form->{$intro_key})) : ?><p><?php echo  esc_html($form->{$intro_key}) ?></p><?php endif; ?>
@@ -100,6 +115,8 @@ final class Public_Form
                 <input type="hidden" name="form_id" value="<?php echo  (int) $form->id ?>">
                 <input type="hidden" name="language" value="<?php echo  esc_attr($lang) ?>">
                 <input class="klp-honeypot" type="text" name="website" value="" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <input type="hidden" name="request_type" value="<?php echo $donation ? 'donation' : 'prayer' ?>">
+                <?php if (!$donation) : ?>
                 <?php $modes = array_unique(array_column($services, 'intention_mode')); $show_both = in_array('both', $modes, true) || (in_array('health', $modes, true) && in_array('rest', $modes, true)); ?>
                 <fieldset class="klp-intention<?php echo  $show_both ? '' : ' klp-intention--single' ?>">
                     <legend class="screen-reader-text"><?php echo  esc_html($lang === 'de' ? 'Gebetsart' : 'Тип молитвы') ?></legend>
@@ -122,6 +139,14 @@ final class Public_Form
                     <textarea id="klp-names-<?php echo  (int) $form->id ?>" name="names" rows="<?php echo  $layout === 'compact' ? 4 : 6 ?>" required placeholder="<?php echo  esc_attr(I18n::text('names_placeholder', $lang)) ?>"></textarea>
                     <small><?php echo  esc_html(I18n::text('names_help', $lang)) ?></small>
                 </div>
+                <?php else : ?>
+                <div class="klp-field">
+                    <label><?php echo esc_html(I18n::text('total', $lang)) ?> (EUR) <span>*</span>
+                        <input type="text" name="donation_amount" inputmode="decimal" required maxlength="9" pattern="[0-9]{1,6}([.,][0-9]{1,2})?" aria-describedby="<?php echo esc_attr($amount_id) ?>">
+                    </label>
+                    <small id="<?php echo esc_attr($amount_id) ?>"><?php echo esc_html(I18n::donation_text('amount_help', $lang)) ?></small>
+                </div>
+                <?php endif; ?>
                 <div class="klp-field"><label><?php echo  esc_html(I18n::text('note', $lang)) ?></label><textarea name="note" rows="<?php echo  $layout === 'compact' ? 1 : 2 ?>"></textarea></div>
                 <div class="klp-grid">
                     <div class="klp-field"><label><?php echo  esc_html(I18n::text('donor_name', $lang)) ?></label><input type="text" name="donor_name" autocomplete="name"></div>
@@ -135,8 +160,8 @@ final class Public_Form
                 <?php else : ?><input type="hidden" name="provider" value="<?php echo  esc_attr($enabled[0] ?? 'stripe') ?>"><?php endif; ?>
                 <div class="klp-summary"><span><?php echo  esc_html(I18n::text('total', $lang)) ?></span><strong><output>0,00 €</output></strong></div>
                 <div class="klp-error" role="alert" hidden></div>
-                <button class="klp-submit" type="submit"><span><?php echo  esc_html(I18n::text('submit', $lang)) ?></span><b aria-hidden="true">→</b></button>
-                <p class="klp-secure">♙ <?php echo  esc_html(I18n::text('secure', $lang)) ?></p>
+                <button class="klp-submit" type="submit"><span><?php echo  esc_html(($donation ? I18n::donation_text('submit', $lang) : I18n::text('submit', $lang))) ?></span><b aria-hidden="true">→</b></button>
+                <p class="klp-secure">♙ <?php echo  esc_html(($donation ? I18n::donation_text('secure', $lang) : I18n::text('secure', $lang))) ?></p>
             </form>
         </section>
         <?php
@@ -153,14 +178,17 @@ final class Public_Form
         $key = 'cancelled';
         $state = 'cancelled';
         $lang = I18n::language();
-        if ($status === 'success') {
-            $public_id = sanitize_text_field((string) (Input::get('kloster_order') ?? ''));
-            $order = $public_id !== '' ? $wpdb->get_row($wpdb->prepare('SELECT payment_status,language FROM %i WHERE public_id=%s', Database::table('orders'), $public_id)) : null;
+        $public_id = sanitize_text_field((string) (Input::get('kloster_order') ?? ''));
+        $order = $public_id !== '' ? $wpdb->get_row($wpdb->prepare('SELECT payment_status,language,intention FROM %i WHERE public_id=%s', Database::table('orders'), $public_id)) : null;
+        if ($status === 'success' || ($order && $order->payment_status === 'paid')) {
             $paid = $order && $order->payment_status === 'paid';
             if ($order && in_array($order->language, ['de','ru'], true)) $lang = $order->language;
             $key = $paid ? 'thanks' : 'processing';
             $state = $paid ? 'success' : 'processing';
         }
+        if ($order && in_array($order->language, ['en','de','ru','uk','pl'], true)) $lang = $order->language;
+        $message = ($order && ($order->intention ?? '') === 'none' && in_array($key, ['thanks', 'cancelled'], true))
+            ? I18n::donation_text($key, $lang) : I18n::text($key, $lang);
         $title = I18n::text($state . '_title', $lang);
         $close = I18n::text('close', $lang);
         $icon = $state === 'success' ? '✓' : ($state === 'processing' ? '…' : '×');
@@ -168,6 +196,6 @@ final class Public_Form
             . '<div class="klp-result-modal__backdrop" data-klp-result-close></div><div class="klp-result-modal__card klp-result-modal__card--' . esc_attr($state) . '" tabindex="-1">'
             . '<button type="button" class="klp-result-modal__x" data-klp-result-close aria-label="' . esc_attr($close) . '">×</button>'
             . '<span class="klp-result-modal__icon" aria-hidden="true">' . esc_html($icon) . '</span><h2 id="klp-result-title">' . esc_html($title) . '</h2>'
-            . '<p>' . esc_html(I18n::text($key, $lang)) . '</p><button type="button" class="klp-result-modal__button" data-klp-result-close>' . esc_html($close) . '</button></div></div>';
+            . '<p>' . esc_html($message) . '</p><button type="button" class="klp-result-modal__button" data-klp-result-close>' . esc_html($close) . '</button></div></div>';
     }
 }

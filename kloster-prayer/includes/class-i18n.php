@@ -18,6 +18,19 @@ final class I18n
         return 'de';
     }
 
+    /** Standalone donation strings, following the saved request language. */
+    public static function donation_text(string $key, ?string $language = null): string
+    {
+        $messages = [
+            'de' => ['title'=>'Spende für die Kirche', 'submit'=>'Jetzt spenden', 'secure'=>'Sichere Zahlung. Ihre Daten werden nur zur Bearbeitung Ihrer Spende verwendet.', 'thanks'=>'Vielen Dank. Ihre Spende wurde bestätigt.', 'cancelled'=>'Die Zahlung wurde nicht abgeschlossen. Ihre Spende ist noch nicht eingegangen.', 'subject'=>'Vielen Dank für Ihre Spende', 'amount_help'=>'Betrag in EUR: 0,50 bis 999.999,99. Maximal zwei Nachkommastellen.', 'invalid_amount'=>'Bitte geben Sie einen gültigen Betrag zwischen 0,50 und 999.999,99 EUR ein.'],
+            'ru' => ['title'=>'Пожертвование на нужды храма', 'submit'=>'Пожертвовать', 'secure'=>'Безопасная оплата. Данные используются только для обработки пожертвования.', 'thanks'=>'Благодарим вас. Ваше пожертвование подтверждено.', 'cancelled'=>'Оплата не завершена. Пожертвование ещё не поступило.', 'subject'=>'Благодарим за ваше пожертвование', 'amount_help'=>'Сумма в EUR: от 0,50 до 999 999,99. Не более двух знаков после запятой.', 'invalid_amount'=>'Укажите корректную сумму от 0,50 до 999 999,99 EUR.'],
+            'uk' => ['title'=>'Пожертва на потреби храму', 'submit'=>'Пожертвувати', 'secure'=>'Безпечна оплата. Дані використовуються лише для обробки пожертви.', 'thanks'=>'Дякуємо. Вашу пожертву підтверджено.', 'cancelled'=>'Оплату не завершено. Пожертва ще не надійшла.', 'subject'=>'Дякуємо за вашу пожертву', 'amount_help'=>'Сума в EUR: від 0,50 до 999 999,99. Не більше двох знаків після коми.', 'invalid_amount'=>'Вкажіть коректну суму від 0,50 до 999 999,99 EUR.'],
+            'pl' => ['title'=>'Darowizna na potrzeby cerkwi', 'submit'=>'Przekaż darowiznę', 'secure'=>'Bezpieczna płatność. Dane są używane wyłącznie do obsługi darowizny.', 'thanks'=>'Dziękujemy. Twoja darowizna została potwierdzona.', 'cancelled'=>'Płatność nie została zakończona. Darowizna jeszcze nie wpłynęła.', 'subject'=>'Dziękujemy za Twoją darowiznę', 'amount_help'=>'Kwota w EUR: od 0,50 do 999 999,99. Maksymalnie dwa miejsca po przecinku.', 'invalid_amount'=>'Podaj prawidłową kwotę od 0,50 do 999 999,99 EUR.'],
+            'en' => ['title'=>'Donation for the church', 'submit'=>'Donate', 'secure'=>'Secure payment. Your information is used only to process your donation.', 'thanks'=>'Thank you. Your donation is confirmed.', 'cancelled'=>'Payment was not completed. Your donation has not been received.', 'subject'=>'Thank you for your donation', 'amount_help'=>'Amount in EUR: 0.50 to 999,999.99. Up to two decimal places.', 'invalid_amount'=>'Enter a valid amount between 0.50 and 999,999.99 EUR.'],
+        ];
+        return $messages[$language ?? self::language()][$key] ?? $messages['de'][$key] ?? $key;
+    }
+
     public static function text(string $key, ?string $language = null): string
     {
         $language ??= self::language();

@@ -65,17 +65,26 @@ final class Payments
         }
         set_transient($rate_key, $attempts + 1, MINUTE_IN_SECONDS);
         $provider = sanitize_key((string) (Input::post('provider') ?? 'stripe'));
+        $request_type = Input::post('request_type') ?? 'prayer';
+        if (!in_array($request_type, ['prayer', 'donation'], true)) wp_send_json_error(['message' => I18n::text('required', $language)], 422);
+        $donation = $request_type === 'donation';
         $intention = sanitize_key((string) (Input::post('intention') ?? 'health'));
         $names = self::clean_names((string) Input::textarea('names') ?? '');
         $email = sanitize_email((string) Input::post('donor_email') ?? '');
         $service_ids = array_values(array_unique(array_map('absint', (array) (Input::post_list('services') ?? []))));
         $enabled_methods = (array) get_option('klp_payment_methods', ['stripe', 'paypal']);
-        if (!$names || !is_email($email) || strlen($email) > 190 || !$service_ids || count($service_ids) > 30 || !in_array($provider, $enabled_methods, true) || !in_array($intention, ['health', 'rest'], true)) {
+        if (!is_email($email) || strlen($email) > 190 || !in_array($provider, ['stripe', 'paypal'], true) || !in_array($provider, $enabled_methods, true)
+            || (!$donation && (!$names || !$service_ids || count($service_ids) > 30 || !in_array($intention, ['health', 'rest'], true)))
+            || ($donation && ($service_ids || $names))) {
             wp_send_json_error(['message' => I18n::text('required', $language)], 422);
         }
 
+        $donation_amount = $donation ? self::donation_cents((string) (Input::post('donation_amount') ?? '')) : 0;
+        if ($donation && $donation_amount === null) wp_send_json_error(['message' => I18n::donation_text('invalid_amount', $language)], 422);
+
         $order = self::create_order([
-            'form_id' => absint(Input::post('form_id') ?? 0), 'language' => $language, 'intention' => $intention,
+            'form_id' => $donation ? 0 : absint(Input::post('form_id') ?? 0), 'language' => $language, 'intention' => $donation ? 'none' : $intention,
+            'donation_cents' => $donation_amount,
             'names' => implode("\n", $names), 'note' => sanitize_textarea_field((string) Input::textarea('note') ?? ''),
             'donor_name' => sanitize_text_field((string) Input::post('donor_name') ?? ''), 'donor_email' => $email,
             'provider' => $provider, 'service_ids' => $service_ids, 'return_url' => self::safe_return_url(),
@@ -90,6 +99,14 @@ final class Payments
             wp_send_json_error(['message' => $redirect->get_error_message()], 502);
         }
         wp_send_json_success(['redirect' => $redirect]);
+    }
+
+    /** Decimal EUR input to integer cents; never round or accept exponent notation. */
+    public static function donation_cents(string $raw): ?int
+    {
+        if (!preg_match('/^([0-9]{1,6})(?:[.,]([0-9]{1,2}))?$/D', trim($raw), $parts)) return null;
+        $cents = (int) $parts[1] * 100 + (int) str_pad($parts[2] ?? '', 2, '0');
+        return $cents >= 50 && $cents <= 99999999 ? $cents : null;
     }
 
     /** Shared parser for new submissions and legacy PDF records. Never split spaces inside names. */
@@ -108,15 +125,24 @@ final class Payments
     private static function create_order(array $data): object
     {
         global $wpdb;
-        $services_table = Database::table('services');
-        $placeholders = implode(',', array_fill(0, count($data['service_ids']), '%d'));
-        // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- One %d for each validated service ID, plus the %i table identifier; variadic count is tested on real WordPress.
-        $services = $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE is_active=1 AND id IN ({$placeholders})", $services_table, ...$data['service_ids']));
-        if (!$services || count($services) !== count($data['service_ids'])) {
-            return new WP_Error('invalid_services', I18n::text('error', $data['language']));
+        $donation = $data['intention'] === 'none';
+        $services = [];
+        if ($donation) {
+            if ($data['service_ids'] || $data['names'] !== '' || !is_int($data['donation_cents'] ?? null)
+                || $data['donation_cents'] < 50 || $data['donation_cents'] > 99999999) {
+                return new WP_Error('invalid_amount', I18n::donation_text('invalid_amount', $data['language']));
+            }
+        } else {
+            $services_table = Database::table('services');
+            $placeholders = implode(',', array_fill(0, count($data['service_ids']), '%d'));
+            // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- One %d for each validated service ID, plus the %i table identifier; variadic count is tested on real WordPress.
+            $services = $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE is_active=1 AND id IN ({$placeholders})", $services_table, ...$data['service_ids']));
+            if (!$services || count($services) !== count($data['service_ids'])) {
+                return new WP_Error('invalid_services', I18n::text('error', $data['language']));
+            }
         }
-        $name_count = count(explode("\n", $data['names']));
-        $amount = 0;
+        $name_count = $donation ? 0 : count(explode("\n", $data['names']));
+        $amount = $donation ? $data['donation_cents'] : 0;
         $items = [];
         foreach ($services as $service) {
             if (!in_array($service->intention_mode, ['both', 'none', $data['intention']], true)) {
@@ -249,6 +275,7 @@ final class Payments
 
     private static function payment_label(object $order): string
     {
+        if (($order->intention ?? '') === 'none') return I18n::donation_text('title', $order->language);
         global $wpdb;
         $items = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d ORDER BY id', Database::table('order_items'), (int) $order->id));
         $prefix = $order->language === 'ru' ? 'Молитвенная записка: ' : 'Gebetsanliegen: ';
@@ -443,6 +470,14 @@ final class Payments
         $orders = Database::table('orders');
         $claimed = $wpdb->query($wpdb->prepare("UPDATE %i SET confirmation_sent_at=%s WHERE id=%d AND confirmation_sent_at IS NULL", $orders, current_time('mysql'), (int) $order->id));
         if (!$claimed) return;
+        if (($order->intention ?? '') === 'none') {
+            $subject = I18n::donation_text('subject', $order->language);
+            $site_name = wp_specialchars_decode((string) get_bloginfo('name'), ENT_QUOTES);
+            $body = '<!doctype html><html><body><h1>' . esc_html($subject) . '</h1><p>'
+                . esc_html(I18n::donation_text('thanks', $order->language)) . '</p><p><strong>'
+                . esc_html(number_format_i18n(((int) $order->amount_cents) / 100, 2) . ' ' . $order->currency)
+                . '</strong></p><p>' . esc_html($site_name) . '</p></body></html>';
+        } else {
         $lang = in_array($order->language, ['de','ru','uk','pl'], true) ? $order->language : 'de';
         $site_name = wp_specialchars_decode((string) get_bloginfo('name'), ENT_QUOTES);
         $logo_id = (int) get_theme_mod('custom_logo');
@@ -455,6 +490,7 @@ final class Payments
         $labels=['de'=>['Gebetsanliegen','Gebetsart','Spendensumme','Namen'],'ru'=>['Треба','Тип записки','Сумма пожертвования','Имена'],'uk'=>['Треба','Тип записки','Сума пожертви','Імена'],'pl'=>['Intencja','Rodzaj modlitwy','Kwota darowizny','Imiona']][$lang];
         $footer = ['de'=>'Mit Dankbarkeit und Gebet,<br>','ru'=>'С благодарностью и молитвой,<br>','uk'=>'Із вдячністю та молитвою,<br>','pl'=>'Z wdzięcznością i modlitwą,<br>'][$lang] . esc_html($site_name);
         $body = '<!doctype html><html><body style="margin:0;background:#f3f5f7;font-family:Arial,sans-serif;color:#202936"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding:28px 12px"><table role="presentation" width="620" cellspacing="0" cellpadding="0" style="max-width:620px;width:100%;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 8px 30px rgba(25,40,55,.10)"><tr><td align="center" style="padding:28px 30px 22px;border-top:5px solid #198fd9">'.($logo_url!==''?'<img src="'.esc_url($logo_url).'" width="360" alt="'.esc_attr($site_name).'" style="display:block;max-width:100%;height:auto">':'<strong>'.esc_html($site_name).'</strong>').'</td></tr><tr><td style="padding:8px 42px 38px"><h1 style="margin:0 0 18px;font-size:25px;line-height:1.3;text-align:center">'.esc_html($subject).'</h1><p style="font-size:16px;line-height:1.65">'.$greeting.'</p><p style="font-size:16px;line-height:1.65">'.esc_html(I18n::text('thanks',$lang)).'</p><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:24px 0;border:1px solid #dce4ea;border-radius:5px"><tr><td style="padding:12px 16px;background:#f5f9fc"><strong>'.esc_html($labels[0]).'</strong></td><td style="padding:12px 16px;background:#f5f9fc;text-align:right">'.esc_html(implode(', ',$items)).'</td></tr><tr><td style="padding:12px 16px;border-top:1px solid #dce4ea"><strong>'.esc_html($labels[1]).'</strong></td><td style="padding:12px 16px;border-top:1px solid #dce4ea;text-align:right">'.esc_html($intention).'</td></tr><tr><td style="padding:12px 16px;border-top:1px solid #dce4ea"><strong>'.esc_html($labels[2]).'</strong></td><td style="padding:12px 16px;border-top:1px solid #dce4ea;text-align:right"><strong>'.esc_html($amount).'</strong></td></tr></table><h2 style="font-size:17px;margin:25px 0 10px">'.esc_html($labels[3]).'</h2><div style="padding:17px 20px;background:#f8fafb;border-left:4px solid #198fd9;font-size:16px;line-height:1.7">'.nl2br(esc_html($order->names)).'</div><p style="margin:28px 0 0;color:#53606d;font-size:15px;line-height:1.6">'.$footer.'</p></td></tr><tr><td style="padding:17px 30px;background:#202936;color:#cfd6dc;text-align:center;font-size:12px"><a href="'.esc_url(home_url('/')).'" style="color:#fff">'.esc_html($site_name).'</a></td></tr></table></td></tr></table></body></html>';
+        }
         if (!wp_mail($order->donor_email, $subject, $body, ['Content-Type: text/html; charset=UTF-8'])) { $wpdb->update($orders, ['confirmation_sent_at' => null], ['id' => (int) $order->id]); Order_Workflow::log((int)$order->id,'email_failed','Не удалось передать письмо почтовой системе'); } else { Order_Workflow::log((int)$order->id,'email_sent','Подтверждение передано почтовой системе'); }
     }
 }

@@ -45,7 +45,7 @@ final class Pdf
 
     private static function cards(): array
     {
-        global $wpdb; $where=[]; $args=[];
+        global $wpdb; $where=["o.intention<>'none'"]; $args=[];
         $status=sanitize_key((string)(Input::get('payment_status')??'')); $intention=sanitize_key((string)(Input::get('intention')??'')); $printed=sanitize_key((string)(Input::get('printed')??''));
         $ids=array_filter(array_map('absint',explode(',',(string)(Input::get('order_ids')??''))));
         if($ids){$where[]='o.id IN ('.implode(',',array_fill(0,count($ids),'%d')).')';array_push($args,...$ids);}
