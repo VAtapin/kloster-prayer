@@ -2,7 +2,7 @@
 Contributors: atapin
 Requires at least: 7.1
 Requires PHP: 8.4
-Stable tag: 1.2.9
+Stable tag: 1.2.10
 License: GPLv2 or later
 
 Православные молитвенные записки и пожертвования для приходов, храмов, соборов и монастырей.
@@ -63,6 +63,25 @@ License: GPLv2 or later
 
 Совместимые начальные ID: 1 — свеча в алтарь, 2 — общая форма, 3 — сорокоуст, 4 — панихида, 5 — молебен.
 
+== Подключение PayPal ==
+
+В настройках оплаты раскройте «Как подключить PayPal — пошаговая инструкция».
+Для Live нужен PayPal Business аккаунт получателя; email сам по себе недостаточен.
+Откройте https://developer.paypal.com/dashboard/applications/ → Apps & Credentials,
+выберите Live или Sandbox, откройте REST приложение либо создайте его через Create App.
+Client ID и Secret копируются из страницы приложения. В том же приложении добавьте Webhook
+с точным HTTPS URL из настроек плагина (порт 443). Подпишитесь на PAYMENT.CAPTURE.COMPLETED
+и PAYMENT.CAPTURE.REFUNDED. ID созданного webhook вставьте в Webhook ID плагина.
+Все три значения и режим должны соответствовать одному приложению. Включите PayPal и сохраните.
+При смене режима замените весь комплект, включая Secret: пустой Secret сохраняет прежний.
+Сначала проверьте реальную тестовую оплату в Sandbox отдельным Personal аккаунтом покупателя;
+Business аккаунт продавца и Personal покупатель находятся в Testing Tools → Sandbox Accounts.
+Webhooks Simulator не подходит для используемой postback-проверки подписи:
+PayPal не поддерживает verify-webhook-signature для искусственных событий симулятора.
+Наличие ключей в диагностике не означает проверку их действительности в PayPal.
+Официальные инструкции: https://developer.paypal.com/api/get-started/
+и https://developer.paypal.com/api/rest/webhooks/rest/.
+
 == Webhook события ==
 
 Stripe: checkout.session.completed, charge.refunded.
@@ -79,6 +98,9 @@ PayPal: PAYMENT.CAPTURE.COMPLETED, PAYMENT.CAPTURE.REFUNDED.
 Ключи и секреты эта настройка не меняет.
 
 == Changelog ==
+
+= 1.2.10 =
+* Пошаговая помощь по PayPal: аккаунт Business, ключи, режим, Webhook ID, события и Sandbox-проверка с официальными ссылками.
 
 = 1.2.9 =
 * Исправлена критическая ошибка при прямом открытии карточки записки.

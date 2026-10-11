@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace KlosterPrayer;
+require_once DIR.'/includes/class-paypal-help.php';
 
 final class Admin_Screens
 {
@@ -20,7 +21,9 @@ final class Admin_Screens
             foreach($fields as $key=>$label){$secret=str_contains($key,'secret');$value=(string)get_option('klp_'.$key,'');
                 echo '<p><label for="'.esc_attr($key).'">'.esc_html($label).'</label><input id="'.esc_attr($key).'" name="'.esc_attr($key).'" type="'.($secret?'password':'text').'" value="'.esc_attr($secret?'':$value).'" autocomplete="off"'.($secret&&$value!==''?' placeholder="Сохранено — оставьте пустым, чтобы не менять"':'').'></p>';
             }
-            echo '<p><label>Webhook URL</label><code>'.esc_html(Payments::api_url($provider.'/webhook')).'</code></p><p class="description">Настройка нужна только для включённого способа оплаты.</p></div></section>';
+            echo '<p><label>Webhook URL</label><code>'.esc_html(Payments::api_url($provider.'/webhook')).'</code></p><p class="description">Настройка нужна только для включённого способа оплаты.</p>';
+            if($provider==='paypal')PayPal_Help::render();
+            echo '</div></section>';
         }
         echo '</div>';submit_button('Сохранить настройки');echo '</form></div>';
     }
