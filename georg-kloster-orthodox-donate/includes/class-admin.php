@@ -33,7 +33,7 @@ final class Admin
 
     public static function menu(): void
     {
-        add_menu_page(__('Parish', 'georg-kloster-orthodox-donate'), __('Parish', 'georg-kloster-orthodox-donate'), 'manage_options', 'georg-kloster-orthodox-donate', [self::class, 'orders'], 'dashicons-heart', 26);
+        add_menu_page(__('Donations', 'georg-kloster-orthodox-donate'), __('Donations', 'georg-kloster-orthodox-donate'), 'manage_options', 'georg-kloster-orthodox-donate', [self::class, 'orders'], 'dashicons-heart', 26);
         add_submenu_page('georg-kloster-orthodox-donate', (__('Prayer notes', 'georg-kloster-orthodox-donate')), (__('Prayer notes', 'georg-kloster-orthodox-donate')), 'manage_options', 'georg-kloster-orthodox-donate', [self::class, 'orders']);
         add_submenu_page('georg-kloster-orthodox-donate', (__('Services', 'georg-kloster-orthodox-donate')), (__('Services', 'georg-kloster-orthodox-donate')), 'manage_options', 'georg-kloster-orthodox-donate-services', [self::class, 'services']);
         add_submenu_page('georg-kloster-orthodox-donate', (__('Forms', 'georg-kloster-orthodox-donate')), (__('Forms', 'georg-kloster-orthodox-donate')), 'manage_options', 'georg-kloster-orthodox-donate-forms', [self::class, 'forms']);

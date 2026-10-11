@@ -60,5 +60,5 @@ jobs:
         run: |
           version="${TAG#georg-kloster-orthodox-donate-}"
           gh release create "$TAG" "georg-kloster-orthodox-donate-$version.zip" georg-kloster-orthodox-donate.zip \
-            --title "Приход — записки, требы и пожертвования $TAG" \
+            --title "Пожертвования $TAG" \
             --generate-notes

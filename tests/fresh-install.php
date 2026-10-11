@@ -24,8 +24,8 @@ foreach($legacyTables as $table)if($before[$table]!==hash('sha256',serialize($wp
 if(get_option('gkod_db_version')!=='1.0.1')throw new RuntimeException('Wrong schema version');
 require_once ABSPATH.'wp-admin/includes/plugin.php';
 $metadata=get_plugin_data(GeorgKlosterOrthodoxDonate\FILE,false,false);
-if($metadata['TextDomain']!=='georg-kloster-orthodox-donate'||$metadata['Version']!=='1.0.1')throw new RuntimeException('Plugin metadata mismatch');
+if($metadata['TextDomain']!=='georg-kloster-orthodox-donate'||$metadata['Version']!=='1.0.2')throw new RuntimeException('Plugin metadata mismatch');
 load_textdomain('georg-kloster-orthodox-donate',GeorgKlosterOrthodoxDonate\DIR.'/languages/georg-kloster-orthodox-donate-ru_RU.mo');
-if(get_plugin_data(GeorgKlosterOrthodoxDonate\FILE,false,true)['Name']!=='Приход — записки, требы и пожертвования')throw new RuntimeException('Russian plugin name not translated by WordPress');
+if(get_plugin_data(GeorgKlosterOrthodoxDonate\FILE,false,true)['Name']!=='Пожертвования')throw new RuntimeException('Russian plugin name not translated by WordPress');
 if($wpdb->last_error!=='')throw new RuntimeException('Database error');
 echo "PASS fresh installation: separate tables and settings, no order or credential import, previous data untouched\n";

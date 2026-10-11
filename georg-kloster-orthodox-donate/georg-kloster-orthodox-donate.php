@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Parish — Prayer Requests, Services and Donations
+ * Plugin Name: Orthodox Donations
  * Plugin URI: https://atapin.de/
  * Description: Orthodox prayer requests and donations with Stripe, PayPal, printable prayer slips and reports.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: atapin.de
  * Author URI: https://atapin.de/
  * Text Domain: georg-kloster-orthodox-donate
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const VERSION = '1.0.1';
+const VERSION = '1.0.2';
 const FILE = __FILE__;
 const DIR = __DIR__;
 

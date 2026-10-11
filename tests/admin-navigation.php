@@ -14,6 +14,9 @@ ob_start();require_once ABSPATH.'wp-admin/menu-header.php';ob_end_clean();
 foreach(['en','ru','de','uk','pl'] as $language){
     $menu=[];$submenu=[];$admin_page_hooks=[];$_registered_pages=[];$_parent_pages=[];
     GeorgKlosterOrthodoxDonate\I18n::in_language(static function(){do_action('admin_menu');return '';},$language);
+    $labels=['en'=>'Donations','ru'=>'Пожертвования','de'=>'Spenden','uk'=>'Пожертви','pl'=>'Darowizny'];
+    $parent=array_values(array_filter($menu,static fn($item)=>$item[2]==='georg-kloster-orthodox-donate'));
+    donation_assert(count($parent)===1&&$parent[0][0]===$labels[$language],'Donation menu name uses the current WordPress translation');
     foreach(['georg-kloster-orthodox-donate-campaigns','georg-kloster-orthodox-donate-support','georg-kloster-orthodox-donate-help'] as $slug){
         $hook=get_plugin_page_hook($slug,'georg-kloster-orthodox-donate');
         donation_assert((bool)$hook,'WordPress resolves the submenu callback: '.$language.'/'.$slug);

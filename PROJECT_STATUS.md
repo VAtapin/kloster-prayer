@@ -1,9 +1,9 @@
 # Состояние проекта
 
 ## Текущее состояние
-- Независимый плагин 1.0.1: «Приход — записки, требы и пожертвования»; английское имя Parish — Prayer Requests, Services and Donations. Slug, папка, PHP-файл и text domain: georg-kloster-orthodox-donate.
+- Независимый плагин 1.0.2: «Пожертвования»; английское имя Orthodox Donations. Меню: Donations / Пожертвования / Spenden / Пожертви / Darowizny. Slug, папка, PHP-файл и text domain: georg-kloster-orthodox-donate.
 - PHP 8.4 / WordPress 7.1; main → origin/main; репозиторий https://github.com/VAtapin/kloster-prayer.git не переименован.
-- Проверенный ZIP: output/georg-kloster-orthodox-donate-1.0.1.zip, 374 файла. Новые tags/releases не создавались; прежний tag 1.0.0 не изменён.
+- Проверенный ZIP: output/georg-kloster-orthodox-donate-1.0.2.zip, 374 файла. Новые tags/releases не создавались; прежний tag 1.0.0 не изменён.
 - Владелец устанавливает ZIP через WordPress самостоятельно. Production не обновлялся. Автоматизация ожидания 1.2.13 приостановлена.
 
 ## Реализовано и решения
@@ -16,6 +16,7 @@
 - PDF-бланки, архив, комментарии, CSV и уведомления работают. Лицензии включены в ZIP. Frontend build не требуется.
 
 ## Проверки
+- 1.0.2: i18n (360 полных PO/MO), lint четырёх изменённых PHP, admin-navigation с точными названиями меню на пяти языках, fresh-install из ZIP с переводом имени через WordPress, integrity/374 файла/версии ZIP — PASS. Остальные функциональные и Plugin Check ниже выполнены для 1.0.1; переименование не меняет их обработчики.
 - plugin-coexistence в обоих порядках загрузки: оба реальных плагина активны при старте WordPress, раздельные классы/таблицы/настройки/шорткоды/меню/webhook/AJAX — PASS. Browser: две реальные формы и оба скрипта на одной странице отправляют только собственную форму, без дублей — PASS.
 - PHP 8.4 lint: 50 собственных файлов/тестов. i18n, api-domain, payment-binding, notifications, order-workflow, admin-comments/admin-behavior, paypal-help/stripe-help — PASS.
 - На отдельных копиях WordPress 7.1/SQLite: fresh-install, donations/campaigns/subscriptions, native-admin, admin-navigation, shortcode-help — PASS. HTTP/почта перехвачены, реальных платежей/писем нет.
@@ -31,5 +32,5 @@
 - Slug и приём в WordPress.org утверждает Plugins Team; Plugin Check не равен одобрению каталога.
 
 ## Последний связанный commit
-- Текущая задача: Isolate Parish plugin from legacy prayer plugin (этот commit).
-- Предыдущий: cd8124a2633c2e147b1852bd6881cb302a029e72 — Rebuild native WordPress admin as Parish 1.0.0.
+- Текущая задача: Rename plugin and admin menu to Donations (этот commit).
+- Предыдущий: f6ed70c60bec855a558cdc8dbf04545394e24c5e — Isolate Parish plugin from legacy prayer plugin.

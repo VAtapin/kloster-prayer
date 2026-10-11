@@ -1,10 +1,10 @@
-=== Parish — Prayer Requests, Services and Donations ===
+=== Orthodox Donations ===
 Contributors: atapin
 Tags: orthodox, prayer, donations, stripe, paypal
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,8 +94,8 @@ Bundled libraries retain their own GPL-compatible licenses and notices.
 1. Back up the site and database before updating.
 2. The previous Kloster plugin can remain active. This independent plugin uses separate PHP namespaces, gkod_* shortcodes, styles/scripts, settings and tables; previous data is not imported or changed.
 3. Upload the ZIP using Plugins → Add New → Upload Plugin, or install from the directory when available.
-4. Activate Parish — Prayer Requests, Services and Donations.
-5. Open Parish → Settings; configure only the payment providers you intend to enable, using fresh settings for this installation.
+4. Activate Orthodox Donations.
+5. Open Donations → Settings; configure only the payment providers you intend to enable, using fresh settings for this installation.
 6. Register the exact webhook URL shown for each provider in that provider's dashboard.
 7. Insert [gkod_form] into a page and test the full payment flow with test credentials before going Live.
 
@@ -227,6 +227,9 @@ No. Payment records and settings are retained to prevent accidental loss.
 Manage retention and backups according to your site's policy.
 
 == Changelog ==
+
+= 1.0.2 =
+* Rename the plugin to Orthodox Donations and its admin menu to Donations, with localized names in RU/DE/UK/PL.
 
 = 1.0.1 =
 * Fully isolate PHP namespaces, nine gkod_* shortcodes, frontend selectors, JavaScript globals and payment return parameters from the previous plugin.

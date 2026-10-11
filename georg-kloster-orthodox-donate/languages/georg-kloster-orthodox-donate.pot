@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: georg-kloster-orthodox-donate 1.0.1\n"
+"Project-Id-Version: georg-kloster-orthodox-donate 1.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/georg-kloster-orthodox-donate\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 
 #. Plugin Name of the plugin
 #: georg-kloster-orthodox-donate.php
-msgid "Parish — Prayer Requests, Services and Donations"
+msgid "Orthodox Donations"
 msgstr ""
 
 #. Plugin URI of the plugin
@@ -248,7 +248,7 @@ msgid "Use image"
 msgstr ""
 
 #: includes/class-admin.php:34
-msgid "Parish"
+msgid "Donations"
 msgstr ""
 
 #: includes/class-admin.php:35
