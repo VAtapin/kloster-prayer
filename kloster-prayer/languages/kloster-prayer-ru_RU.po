@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: kloster-prayer 1.2.15\n"
+"Project-Id-Version: kloster-prayer 1.2.16\n"
 "Language: ru_RU\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -949,3 +949,90 @@ msgstr "Отменить регулярную поддержку"
 
 msgid "Closing a campaign prevents new submissions. Existing regular support continues until cancelled."
 msgstr "Закрытие сбора запрещает новые заявки. Действующая регулярная поддержка продолжается до её отмены."
+
+msgid "Help → Shortcodes"
+msgstr "Помощь → Шорткоды"
+
+msgid "Help"
+msgstr "Помощь"
+
+msgid "Prayer form. Without id or slug, uses the active gebetsanliegen form. An id takes precedence over a slug."
+msgstr "Форма записок. Без id или slug используется активная форма gebetsanliegen. Параметр id имеет приоритет над slug."
+
+msgid "Alias of kloster_form with the same parameters and behavior."
+msgstr "Другое имя kloster_form с теми же параметрами и поведением."
+
+msgid "Form for one active service. Specify its id or slug; an id takes precedence. Find these values in Services."
+msgstr "Форма одной активной требы. Укажите её id или slug; id имеет приоритет. Значения находятся в разделе «Требы»."
+
+msgid "One-time donation without prayer names or services. The donor enters an amount from 0.50 to 999,999.99 EUR."
+msgstr "Разовое пожертвование без молитвенных имён и треб. Жертвователь вводит сумму от 0,50 до 999 999,99 EUR."
+
+msgid "Monthly or yearly support. Requires login and explicit consent. The owner can cancel in donation history; configure recurring webhooks and WP-Cron first."
+msgstr "Ежемесячная или ежегодная поддержка. Требуются вход и явное согласие. Владелец может отменить её в истории пожертвований; сначала настройте webhook-события подписок и WP-Cron."
+
+msgid "Published campaigns with progress, totals and donation forms. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
+msgstr "Опубликованные сборы с прогрессом, итогами и формами пожертвований. Без id показывается до 100 сборов. Черновики скрыты; закрытые и просроченные сборы не принимают новые платежи."
+
+msgid "Public report for one published campaign: goal, confirmed receipts after refunds, separately recorded expenses and balance. Does not disclose donor data or include a payment form."
+msgstr "Публичный отчёт одного опубликованного сбора: цель, подтверждённые поступления за вычетом возвратов, отдельно введённые расходы и остаток. Без данных жертвователей и формы оплаты."
+
+msgid "Private payment history and regular-support cancellation for the signed-in account. Guest and historical payments are not assigned by email. Exclude this page from external full-page caches."
+msgstr "Личная история платежей и отмена регулярной поддержки вошедшего пользователя. Гостевые и прежние платежи не привязываются по email. Исключите страницу из внешнего полного кеша."
+
+msgid "Payment result for the returned order, using its saved language. Has no shortcode parameters. Forms already include this block; use it separately on a custom return page. A return URL alone does not confirm payment."
+msgstr "Результат оплаты заказа после возврата с платёжной страницы, на сохранённом языке заказа. Параметров нет. Формы уже содержат этот блок; отдельно используйте его на своей странице возврата. Сам возврат на сайт не подтверждает оплату."
+
+msgid "Numeric form, service or campaign ID. Find it in the corresponding admin section. Required for a campaign report; optional for the campaign list."
+msgstr "Числовой ID формы, требы или сбора из соответствующего раздела админки. Обязателен для отчёта сбора; необязателен для списка сборов."
+
+msgid "Saved form or service slug. Used only when id is omitted or zero."
+msgstr "Сохранённый slug формы или требы. Используется, только если id отсутствует или равен 0."
+
+msgid "Layout: standard, compact, wide, two_columns, cards or minimal. Prayer forms default to their saved layout; other forms default to compact."
+msgstr "Макет: standard, compact, wide, two_columns, cards или minimal. Для записок по умолчанию используется сохранённый макет формы, для остальных форм — compact."
+
+msgid "Language: en, ru, de, uk or pl. Omit it to use the current WordPress language. Existing prayer form/service content uses German as the English fallback."
+msgstr "Язык: en, ru, de, uk или pl. Без параметра используется текущий язык WordPress. Для английского языка тексты существующих форм записок и треб берутся из немецких полей."
+
+msgid "yes (default) shows the form heading; no hides it. Not supported by kloster_service."
+msgstr "yes (по умолчанию) показывает заголовок формы; no скрывает его. Шорткод kloster_service не поддерживает этот параметр."
+
+msgid "Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired."
+msgstr "Необязательный ID сбора. Без него или при 0 — поддержка общих нужд храма. Указанный сбор должен быть открыт, а его срок не должен истечь."
+
+msgid "Compatibility parameter for kloster_donation: no (default) means one-time payment; yes displays recurring choices. Prefer kloster_support, which also checks login before showing the form."
+msgstr "Параметр совместимости kloster_donation: no (по умолчанию) — разовый платёж; yes показывает регулярные варианты. Используйте kloster_support: он также проверяет вход перед показом формы."
+
+msgid "Copied."
+msgstr "Скопировано."
+
+msgid "The example is selected. Copy it manually."
+msgstr "Пример выделен. Скопируйте его вручную."
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "Add a Shortcode block to a WordPress page and paste an example. Replace example IDs and slugs with your saved values. Publish the page to display the form or report."
+msgstr "Добавьте блок «Шорткод» на страницу WordPress и вставьте пример. Замените ID и slug своими сохранёнными значениями. Опубликуйте страницу, чтобы показать форму или отчёт."
+
+msgid "Choose a language above to translate this guide and the lang parameter in its examples. Keep shortcode names and parameter values unchanged."
+msgstr "Выберите язык выше: изменится язык справки и параметр lang в примерах. Названия шорткодов и значения остальных параметров не переводите."
+
+msgid "Parameters"
+msgstr "Параметры"
+
+msgid "No parameters."
+msgstr "Без параметров."
+
+msgid "Examples to copy"
+msgstr "Примеры для копирования"
+
+msgid "Shortcode example"
+msgstr "Пример шорткода"
+
+msgid "Copy"
+msgstr "Копировать"
+
+msgid "English"
+msgstr "Английский"

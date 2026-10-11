@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: kloster-prayer 1.2.15\n"
+"Project-Id-Version: kloster-prayer 1.2.16\n"
 "Language: uk\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -949,3 +949,90 @@ msgstr "Скасувати регулярну підтримку"
 
 msgid "Closing a campaign prevents new submissions. Existing regular support continues until cancelled."
 msgstr "Закриття збору забороняє нові заявки. Чинна регулярна підтримка триває до її скасування."
+
+msgid "Help → Shortcodes"
+msgstr "Допомога → Шорткоди"
+
+msgid "Help"
+msgstr "Допомога"
+
+msgid "Prayer form. Without id or slug, uses the active gebetsanliegen form. An id takes precedence over a slug."
+msgstr "Форма записок. Без id або slug використовується активна форма gebetsanliegen. Параметр id має пріоритет над slug."
+
+msgid "Alias of kloster_form with the same parameters and behavior."
+msgstr "Інша назва kloster_form із тими самими параметрами та поведінкою."
+
+msgid "Form for one active service. Specify its id or slug; an id takes precedence. Find these values in Services."
+msgstr "Форма однієї активної треби. Укажіть її id або slug; id має пріоритет. Значення містяться в розділі «Треби»."
+
+msgid "One-time donation without prayer names or services. The donor enters an amount from 0.50 to 999,999.99 EUR."
+msgstr "Разова пожертва без молитовних імен і треб. Жертводавець вводить суму від 0,50 до 999 999,99 EUR."
+
+msgid "Monthly or yearly support. Requires login and explicit consent. The owner can cancel in donation history; configure recurring webhooks and WP-Cron first."
+msgstr "Щомісячна або щорічна підтримка. Потрібні вхід і явна згода. Власник може скасувати її в історії пожертв; спочатку налаштуйте webhook-події підписок і WP-Cron."
+
+msgid "Published campaigns with progress, totals and donation forms. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
+msgstr "Опубліковані збори з прогресом, підсумками та формами пожертв. Без id показується до 100 зборів. Чернетки приховані; закриті й прострочені збори не приймають нових платежів."
+
+msgid "Public report for one published campaign: goal, confirmed receipts after refunds, separately recorded expenses and balance. Does not disclose donor data or include a payment form."
+msgstr "Публічний звіт одного опублікованого збору: мета, підтверджені надходження за вирахуванням повернень, окремо введені витрати та залишок. Без даних жертводавців і форми оплати."
+
+msgid "Private payment history and regular-support cancellation for the signed-in account. Guest and historical payments are not assigned by email. Exclude this page from external full-page caches."
+msgstr "Особиста історія платежів і скасування регулярної підтримки для користувача, який увійшов. Гостьові й попередні платежі не прив’язуються за email. Виключіть сторінку із зовнішнього повного кешу."
+
+msgid "Payment result for the returned order, using its saved language. Has no shortcode parameters. Forms already include this block; use it separately on a custom return page. A return URL alone does not confirm payment."
+msgstr "Результат оплати замовлення після повернення з платіжної сторінки, збереженою мовою замовлення. Параметрів немає. Форми вже містять цей блок; окремо використовуйте його на власній сторінці повернення. Саме повернення на сайт не підтверджує оплату."
+
+msgid "Numeric form, service or campaign ID. Find it in the corresponding admin section. Required for a campaign report; optional for the campaign list."
+msgstr "Числовий ID форми, треби або збору з відповідного розділу адмінки. Обов’язковий для звіту збору; необов’язковий для списку зборів."
+
+msgid "Saved form or service slug. Used only when id is omitted or zero."
+msgstr "Збережений slug форми або треби. Використовується лише коли id відсутній або дорівнює 0."
+
+msgid "Layout: standard, compact, wide, two_columns, cards or minimal. Prayer forms default to their saved layout; other forms default to compact."
+msgstr "Макет: standard, compact, wide, two_columns, cards або minimal. Для записок за замовчуванням використовується збережений макет форми, для решти форм — compact."
+
+msgid "Language: en, ru, de, uk or pl. Omit it to use the current WordPress language. Existing prayer form/service content uses German as the English fallback."
+msgstr "Мова: en, ru, de, uk або pl. Без параметра використовується поточна мова WordPress. Для англійської мови тексти наявних форм записок і треб беруться з німецьких полів."
+
+msgid "yes (default) shows the form heading; no hides it. Not supported by kloster_service."
+msgstr "yes (за замовчуванням) показує заголовок форми; no приховує його. Шорткод kloster_service не підтримує цей параметр."
+
+msgid "Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired."
+msgstr "Необов’язковий ID збору. Без нього або при 0 — підтримка загальних потреб храму. Указаний збір має бути відкритим, а його строк не повинен минути."
+
+msgid "Compatibility parameter for kloster_donation: no (default) means one-time payment; yes displays recurring choices. Prefer kloster_support, which also checks login before showing the form."
+msgstr "Параметр сумісності kloster_donation: no (за замовчуванням) — разовий платіж; yes показує регулярні варіанти. Використовуйте kloster_support: він також перевіряє вхід перед показом форми."
+
+msgid "Copied."
+msgstr "Скопійовано."
+
+msgid "The example is selected. Copy it manually."
+msgstr "Приклад виділено. Скопіюйте його вручну."
+
+msgid "Language"
+msgstr "Мова"
+
+msgid "Add a Shortcode block to a WordPress page and paste an example. Replace example IDs and slugs with your saved values. Publish the page to display the form or report."
+msgstr "Додайте блок «Шорткод» на сторінку WordPress і вставте приклад. Замініть ID та slug власними збереженими значеннями. Опублікуйте сторінку, щоб показати форму або звіт."
+
+msgid "Choose a language above to translate this guide and the lang parameter in its examples. Keep shortcode names and parameter values unchanged."
+msgstr "Виберіть мову вище: зміниться мова довідки та параметр lang у прикладах. Назви шорткодів і значення решти параметрів не перекладайте."
+
+msgid "Parameters"
+msgstr "Параметри"
+
+msgid "No parameters."
+msgstr "Без параметрів."
+
+msgid "Examples to copy"
+msgstr "Приклади для копіювання"
+
+msgid "Shortcode example"
+msgstr "Приклад шорткоду"
+
+msgid "Copy"
+msgstr "Копіювати"
+
+msgid "English"
+msgstr "Англійська"

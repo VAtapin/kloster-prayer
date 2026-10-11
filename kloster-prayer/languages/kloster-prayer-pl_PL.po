@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: kloster-prayer 1.2.15\n"
+"Project-Id-Version: kloster-prayer 1.2.16\n"
 "Language: pl_PL\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -949,3 +949,90 @@ msgstr "Anuluj regularne wsparcie"
 
 msgid "Closing a campaign prevents new submissions. Existing regular support continues until cancelled."
 msgstr "Zamknięcie zbiórki blokuje nowe zgłoszenia. Istniejące regularne wsparcie trwa do jego anulowania."
+
+msgid "Help → Shortcodes"
+msgstr "Pomoc → Shortcode’y"
+
+msgid "Help"
+msgstr "Pomoc"
+
+msgid "Prayer form. Without id or slug, uses the active gebetsanliegen form. An id takes precedence over a slug."
+msgstr "Formularz intencji. Bez id lub slug używany jest aktywny formularz gebetsanliegen. id ma pierwszeństwo przed slug."
+
+msgid "Alias of kloster_form with the same parameters and behavior."
+msgstr "Inna nazwa kloster_form z tymi samymi parametrami i działaniem."
+
+msgid "Form for one active service. Specify its id or slug; an id takes precedence. Find these values in Services."
+msgstr "Formularz jednej aktywnej posługi. Podaj id lub slug; id ma pierwszeństwo. Wartości znajdziesz w sekcji Posługi."
+
+msgid "One-time donation without prayer names or services. The donor enters an amount from 0.50 to 999,999.99 EUR."
+msgstr "Jednorazowa darowizna bez imion i posług. Darczyńca wpisuje kwotę od 0,50 do 999 999,99 EUR."
+
+msgid "Monthly or yearly support. Requires login and explicit consent. The owner can cancel in donation history; configure recurring webhooks and WP-Cron first."
+msgstr "Wsparcie miesięczne lub roczne. Wymaga zalogowania i wyraźnej zgody. Właściciel może je anulować w historii darowizn; najpierw skonfiguruj webhooki subskrypcji i WP-Cron."
+
+msgid "Published campaigns with progress, totals and donation forms. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
+msgstr "Opublikowane zbiórki z postępem, podsumowaniami i formularzami darowizn. Bez id wyświetla do 100 zbiórek. Szkice są ukryte; zamknięte lub wygasłe zbiórki nie przyjmują nowych płatności."
+
+msgid "Public report for one published campaign: goal, confirmed receipts after refunds, separately recorded expenses and balance. Does not disclose donor data or include a payment form."
+msgstr "Publiczny raport jednej opublikowanej zbiórki: cel, potwierdzone wpływy po zwrotach, osobno wpisane wydatki i saldo. Bez danych darczyńców i formularza płatności."
+
+msgid "Private payment history and regular-support cancellation for the signed-in account. Guest and historical payments are not assigned by email. Exclude this page from external full-page caches."
+msgstr "Prywatna historia płatności i anulowanie regularnego wsparcia dla zalogowanego konta. Płatności gości i wcześniejsze nie są przypisywane według emaila. Wyklucz stronę z zewnętrznej pamięci podręcznej całych stron."
+
+msgid "Payment result for the returned order, using its saved language. Has no shortcode parameters. Forms already include this block; use it separately on a custom return page. A return URL alone does not confirm payment."
+msgstr "Wynik płatności po powrocie do zamówienia, w jego zapisanym języku. Bez parametrów shortcode’u. Formularze już zawierają ten blok; użyj go osobno na własnej stronie powrotu. Sam adres powrotu nie potwierdza płatności."
+
+msgid "Numeric form, service or campaign ID. Find it in the corresponding admin section. Required for a campaign report; optional for the campaign list."
+msgstr "Liczbowy ID formularza, posługi lub zbiórki z odpowiedniej sekcji administracji. Wymagany dla raportu zbiórki; opcjonalny dla listy zbiórek."
+
+msgid "Saved form or service slug. Used only when id is omitted or zero."
+msgstr "Zapisany slug formularza lub posługi. Używany tylko wtedy, gdy id jest pominięty lub równy 0."
+
+msgid "Layout: standard, compact, wide, two_columns, cards or minimal. Prayer forms default to their saved layout; other forms default to compact."
+msgstr "Układ: standard, compact, wide, two_columns, cards lub minimal. Formularze intencji domyślnie używają zapisanego układu; pozostałe formularze — compact."
+
+msgid "Language: en, ru, de, uk or pl. Omit it to use the current WordPress language. Existing prayer form/service content uses German as the English fallback."
+msgstr "Język: en, ru, de, uk lub pl. Bez parametru używany jest bieżący język WordPress. Istniejące treści formularzy intencji i posług korzystają z niemieckich pól dla języka angielskiego."
+
+msgid "yes (default) shows the form heading; no hides it. Not supported by kloster_service."
+msgstr "yes (domyślnie) pokazuje nagłówek formularza; no go ukrywa. Nieobsługiwane przez kloster_service."
+
+msgid "Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired."
+msgstr "Opcjonalny ID zbiórki. Pomiń lub użyj 0 dla ogólnego wsparcia cerkwi. Wskazana zbiórka musi być otwarta i nie może być wygasła."
+
+msgid "Compatibility parameter for kloster_donation: no (default) means one-time payment; yes displays recurring choices. Prefer kloster_support, which also checks login before showing the form."
+msgstr "Parametr zgodności kloster_donation: no (domyślnie) oznacza płatność jednorazową; yes pokazuje opcje regularne. Używaj kloster_support, który sprawdza zalogowanie przed wyświetleniem formularza."
+
+msgid "Copied."
+msgstr "Skopiowano."
+
+msgid "The example is selected. Copy it manually."
+msgstr "Przykład jest zaznaczony. Skopiuj go ręcznie."
+
+msgid "Language"
+msgstr "Język"
+
+msgid "Add a Shortcode block to a WordPress page and paste an example. Replace example IDs and slugs with your saved values. Publish the page to display the form or report."
+msgstr "Dodaj blok Shortcode do strony WordPress i wklej przykład. Zastąp przykładowe ID i slugi własnymi zapisanymi wartościami. Opublikuj stronę, aby wyświetlić formularz lub raport."
+
+msgid "Choose a language above to translate this guide and the lang parameter in its examples. Keep shortcode names and parameter values unchanged."
+msgstr "Wybierz język powyżej, aby zmienić język pomocy i parametr lang w przykładach. Nie zmieniaj nazw shortcode’ów ani wartości pozostałych parametrów."
+
+msgid "Parameters"
+msgstr "Parametry"
+
+msgid "No parameters."
+msgstr "Bez parametrów."
+
+msgid "Examples to copy"
+msgstr "Przykłady do skopiowania"
+
+msgid "Shortcode example"
+msgstr "Przykład shortcode’u"
+
+msgid "Copy"
+msgstr "Kopiuj"
+
+msgid "English"
+msgstr "Angielski"

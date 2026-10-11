@@ -16,6 +16,7 @@ final class Admin
             if (str_contains($hook, 'kloster-prayer')) {
                 wp_enqueue_style('klp-admin', plugins_url('assets/css/admin.css', FILE), [], VERSION);
                 wp_enqueue_style('klp-admin-native', plugins_url('assets/css/admin-native.css', FILE), ['klp-admin'], VERSION);
+                if (str_ends_with($hook, '_page_kloster-prayer-help')) wp_enqueue_script('klp-admin-shortcodes', plugins_url('assets/js/admin-shortcodes.js', FILE), [], VERSION, true);
                 wp_enqueue_media();
                 wp_enqueue_script('klp-admin-images', plugins_url('assets/js/admin-images.js', FILE), ['jquery','media-views'], VERSION, true);
                 wp_localize_script('klp-admin-images', 'klosterPrayerAdmin', [
@@ -38,6 +39,7 @@ final class Admin
         add_submenu_page('kloster-prayer', (__('Reports', 'kloster-prayer')), (__('Reports', 'kloster-prayer')), 'manage_options', 'kloster-prayer-reports', [self::class, 'reports']);
         add_submenu_page('kloster-prayer', (__('Settings', 'kloster-prayer')), (__('Settings', 'kloster-prayer')), 'manage_options', 'kloster-prayer-settings', [self::class, 'settings']);
         add_submenu_page('kloster-prayer', (__('Diagnostics', 'kloster-prayer')), (__('Diagnostics', 'kloster-prayer')), 'manage_options', 'kloster-prayer-diagnostics', [self::class, 'diagnostics']);
+        add_submenu_page('kloster-prayer', __('Help → Shortcodes', 'kloster-prayer'), __('Help', 'kloster-prayer'), 'manage_options', 'kloster-prayer-help', [Shortcode_Help::class, 'page']);
     }
 
     public static function handle_actions(): void

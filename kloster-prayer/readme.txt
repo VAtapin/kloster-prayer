@@ -4,7 +4,7 @@ Tags: orthodox, prayer, donations, stripe, paypal
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.2.15
+Stable tag: 1.2.16
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -155,6 +155,9 @@ Test real provider Sandbox/test payments, renewal events, cancellation and refun
 
 = Shortcodes =
 
+Help → Shortcodes in the administration menu documents every shortcode and parameter,
+with copy buttons and a guide language selector for English, Russian, German, Ukrainian and Polish.
+
 [kloster_campaigns lang="ru"] — public campaigns and donation forms.
 [kloster_campaigns id="1"] — one published campaign.
 [kloster_campaign_report id="1"] — public totals without donor details.
@@ -215,6 +218,9 @@ No. Payment records and settings are retained to prevent accidental loss.
 Manage retention and backups according to your site's policy.
 
 == Changelog ==
+
+= 1.2.16 =
+* Multilingual administrator shortcode guide with parameters, examples and copy controls.
 
 = 1.2.15 =
 * Verified Stripe/PayPal monthly/yearly support, explicit consent and owner/staff cancellation.

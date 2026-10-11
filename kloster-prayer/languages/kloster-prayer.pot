@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: kloster-prayer 1.2.15\n"
+"Project-Id-Version: kloster-prayer 1.2.16\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kloster-prayer\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1328,4 +1328,91 @@ msgid "Cancel regular support"
 msgstr ""
 
 msgid "Closing a campaign prevents new submissions. Existing regular support continues until cancelled."
+msgstr ""
+
+msgid "Help → Shortcodes"
+msgstr ""
+
+msgid "Help"
+msgstr ""
+
+msgid "Prayer form. Without id or slug, uses the active gebetsanliegen form. An id takes precedence over a slug."
+msgstr ""
+
+msgid "Alias of kloster_form with the same parameters and behavior."
+msgstr ""
+
+msgid "Form for one active service. Specify its id or slug; an id takes precedence. Find these values in Services."
+msgstr ""
+
+msgid "One-time donation without prayer names or services. The donor enters an amount from 0.50 to 999,999.99 EUR."
+msgstr ""
+
+msgid "Monthly or yearly support. Requires login and explicit consent. The owner can cancel in donation history; configure recurring webhooks and WP-Cron first."
+msgstr ""
+
+msgid "Published campaigns with progress, totals and donation forms. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
+msgstr ""
+
+msgid "Public report for one published campaign: goal, confirmed receipts after refunds, separately recorded expenses and balance. Does not disclose donor data or include a payment form."
+msgstr ""
+
+msgid "Private payment history and regular-support cancellation for the signed-in account. Guest and historical payments are not assigned by email. Exclude this page from external full-page caches."
+msgstr ""
+
+msgid "Payment result for the returned order, using its saved language. Has no shortcode parameters. Forms already include this block; use it separately on a custom return page. A return URL alone does not confirm payment."
+msgstr ""
+
+msgid "Numeric form, service or campaign ID. Find it in the corresponding admin section. Required for a campaign report; optional for the campaign list."
+msgstr ""
+
+msgid "Saved form or service slug. Used only when id is omitted or zero."
+msgstr ""
+
+msgid "Layout: standard, compact, wide, two_columns, cards or minimal. Prayer forms default to their saved layout; other forms default to compact."
+msgstr ""
+
+msgid "Language: en, ru, de, uk or pl. Omit it to use the current WordPress language. Existing prayer form/service content uses German as the English fallback."
+msgstr ""
+
+msgid "yes (default) shows the form heading; no hides it. Not supported by kloster_service."
+msgstr ""
+
+msgid "Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired."
+msgstr ""
+
+msgid "Compatibility parameter for kloster_donation: no (default) means one-time payment; yes displays recurring choices. Prefer kloster_support, which also checks login before showing the form."
+msgstr ""
+
+msgid "Copied."
+msgstr ""
+
+msgid "The example is selected. Copy it manually."
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "Add a Shortcode block to a WordPress page and paste an example. Replace example IDs and slugs with your saved values. Publish the page to display the form or report."
+msgstr ""
+
+msgid "Choose a language above to translate this guide and the lang parameter in its examples. Keep shortcode names and parameter values unchanged."
+msgstr ""
+
+msgid "Parameters"
+msgstr ""
+
+msgid "No parameters."
+msgstr ""
+
+msgid "Examples to copy"
+msgstr ""
+
+msgid "Shortcode example"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "English"
 msgstr ""
