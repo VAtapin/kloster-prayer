@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: kloster-prayer 1.2.14\n"
+"Project-Id-Version: kloster-prayer 1.2.15\n"
 "Language: de_DE\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -886,3 +886,66 @@ msgstr "Zurück"
 
 msgid "Next"
 msgstr "Weiter"
+
+msgid "For regular support, also enable these webhook events:"
+msgstr "Aktivieren Sie für regelmäßige Unterstützung zusätzlich diese Webhook-Ereignisse:"
+
+msgid "Partially refunded"
+msgstr "Teilweise erstattet"
+
+msgid "Log in and confirm recurring support before continuing."
+msgstr "Melden Sie sich an und bestätigen Sie die regelmäßige Unterstützung."
+
+msgid "Regular support"
+msgstr "Regelmäßige Unterstützung"
+
+msgid "Frequency"
+msgstr "Häufigkeit"
+
+msgid "Monthly"
+msgstr "Monatlich"
+
+msgid "Yearly"
+msgstr "Jährlich"
+
+msgid "Repeat this amount at the selected interval until I cancel. I can cancel in my donation history."
+msgstr "Diesen Betrag im gewählten Intervall wiederholen, bis ich kündige. Ich kann in meiner Spendenhistorie kündigen."
+
+msgid "Start regular support"
+msgstr "Regelmäßige Unterstützung beginnen"
+
+msgid "Stripe is not configured."
+msgstr "Stripe ist nicht eingerichtet."
+
+msgid "PayPal is not configured or authentication failed."
+msgstr "PayPal ist nicht eingerichtet oder die Anmeldung ist fehlgeschlagen."
+
+msgid "The payment provider is unavailable. Please try again."
+msgstr "Der Zahlungsanbieter ist nicht erreichbar. Bitte versuchen Sie es erneut."
+
+msgid "The payment provider could not complete this operation."
+msgstr "Der Zahlungsanbieter konnte diesen Vorgang nicht abschließen."
+
+msgid "Invalid payment provider response."
+msgstr "Ungültige Antwort des Zahlungsanbieters."
+
+msgid "PayPal is preparing recurring support. Please try again shortly."
+msgstr "PayPal bereitet die regelmäßige Unterstützung vor. Bitte versuchen Sie es in Kürze erneut."
+
+msgid "Log in to start regular support."
+msgstr "Melden Sie sich an, um die regelmäßige Unterstützung zu beginnen."
+
+msgid "Payment overdue"
+msgstr "Zahlung überfällig"
+
+msgid "Actions"
+msgstr "Aktionen"
+
+msgid "User"
+msgstr "Benutzer"
+
+msgid "Cancel regular support"
+msgstr "Regelmäßige Unterstützung kündigen"
+
+msgid "Closing a campaign prevents new submissions. Existing regular support continues until cancelled."
+msgstr "Das Schließen einer Spendenaktion verhindert neue Anträge. Bestehende regelmäßige Unterstützung läuft bis zur Kündigung weiter."

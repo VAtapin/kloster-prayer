@@ -149,7 +149,7 @@ final class Admin
         if ($view) {
             if(isset($detail)&&$detail) Order_Workflow::detail($detail);
             if((Input::get('customer_sync') !== null))echo '<div class="notice notice-info"><p>'.(Input::get('customer_sync')==='ok'?(esc_html__('Customer details refreshed from Stripe.', 'kloster-prayer')):(esc_html__('Stripe did not return payer details.', 'kloster-prayer'))).'</p></div>';
-            if(isset($detail)&&$detail&&$detail->payment_provider==='stripe'){
+            if(isset($detail)&&$detail&&$detail->payment_provider==='stripe'&&empty($detail->subscription_id)){
                 echo '<form method="post">';wp_nonce_field('klp_admin_action', '_klp_nonce');
                 echo '<input type="hidden" name="klp_action" value="refresh_customer"><input type="hidden" name="order_id" value="'.(int)$view.('"><button class="button">'.esc_html__('Retrieve payer details from Stripe', 'kloster-prayer').'</button></form>');
             }

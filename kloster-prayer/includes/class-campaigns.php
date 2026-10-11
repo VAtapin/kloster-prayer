@@ -31,7 +31,7 @@ final class Campaigns
     public static function totals(int $id): array
     {
         global $wpdb;
-        $received = (int) $wpdb->get_var($wpdb->prepare("SELECT COALESCE(SUM(amount_cents),0) FROM %i WHERE campaign_id=%d AND payment_status='paid'", Database::table('orders'), $id));
+        $received = (int) $wpdb->get_var($wpdb->prepare("SELECT COALESCE(SUM(amount_cents-refunded_cents),0) FROM %i WHERE campaign_id=%d AND payment_status='paid'", Database::table('orders'), $id));
         $spent = (int) $wpdb->get_var($wpdb->prepare('SELECT COALESCE(SUM(amount_cents),0) FROM %i WHERE campaign_id=%d', Database::table('campaign_expenses'), $id));
         return ['received' => $received, 'spent' => $spent, 'balance' => $received - $spent];
     }

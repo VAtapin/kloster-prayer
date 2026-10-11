@@ -68,6 +68,10 @@ final class Payments
         $request_type = Input::post('request_type') ?? 'prayer';
         if (!in_array($request_type, ['prayer', 'donation'], true)) wp_send_json_error(['message' => I18n::text('required', $language)], 422);
         $donation = $request_type === 'donation';
+        $frequency = Input::post('frequency') ?? 'once';
+        if (!in_array($frequency, ['once', 'month', 'year'], true) || ($frequency !== 'once' && (!$donation || !is_user_logged_in() || Input::post('recurring_consent') !== '1'))) {
+            wp_send_json_error(['message' => I18n::in_language(static fn() => __('Log in and confirm recurring support before continuing.', 'kloster-prayer'), $language)], 422);
+        }
         $campaign_id = absint(Input::post('campaign_id') ?? 0);
         if ($campaign_id) {
             $campaign = Campaigns::get($campaign_id);
@@ -99,7 +103,7 @@ final class Payments
             wp_send_json_error(['message' => $order->get_error_message()], 422);
         }
 
-        $redirect = $provider === 'stripe' ? self::stripe_checkout($order) : self::paypal_checkout($order);
+        $redirect = $frequency !== 'once' ? Subscriptions::checkout($order, $frequency) : ($provider === 'stripe' ? self::stripe_checkout($order) : self::paypal_checkout($order));
         if (is_wp_error($redirect)) {
             self::set_status((int) $order->id, 'failed');
             wp_send_json_error(['message' => $redirect->get_error_message()], 502);
@@ -128,12 +132,12 @@ final class Payments
         return array_slice($lines, 0, 300);
     }
 
-    private static function create_order(array $data): object
+    public static function create_order(array $data): object
     {
         global $wpdb;
         $donation = $data['intention'] === 'none';
         $campaign_id = (int) ($data['campaign_id'] ?? 0);
-        if ($campaign_id && (!$donation || !($campaign = Campaigns::get($campaign_id)) || !Campaigns::accepting($campaign))) return new WP_Error('campaign', __('This campaign is closed.', 'kloster-prayer'));
+        if ($campaign_id && empty($data['trusted_renewal']) && (!$donation || !($campaign = Campaigns::get($campaign_id)) || !Campaigns::accepting($campaign))) return new WP_Error('campaign', __('This campaign is closed.', 'kloster-prayer'));
         $services = [];
         if ($donation) {
             if ($data['service_ids'] || $data['names'] !== '' || !is_int($data['donation_cents'] ?? null)
@@ -171,7 +175,8 @@ final class Payments
         $uuid = wp_generate_uuid4();
         $ok = $wpdb->insert(Database::table('orders'), [
             'public_id' => $uuid, 'form_id' => $data['form_id'] ?: null, 'language' => $data['language'],
-            'campaign_id' => $campaign_id ?: null, 'donor_user_id' => get_current_user_id(),
+            'campaign_id' => $campaign_id ?: null, 'donor_user_id' => $data['donor_user_id'] ?? get_current_user_id(),
+            'subscription_id' => $data['subscription_id'] ?? null, 'payment_id' => $data['payment_id'] ?? null, 'payment_reference' => $data['payment_reference'] ?? null,
             'intention' => $data['intention'], 'names' => $data['names'], 'note' => $data['note'],
             'donor_name' => $data['donor_name'], 'donor_email' => $data['donor_email'], 'amount_cents' => $amount,
             'currency' => 'EUR', 'payment_status' => 'pending', 'payment_provider' => $data['provider'], 'created_at' => current_time('mysql'),
@@ -242,7 +247,7 @@ final class Payments
         return true;
     }
 
-    private static function paypal_access_token(): string|WP_Error
+    public static function paypal_access_token(): string|WP_Error
     {
         $client = trim((string) get_option('klp_paypal_client_id'));
         $secret = trim((string) get_option('klp_paypal_secret'));
@@ -301,6 +306,14 @@ final class Payments
         if (!self::verify_stripe_signature($payload, $signature, (string) get_option('klp_stripe_webhook_secret'))) return new WP_REST_Response(['error' => 'Invalid signature'], 400);
         $event = json_decode($payload, true);
         if (!is_array($event) || empty($event['id'])) return new WP_REST_Response(['error' => 'Invalid payload'], 400);
+        if (class_exists(Payment_Refunds::class) && ($refund = Payment_Refunds::stripe($event)) !== null) {
+            if ($refund->get_status() === 200) self::record_event('stripe', (string) $event['id'], (string) ($event['type'] ?? ''), 0, $payload);
+            return $refund;
+        }
+        if (class_exists(Subscriptions::class) && ($recurring = Subscriptions::stripe($event)) !== null) {
+            if ($recurring->get_status() === 200) self::record_event('stripe', (string) $event['id'], (string) ($event['type'] ?? ''), 0, $payload);
+            return $recurring;
+        }
         $object = $event['data']['object'] ?? [];
         $order_id = (int) ($object['metadata']['order_id'] ?? $object['client_reference_id'] ?? 0);
         if (($event['type'] ?? '') === 'checkout.session.completed' && ($object['payment_status'] ?? '') === 'paid') {
@@ -311,6 +324,7 @@ final class Payments
         if (!self::record_event('stripe', (string) $event['id'], (string) ($event['type'] ?? ''), $order_id, $payload)) return new WP_REST_Response(['received' => true], 200);
         if (($event['type'] ?? '') === 'checkout.session.completed' && ($object['payment_status'] ?? '') === 'paid') {
             self::store_customer_details($order_id, (array) ($object['customer_details'] ?? []));
+            if (!empty($object['payment_intent'])) $wpdb->update(Database::table('orders'), ['payment_reference' => (string) $object['payment_intent']], ['id' => $order_id]);
             self::mark_paid($order_id, (string) ($object['id'] ?? ''));
         }
         if (($event['type'] ?? '') === 'charge.refunded' && $order_id > 0) self::set_status($order_id, 'refunded');
@@ -339,7 +353,10 @@ final class Payments
             $base = get_option('klp_paypal_mode', 'live') === 'sandbox' ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
             $response = wp_remote_post($base . '/v2/checkout/orders/' . rawurlencode($token_id) . '/capture', ['timeout' => 25, 'headers' => ['Authorization' => 'Bearer ' . $token, 'Content-Type' => 'application/json'], 'body' => '{}']);
             $json = !is_wp_error($response) ? json_decode((string) wp_remote_retrieve_body($response), true) : [];
-            if (is_array($json) && self::paypal_return_matches($order, $json)) self::mark_paid((int) $order->id, $token_id);
+            if (is_array($json) && self::paypal_return_matches($order, $json)) {
+                $wpdb->update(Database::table('orders'), ['payment_reference' => (string) $json['purchase_units'][0]['payments']['captures'][0]['id']], ['id' => $order->id]);
+                self::mark_paid((int) $order->id, $token_id);
+            }
         }
         wp_safe_redirect(self::return_url($order, 'success')); exit;
     }
@@ -351,6 +368,14 @@ final class Payments
         if ($event_id === '') return new WP_REST_Response(['error' => 'Invalid payload'], 400);
         $verified = self::verify_paypal_webhook($request, $payload);
         if (!$verified) return new WP_REST_Response(['error' => 'Invalid signature'], 400);
+        if (class_exists(Payment_Refunds::class) && ($refund = Payment_Refunds::paypal($payload)) !== null) {
+            if ($refund->get_status() === 200) self::record_event('paypal', $event_id, (string) ($payload['event_type'] ?? ''), 0, $request->get_body());
+            return $refund;
+        }
+        if (class_exists(Subscriptions::class) && ($recurring = Subscriptions::paypal($payload)) !== null) {
+            if ($recurring->get_status() === 200) self::record_event('paypal', $event_id, (string) ($payload['event_type'] ?? ''), 0, $request->get_body());
+            return $recurring;
+        }
         $resource = $payload['resource'] ?? [];
         $order_id = (int) ($resource['custom_id'] ?? 0);
         if (!$order_id && !empty($resource['supplementary_data']['related_ids']['order_id'])) {
@@ -363,7 +388,10 @@ final class Payments
             if (!$order || !self::paypal_capture_matches($order, $resource)) return new WP_REST_Response(['error' => 'Payment does not match order'], 400);
         }
         if (self::record_event('paypal', $event_id, (string) ($payload['event_type'] ?? ''), $order_id, $request->get_body())) {
-            if (($payload['event_type'] ?? '') === 'PAYMENT.CAPTURE.COMPLETED') self::mark_paid($order_id, (string) ($resource['id'] ?? ''));
+            if (($payload['event_type'] ?? '') === 'PAYMENT.CAPTURE.COMPLETED') {
+                $wpdb->update(Database::table('orders'), ['payment_reference' => (string) ($resource['id'] ?? '')], ['id' => $order_id]);
+                self::mark_paid($order_id, (string) ($resource['id'] ?? ''));
+            }
             if (($payload['event_type'] ?? '') === 'PAYMENT.CAPTURE.REFUNDED' && $order_id > 0) self::set_status($order_id, 'refunded');
         }
         return new WP_REST_Response(['received' => true], 200);
@@ -435,18 +463,18 @@ final class Payments
         ], ['id' => $order_id]);
     }
 
-    private static function mark_paid(int $order_id, string $payment_id): void
+    public static function mark_paid(int $order_id, string $payment_id): void
     {
         global $wpdb;
         if ($order_id <= 0) return;
         $table = Database::table('orders');
-        $wpdb->query($wpdb->prepare("UPDATE %i SET payment_status='paid',payment_id=COALESCE(NULLIF(%s,''),payment_id),paid_at=COALESCE(paid_at,%s) WHERE id=%d AND payment_status<>'paid'", $table, $payment_id, current_time('mysql'), $order_id));
+        $wpdb->query($wpdb->prepare("UPDATE %i SET payment_status='paid',payment_id=COALESCE(NULLIF(%s,''),payment_id),paid_at=COALESCE(paid_at,%s) WHERE id=%d AND payment_status IN ('pending','failed','cancelled')", $table, $payment_id, current_time('mysql'), $order_id));
         if ($wpdb->rows_affected > 0) {
             Notifications::enqueue($order_id);
             Order_Workflow::log($order_id,'paid',__('Payment confirmed', 'kloster-prayer'));
         }
         $order = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id=%d", $table, $order_id));
-        if ($order && !$order->confirmation_sent_at) self::send_confirmation($order);
+        if ($order && $order->payment_status === 'paid' && !$order->confirmation_sent_at) self::send_confirmation($order);
         Notifications::send($order_id);
     }
 

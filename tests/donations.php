@@ -77,13 +77,14 @@ donation_assert($checkout['line_items[0][price_data][unit_amount]']==='1234' && 
 $_GET=['kloster_payment'=>'success','kloster_order'=>$order->public_id];
 donation_assert(!str_contains(Public_Form::result_shortcode(),KlosterPrayer\I18n::donation_text('thanks','ru')),'Return URL cannot claim an unpaid donation');
 function donation_event(object $order, int $amount, string $id): WP_REST_Response {
-    $payload=wp_json_encode(['id'=>$id,'type'=>'checkout.session.completed','data'=>['object'=>['id'=>$order->payment_id,'metadata'=>['order_id'=>(string)$order->id],'payment_status'=>'paid','currency'=>'eur','amount_total'=>$amount]]]);
+    $payload=wp_json_encode(['id'=>$id,'type'=>'checkout.session.completed','data'=>['object'=>['id'=>$order->payment_id,'metadata'=>['order_id'=>(string)$order->id],'payment_intent'=>'pi_donation_fixture','payment_status'=>'paid','currency'=>'eur','amount_total'=>$amount]]]);
     $r=new WP_REST_Request('POST','/kloster-prayer/v1/stripe/webhook'); $r->set_body($payload); $time=time();
     $r->set_header('stripe-signature','t='.$time.',v1='.hash_hmac('sha256',$time.'.'.$payload,'local-fixture-signing'));
     return Payments::stripe_webhook($r);
 }
 donation_assert(donation_event($order,1,'evt_donation_bad')->get_status()===400 && !$mail,'Wrong amount rejected without mail');
 donation_assert(donation_event($order,1234,'evt_donation_paid')->get_status()===200 && count($mail)===2,'Signed donation webhook confirms and sends two emails');
+donation_assert($wpdb->get_var($wpdb->prepare('SELECT payment_reference FROM %i WHERE id=%d',Database::table('orders'),$order->id))==='pi_donation_fixture','Verified checkout stores the refund reference');
 donation_assert($mail[0]['subject']===KlosterPrayer\I18n::donation_text('subject','ru') && !str_contains($mail[0]['message'],'Имена'),'Donor confirmation describes donation');
 donation_assert(!str_contains($mail[1]['message'],'<h2') && !str_contains($mail[1]['message'],'О здравии'),'Recipient notification omits prayer names/type');
 $delivered=count($mail); donation_event($order,1234,'evt_donation_paid'); donation_assert(count($mail)===$delivered,'Duplicate webhook does not resend');

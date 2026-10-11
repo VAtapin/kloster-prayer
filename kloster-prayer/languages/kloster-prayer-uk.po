@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: kloster-prayer 1.2.14\n"
+"Project-Id-Version: kloster-prayer 1.2.15\n"
 "Language: uk\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -886,3 +886,66 @@ msgstr "Назад"
 
 msgid "Next"
 msgstr "Далі"
+
+msgid "For regular support, also enable these webhook events:"
+msgstr "Для регулярної підтримки увімкніть також ці webhook-події:"
+
+msgid "Partially refunded"
+msgstr "Частково повернено"
+
+msgid "Log in and confirm recurring support before continuing."
+msgstr "Увійдіть і підтвердьте згоду на регулярну підтримку."
+
+msgid "Regular support"
+msgstr "Регулярна підтримка"
+
+msgid "Frequency"
+msgstr "Періодичність"
+
+msgid "Monthly"
+msgstr "Щомісяця"
+
+msgid "Yearly"
+msgstr "Щорічно"
+
+msgid "Repeat this amount at the selected interval until I cancel. I can cancel in my donation history."
+msgstr "Повторювати цю суму з обраною періодичністю до мого скасування. Скасувати підтримку можна в історії пожертв."
+
+msgid "Start regular support"
+msgstr "Розпочати регулярну підтримку"
+
+msgid "Stripe is not configured."
+msgstr "Stripe не налаштовано."
+
+msgid "PayPal is not configured or authentication failed."
+msgstr "PayPal не налаштовано або авторизація не вдалася."
+
+msgid "The payment provider is unavailable. Please try again."
+msgstr "Платіжна система недоступна. Спробуйте ще раз."
+
+msgid "The payment provider could not complete this operation."
+msgstr "Платіжна система не змогла виконати цю операцію."
+
+msgid "Invalid payment provider response."
+msgstr "Некоректна відповідь платіжної системи."
+
+msgid "PayPal is preparing recurring support. Please try again shortly."
+msgstr "PayPal готує регулярну підтримку. Повторіть спробу трохи пізніше."
+
+msgid "Log in to start regular support."
+msgstr "Увійдіть, щоб розпочати регулярну підтримку."
+
+msgid "Payment overdue"
+msgstr "Оплату прострочено"
+
+msgid "Actions"
+msgstr "Дії"
+
+msgid "User"
+msgstr "Користувач"
+
+msgid "Cancel regular support"
+msgstr "Скасувати регулярну підтримку"
+
+msgid "Closing a campaign prevents new submissions. Existing regular support continues until cancelled."
+msgstr "Закриття збору забороняє нові заявки. Чинна регулярна підтримка триває до її скасування."

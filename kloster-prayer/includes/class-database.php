@@ -5,7 +5,7 @@ namespace KlosterPrayer;
 
 final class Database
 {
-    private const DB_VERSION = '1.2.14';
+    private const DB_VERSION = '1.2.15';
 
     public static function table(string $name): string
     {
@@ -115,6 +115,9 @@ final class Database
             form_id bigint unsigned NULL,
             campaign_id bigint unsigned NULL,
             donor_user_id bigint unsigned NOT NULL DEFAULT 0,
+            subscription_id bigint unsigned NULL,
+            payment_reference varchar(191) NULL,
+            refunded_cents int unsigned NOT NULL DEFAULT 0,
             language char(2) NOT NULL DEFAULT 'de',
             intention enum('health','rest','none') NOT NULL DEFAULT 'health',
             names longtext NOT NULL,
@@ -143,7 +146,9 @@ final class Database
             KEY printed_at (printed_at),
             KEY form_id (form_id),
             KEY campaign_id (campaign_id),
-            KEY donor_user_id (donor_user_id)
+            KEY donor_user_id (donor_user_id),
+            KEY subscription_id (subscription_id),
+            KEY payment_reference (payment_reference)
         ) {$charset};");
 
         dbDelta("CREATE TABLE {$items} (
@@ -232,6 +237,39 @@ final class Database
             created_at datetime NOT NULL,
             PRIMARY KEY  (id),
             KEY campaign_id (campaign_id)
+        ) {$charset};");
+        $subscriptions = self::table('subscriptions');
+        dbDelta("CREATE TABLE {$subscriptions} (
+            id bigint unsigned NOT NULL AUTO_INCREMENT,
+            public_id char(36) NOT NULL,
+            donor_user_id bigint unsigned NOT NULL,
+            initial_order_id bigint unsigned NOT NULL,
+            provider varchar(20) NOT NULL,
+            provider_id varchar(191) NULL,
+            checkout_id varchar(191) NULL,
+            plan_id varchar(191) NULL,
+            amount_cents int unsigned NOT NULL,
+            billing_interval varchar(10) NOT NULL,
+            status varchar(20) NOT NULL DEFAULT 'pending',
+            last_event_at bigint unsigned NOT NULL DEFAULT 0,
+            created_at datetime NOT NULL,
+            updated_at datetime NOT NULL,
+            PRIMARY KEY  (id),
+            UNIQUE KEY public_id (public_id),
+            UNIQUE KEY provider_subscription (provider,provider_id),
+            KEY donor_user_id (donor_user_id)
+        ) {$charset};");
+        $refunds = self::table('payment_refunds');
+        dbDelta("CREATE TABLE {$refunds} (
+            id bigint unsigned NOT NULL AUTO_INCREMENT,
+            provider varchar(20) NOT NULL,
+            refund_id varchar(191) NOT NULL,
+            order_id bigint unsigned NOT NULL,
+            amount_cents int unsigned NOT NULL,
+            created_at datetime NOT NULL,
+            PRIMARY KEY  (id),
+            UNIQUE KEY provider_refund (provider,refund_id),
+            KEY order_id (order_id)
         ) {$charset};");
         update_option('klp_db_version', self::DB_VERSION, true);
     }

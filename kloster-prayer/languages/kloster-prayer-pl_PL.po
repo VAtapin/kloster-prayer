@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: kloster-prayer 1.2.14\n"
+"Project-Id-Version: kloster-prayer 1.2.15\n"
 "Language: pl_PL\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -886,3 +886,66 @@ msgstr "Poprzednia"
 
 msgid "Next"
 msgstr "Następna"
+
+msgid "For regular support, also enable these webhook events:"
+msgstr "Dla regularnego wsparcia włącz również te zdarzenia webhook:"
+
+msgid "Partially refunded"
+msgstr "Częściowo zwrócono"
+
+msgid "Log in and confirm recurring support before continuing."
+msgstr "Zaloguj się i potwierdź zgodę na regularne wsparcie."
+
+msgid "Regular support"
+msgstr "Regularne wsparcie"
+
+msgid "Frequency"
+msgstr "Częstotliwość"
+
+msgid "Monthly"
+msgstr "Co miesiąc"
+
+msgid "Yearly"
+msgstr "Co rok"
+
+msgid "Repeat this amount at the selected interval until I cancel. I can cancel in my donation history."
+msgstr "Powtarzaj tę kwotę w wybranym odstępie do czasu anulowania. Mogę anulować wsparcie w historii darowizn."
+
+msgid "Start regular support"
+msgstr "Rozpocznij regularne wsparcie"
+
+msgid "Stripe is not configured."
+msgstr "Stripe nie jest skonfigurowany."
+
+msgid "PayPal is not configured or authentication failed."
+msgstr "PayPal nie jest skonfigurowany lub uwierzytelnienie nie powiodło się."
+
+msgid "The payment provider is unavailable. Please try again."
+msgstr "Operator płatności jest niedostępny. Spróbuj ponownie."
+
+msgid "The payment provider could not complete this operation."
+msgstr "Operator płatności nie mógł wykonać tej operacji."
+
+msgid "Invalid payment provider response."
+msgstr "Nieprawidłowa odpowiedź operatora płatności."
+
+msgid "PayPal is preparing recurring support. Please try again shortly."
+msgstr "PayPal przygotowuje regularne wsparcie. Spróbuj ponownie za chwilę."
+
+msgid "Log in to start regular support."
+msgstr "Zaloguj się, aby rozpocząć regularne wsparcie."
+
+msgid "Payment overdue"
+msgstr "Płatność zaległa"
+
+msgid "Actions"
+msgstr "Działania"
+
+msgid "User"
+msgstr "Użytkownik"
+
+msgid "Cancel regular support"
+msgstr "Anuluj regularne wsparcie"
+
+msgid "Closing a campaign prevents new submissions. Existing regular support continues until cancelled."
+msgstr "Zamknięcie zbiórki blokuje nowe zgłoszenia. Istniejące regularne wsparcie trwa do jego anulowania."

@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: kloster-prayer 1.2.14\n"
+"Project-Id-Version: kloster-prayer 1.2.15\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kloster-prayer\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1265,4 +1265,67 @@ msgid "Previous"
 msgstr ""
 
 msgid "Next"
+msgstr ""
+
+msgid "For regular support, also enable these webhook events:"
+msgstr ""
+
+msgid "Partially refunded"
+msgstr ""
+
+msgid "Log in and confirm recurring support before continuing."
+msgstr ""
+
+msgid "Regular support"
+msgstr ""
+
+msgid "Frequency"
+msgstr ""
+
+msgid "Monthly"
+msgstr ""
+
+msgid "Yearly"
+msgstr ""
+
+msgid "Repeat this amount at the selected interval until I cancel. I can cancel in my donation history."
+msgstr ""
+
+msgid "Start regular support"
+msgstr ""
+
+msgid "Stripe is not configured."
+msgstr ""
+
+msgid "PayPal is not configured or authentication failed."
+msgstr ""
+
+msgid "The payment provider is unavailable. Please try again."
+msgstr ""
+
+msgid "The payment provider could not complete this operation."
+msgstr ""
+
+msgid "Invalid payment provider response."
+msgstr ""
+
+msgid "PayPal is preparing recurring support. Please try again shortly."
+msgstr ""
+
+msgid "Log in to start regular support."
+msgstr ""
+
+msgid "Payment overdue"
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Cancel regular support"
+msgstr ""
+
+msgid "Closing a campaign prevents new submissions. Existing regular support continues until cancelled."
 msgstr ""

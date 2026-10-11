@@ -61,13 +61,13 @@ final class Public_Form
 
     public static function donation_shortcode(array|string $atts = []): string
     {
-        $atts = shortcode_atts(['layout' => 'compact', 'lang' => '', 'header' => 'yes', 'campaign_id' => 0], $atts, 'kloster_donation');
+        $atts = shortcode_atts(['layout' => 'compact', 'lang' => '', 'header' => 'yes', 'campaign_id' => 0, 'support' => 'no'], $atts, 'kloster_donation');
         $campaign = absint($atts['campaign_id']) ? Campaigns::get(absint($atts['campaign_id'])) : null;
         if (absint($atts['campaign_id']) && (!$campaign || !Campaigns::accepting($campaign))) return I18n::in_language(static fn(): string => '<p>' . esc_html__('This campaign is closed.', 'kloster-prayer') . '</p>', in_array($atts['lang'], ['en','ru','de','uk','pl'], true) ? $atts['lang'] : I18n::language());
         $atts['request_type'] = 'donation';
         $form = (object) ['id' => 0, 'layout' => 'compact'];
         foreach (['en', 'de', 'ru', 'uk', 'pl'] as $lang) {
-            $form->{'title_' . $lang} = $campaign ? Campaigns::title($campaign, $lang) : I18n::donation_text('title', $lang);
+            $form->{'title_' . $lang} = $campaign ? Campaigns::title($campaign, $lang) : ($atts['support'] === 'yes' ? I18n::in_language(static fn() => __('Regular support', 'kloster-prayer'), $lang) : I18n::donation_text('title', $lang));
             $form->{'intro_' . $lang} = '';
         }
         return self::result_shortcode() . self::render($form, $atts, []);
@@ -153,6 +153,12 @@ final class Public_Form
                 </div>
                 <?php endif; ?>
                 <div class="klp-field"><label><?php echo  esc_html(I18n::text('note', $lang)) ?></label><textarea name="note" rows="<?php echo  $layout === 'compact' ? 1 : 2 ?>"></textarea></div>
+                <?php if ($donation && ($atts['support'] ?? 'no') === 'yes') : ?>
+                <div class="klp-field klp-frequency"><label><?php echo esc_html(I18n::in_language(static fn() => __('Frequency', 'kloster-prayer'), $lang)) ?>
+                    <select name="frequency"><option value="month"><?php echo esc_html(I18n::in_language(static fn() => __('Monthly', 'kloster-prayer'), $lang)) ?></option><option value="year"><?php echo esc_html(I18n::in_language(static fn() => __('Yearly', 'kloster-prayer'), $lang)) ?></option></select></label>
+                </div>
+                <div class="klp-field klp-consent"><label><input type="checkbox" name="recurring_consent" value="1" required><span><?php echo esc_html(I18n::in_language(static fn() => __('Repeat this amount at the selected interval until I cancel. I can cancel in my donation history.', 'kloster-prayer'), $lang)) ?></span></label></div>
+                <?php endif; ?>
                 <div class="klp-grid">
                     <div class="klp-field"><label><?php echo  esc_html(I18n::text('donor_name', $lang)) ?></label><input type="text" name="donor_name" autocomplete="name"></div>
                     <div class="klp-field"><label><?php echo  esc_html(I18n::text('email', $lang)) ?> <span>*</span></label><input type="email" name="donor_email" required autocomplete="email"><small><?php echo  esc_html(I18n::text('email_help', $lang)) ?></small></div>
@@ -165,7 +171,7 @@ final class Public_Form
                 <?php else : ?><input type="hidden" name="provider" value="<?php echo  esc_attr($enabled[0] ?? 'stripe') ?>"><?php endif; ?>
                 <div class="klp-summary"><span><?php echo  esc_html(I18n::text('total', $lang)) ?></span><strong><output>0,00 €</output></strong></div>
                 <div class="klp-error" role="alert" hidden></div>
-                <button class="klp-submit" type="submit"><span><?php echo  esc_html(($donation ? I18n::donation_text('submit', $lang) : I18n::text('submit', $lang))) ?></span><b aria-hidden="true">→</b></button>
+                <button class="klp-submit" type="submit"><span><?php echo esc_html(($atts['support'] ?? 'no') === 'yes' ? I18n::in_language(static fn() => __('Start regular support', 'kloster-prayer'), $lang) : ($donation ? I18n::donation_text('submit', $lang) : I18n::text('submit', $lang))) ?></span><b aria-hidden="true">→</b></button>
                 <p class="klp-secure">♙ <?php echo  esc_html(($donation ? I18n::donation_text('secure', $lang) : I18n::text('secure', $lang))) ?></p>
             </form>
         </section>

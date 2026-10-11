@@ -4,7 +4,7 @@ Tags: orthodox, prayer, donations, stripe, paypal
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.2.14
+Stable tag: 1.2.15
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,6 +16,8 @@ Accept Orthodox prayer requests and donations on a parish, church, cathedral or 
 Visitors select services, submit names and optional comments, and pay through the site's own Stripe or PayPal account.
 
 * Configurable services, amounts, forms and six responsive layouts.
+* Standalone donations, targeted campaigns, public financial totals and private account history.
+* Monthly or yearly support through Stripe/PayPal with explicit consent and account cancellation.
 * English interface source strings with Russian, German, Ukrainian and Polish translations.
 * Names separated by commas are normalized to one person per line.
 * Payment confirmation emails and an optional designated recipient for paid requests.
@@ -35,6 +37,9 @@ Stripe processes donations when the visitor selects Stripe. The site contacts
 https://api.stripe.com/v1/checkout/sessions to create Checkout and, at the administrator's request,
 retrieve payer details. It sends the donor email, EUR amount, selected service titles, internal/public
 request identifiers and return URLs. Prayer names and comments are not sent in the payment request.
+Regular support uses subscription-mode Checkout, /v1/subscriptions for lifecycle/cancellation,
+/v1/invoice_payments to identify confirmed invoice payments and /v1/refunds to reconcile paginated refunds.
+Recurring requests also send the billing interval and an internal subscription identifier.
 Stripe collects card/billing/contact details on its hosted payment page. Signed webhooks return
 payment results and available payer details. The site owner supplies the API key and webhook signing secret.
 
@@ -53,6 +58,10 @@ the received webhook event, transmission headers and Webhook ID back to PayPal.
 Prayer names and comments are not sent when creating the payment.
 PayPal collects payer information on its own payment page and returns payment results/identifiers.
 This integration uses REST Orders v2, not IPN or legacy email-only payment buttons.
+Regular support additionally uses /v1/catalogs/products, /v1/billing/plans and
+/v1/billing/subscriptions to provision plans, start support and cancel agreements.
+Legacy capture references can be verified through /v2/payments/captures/{capture_id}.
+Recurring requests send the EUR amount, billing interval, plan and internal subscription identifiers.
 
 * Terms: https://www.paypal.com/legalhub/paypal/useragreement-full
 * Privacy: https://www.paypal.com/legalhub/paypal/privacy-full
@@ -64,6 +73,8 @@ This integration uses REST Orders v2, not IPN or legacy email-only payment butto
 The site stores prayer names, comments, donor email/name, service selections, amounts,
 payment identifiers/statuses, available billing details (name, email, phone and address),
 timestamps and action history in its own database. It does not store card numbers or security codes.
+Campaigns, separately entered expenses, account ownership, subscription states and confirmed
+refund amounts are stored locally. Public campaign reports contain aggregates only.
 Emails are sent through wp_mail and the site's mail configuration; they can contain prayer names,
 comments and payer details. Only specify an authorized recipient. The plugin author does not
 receive requests, keys, telemetry or payments. Site owners must define retention, restrict access
@@ -120,6 +131,28 @@ enabling the option does not send historical requests. The donor confirmation is
 Failures retry through hourly WP-Cron. Pending notifications use the current configured address.
 Mail acceptance does not prove Inbox delivery; a crash after mail acceptance can cause a retry.
 
+= Regular support setup =
+
+Add [kloster_support lang="ru"] to a page; campaign_id="1" optionally allocates support to a campaign.
+The donor must sign in, choose a monthly or yearly amount and explicitly consent to repeated payments.
+They approve the agreement on the provider's site and cancel it through [kloster_donation_history].
+Staff with manage_options can inspect/cancel agreements in Regular support.
+Closing a campaign prevents new agreements; existing agreements continue until cancelled.
+
+Keep the existing one-time webhook events and additionally register:
+Stripe: invoice.payment_succeeded, invoice.payment_failed, customer.subscription.created,
+customer.subscription.updated and customer.subscription.deleted; charge.refunded remains required.
+PayPal: PAYMENT.SALE.COMPLETED, PAYMENT.SALE.REFUNDED, BILLING.SUBSCRIPTION.CREATED,
+BILLING.SUBSCRIPTION.ACTIVATED, BILLING.SUBSCRIPTION.CANCELLED, BILLING.SUBSCRIPTION.EXPIRED,
+BILLING.SUBSCRIPTION.SUSPENDED and BILLING.SUBSCRIPTION.PAYMENT.FAILED.
+Agreement activation and return URLs never count as income; only verified payment events do.
+Cancellation stops future billing after the provider acknowledges it; it does not refund past payments.
+
+WP-Cron must run. PayPal prepares a plan for a new amount/interval in the background;
+when the form reports preparation, retry shortly. Stripe refund pagination is reconciled in the background.
+Exclude personalized history/support pages from external full-page caches/CDNs.
+Test real provider Sandbox/test payments, renewal events, cancellation and refunds before enabling Live.
+
 = Shortcodes =
 
 [kloster_campaigns lang="ru"] — public campaigns and donation forms.
@@ -130,8 +163,15 @@ Mail acceptance does not prove Inbox delivery; a crash after mail acceptance can
 Guests and historical payments are never assigned by email. Staff access remains
 restricted to manage_options. Campaign expenses are entered separately in Campaigns;
 pending, failed and refunded payments are excluded from received totals.
+Confirmed partial refunds reduce received amounts rather than removing the whole payment.
+Old full-refund states remain excluded; unknown historical refund amounts are not reconstructed.
 The schema upgrade adds campaign records and optional ownership/allocation columns
 without deleting existing prayer notes or linking old records to users.
+Version 1.2.15 adds subscriptions, verified refund records and optional payment-reference columns.
+
+[kloster_support lang="ru"] — signed-in monthly/yearly support with explicit consent.
+[kloster_support campaign_id="1"] — regular support allocated to an accepting campaign.
+The account history also shows owned support agreements and cancellation controls.
 
 [kloster_donation lang="ru"] — standalone one-time donation without prayer names or services.
 Amounts: EUR 0.50–999,999.99; comma or dot decimals, up to two decimal places.
@@ -175,6 +215,15 @@ No. Payment records and settings are retained to prevent accidental loss.
 Manage retention and backups according to your site's policy.
 
 == Changelog ==
+
+= 1.2.15 =
+* Verified Stripe/PayPal monthly/yearly support, explicit consent and owner/staff cancellation.
+* Idempotent payment cycles, background PayPal plans, confirmed partial/full refund accounting.
+* Compatible schema upgrade, private responsive history and four complete translations.
+
+= 1.2.14 =
+* Targeted campaigns with goals, deadlines, statuses and public aggregate reports.
+* Separately recorded expenses and private account donation history with ownership checks.
 
 = 1.2.13 =
 * Use US English gettext source strings throughout the interface, email, PDF labels and PayPal help.
