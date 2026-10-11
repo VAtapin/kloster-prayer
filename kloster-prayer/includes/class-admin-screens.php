@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace KlosterPrayer;
 if (!defined('ABSPATH')) exit;
 require_once DIR.'/includes/class-paypal-help.php';
+require_once DIR.'/includes/class-stripe-help.php';
 
 final class Admin_Screens
 {
@@ -26,6 +27,7 @@ final class Admin_Screens
             echo '<p><label>Webhook URL</label><code>'.esc_html(Payments::api_url($provider.'/webhook')).('</code></p><p class="description">'.esc_html__('Configuration is required only for enabled payment methods.', 'kloster-prayer').'</p>');
             echo '<p class="description">' . esc_html__('For regular support, also enable these webhook events:', 'kloster-prayer') . '</p><p><code>' . esc_html($provider === 'stripe' ? 'invoice.payment_succeeded, invoice.payment_failed, customer.subscription.created, customer.subscription.updated, customer.subscription.deleted, charge.refunded' : 'PAYMENT.SALE.COMPLETED, PAYMENT.SALE.REFUNDED, BILLING.SUBSCRIPTION.CREATED, BILLING.SUBSCRIPTION.ACTIVATED, BILLING.SUBSCRIPTION.CANCELLED, BILLING.SUBSCRIPTION.EXPIRED, BILLING.SUBSCRIPTION.SUSPENDED, BILLING.SUBSCRIPTION.PAYMENT.FAILED') . '</code></p>';
             if($provider==='paypal')PayPal_Help::render();
+            if($provider==='stripe')Stripe_Help::render();
             echo '</div></section>';
         }
         echo '</div>';submit_button((__('Save settings', 'kloster-prayer')));echo '</form></div>';

@@ -4,7 +4,7 @@ Tags: orthodox, prayer, donations, stripe, paypal
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.2.16
+Stable tag: 1.2.17
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -117,6 +117,13 @@ Expand the PayPal setup help in settings for detailed steps and official links.
 
 = Stripe setup =
 
+Expand Stripe setup in payment settings for the complete translated guide and direct Dashboard links.
+API keys: https://dashboard.stripe.com/apikeys
+Webhooks / Workbench: https://dashboard.stripe.com/webhooks
+Choose Your account, Snapshot payloads and Webhook endpoint. Thin events are not supported.
+The plugin parent menu is registered before feature submenus so Campaigns and Regular support
+open through admin.php?page=... rather than non-existent wp-admin paths.
+
 Obtain the Secret Key for the intended Stripe test or live environment.
 Add the exact webhook URL shown in settings, subscribe to checkout.session.completed and charge.refunded,
 and copy its endpoint signing secret to Webhook Secret. Keep test and live credentials consistent.
@@ -218,6 +225,10 @@ No. Payment records and settings are retained to prevent accidental loss.
 Manage retention and backups according to your site's policy.
 
 == Changelog ==
+
+= 1.2.17 =
+* Complete translated Stripe setup guide with direct Dashboard links, snapshot events and troubleshooting.
+* Fix Campaigns and Regular support admin links by registering the parent menu before submenus.
 
 = 1.2.16 =
 * Multilingual administrator shortcode guide with parameters, examples and copy controls.

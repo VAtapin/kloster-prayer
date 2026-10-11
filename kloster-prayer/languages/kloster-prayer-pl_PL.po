@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: kloster-prayer 1.2.16\n"
+"Project-Id-Version: kloster-prayer 1.2.17\n"
 "Language: pl_PL\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
@@ -1036,3 +1036,54 @@ msgstr "Kopiuj"
 
 msgid "English"
 msgstr "Angielski"
+
+msgid "Stripe setup — step-by-step instructions"
+msgstr "Konfiguracja Stripe — krok po kroku"
+
+msgid "Sign in to the Stripe account that will receive donations. Choose a Sandbox or test environment first. The API key and webhook must belong to the same account and environment."
+msgstr "Zaloguj się na konto Stripe odbiorcy darowizn. Zacznij od Sandbox lub środowiska testowego. Klucz API i webhook muszą należeć do tego samego konta i środowiska."
+
+msgid "Open Stripe API keys"
+msgstr "Otwórz klucze API Stripe"
+
+msgid "Reveal or create a Secret key on the API keys page and paste it into Secret Key. Test keys start with sk_test_, live keys with sk_live_. A pk_ publishable key, account password or whsec_ signing secret cannot replace it."
+msgstr "Na stronie kluczy API ujawnij lub utwórz Secret key i wklej go w Secret Key. Klucze testowe zaczynają się od sk_test_, produkcyjne od sk_live_. Klucz publiczny pk_, hasło konta ani sekret podpisu whsec_ go nie zastępują."
+
+msgid "Open Stripe Webhooks / Workbench"
+msgstr "Otwórz Stripe Webhooks / Workbench"
+
+msgid "In Workbench → Webhooks, choose Create an event destination (or Add destination / Add endpoint in older dashboards). Choose Your account, the Snapshot payload format and Webhook endpoint as the destination. This plugin does not process Thin events."
+msgstr "W Workbench → Webhooks wybierz Create an event destination (w starszym panelu Add destination / Add endpoint). Wybierz Your account, format danych Snapshot i typ docelowy Webhook endpoint. Wtyczka nie obsługuje zdarzeń Thin."
+
+msgid "Paste the exact Endpoint URL below. It must be publicly accessible over HTTPS and accept POST requests without login, redirects or a security challenge. Do not enter the WordPress settings-page URL."
+msgstr "Wklej dokładny Endpoint URL podany poniżej. Musi być publicznie dostępny przez HTTPS i przyjmować POST bez logowania, przekierowań ani dodatkowej kontroli bezpieczeństwa. Nie wpisuj adresu strony ustawień WordPress."
+
+msgid "For one-time donations and prayer requests, select checkout.session.completed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
+msgstr "Dla jednorazowych darowizn i intencji wybierz checkout.session.completed i charge.refunded. Dla regularnego wsparcia dodaj poniższe zdarzenia subskrypcji i faktur. Zapisz miejsce docelowe."
+
+msgid "Open the saved destination and reveal its Signing secret, starting with whsec_. Paste it into Webhook Secret. Use the secret of this exact endpoint and environment, not a Stripe CLI listener secret. Enable Stripe and save the plugin settings."
+msgstr "Otwórz zapisane miejsce docelowe i ujawnij Signing secret zaczynający się od whsec_. Wklej go w Webhook Secret. Użyj sekretu tego konkretnego punktu końcowego i środowiska, a nie odbiornika Stripe CLI. Włącz Stripe i zapisz ustawienia wtyczki."
+
+msgid "A blank Secret Key or Webhook Secret field preserves the saved value. When switching to Live, replace both values with the Live account key and Live endpoint signing secret. The plugin stores one set of Stripe credentials."
+msgstr "Puste pola Secret Key i Webhook Secret zachowują zapisane wartości. Przy przejściu do Live zastąp oba kluczem konta produkcyjnego i sekretem podpisu produkcyjnego webhooka. Wtyczka przechowuje jeden zestaw danych Stripe."
+
+msgid "Submit a real checkout from a page on your test site. In the test environment, use a Stripe test card from the official testing guide, not a real card. Verify Paid status and configured emails. For regular support, also test a payment cycle, cancellation and refunds."
+msgstr "Przejdź przez rzeczywisty checkout na stronie testowej. W środowisku testowym użyj karty testowej Stripe z oficjalnej instrukcji, a nie prawdziwej karty. Sprawdź status Opłacono i skonfigurowane wiadomości. Dla regularnego wsparcia sprawdź też cykl płatności, anulowanie i zwroty."
+
+msgid "Stripe test cards and testing guide"
+msgstr "Karty testowe Stripe i instrukcja testowania"
+
+msgid "In the destination, inspect event deliveries and their HTTP responses. A successful delivery should return 2xx. Fix the cause before resending a failed event: 400 can indicate a wrong signing secret, payload format or payment mismatch; 404 indicates a wrong endpoint URL; 403 or a security page can indicate blocked POST requests."
+msgstr "Sprawdź dostarczanie zdarzeń i odpowiedzi HTTP w miejscu docelowym. Udana dostawa zwraca 2xx. Przed ponowną wysyłką usuń przyczynę: 400 może oznaczać błędny sekret podpisu, format danych lub niezgodność płatności; 404 — zły adres; 403 lub strona ochronna — blokadę POST."
+
+msgid "Opening the webhook URL in a browser sends GET and is not a payment test. A Dashboard sample event may not match a saved plugin order. Test a checkout created by this plugin and inspect its event delivery. A success return URL alone does not confirm payment."
+msgstr "Otwarcie adresu webhooka w przeglądarce wysyła GET i nie testuje płatności. Przykładowe zdarzenie z Dashboard może nie pasować do zapisanego zamówienia wtyczki. Sprawdź checkout utworzony przez wtyczkę i dostarczenie jego zdarzenia. Sam powrót na stronę sukcesu nie potwierdza płatności."
+
+msgid "After a domain move, update the destination URL in Stripe. Never publish API keys or signing secrets. Plugin diagnostics checks whether settings exist, not whether Stripe accepts them."
+msgstr "Po zmianie domeny zaktualizuj adres docelowy w Stripe. Nie publikuj kluczy API ani sekretów podpisu. Diagnostyka wtyczki sprawdza obecność ustawień, a nie ich akceptację przez Stripe."
+
+msgid "Stripe documentation: API keys"
+msgstr "Dokumentacja Stripe: klucze API"
+
+msgid "Stripe documentation: webhook setup and signatures"
+msgstr "Dokumentacja Stripe: konfiguracja webhooków i podpisy"

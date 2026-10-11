@@ -8,7 +8,8 @@ final class Admin
     public static function init(): void
     {
         if (!is_admin()) return;
-        add_action('admin_menu', [self::class, 'menu']);
+        // Register the parent before feature submenus derive their page hooks.
+        add_action('admin_menu', [self::class, 'menu'], 9);
         add_action('admin_init', [self::class, 'handle_actions']);
         add_action('admin_post_klp_csv', [self::class, 'export_csv']);
         add_filter('plugin_row_meta', [self::class, 'external_meta'], 10, 2);
