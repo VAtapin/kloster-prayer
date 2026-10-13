@@ -2,7 +2,7 @@
 declare(strict_types=1);
 define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
 require __DIR__.'/bootstrap-i18n.php';
-define('GeorgKlosterOrthodoxDonate\\DIR', dirname(__DIR__).'/georg-kloster-orthodox-donate');
+define('GeorgKlosterOrthodoxDonate\\DIR', dirname(__DIR__).'/georg-kloster-orthodox-donations');
 require GeorgKlosterOrthodoxDonate\DIR.'/includes/lib/dompdf/autoload.inc.php';
 require GeorgKlosterOrthodoxDonate\DIR.'/includes/class-pdf.php';
 function esc_html($v){return htmlspecialchars($v,ENT_QUOTES,'UTF-8');}

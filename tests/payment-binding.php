@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
-require dirname(__DIR__).'/georg-kloster-orthodox-donate/includes/class-payments.php';
+require dirname(__DIR__).'/georg-kloster-orthodox-donations/includes/class-payments.php';
 $order=(object)['id'=>7,'public_id'=>'request-7','payment_id'=>'PAYPAL-ORDER-7','payment_provider'=>'paypal','amount_cents'=>4000];
 $capture=['id'=>'CAPTURE-7','status'=>'COMPLETED','custom_id'=>'7','amount'=>['value'=>'40.00','currency_code'=>'EUR'],'supplementary_data'=>['related_ids'=>['order_id'=>'PAYPAL-ORDER-7']]];
 $matches=new ReflectionMethod(GeorgKlosterOrthodoxDonate\Payments::class,'paypal_capture_matches');

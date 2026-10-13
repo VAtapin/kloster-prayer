@@ -6,11 +6,11 @@ require __DIR__.'/bootstrap-i18n.php';
 function esc_attr(string $value): string { return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 function esc_html(string $value): string { return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 
-define('GeorgKlosterOrthodoxDonate\\DIR', dirname(__DIR__) . '/georg-kloster-orthodox-donate');
+define('GeorgKlosterOrthodoxDonate\\DIR', dirname(__DIR__) . '/georg-kloster-orthodox-donations');
 
-require dirname(__DIR__) . '/georg-kloster-orthodox-donate/includes/lib/dompdf/autoload.inc.php';
-require dirname(__DIR__) . '/georg-kloster-orthodox-donate/includes/class-payments.php';
-require dirname(__DIR__) . '/georg-kloster-orthodox-donate/includes/class-pdf.php';
+require dirname(__DIR__) . '/georg-kloster-orthodox-donations/includes/lib/dompdf/autoload.inc.php';
+require dirname(__DIR__) . '/georg-kloster-orthodox-donations/includes/class-payments.php';
+require dirname(__DIR__) . '/georg-kloster-orthodox-donations/includes/class-pdf.php';
 
 $payload = '{"id":"evt_test"}';
 $timestamp = time();
@@ -52,7 +52,7 @@ $options = new \Dompdf\Options();
 $options->set('isRemoteEnabled', false);
 $options->set('isHtml5ParserEnabled', true);
 $options->set('defaultFont', 'DejaVu Sans');
-$options->setChroot(dirname(__DIR__) . '/georg-kloster-orthodox-donate');
+$options->setChroot(dirname(__DIR__) . '/georg-kloster-orthodox-donations');
 $dompdf = new \Dompdf\Dompdf($options);
 $dompdf->setPaper('A4', 'landscape');
 $dompdf->loadHtml($html, 'UTF-8');

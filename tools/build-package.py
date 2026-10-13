@@ -6,7 +6,7 @@ import re
 import zipfile
 
 root = Path(__file__).resolve().parent.parent
-slug = "georg-kloster-orthodox-donate"
+slug = "georg-kloster-orthodox-donations"
 plugin = root / slug
 args = argparse.ArgumentParser()
 args.add_argument("--extract-to", type=Path, help="Optional local verification directory")

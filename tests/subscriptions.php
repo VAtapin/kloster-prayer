@@ -30,13 +30,13 @@ add_filter('pre_http_request',static function($value,$args,$url)use(&$requests,&
 },10,3);
 function support_event(string $type,array $object,string $id,?int $created=null): WP_REST_Response {
     $payload=wp_json_encode(['id'=>$id,'type'=>$type,'created'=>$created??time(),'data'=>['object'=>$object]]);
-    $r=new WP_REST_Request('POST','/georg-kloster-orthodox-donate/v1/stripe/webhook');$r->set_body($payload);$t=time();
+    $r=new WP_REST_Request('POST','/georg-kloster-orthodox-donations/v1/stripe/webhook');$r->set_body($payload);$t=time();
     $r->set_header('stripe-signature','t='.$t.',v1='.hash_hmac('sha256',$t.'.'.$payload,'local-fixture-signing'));
     return GeorgKlosterOrthodoxDonate\Payments::stripe_webhook($r);
 }
 function support_paypal(string $type,array $object,string $id): WP_REST_Response {
     $payload=['id'=>$id,'event_type'=>$type,'create_time'=>gmdate('Y-m-d\TH:i:s\Z'),'resource'=>$object];
-    $r=new WP_REST_Request('POST','/georg-kloster-orthodox-donate/v1/paypal/webhook');$r->set_body(wp_json_encode($payload));$r->set_header('content-type','application/json');
+    $r=new WP_REST_Request('POST','/georg-kloster-orthodox-donations/v1/paypal/webhook');$r->set_body(wp_json_encode($payload));$r->set_header('content-type','application/json');
     foreach(['auth-algo'=>'SHA256withRSA','cert-url'=>'https://api-m.sandbox.paypal.com/fixture','transmission-id'=>'fixture','transmission-sig'=>'fixture','transmission-time'=>gmdate('c')]as$k=>$v)$r->set_header('paypal-'.$k,$v);
     return GeorgKlosterOrthodoxDonate\Payments::paypal_webhook($r);
 }
@@ -149,6 +149,6 @@ update_option('gkod_db_version','1.2.14');Database::maybe_upgrade();donation_ass
 donation_assert($wpdb->last_error==='','No database errors');
 wp_schedule_single_event(time()+600,'gkod_prepare_recurring_plan',[1000,'month','fixture-key',0]);
 wp_schedule_single_event(time()+600,'gkod_sync_recurring_refunds',['ch_fixture','pi_fixture','',0]);
-do_action('deactivate_georg-kloster-orthodox-donate/georg-kloster-orthodox-donate.php');
+do_action('deactivate_georg-kloster-orthodox-donations/georg-kloster-orthodox-donations.php');
 donation_assert(!wp_next_scheduled('gkod_prepare_recurring_plan',[1000,'month','fixture-key',0])&&!wp_next_scheduled('gkod_sync_recurring_refunds',['ch_fixture','pi_fixture','',0]),'Deactivation clears background events with arguments');
 echo "PASS recurring support: consent/login, Stripe/PayPal API payloads, signed events, out-of-order events, cycle/refund idempotency, ownership, cancellation/failure handling, background provisioning and compatible schema; HTTP/mail intercepted\n";

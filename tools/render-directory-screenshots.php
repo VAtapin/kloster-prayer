@@ -12,8 +12,8 @@ add_filter('determine_locale',static fn()=>'ru_RU');
 unload_textdomain('default',true);
 foreach(['ru_RU.mo','admin-ru_RU.mo']as$catalog)load_textdomain('default',WP_LANG_DIR.'/'.$catalog,'ru_RU');
 $GLOBALS['wp_locale']=new WP_Locale();
-unload_textdomain('georg-kloster-orthodox-donate',true);
-load_textdomain('georg-kloster-orthodox-donate',GeorgKlosterOrthodoxDonate\DIR.'/languages/georg-kloster-orthodox-donate-ru_RU.mo','ru_RU');
+unload_textdomain('georg-kloster-orthodox-donations',true);
+load_textdomain('georg-kloster-orthodox-donations',GeorgKlosterOrthodoxDonate\DIR.'/languages/georg-kloster-orthodox-donations-ru_RU.mo','ru_RU');
 update_option('gkod_payment_methods',['stripe','paypal']);
 global $wpdb;
 foreach(['campaign_expenses','campaigns','subscriptions','orders']as$table){
@@ -35,7 +35,7 @@ $pages=[
 if(!defined('WP_ADMIN'))define('WP_ADMIN',true);
 require_once ABSPATH.'wp-admin/includes/template.php';
 require_once ABSPATH.'wp-admin/includes/screen.php';
-set_current_screen('georg-kloster-orthodox-donate-campaigns');
+set_current_screen('georg-kloster-orthodox-donations-campaigns');
 $_GET=['campaign_id'=>$campaign];ob_start();Donation_Pages::admin();$pages['5']=['admin',ob_get_clean()];
 $_GET=[];ob_start();Support_Pages::admin();$pages['6']=['admin',ob_get_clean()];
 foreach($pages as$number=>[$kind,$html]){

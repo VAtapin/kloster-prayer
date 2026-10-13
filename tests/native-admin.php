@@ -7,7 +7,7 @@ use GeorgKlosterOrthodoxDonate\I18n;
 use GeorgKlosterOrthodoxDonate\Admin;
 if(!defined('WP_ADMIN'))define('WP_ADMIN',true);
 // UI translations use the normal WordPress domain loader, independently of content language.
-load_textdomain('georg-kloster-orthodox-donate',GeorgKlosterOrthodoxDonate\DIR.'/languages/georg-kloster-orthodox-donate-ru_RU.mo');
+load_textdomain('georg-kloster-orthodox-donations',GeorgKlosterOrthodoxDonate\DIR.'/languages/georg-kloster-orthodox-donations-ru_RU.mo');
 $current='ru';add_filter('wpml_current_language',static function()use(&$current){return $current;});
 add_filter('wpml_default_language',static fn()=>'ru');
 $ru=Campaigns::save(['title_ru'=>'Русское название','description_ru'=>'Русское описание','goal'=>'100.00','status'=>'draft']);

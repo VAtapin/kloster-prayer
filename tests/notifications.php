@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 define('ABSPATH',dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
-require dirname(__DIR__).'/georg-kloster-orthodox-donate/includes/class-database.php';
-require dirname(__DIR__).'/georg-kloster-orthodox-donate/includes/class-payments.php';
-require dirname(__DIR__).'/georg-kloster-orthodox-donate/includes/class-notifications.php';
-require dirname(__DIR__).'/georg-kloster-orthodox-donate/includes/class-order-workflow.php';
+require dirname(__DIR__).'/georg-kloster-orthodox-donations/includes/class-database.php';
+require dirname(__DIR__).'/georg-kloster-orthodox-donations/includes/class-payments.php';
+require dirname(__DIR__).'/georg-kloster-orthodox-donations/includes/class-notifications.php';
+require dirname(__DIR__).'/georg-kloster-orthodox-donations/includes/class-order-workflow.php';
 use GeorgKlosterOrthodoxDonate\Notifications as N;
 function check($value,$message){if(!$value)throw new RuntimeException($message);}
 $recipient='';$deliveries=[];$mail_ok=true;$throws=false;
 function get_option($key,$default=''){global $recipient;check($key==='gkod_notification_email','Must not use admin_email');return $recipient;}
 function is_email($v){return filter_var($v,FILTER_VALIDATE_EMAIL);}
-function __($v,$domain){check($domain==='georg-kloster-orthodox-donate','Text domain');return $v;}
+function __($v,$domain){check($domain==='georg-kloster-orthodox-donations','Text domain');return $v;}
 function esc_html($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');}
 function esc_html__($v,$d){return esc_html(__($v,$d));}
 function esc_url($v){return esc_html($v);}

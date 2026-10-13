@@ -3,7 +3,7 @@ name: Build and release WordPress plugin
 on:
   push:
     tags:
-      - 'georg-kloster-orthodox-donate-*'
+      - 'georg-kloster-orthodox-donations-*'
 
 permissions:
   contents: write
@@ -26,13 +26,13 @@ jobs:
         env:
           TAG: ${{ github.ref_name }}
         run: |
-          version="$(sed -n 's/^ \* Version: \(.*\)$/\1/p' georg-kloster-orthodox-donate/georg-kloster-orthodox-donate.php)"
-          stable="$(sed -n 's/^Stable tag: \(.*\)$/\1/p' georg-kloster-orthodox-donate/readme.txt)"
-          test "${TAG#georg-kloster-orthodox-donate-}" = "$version"
-          test "${TAG#georg-kloster-orthodox-donate-}" = "$stable"
+          version="$(sed -n 's/^ \* Version: \(.*\)$/\1/p' georg-kloster-orthodox-donations/georg-kloster-orthodox-donations.php)"
+          stable="$(sed -n 's/^Stable tag: \(.*\)$/\1/p' georg-kloster-orthodox-donations/readme.txt)"
+          test "${TAG#georg-kloster-orthodox-donations-}" = "$version"
+          test "${TAG#georg-kloster-orthodox-donations-}" = "$stable"
           mkdir -p tmp/admin-check-core
           curl --fail --location --silent --show-error https://wordpress.org/wordpress-7.1.3.tar.gz | tar -xz -C tmp/admin-check-core
-          find georg-kloster-orthodox-donate tests -name '*.php' -print0 | xargs -0 -n1 php -l
+          find georg-kloster-orthodox-donations tests -name '*.php' -print0 | xargs -0 -n1 php -l
           mkdir -p tmp/pdfs output/pdf
           php -d zend.assertions=1 -d assert.exception=1 tests/smoke.php
           php tests/notifications.php
@@ -47,15 +47,15 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: |
           python3 tools/build-package.py
-          version="${TAG#georg-kloster-orthodox-donate-}"
-          cp "output/georg-kloster-orthodox-donate-$version.zip" georg-kloster-orthodox-donate.zip
+          version="${TAG#georg-kloster-orthodox-donations-}"
+          cp "output/georg-kloster-orthodox-donations-$version.zip" georg-kloster-orthodox-donations.zip
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.ref_name }}
         run: |
-          version="${TAG#georg-kloster-orthodox-donate-}"
-          gh release create "$TAG" "output/georg-kloster-orthodox-donate-$version.zip" "output/georg-kloster-orthodox-donate-wordpress-org-$version.zip" georg-kloster-orthodox-donate.zip \
+          version="${TAG#georg-kloster-orthodox-donations-}"
+          gh release create "$TAG" "output/georg-kloster-orthodox-donations-$version.zip" "output/georg-kloster-orthodox-donations-wordpress-org-$version.zip" georg-kloster-orthodox-donations.zip \
             --title "Пожертвования $TAG" \
             --generate-notes

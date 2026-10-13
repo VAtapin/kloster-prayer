@@ -1,7 +1,7 @@
 # Материалы страницы WordPress.org
 
 Комплект находится в `wordpressorg-assets/`, отдельно от исходников плагина.
-Для передачи подготовлен `output/georg-kloster-orthodox-donate-wordpressorg-assets.zip`.
+Для передачи подготовлен `output/georg-kloster-orthodox-donations-wordpressorg-assets.zip`.
 Он содержит только десять PNG в папке `assets/`.
 
 После одобрения заявки файлы загружаются в корневую папку `assets` SVN-репозитория

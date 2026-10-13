@@ -32,7 +32,7 @@ $_GET=['help_lang'=>'ru'];
 require_once ABSPATH.'wp-admin/includes/plugin.php';
 if(!defined('WP_ADMIN'))define('WP_ADMIN',true);
 GeorgKlosterOrthodoxDonate\Admin::init();GeorgKlosterOrthodoxDonate\Admin::menu();
-$hook=get_plugin_page_hookname('georg-kloster-orthodox-donate-help','georg-kloster-orthodox-donate');
+$hook=get_plugin_page_hookname('georg-kloster-orthodox-donations-help','georg-kloster-orthodox-donations');
 do_action('admin_enqueue_scripts',$hook);
 donation_assert(wp_script_is('gkod-admin-shortcodes','enqueued'),'Copy script loads on the actual translated admin hook');
 wp_set_current_user(0);remove_filter('wp_doing_ajax','__return_true');

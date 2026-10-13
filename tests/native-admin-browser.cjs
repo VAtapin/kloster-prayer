@@ -9,8 +9,8 @@ const {chromium}=require(path.resolve(__dirname,'../../Kalendar/node_modules/pla
     for(const name of ['native-campaign-ru','native-campaign-de','native-forms-ru','native-services-ru','native-campaign-list','native-support-empty','native-support-filled']){
       await page.setContent('<body class="wp-admin wp-core-ui">'+fs.readFileSync(path.resolve(__dirname,'../tmp/'+name+'.html'),'utf8')+'</body>');
       for(const css of ['wp-includes/css/buttons.css','wp-admin/css/common.css','wp-admin/css/forms.css','wp-admin/css/list-tables.css'])await page.addStyleTag({path:path.resolve(__dirname,'../tmp/admin-check-core/wordpress',css)});
-      await page.addStyleTag({path:path.resolve(__dirname,'../georg-kloster-orthodox-donate/assets/css/admin.css')});
-      await page.addStyleTag({path:path.resolve(__dirname,'../georg-kloster-orthodox-donate/assets/css/admin-native.css')});
+      await page.addStyleTag({path:path.resolve(__dirname,'../georg-kloster-orthodox-donations/assets/css/admin.css')});
+      await page.addStyleTag({path:path.resolve(__dirname,'../georg-kloster-orthodox-donations/assets/css/admin-native.css')});
       await page.addStyleTag({content:'body{margin:20px;background:#f0f0f1;font:13px Arial;color:#1d2327}.screen-reader-text{position:absolute;clip-path:inset(50%)}'});
       if(name==='native-campaign-ru')assert.equal(await page.locator('[name^="title_"]').count(),1);
       if(name.includes('support'))assert.equal(await page.locator('table.wp-list-table').count(),1);

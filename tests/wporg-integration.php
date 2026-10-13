@@ -47,7 +47,7 @@ $order->payment_id='cs_test_review_'.$order->id;
 $wpdb->update(Database::table('orders'),['payment_id'=>$order->payment_id],['id'=>$order->id]);
 function stripe_event(object $order,int $amount,string $id): WP_REST_Response {
     $payload=wp_json_encode(['id'=>$id.'_'.$order->id,'type'=>'checkout.session.completed','data'=>['object'=>['id'=>$order->payment_id,'metadata'=>['order_id'=>(string)$order->id],'payment_status'=>'paid','currency'=>'eur','amount_total'=>$amount,'customer_details'=>['email'=>'donor@example.invalid','name'=>'Review payer']]]]);
-    $request=new WP_REST_Request('POST','/georg-kloster-orthodox-donate/v1/stripe/webhook');$request->set_body($payload);
+    $request=new WP_REST_Request('POST','/georg-kloster-orthodox-donations/v1/stripe/webhook');$request->set_body($payload);
     $time=time();$request->set_header('stripe-signature','t='.$time.',v1='.hash_hmac('sha256',$time.'.'.$payload,'local-fixture-signing-secret'));
     return Payments::stripe_webhook($request);
 }

@@ -5,7 +5,7 @@ function wp_has_noncharacters($s){return false;}
 function wp_kses_uri_attributes(){return ['href','src'];}
 foreach(['attribute-token','text-replacement','span','decoder','tag-processor'] as $class)require_once ABSPATH.'wp-includes/html-api/class-wp-html-'.$class.'.php';
 $links=['Version 1.1.1','Author: <a href="https://atapin.de/">atapin.de</a>','<a href="https://atapin.de/">Plugin page</a>'];
-$result=GeorgKlosterOrthodoxDonate\Admin::external_meta($links,'georg-kloster-orthodox-donate/georg-kloster-orthodox-donate.php');
+$result=GeorgKlosterOrthodoxDonate\Admin::external_meta($links,'georg-kloster-orthodox-donations/georg-kloster-orthodox-donations.php');
 if(substr_count(implode('',$result),'target="_blank"')!==2)throw new Exception('External link targets');
 if(GeorgKlosterOrthodoxDonate\Admin::external_meta($links,'another/plugin.php')!==$links)throw new Exception('Other plugin changed');
 require_once GeorgKlosterOrthodoxDonate\DIR.'/includes/class-payments.php';

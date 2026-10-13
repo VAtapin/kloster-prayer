@@ -4,7 +4,7 @@ declare(strict_types=1);
 $site = realpath($argv[1] ?? '');
 if (!$site || !str_contains(str_replace('\\', '/', $site), '/tmp/wporg-review/wordpress')) throw new RuntimeException('Local review WordPress required');
 $source = realpath($argv[2] ?? dirname(__DIR__));
-if (!$source || !is_file($source . '/georg-kloster-orthodox-donate/georg-kloster-orthodox-donate.php')) throw new RuntimeException('Plugin source required');
+if (!$source || !is_file($source . '/georg-kloster-orthodox-donations/georg-kloster-orthodox-donations.php')) throw new RuntimeException('Plugin source required');
 // Clone the disposable database; leave the existing review site unchanged.
 $database = 'donation-check-' . bin2hex(random_bytes(6)) . '.sqlite';
 $db = new PDO('sqlite:' . $site . '/wp-content/database/.ht.sqlite');
@@ -13,8 +13,8 @@ unset($db);
 define('DB_FILE', $database);
 define('WP_PLUGIN_DIR', $source);
 require $site . '/wp-load.php';
-if (!class_exists(GeorgKlosterOrthodoxDonate\Payments::class)) require $source . '/georg-kloster-orthodox-donate/georg-kloster-orthodox-donate.php';
-require_once $source . '/georg-kloster-orthodox-donate/includes/class-orders-table.php';
+if (!class_exists(GeorgKlosterOrthodoxDonate\Payments::class)) require $source . '/georg-kloster-orthodox-donations/georg-kloster-orthodox-donations.php';
+require_once $source . '/georg-kloster-orthodox-donations/includes/class-orders-table.php';
 function donation_assert(bool $ok, string $message): void { if (!$ok) throw new RuntimeException($message); }
 use GeorgKlosterOrthodoxDonate\Database;
 use GeorgKlosterOrthodoxDonate\Payments;
@@ -78,7 +78,7 @@ $_GET=['gkod_payment'=>'success','gkod_order'=>$order->public_id];
 donation_assert(!str_contains(Public_Form::result_shortcode(),GeorgKlosterOrthodoxDonate\I18n::donation_text('thanks','ru')),'Return URL cannot claim an unpaid donation');
 function donation_event(object $order, int $amount, string $id): WP_REST_Response {
     $payload=wp_json_encode(['id'=>$id,'type'=>'checkout.session.completed','data'=>['object'=>['id'=>$order->payment_id,'metadata'=>['order_id'=>(string)$order->id],'payment_intent'=>'pi_donation_fixture','payment_status'=>'paid','currency'=>'eur','amount_total'=>$amount]]]);
-    $r=new WP_REST_Request('POST','/georg-kloster-orthodox-donate/v1/stripe/webhook'); $r->set_body($payload); $time=time();
+    $r=new WP_REST_Request('POST','/georg-kloster-orthodox-donations/v1/stripe/webhook'); $r->set_body($payload); $time=time();
     $r->set_header('stripe-signature','t='.$time.',v1='.hash_hmac('sha256',$time.'.'.$payload,'local-fixture-signing'));
     return Payments::stripe_webhook($r);
 }

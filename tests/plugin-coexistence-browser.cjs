@@ -9,7 +9,7 @@ const {chromium}=require(path.resolve(__dirname,'../../Kalendar/node_modules/pla
   await page.setContent(fs.readFileSync(path.resolve(__dirname,'../tmp/coexistence-forms.html'),'utf8'));
   await page.addScriptTag({path:path.resolve(__dirname,'../tmp/coexistence-config.js')});
   await page.evaluate(()=>{window.sent=[];window.fetch=async(url,options)=>{window.sent.push(Object.fromEntries(options.body));return {json:async()=>({success:false,data:{message:'Local fixture'}})};};});
-  for(const dir of ['kloster-prayer','georg-kloster-orthodox-donate'])await page.addScriptTag({path:path.resolve(__dirname,'../tmp/coexistence-check',dir,'assets/js/public.js')});
+  for(const dir of ['kloster-prayer','georg-kloster-orthodox-donations'])await page.addScriptTag({path:path.resolve(__dirname,'../tmp/coexistence-check',dir,'assets/js/public.js')});
   await page.evaluate(()=>document.dispatchEvent(new Event('DOMContentLoaded')));
   for(const [selector,action]of[['.klp-form','klp_create_payment'],['.gkod-form','gkod_create_payment']]){
    const form=page.locator(selector);

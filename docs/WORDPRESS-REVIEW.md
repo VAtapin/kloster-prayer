@@ -1,8 +1,8 @@
-# WordPress.org preparation — 1.0.3
+# WordPress.org preparation — 1.0.4
 
-Prepared on 2026-10-13. English directory name: **Georg-Kloster Orthodox Donations**.
+Prepared on 2026-10-13. English directory name: **Georg Kloster – Orthodox Donations**.
 Russian plugin name/menu: **Пожертвования**. Requested slug/text domain/package
-folder: `georg-kloster-orthodox-donate`. Author: Vladimir Atapin; contributor `atapin`.
+folder: `georg-kloster-orthodox-donations`. Author: Vladimir Atapin; contributor `atapin`.
 The public WordPress.org contributor profile was verified with HTTP 200.
 
 ## Applied publication experience
@@ -15,8 +15,8 @@ payment hooks/settings/tables and assets remain independent from the legacy plug
 
 Both ZIPs contain identical runtime/assets and one correctly named root folder:
 
-- `output/georg-kloster-orthodox-donate-1.0.3.zip`: 374 files, including all four PO/MO catalogs.
-- `output/georg-kloster-orthodox-donate-wordpress-org-1.0.3.zip`: 366 files; excludes only PO/MO and retains POT.
+- `output/georg-kloster-orthodox-donations-1.0.4.zip`: 374 files, including all four PO/MO catalogs.
+- `output/georg-kloster-orthodox-donations-wordpress-org-1.0.4.zip`: 366 files; excludes only PO/MO and retains POT.
 
 Use the second ZIP for submission. WordPress.org builds obtain translations from
 `wp-content/languages/plugins`; until published on translate.wordpress.org the
@@ -67,7 +67,7 @@ Unrelated security, escaping, nonce, signature and query preparation checks rema
 
 ## Checks actually executed
 
-- PHP syntax across all 275 source/test files, including bundled libraries; JS syntax.
+- PHP syntax across all 277 source/test/tool files, including bundled libraries; JS syntax.
 - i18n/POT/PO/MO completeness, placeholders and preserved translations in four locales.
 - Standalone API-domain, payment binding, notifications, workflow, archive/print state,
   comments/admin behavior and Stripe/PayPal setup-help regressions.
@@ -98,8 +98,19 @@ SQLite. This local environment limitation is separate from owner-confirmed site 
 
 ## Submission
 
-Submit the directory ZIP as this independent plugin. Request the exact slug
-`georg-kloster-orthodox-donate` before approval, rather than relying on the generated
-slug from the English display name. Keep the established translator/calendar
-submissions separate. Plugins Team decides name/slug acceptance and final approval;
-automated checks do not publish or approve a plugin.
+The owner submitted the plugin and accepted the assigned slug
+`georg-kloster-orthodox-donations`. Their upload report contained 564
+WordPress.WP.I18n.TextDomainMismatch errors and one header textdomain_mismatch:
+all referred to the old singular donate domain. Version 1.0.4 aligns the folder,
+main PHP filename, all gettext calls, catalog filenames/headers, resource/admin
+and webhook routes, tests and packaging with the assigned slug. The exact approved
+display name is Georg Kloster – Orthodox Donations; gkod_ tables/options/actions
+and the PHP namespace remain unchanged. No financial schema migration is introduced.
+
+Full Plugin Check must use --slug=georg-kloster-orthodox-donations for both ZIPs;
+matching only the locally chosen folder is insufficient. The readiness regression
+also pins the assigned slug and the owner-approved display name.
+
+Upload the corrected ZIP to the EXISTING submission; do not submit a new plugin.
+Keep translator/calendar submissions separate. Plugins Team makes the final
+approval decision; local automated checks do not approve or publish a plugin.

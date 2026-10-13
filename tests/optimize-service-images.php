@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-$dir=dirname(__DIR__).'/georg-kloster-orthodox-donate/assets/img/services/';
+$dir=dirname(__DIR__).'/georg-kloster-orthodox-donations/assets/img/services/';
 foreach(glob($dir.'*.png') as $file){
     $source=imagecreatefrompng($file);$width=imagesx($source);$height=imagesy($source);
     $w=min(768,$width);$h=(int)round($height*$w/$width);$target=imagecreatetruecolor($w,$h);
