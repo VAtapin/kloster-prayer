@@ -99,3 +99,5 @@ python tools/build-package.py
 ```
 
 Проверки перед подачей описаны в [docs/WORDPRESS-REVIEW.md](docs/WORDPRESS-REVIEW.md). WordPress.org и production автоматически не обновляются; tag/release/SVN-публикация требуют отдельного разрешения.
+
+Иконки, русские баннеры и шесть настоящих скриншотов подготовлены отдельно в `wordpressorg-assets/`; архив — `output/georg-kloster-orthodox-donate-wordpressorg-assets.zip`. Они загружаются в SVN `assets` после одобрения заявки. Подписи в readme английские. Состав и получение: [docs/WORDPRESS-ORG-ASSETS.md](docs/WORDPRESS-ORG-ASSETS.md).

@@ -5,6 +5,7 @@
 - PHP 8.4 / WordPress 7.1.3; main → origin/main; репозиторий https://github.com/VAtapin/kloster-prayer.git не переименован.
 - Проверены два ZIP 1.0.3: установочный output/georg-kloster-orthodox-donate-1.0.3.zip (374 файла, все PO/MO) и output/georg-kloster-orthodox-donate-wordpress-org-1.0.3.zip (366 файлов, POT и WordPress language packs, без PO/MO). Новые tags/releases не создавались; прежний tag 1.0.0 не изменён.
 - Владелец устанавливает ZIP через WordPress самостоятельно. Production не обновлялся. Автоматизация ожидания 1.2.13 приостановлена.
+- Для страницы WordPress.org подготовлены отдельные материалы: две иконки с запиской и свечой, два русских баннера без названия монастыря и шесть скриншотов реального русского интерфейса. Папка wordpressorg-assets; отдельный ZIP output/georg-kloster-orthodox-donate-wordpressorg-assets.zip. Подписи Screenshots в readme английские; материалы не включаются в plugin runtime ZIP.
 
 ## Реализовано и решения
 - Стандартные формы и кнопки WordPress; сборы, расходы и регулярная поддержка используют WP_List_Table, пагинацию и штатное пустое состояние. Список сборов отделён от редактора.
@@ -23,6 +24,7 @@
 - WordPress language packs в четырёх локалях без bundled MO, включая сохранённый язык писем/PDF — PASS.
 - Совместная загрузка обоих плагинов в двух порядках и обе реальные формы на одной странице — PASS.
 - Семь браузерных сценариев, PDF smoke и оба render-теста — PASS. actionlint 1.7.12, ZIP integrity/структура/побайтовое соответствие исходникам — PASS.
+- Материалы каталога: проверены размеры PNG, соответствие шести подписей шести скриншотам, визуальная читаемость; текущие PHP/JS-renderers снимаются на клоне локальной БД. Обновлённый readme прошёл официальный парсер и полный Plugin Check, оба plugin ZIP пересобраны. Инструкция: docs/WORDPRESS-ORG-ASSETS.md.
 
 ## Подтверждения и следующие действия
 - Владелец 13.10.2026 подтвердил: реальные платёжные аккаунты и установленный WPML уже проверены. Эти пункты закрыты; локальные автоматические HTTP/почта остаются перехваченными тестовыми вызовами.
@@ -32,5 +34,5 @@
 - Production/SVN/tag/release не выполнялись. Документация проверки: docs/WORDPRESS-REVIEW.md.
 
 ## Последний связанный commit
-- Текущая задача: Prepare Donations packages for WordPress.org submission (этот commit).
-- Предыдущий: 4fee594943c4dbaf17e735373062f34208f10e04 — Rename plugin and admin menu to Donations.
+- Текущая задача: Add WordPress.org artwork and Russian screenshots (этот commit).
+- Предыдущий: 9fc1cab8dc3d27339b03cda404ccd64e2d9e5f3c — Prepare Donations packages for WordPress.org submission.

@@ -25,11 +25,9 @@ Accept donations and Orthodox prayer requests on parish, church, cathedral or mo
 * English source strings with Russian, German, Ukrainian and Polish translations.
 * WordPress gettext for the interface; the current WPML/Polylang language for edited content.
 
-Independent gkod_* shortcodes, settings, tables, assets and callbacks allow coexistence with the previous plugin; no previous data is imported.
-
 The manual ZIP includes four translations. WordPress.org builds use standard language packs from translate.wordpress.org; until available there, the interface uses English.
 
-Requirements: WordPress 7.1+, PHP 8.4+, PHP mbstring and GD for PDF generation, HTTPS for payment callbacks, and working WP-Cron for background tasks. PDF generation is local. The plugin does not verify physical printer output.
+Requirements: WordPress 7.1+, PHP 8.4+, mbstring/GD for local PDFs, HTTPS callbacks and working WP-Cron.
 
 = External services: Stripe =
 
@@ -62,7 +60,7 @@ The plugin author receives no requests, keys, telemetry or payments. Site owners
 
 = Source code and licenses =
 
-Readable PHP/JS/CSS and GPL-compatible library/font/artwork licenses are included; see third-party-notices.txt. Code and original prayer slips are GPL-2.0-or-later. No build or runtime code download is required.
+Readable sources and GPL-compatible licenses are included in third-party-notices.txt. Code/prayer slips are GPL-2.0-or-later. No build or runtime code download is required.
 
 Source: https://github.com/VAtapin/kloster-prayer/tree/main/georg-kloster-orthodox-donate
 
@@ -110,7 +108,7 @@ WP-Cron prepares new PayPal plans in the background; retry shortly if requested.
 
 Donation/support forms accept campaign_id="1" to allocate payments to an open, unexpired campaign. Amounts are EUR 0.50-999,999.99 with up to two decimal places. Confirmed partial refunds reduce received totals; fully refunded, failed and pending payments are excluded. Expenses are entered separately by staff with manage_options.
 
-Layouts: standard, compact, wide, two_columns, cards, minimal. header="no" hides the heading where supported. Without lang, the current language plugin/WordPress language is used. See the administrator guide for exact parameters and defaults of each shortcode. Content editors display one current language and preserve other saved translations. Guest payments are not assigned to accounts by email.
+Layouts: standard, compact, wide, two_columns, cards, minimal. header="no" hides supported headings. Without lang, WordPress/the language plugin selects the language. The admin guide lists parameters/defaults. Editors preserve other translations. Guest payments are not linked to accounts by email.
 
 == Frequently Asked Questions ==
 
@@ -125,6 +123,15 @@ No. Records and settings are retained. Site owners must manage retention and bac
 
 = What happens when the site's domain changes? =
 Update provider webhook/return URLs after moving. An API-domain override must serve the same WordPress site over HTTPS.
+
+== Screenshots ==
+
+1. Russian donation form: EUR amount and Stripe/PayPal choice.
+2. Prayer names, selected services and calculated donation.
+3. Campaign income, expenses, balance and donation form.
+4. Monthly/yearly support with explicit consent.
+5. WordPress campaign editor and expense records.
+6. WordPress support table and cancellation controls.
 
 == Changelog ==
 
