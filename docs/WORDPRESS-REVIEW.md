@@ -1,8 +1,9 @@
-# WordPress.org preparation — 1.0.4
+# WordPress.org preparation — 1.0.5
 
 Prepared on 2026-10-13. English directory name: **Georg Kloster – Orthodox Donations**.
-Russian plugin name/menu: **Пожертвования**. Requested slug/text domain/package
+Russian plugin name/menu: **Пожертвования**. Assigned slug/text domain/package
 folder: `georg-kloster-orthodox-donations`. Author: Vladimir Atapin; contributor `atapin`.
+Review security fixes and detailed scope: [SECURITY-REVIEW-1.0.5.md](SECURITY-REVIEW-1.0.5.md).
 The public WordPress.org contributor profile was verified with HTTP 200.
 
 ## Applied publication experience
@@ -15,8 +16,8 @@ payment hooks/settings/tables and assets remain independent from the legacy plug
 
 Both ZIPs contain identical runtime/assets and one correctly named root folder:
 
-- `output/georg-kloster-orthodox-donations-1.0.4.zip`: 374 files, including all four PO/MO catalogs.
-- `output/georg-kloster-orthodox-donations-wordpress-org-1.0.4.zip`: 366 files; excludes only PO/MO and retains POT.
+- `output/georg-kloster-orthodox-donations-1.0.5.zip`: 374 files, including all four PO/MO catalogs.
+- `output/georg-kloster-orthodox-donations-wordpress-org-1.0.5.zip`: 366 files; excludes only PO/MO and retains POT.
 
 Use the second ZIP for submission. WordPress.org builds obtain translations from
 `wp-content/languages/plugins`; until published on translate.wordpress.org the
@@ -57,17 +58,17 @@ The initial 254 warnings were individually accounted for:
   idempotency, refund totals, notification claims and ownership checks must not
   read stale financial cache. 129 affected SQL statement lines have narrow PHPCS
   exceptions explaining their role; existing prepared-query explanations remain.
-- One discouraged bundled text-domain loader: retained for manual ZIP installs,
-  with a narrow explanation; standard WordPress.org language packs take precedence.
+- The text-domain loader call and its annotation are removed in 1.0.5. WordPress
+  JIT loads directory packs; manual ZIPs register only the local catalog path.
 
 This is documented exception handling, not replacement of SQL operations with
 cached financial state. Executable-token comparison against the preceding commit
-confirmed that all 22 modules outside the language-pack helper are unchanged.
+confirmed financial-query semantics were unchanged by the initial annotation work.
 Unrelated security, escaping, nonce, signature and query preparation checks remain active.
 
 ## Checks actually executed
 
-- PHP syntax across all 277 source/test/tool files, including bundled libraries; JS syntax.
+- PHP syntax across all 279 source/test/tool files, including bundled libraries; JS syntax.
 - i18n/POT/PO/MO completeness, placeholders and preserved translations in four locales.
 - Standalone API-domain, payment binding, notifications, workflow, archive/print state,
   comments/admin behavior and Stripe/PayPal setup-help regressions.
@@ -101,7 +102,7 @@ SQLite. This local environment limitation is separate from owner-confirmed site 
 The owner submitted the plugin and accepted the assigned slug
 `georg-kloster-orthodox-donations`. Their upload report contained 564
 WordPress.WP.I18n.TextDomainMismatch errors and one header textdomain_mismatch:
-all referred to the old singular donate domain. Version 1.0.4 aligns the folder,
+all referred to the old singular donate domain. Version 1.0.4 aligned the folder,
 main PHP filename, all gettext calls, catalog filenames/headers, resource/admin
 and webhook routes, tests and packaging with the assigned slug. The exact approved
 display name is Georg Kloster – Orthodox Donations; gkod_ tables/options/actions

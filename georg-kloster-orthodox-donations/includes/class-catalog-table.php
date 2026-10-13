@@ -9,9 +9,9 @@ final class Catalog_Table extends \WP_List_Table
 {
     private string $kind;
     public function __construct(string $kind) { $this->kind=$kind; parent::__construct(['singular'=>'gkod-item','plural'=>'gkod-items','ajax'=>false]); }
-    public function get_columns() { return ['cb'=>'<input type="checkbox">','title'=>(__('Title', 'georg-kloster-orthodox-donations')),'slug'=>(__('Slug', 'georg-kloster-orthodox-donations')),'details'=>$this->kind==='forms'?(__('Shortcode', 'georg-kloster-orthodox-donations')):(__('Donation', 'georg-kloster-orthodox-donations')),'status'=>(__('Status', 'georg-kloster-orthodox-donations')),'updated_at'=>(__('Updated', 'georg-kloster-orthodox-donations'))]; }
+    public function get_columns() { return ['cb'=>'<input type="checkbox">','title'=>(esc_html__('Title', 'georg-kloster-orthodox-donations')),'slug'=>(esc_html__('Slug', 'georg-kloster-orthodox-donations')),'details'=>$this->kind==='forms'?(esc_html__('Shortcode', 'georg-kloster-orthodox-donations')):(esc_html__('Donation', 'georg-kloster-orthodox-donations')),'status'=>(esc_html__('Status', 'georg-kloster-orthodox-donations')),'updated_at'=>(esc_html__('Updated', 'georg-kloster-orthodox-donations'))]; }
     protected function get_sortable_columns() { return ['title'=>['title_'.array_key_first(Admin::editor_languages()),false],'slug'=>['slug',false],'updated_at'=>['updated_at',true]]; }
-    protected function get_bulk_actions() { return ['enable'=>(__('Enable', 'georg-kloster-orthodox-donations')),'disable'=>(__('Disable', 'georg-kloster-orthodox-donations'))]; }
+    protected function get_bulk_actions() { return ['enable'=>(esc_html__('Enable', 'georg-kloster-orthodox-donations')),'disable'=>(esc_html__('Disable', 'georg-kloster-orthodox-donations'))]; }
     public function column_cb($item) { return '<input type="checkbox" name="ids[]" value="'.(int)$item->id.'" aria-label="'.esc_attr((__('Select', 'georg-kloster-orthodox-donations').' ').$item->title_ru).'">'; }
     public function column_title($item) {
         $url=admin_url('admin.php?page=georg-kloster-orthodox-donations-'.$this->kind.'&edit='.(int)$item->id);
@@ -20,7 +20,7 @@ final class Catalog_Table extends \WP_List_Table
     }
     public function column_default($item,$column) {
         if($column==='slug')return '<code>'.esc_html($item->slug).'</code>';
-        if($column==='status')return $item->is_active?(__('Active', 'georg-kloster-orthodox-donations')):(__('Disabled', 'georg-kloster-orthodox-donations'));
+        if($column==='status')return $item->is_active?(esc_html__('Active', 'georg-kloster-orthodox-donations')):(esc_html__('Disabled', 'georg-kloster-orthodox-donations'));
         if($column==='updated_at')return esc_html($item->updated_at);
         if($column==='details')return $this->kind==='forms'?'<code>[gkod_form id="'.(int)$item->id.'"]</code>':esc_html(number_format_i18n($item->price_cents/100,2)).' €';
         return '';

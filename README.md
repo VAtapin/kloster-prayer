@@ -4,7 +4,7 @@ WordPress-плагин для приходов, храмов, соборов и 
 
 ## Установка
 
-Версия 1.0.4 устанавливается из `georg-kloster-orthodox-donations-1.0.4.zip`: **Плагины → Добавить новый → Загрузить плагин**. Это независимый плагин: отдельные PHP-классы, шорткоды `gkod_*`, стили, скрипты, таблицы, настройки и webhook-адреса. Прежний плагин может оставаться включённым; его записки, платежи и переводы не импортируются и не изменяются. Настройте оплату нового плагина и зарегистрируйте его webhook-адреса в Stripe/PayPal. На страницах нового плагина используйте новые шорткоды из раздела помощи.
+Версия 1.0.5 устанавливается из `georg-kloster-orthodox-donations-1.0.5.zip`: **Плагины → Добавить новый → Загрузить плагин**. Это независимый плагин: отдельные PHP-классы, шорткоды `gkod_*`, стили, скрипты, таблицы, настройки и webhook-адреса. Прежний плагин может оставаться включённым; его записки, платежи и переводы не импортируются и не изменяются. Настройте оплату нового плагина и зарегистрируйте его webhook-адреса в Stripe/PayPal. На страницах нового плагина используйте новые шорткоды из раздела помощи.
 
 После активации откройте **Пожертвования → Настройки** и внесите данные Stripe и/или PayPal. Создайте webhook-адреса, показанные на этой странице настроек. Плагин не содержит и не публикует платёжные ключи.
 
@@ -15,6 +15,7 @@ WordPress-плагин для приходов, храмов, соборов и 
 Требования: WordPress 7.1+, PHP 8.4+, HTTPS для Stripe и PayPal.
 
 Подготовка к WordPress.org, сведения о проверках и ограничения: [docs/WORDPRESS-REVIEW.md](docs/WORDPRESS-REVIEW.md).
+Исправления предварительной проверки, escaping/nonce/права и подробный аудит: [docs/SECURITY-REVIEW-1.0.5.md](docs/SECURITY-REVIEW-1.0.5.md).
 Каноническое имя для каталога — Georg Kloster – Orthodox Donations; слаг остаётся georg-kloster-orthodox-donations.
 Нельзя считать Git push публикацией в WordPress.org или обновлением сайта.
 
@@ -82,7 +83,7 @@ PayPal — `PAYMENT.SALE.COMPLETED`, `PAYMENT.SALE.REFUNDED`, `BILLING.SUBSCRIPT
 
 ## Выпуск
 
-Номер версии должен совпадать в `georg-kloster-orthodox-donations/georg-kloster-orthodox-donations.php` и `georg-kloster-orthodox-donations/readme.txt`. В новой серии теги имеют вид `georg-kloster-orthodox-donations-<версия>`, чтобы не пересекаться с прежними тегами. Теги и releases создаются только по отдельному разрешению владельца; для 1.0.4 подготовлен локальный ZIP. Тег новой серии запускает GitHub Actions: проверяются версия и синтаксис PHP, затем создаётся GitHub Release с установочным и каталоговым архивами:
+Номер версии должен совпадать в `georg-kloster-orthodox-donations/georg-kloster-orthodox-donations.php` и `georg-kloster-orthodox-donations/readme.txt`. В новой серии теги имеют вид `georg-kloster-orthodox-donations-<версия>`, чтобы не пересекаться с прежними тегами. Теги и releases создаются только по отдельному разрешению владельца; для 1.0.5 подготовлен локальный ZIP. Тег новой серии запускает GitHub Actions: проверяются версия и синтаксис PHP, затем создаётся GitHub Release с установочным и каталоговым архивами:
 
 - `georg-kloster-orthodox-donations-<версия>.zip` — архив конкретного выпуска;
 - `georg-kloster-orthodox-donations-wordpress-org-<версия>.zip` — пакет для заявки в каталог;
@@ -90,7 +91,7 @@ PayPal — `PAYMENT.SALE.COMPLETED`, `PAYMENT.SALE.REFUNDED`, `BILLING.SUBSCRIPT
 
 ## Пакет для WordPress.org
 
-Для заявки используйте `output/georg-kloster-orthodox-donations-wordpress-org-1.0.4.zip`. По опыту успешной публикации wp_cu_translator этот пакет содержит POT и исходники, но исключает PO/MO. Четыре перевода остаются в репозитории и обычном установочном ZIP; версия каталога загружает стандартные WordPress language packs из `wp-content/languages/plugins`. До публикации переводов на translate.wordpress.org каталоговая версия показывает английский интерфейс. Сохранённый язык писем и PDF также поддерживает language packs.
+Для заявки используйте `output/georg-kloster-orthodox-donations-wordpress-org-1.0.5.zip`. По опыту успешной публикации wp_cu_translator этот пакет содержит POT и исходники, но исключает PO/MO. Четыре перевода остаются в репозитории и обычном установочном ZIP; версия каталога загружает стандартные WordPress language packs из `wp-content/languages/plugins`. До публикации переводов на translate.wordpress.org каталоговая версия показывает английский интерфейс. Сохранённый язык писем и PDF также поддерживает language packs.
 
 Воспроизводимая сборка обоих пакетов из корня проекта:
 

@@ -21,7 +21,7 @@ final class Donation_Pages
 
     public static function menu(): void
     {
-        add_submenu_page('georg-kloster-orthodox-donations', __('Campaigns', 'georg-kloster-orthodox-donations'), __('Campaigns', 'georg-kloster-orthodox-donations'), 'manage_options', 'georg-kloster-orthodox-donations-campaigns', [self::class, 'admin']);
+        add_submenu_page('georg-kloster-orthodox-donations', esc_html__('Campaigns', 'georg-kloster-orthodox-donations'), esc_html__('Campaigns', 'georg-kloster-orthodox-donations'), 'manage_options', 'georg-kloster-orthodox-donations-campaigns', [self::class, 'admin']);
     }
 
     public static function actions(): void

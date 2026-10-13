@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: georg-kloster-orthodox-donations 1.0.4\n"
+"Project-Id-Version: georg-kloster-orthodox-donations 1.0.5\n"
 "Language: pl_PL\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"

@@ -1,9 +1,9 @@
 # Состояние проекта
 
 ## Текущее состояние
-- Независимый плагин 1.0.4: «Пожертвования»; английское имя Georg Kloster – Orthodox Donations. Меню: Donations / Пожертвования / Spenden / Пожертви / Darowizny. Slug, папка, PHP-файл и text domain: georg-kloster-orthodox-donations.
+- Независимый плагин 1.0.5: «Пожертвования»; английское имя Georg Kloster – Orthodox Donations. Меню: Donations / Пожертвования / Spenden / Пожертви / Darowizny. Slug, папка, PHP-файл и text domain: georg-kloster-orthodox-donations.
 - PHP 8.4 / WordPress 7.1.3; main → origin/main; репозиторий https://github.com/VAtapin/kloster-prayer.git не переименован.
-- Проверены два ZIP 1.0.4: установочный output/georg-kloster-orthodox-donations-1.0.4.zip (374 файла, все PO/MO) и output/georg-kloster-orthodox-donations-wordpress-org-1.0.4.zip (366 файлов, POT и WordPress language packs, без PO/MO). Новые tags/releases не создавались; прежний tag 1.0.0 не изменён.
+- Проверены два ZIP 1.0.5: установочный output/georg-kloster-orthodox-donations-1.0.5.zip (374 файла, все PO/MO) и output/georg-kloster-orthodox-donations-wordpress-org-1.0.5.zip (366 файлов, POT и WordPress language packs, без PO/MO). Новые tags/releases не создавались; прежний tag 1.0.0 не изменён.
 - Владелец устанавливает ZIP через WordPress самостоятельно. Production не обновлялся. Автоматизация ожидания 1.2.13 приостановлена.
 - Для страницы WordPress.org подготовлены отдельные материалы: две иконки с запиской и свечой, два русских баннера без названия монастыря и шесть скриншотов реального русского интерфейса. Папка wordpressorg-assets; отдельный ZIP output/georg-kloster-orthodox-donations-wordpressorg-assets.zip. Подписи Screenshots в readme английские; материалы не включаются в plugin runtime ZIP.
 
@@ -19,9 +19,11 @@
 ## Проверки
 - WordPress.org readme приведён к английскому описанию нового плагина, <10 КБ, уникальные версии; все девять шорткодов и внешние сервисы описаны. Проверен официальный парсер, метаданные и профиль автора atapin.
 - Применён опыт wp_cu_translator: отдельные каталоговый/установочный ZIP, бренд в английском имени, POT и стандартные language packs. Runtime двух пакетов одинаков; сборка воспроизводима через tools/build-package.py.
-- Plugin Check 2.1.0 на WordPress 7.1.3 / PHP 8.4.25, все категории и runtime-проверки для обоих точных ZIP 1.0.4 с явным --slug=georg-kloster-orthodox-donations: 0 ошибок, 0 предупреждений. Новых исключений для исправления домена нет. Прежние 129 точечных SQL-аннотаций и загрузчик MO сохранены. Сравнение 23 runtime-модулей подтвердило: изменены только согласованные slug/имя, SQL и платёжная логика не изменены.
-- Lint всех 277 PHP-файлов, JS syntax, i18n/360 строк/четыре PO/MO/placeholders, standalone API/payment binding/notifications/workflow/admin/help, реальные WordPress integration/gettext/donations/campaigns/subscriptions/native-admin/navigation/shortcode-help/fresh-install — PASS. Проверки выполнялись также из ZIP.
+- load_plugin_textdomain и его исключение удалены. Каталоговый ZIP использует штатный JIT language packs; ручной ZIP регистрирует только путь своих MO в WordPress registry, без явной загрузки. Исправлен поздний escaping календаря, меню, таблиц, статусов и атрибутов; CSV защищён от формул, фильтры PDF проходят Input. Платёжная логика, схема, CSS/JS не изменены.
+- Plugin Check 2.1.0 для обоих точных ZIP 1.0.5 с --slug=georg-kloster-orthodox-donations: 0 ошибок/предупреждений. Focused WPCS Security/I18n/DevelopmentFunctions: 0 ошибок/предупреждений. Прежние точечные SQL-аннотации и обоснованные исключения для бинарного PDF/безопасного render/input-контекста сохранены; новых escaping-исключений нет.
+- Lint всех 279 PHP-файлов, JS syntax, i18n/360 строк/четыре PO/MO/placeholders, standalone API/payment binding/notifications/workflow/admin/help, реальные WordPress integration/gettext/donations/campaigns/subscriptions/native-admin/navigation/shortcode-help/fresh-install — PASS. Проверки выполнялись также из ZIP.
 - WordPress language packs в четырёх локалях без bundled MO, включая сохранённый язык писем/PDF — PASS.
+- Новая пустая WordPress установка с WP_DEBUG: invalid nonce/права settings/campaigns/CSV/PDF/cancellation, malformed input, XSS в переводах/данных/атрибутах и CSV — PASS. Автоматический JIT в четырёх локалях без тестового загрузчика — PASS. Composer audit пяти PDF-зависимостей: advisories/abandoned отсутствуют.
 - Совместная загрузка обоих плагинов в двух порядках и обе реальные формы на одной странице — PASS.
 - Семь браузерных сценариев, PDF smoke и оба render-теста — PASS. actionlint 1.7.12, ZIP integrity/структура/побайтовое соответствие исходникам — PASS.
 - Материалы каталога: проверены размеры PNG, соответствие шести подписей шести скриншотам, визуальная читаемость; текущие PHP/JS-renderers снимаются на клоне локальной БД. Обновлённый readme прошёл официальный парсер и полный Plugin Check, оба plugin ZIP пересобраны. Инструкция: docs/WORDPRESS-ORG-ASSETS.md.
@@ -29,10 +31,11 @@
 ## Подтверждения и следующие действия
 - Владелец 13.10.2026 подтвердил: реальные платёжные аккаунты и установленный WPML уже проверены. Эти пункты закрыты; локальные автоматические HTTP/почта остаются перехваченными тестовыми вызовами.
 - Локальные MySQL/MariaDB/Docker недоступны; автоматические базы — SQLite. Это ограничение локального стенда, а не утверждение о проверках сайта владельца.
+- Полный WPCS выполнен: прежние замечания к стилю PHP (отступы, пробелы, short arrays, документационные комментарии) остаются; это не заявление о полном stylistic WPCS compliance. Массовое форматирование не включено в исправление безопасности. Отчёт: docs/SECURITY-REVIEW-1.0.5.md.
 - Для WordPress.org использовать каталоговый ZIP; установочный ZIP сохраняет все четыре перевода для ручной установки. До публикации переводов на translate.wordpress.org каталоговая версия показывает английский интерфейс.
-- Заявка уже подана владельцем. WordPress.org назначил georg-kloster-orthodox-donations; владелец принял этот slug и точное имя Georg Kloster – Orthodox Donations. Отчёт: 564 ошибки домена и одно предупреждение заголовка, одна причина — прежний donate. Исправленный ZIP 1.0.4 обновляет существующую заявку; новую не создавать. Заявки переводчика/календаря не заменять.
+- Заявка уже подана владельцем. WordPress.org назначил georg-kloster-orthodox-donations; владелец принял этот slug и точное имя Georg Kloster – Orthodox Donations. Отчёт: 564 ошибки домена и одно предупреждение заголовка, одна причина — прежний donate. Исправленный ZIP 1.0.5 обновляет существующую заявку; новую не создавать. Заявки переводчика/календаря не заменять.
 - Production/SVN/tag/release не выполнялись. Документация проверки: docs/WORDPRESS-REVIEW.md.
 
 ## Последний связанный commit
-- Текущая задача: Align plugin with assigned WordPress.org slug (этот commit).
-- Предыдущий: 804d2ffba8d016fcb5fb53fa4c80175640ddb1ca — Add WordPress.org artwork and Russian screenshots.
+- Текущая задача: Fix translation loading and admin output escaping (этот commit).
+- Предыдущий: a581733a373107fcf241ece886d6e8d8c64ca275 — Align plugin with assigned WordPress.org slug.

@@ -14,7 +14,7 @@ final class Support_Pages
 
     public static function menu(): void
     {
-        add_submenu_page('georg-kloster-orthodox-donations', __('Regular support', 'georg-kloster-orthodox-donations'), __('Regular support', 'georg-kloster-orthodox-donations'), 'manage_options', 'georg-kloster-orthodox-donations-support', [self::class, 'admin']);
+        add_submenu_page('georg-kloster-orthodox-donations', esc_html__('Regular support', 'georg-kloster-orthodox-donations'), esc_html__('Regular support', 'georg-kloster-orthodox-donations'), 'manage_options', 'georg-kloster-orthodox-donations-support', [self::class, 'admin']);
     }
 
     public static function form(array|string $atts = []): string

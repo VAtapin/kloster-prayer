@@ -33,14 +33,14 @@ final class Admin
 
     public static function menu(): void
     {
-        add_menu_page(__('Donations', 'georg-kloster-orthodox-donations'), __('Donations', 'georg-kloster-orthodox-donations'), 'manage_options', 'georg-kloster-orthodox-donations', [self::class, 'orders'], 'dashicons-heart', 26);
-        add_submenu_page('georg-kloster-orthodox-donations', (__('Prayer notes', 'georg-kloster-orthodox-donations')), (__('Prayer notes', 'georg-kloster-orthodox-donations')), 'manage_options', 'georg-kloster-orthodox-donations', [self::class, 'orders']);
-        add_submenu_page('georg-kloster-orthodox-donations', (__('Services', 'georg-kloster-orthodox-donations')), (__('Services', 'georg-kloster-orthodox-donations')), 'manage_options', 'georg-kloster-orthodox-donations-services', [self::class, 'services']);
-        add_submenu_page('georg-kloster-orthodox-donations', (__('Forms', 'georg-kloster-orthodox-donations')), (__('Forms', 'georg-kloster-orthodox-donations')), 'manage_options', 'georg-kloster-orthodox-donations-forms', [self::class, 'forms']);
-        add_submenu_page('georg-kloster-orthodox-donations', (__('Reports', 'georg-kloster-orthodox-donations')), (__('Reports', 'georg-kloster-orthodox-donations')), 'manage_options', 'georg-kloster-orthodox-donations-reports', [self::class, 'reports']);
-        add_submenu_page('georg-kloster-orthodox-donations', (__('Settings', 'georg-kloster-orthodox-donations')), (__('Settings', 'georg-kloster-orthodox-donations')), 'manage_options', 'georg-kloster-orthodox-donations-settings', [self::class, 'settings']);
-        add_submenu_page('georg-kloster-orthodox-donations', (__('Diagnostics', 'georg-kloster-orthodox-donations')), (__('Diagnostics', 'georg-kloster-orthodox-donations')), 'manage_options', 'georg-kloster-orthodox-donations-diagnostics', [self::class, 'diagnostics']);
-        add_submenu_page('georg-kloster-orthodox-donations', __('Help → Shortcodes', 'georg-kloster-orthodox-donations'), __('Help', 'georg-kloster-orthodox-donations'), 'manage_options', 'georg-kloster-orthodox-donations-help', [Shortcode_Help::class, 'page']);
+        add_menu_page(esc_html__('Donations', 'georg-kloster-orthodox-donations'), esc_html__('Donations', 'georg-kloster-orthodox-donations'), 'manage_options', 'georg-kloster-orthodox-donations', [self::class, 'orders'], 'dashicons-heart', 26);
+        add_submenu_page('georg-kloster-orthodox-donations', (esc_html__('Prayer notes', 'georg-kloster-orthodox-donations')), (esc_html__('Prayer notes', 'georg-kloster-orthodox-donations')), 'manage_options', 'georg-kloster-orthodox-donations', [self::class, 'orders']);
+        add_submenu_page('georg-kloster-orthodox-donations', (esc_html__('Services', 'georg-kloster-orthodox-donations')), (esc_html__('Services', 'georg-kloster-orthodox-donations')), 'manage_options', 'georg-kloster-orthodox-donations-services', [self::class, 'services']);
+        add_submenu_page('georg-kloster-orthodox-donations', (esc_html__('Forms', 'georg-kloster-orthodox-donations')), (esc_html__('Forms', 'georg-kloster-orthodox-donations')), 'manage_options', 'georg-kloster-orthodox-donations-forms', [self::class, 'forms']);
+        add_submenu_page('georg-kloster-orthodox-donations', (esc_html__('Reports', 'georg-kloster-orthodox-donations')), (esc_html__('Reports', 'georg-kloster-orthodox-donations')), 'manage_options', 'georg-kloster-orthodox-donations-reports', [self::class, 'reports']);
+        add_submenu_page('georg-kloster-orthodox-donations', (esc_html__('Settings', 'georg-kloster-orthodox-donations')), (esc_html__('Settings', 'georg-kloster-orthodox-donations')), 'manage_options', 'georg-kloster-orthodox-donations-settings', [self::class, 'settings']);
+        add_submenu_page('georg-kloster-orthodox-donations', (esc_html__('Diagnostics', 'georg-kloster-orthodox-donations')), (esc_html__('Diagnostics', 'georg-kloster-orthodox-donations')), 'manage_options', 'georg-kloster-orthodox-donations-diagnostics', [self::class, 'diagnostics']);
+        add_submenu_page('georg-kloster-orthodox-donations', esc_html__('Help → Shortcodes', 'georg-kloster-orthodox-donations'), esc_html__('Help', 'georg-kloster-orthodox-donations'), 'manage_options', 'georg-kloster-orthodox-donations-help', [Shortcode_Help::class, 'page']);
     }
 
     public static function handle_actions(): void
@@ -73,7 +73,7 @@ final class Admin
                 if (!$ids) wp_die((esc_html__('No requests match the selected filter.', 'georg-kloster-orthodox-donations')));
             }
             $filters = ['order_ids' => $ids];
-            foreach (['archive','payment_status','intention','printed'] as $key) if (!empty($_POST[$key])) $filters[$key] = sanitize_key((string) $_POST[$key]);
+            foreach (['archive','payment_status','intention','printed'] as $key) if (!empty(Input::post($key))) $filters[$key] = sanitize_key(Input::post($key));
             wp_safe_redirect(Pdf::url($filters)); exit;
         }
         if ($action === 'resend_confirmation') {
@@ -224,10 +224,17 @@ final class Admin
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Authorized administration of custom request/form/service tables; read current rows after edits.
         $rows=$wpdb->get_results($wpdb->prepare('SELECT * FROM %i ORDER BY created_at DESC',Database::table('orders')),ARRAY_A);
         nocache_headers(); header('Content-Type: text/csv; charset=UTF-8'); header('Content-Disposition: attachment; filename="kloster-orders-'.wp_date('Ymd-His').'.csv"');
-        $out=fopen('php://output','wb'); echo "\xEF\xBB\xBF"; fputcsv($out,['ID',(__('Date', 'georg-kloster-orthodox-donations')),(__('Status', 'georg-kloster-orthodox-donations')),(__('Payment', 'georg-kloster-orthodox-donations')),(__('Amount EUR', 'georg-kloster-orthodox-donations')),(__('Type', 'georg-kloster-orthodox-donations')),(__('Names', 'georg-kloster-orthodox-donations')),(__('Note', 'georg-kloster-orthodox-donations')),(__('Donor name', 'georg-kloster-orthodox-donations')),'E-mail',(__('Printed', 'georg-kloster-orthodox-donations')),(__('Payer name', 'georg-kloster-orthodox-donations')),(__('Payer email', 'georg-kloster-orthodox-donations')),(__('Phone', 'georg-kloster-orthodox-donations')),(__('Billing address', 'georg-kloster-orthodox-donations'))],';','"','');
-        foreach($rows as $row)fputcsv($out,[$row['id'],$row['created_at'],$row['payment_status'],$row['payment_provider'],number_format(((int)$row['amount_cents'])/100,2,',',''),$row['intention'],$row['names'],$row['note'],$row['donor_name'],$row['donor_email'],$row['printed_at'],$row['billing_name']??'',$row['billing_email']??'',$row['billing_phone']??'',implode(', ',(array)(json_decode((string)($row['billing_address']??''),true)?:[]))],';','"','');
+        $out=fopen('php://output','wb'); echo "\xEF\xBB\xBF"; fputcsv($out,array_map([self::class, 'csv_cell'],['ID',(__('Date', 'georg-kloster-orthodox-donations')),(__('Status', 'georg-kloster-orthodox-donations')),(__('Payment', 'georg-kloster-orthodox-donations')),(__('Amount EUR', 'georg-kloster-orthodox-donations')),(__('Type', 'georg-kloster-orthodox-donations')),(__('Names', 'georg-kloster-orthodox-donations')),(__('Note', 'georg-kloster-orthodox-donations')),(__('Donor name', 'georg-kloster-orthodox-donations')),'E-mail',(__('Printed', 'georg-kloster-orthodox-donations')),(__('Payer name', 'georg-kloster-orthodox-donations')),(__('Payer email', 'georg-kloster-orthodox-donations')),(__('Phone', 'georg-kloster-orthodox-donations')),(__('Billing address', 'georg-kloster-orthodox-donations'))]),';','"','');
+        foreach($rows as $row)fputcsv($out,array_map([self::class, 'csv_cell'],[$row['id'],$row['created_at'],$row['payment_status'],$row['payment_provider'],number_format(((int)$row['amount_cents'])/100,2,',',''),$row['intention'],$row['names'],$row['note'],$row['donor_name'],$row['donor_email'],$row['printed_at'],$row['billing_name']??'',$row['billing_email']??'',$row['billing_phone']??'',implode(', ',(array)(json_decode((string)($row['billing_address']??''),true)?:[]))]),';','"','');
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing php://output, not a filesystem file.
         fclose($out); exit;
+    }
+
+    private static function csv_cell(mixed $value): string
+    {
+        $text = is_scalar($value) ? (string) $value : '';
+        // Keep spreadsheet applications from interpreting donor text as formulas.
+        return preg_match('/^(?:[\x00-\x20]*[=+\-@]|[\t\r\n])/u', $text) ? "'" . $text : $text;
     }
 
     public static function diagnostics(): void

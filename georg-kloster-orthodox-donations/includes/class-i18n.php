@@ -6,8 +6,14 @@ final class I18n
 {
     public static function init(): void
     {
-        // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Registers bundled catalogs for manual ZIP installs; WordPress.org language packs retain precedence.
-        load_plugin_textdomain('georg-kloster-orthodox-donations', false, dirname(plugin_basename(FILE)) . '/languages');
+        // Directory builds use WordPress language packs and need no registration.
+        // Manual ZIPs also provide local catalogs. Register their fallback path
+        // without loading a translation: WordPress keeps its normal JIT loader
+        // and gives wp-content/languages/plugins language packs precedence.
+        if (glob(DIR . '/languages/*.mo')) {
+            global $wp_textdomain_registry;
+            $wp_textdomain_registry->set_custom_path('georg-kloster-orthodox-donations', DIR . '/languages');
+        }
     }
 
     public static function language(): string

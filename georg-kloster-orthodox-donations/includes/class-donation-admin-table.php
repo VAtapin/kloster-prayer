@@ -14,10 +14,10 @@ final class Donation_Admin_Table extends \WP_List_Table
     }
     public function get_columns()
     {
-        if ($this->kind==='campaign_expenses') return ['date'=>__('Date','georg-kloster-orthodox-donations'),'description'=>__('Description','georg-kloster-orthodox-donations'),'expense'=>__('Amount','georg-kloster-orthodox-donations')];
+        if ($this->kind==='campaign_expenses') return ['date'=>esc_html__('Date','georg-kloster-orthodox-donations'),'description'=>esc_html__('Description','georg-kloster-orthodox-donations'),'expense'=>esc_html__('Amount','georg-kloster-orthodox-donations')];
         return $this->kind==='campaigns'
-            ? ['title'=>__('Campaign','georg-kloster-orthodox-donations'),'status'=>__('Status','georg-kloster-orthodox-donations'),'report'=>__('Report','georg-kloster-orthodox-donations')]
-            : ['account'=>__('User','georg-kloster-orthodox-donations'),'amount'=>__('Amount','georg-kloster-orthodox-donations'),'status'=>__('Status','georg-kloster-orthodox-donations'),'provider'=>__('Payment method','georg-kloster-orthodox-donations'),'actions'=>__('Actions','georg-kloster-orthodox-donations')];
+            ? ['title'=>esc_html__('Campaign','georg-kloster-orthodox-donations'),'status'=>esc_html__('Status','georg-kloster-orthodox-donations'),'report'=>esc_html__('Report','georg-kloster-orthodox-donations')]
+            : ['account'=>esc_html__('User','georg-kloster-orthodox-donations'),'amount'=>esc_html__('Amount','georg-kloster-orthodox-donations'),'status'=>esc_html__('Status','georg-kloster-orthodox-donations'),'provider'=>esc_html__('Payment method','georg-kloster-orthodox-donations'),'actions'=>esc_html__('Actions','georg-kloster-orthodox-donations')];
     }
     public function prepare_items()
     {

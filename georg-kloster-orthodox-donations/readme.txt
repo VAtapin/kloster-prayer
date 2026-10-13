@@ -4,7 +4,7 @@ Tags: orthodox, prayer, donations, stripe, paypal
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,7 +54,7 @@ Requests contain application credentials, EUR amounts, service titles, payment/s
 
 The site stores prayer names/comments, donor email/name, WordPress account ownership, service selections, amounts, payment identifiers/statuses, available billing/contact details, timestamps, subscriptions, refunds and action history in its own database. Card numbers and security codes are not stored. Campaign reports publish aggregates only.
 
-Emails use wp_mail and the site's mail configuration and can contain prayer names, comments and payer details. Empty recipient settings disable staff notifications; the WordPress administrator email is not used as a fallback. Failed notifications retry through WP-Cron. Mail acceptance does not guarantee Inbox delivery; a crash after acceptance can cause a retry.
+Emails use wp_mail and can include names, comments and payer details. Empty recipient settings disable staff notifications, without an admin-email fallback. Failed notifications retry via WP-Cron. Acceptance does not guarantee Inbox delivery; a crash after acceptance can cause a retry.
 
 The plugin author receives no requests, keys, telemetry or payments. Site owners must restrict access, define retention and document processing in their privacy policy. Deactivation and uninstall do not automatically delete records or settings.
 
@@ -134,6 +134,9 @@ Update provider webhook/return URLs after moving. An API-domain override must se
 6. WordPress support table and cancellation controls.
 
 == Changelog ==
+
+= 1.0.5 =
+* Remove the translation loader call and escape translated admin output.
 
 = 1.0.4 =
 * Match text domain and package paths to the assigned WordPress.org slug.
