@@ -24,12 +24,14 @@ final class Donation_Admin_Table extends \WP_List_Table
         global $wpdb;
         $table=Database::table($this->kind);$per=20;
         $total=(int)($this->kind==='campaign_expenses'
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Paginated custom campaign/subscription ledger; current expense/payment/lifecycle state is required.
             ? $wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i WHERE campaign_id=%d',$table,$this->campaign_id))
             : $wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i',$table)));
         $this->set_pagination_args(['total_items'=>$total,'per_page'=>$per]);
         $page=min(max(1,(int)ceil($total/$per)),$this->get_pagenum());
         $offset=($page-1)*$per;
         $this->items=$this->kind==='campaign_expenses'
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Paginated custom campaign/subscription ledger; current expense/payment/lifecycle state is required.
             ? $wpdb->get_results($wpdb->prepare('SELECT * FROM %i WHERE campaign_id=%d ORDER BY id DESC LIMIT %d OFFSET %d',$table,$this->campaign_id,$per,$offset))
             : $wpdb->get_results($wpdb->prepare('SELECT * FROM %i ORDER BY id DESC LIMIT %d OFFSET %d',$table,$per,$offset));
         $this->_column_headers=[$this->get_columns(),[],[],array_key_first($this->get_columns())];

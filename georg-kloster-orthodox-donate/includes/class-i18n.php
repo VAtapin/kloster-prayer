@@ -6,6 +6,7 @@ final class I18n
 {
     public static function init(): void
     {
+        // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Registers bundled catalogs for manual ZIP installs; WordPress.org language packs retain precedence.
         load_plugin_textdomain('georg-kloster-orthodox-donate', false, dirname(plugin_basename(FILE)) . '/languages');
     }
 
@@ -63,7 +64,10 @@ final class I18n
             if (isset($locales[$language])) {
                 if (!class_exists('MO')) require_once ABSPATH . 'wp-includes/pomo/mo.php';
                 $mo = new \MO();
-                if ($mo->import_from_file(__DIR__ . '/../languages/georg-kloster-orthodox-donate-' . $locales[$language] . '.mo')) $catalogs[$language] = $mo;
+                $paths=[];
+                if (defined('WP_LANG_DIR')) $paths[]=WP_LANG_DIR.'/plugins/georg-kloster-orthodox-donate-'.$locales[$language].'.mo';
+                $paths[]=__DIR__.'/../languages/georg-kloster-orthodox-donate-'.$locales[$language].'.mo';
+                foreach ($paths as $path) if (is_readable($path) && $mo->import_from_file($path)) { $catalogs[$language]=$mo; break; }
             }
         }
         $catalog = $catalogs[$language];

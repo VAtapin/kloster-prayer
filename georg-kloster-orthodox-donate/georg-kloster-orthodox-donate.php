@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: Orthodox Donations
- * Plugin URI: https://atapin.de/
+ * Plugin Name: Georg-Kloster Orthodox Donations
+ * Plugin URI: https://github.com/VAtapin/kloster-prayer/tree/main/georg-kloster-orthodox-donate
  * Description: Orthodox prayer requests and donations with Stripe, PayPal, printable prayer slips and reports.
- * Version: 1.0.2
- * Author: atapin.de
+ * Version: 1.0.3
+ * Author: Vladimir Atapin
  * Author URI: https://atapin.de/
  * Text Domain: georg-kloster-orthodox-donate
  * Domain Path: /languages
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const VERSION = '1.0.2';
+const VERSION = '1.0.3';
 const FILE = __FILE__;
 const DIR = __DIR__;
 

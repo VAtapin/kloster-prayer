@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: georg-kloster-orthodox-donate 1.0.2\n"
+"Project-Id-Version: georg-kloster-orthodox-donate 1.0.3\n"
 "Language: de_DE\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -776,7 +776,7 @@ msgstr "pro Name"
 msgid "per 10 names"
 msgstr "je 10 Namen"
 
-msgid "Orthodox Donations"
+msgid "Georg-Kloster Orthodox Donations"
 msgstr "Orthodoxe Spenden"
 
 msgid "Orthodox prayer requests and donations with Stripe, PayPal, printable prayer slips and reports."

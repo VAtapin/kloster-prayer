@@ -7,6 +7,7 @@ final class Order_Workflow
     public static function log(int $id, string $type, string $message): void
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom request/archive/print ledger; current state and conditional updates must not use stale cache.
         $wpdb->insert(Database::table('order_history'), [
             'order_id'=>$id, 'event_type'=>$type, 'message'=>$message,
             'user_id'=>get_current_user_id(), 'created_at'=>current_time('mysql'),
@@ -19,6 +20,7 @@ final class Order_Workflow
         foreach (array_unique(array_column($cards, 'order_id')) as $id) {
             $id=(int)$id;
             if ($id < 1) continue;
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom request/archive/print ledger; current state and conditional updates must not use stale cache.
             if ($wpdb->update(Database::table('orders'), ['printed_at'=>current_time('mysql')], ['id'=>$id]) === false) {
                 wp_die((esc_html__('The PDF is ready, but the print status could not be saved. Please try again.', 'georg-kloster-orthodox-donate')));
             }
@@ -49,8 +51,10 @@ final class Order_Workflow
     {
         global $wpdb;
         $id=absint(Input::post('order_id')??0); $item=absint(Input::post('item_id')??0);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom request/archive/print ledger; current state and conditional updates must not use stale cache.
         $row=$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d AND order_id=%d', Database::table('order_items'),$item,$id));
         if (!$row) wp_die((esc_html__('Service not found.', 'georg-kloster-orthodox-donate')));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom request/archive/print ledger; current state and conditional updates must not use stale cache.
         $order=$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'),$id));
         if (!$order || !empty($order->archived_at)) wp_die((esc_html__('Restore the request from the archive first.', 'georg-kloster-orthodox-donate')));
         if (!empty(Input::post('clear_period'))) {
@@ -59,6 +63,7 @@ final class Order_Workflow
             try { [$start,$end]=self::period(sanitize_text_field(Input::post('start')??''), (int)(Input::post('days')??0)); }
             catch (\InvalidArgumentException $e) { wp_die(esc_html($e->getMessage())); }
         }
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom request/archive/print ledger; current state and conditional updates must not use stale cache.
         if ($wpdb->update(Database::table('order_items'),['remembrance_start'=>$start,'remembrance_end'=>$end],['id'=>$item,'order_id'=>$id]) === false) wp_die((esc_html__('Could not save the period.', 'georg-kloster-orthodox-donate')));
         self::log($id,'period', $row->service_title.': '.($row->remembrance_start??'—').' — '.($row->remembrance_end??'—').' → '.($start?$start.' — '.$end:(__('period removed', 'georg-kloster-orthodox-donate'))));
     }
@@ -66,6 +71,7 @@ final class Order_Workflow
     public static function change(int $id, string $action): void
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom request/archive/print ledger; current state and conditional updates must not use stale cache.
         $order=$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'),$id));
         if (!$order) return;
         $archive=in_array($action,['delete_order','archive_order'],true);
@@ -78,6 +84,7 @@ final class Order_Workflow
             $data=['printed_at'=>$action==='mark_printed'?current_time('mysql'):null];
             $message=$action==='mark_printed'?(__('Staff member confirmed printing', 'georg-kloster-orthodox-donate')):(__('Print status cleared', 'georg-kloster-orthodox-donate'));
         }
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom request/archive/print ledger; current state and conditional updates must not use stale cache.
         if ($wpdb->update(Database::table('orders'),$data,['id'=>$id]) === false) wp_die((esc_html__('Could not save the change.', 'georg-kloster-orthodox-donate')));
         self::log($id,$action,$message);
     }
@@ -92,6 +99,7 @@ final class Order_Workflow
         foreach(['mark_unprinted'=>(__('Clear print status', 'georg-kloster-orthodox-donate')),empty($order->archived_at)?'archive_order':'restore_order'=>empty($order->archived_at)?(__('Archive request', 'georg-kloster-orthodox-donate')):(__('Restore', 'georg-kloster-orthodox-donate'))] as $action=>$label) echo '<button class="button" name="gkod_action" value="'.esc_attr($action).'">'.esc_html($label).'</button> ';
         echo ('</form></div><div class="postbox gkod-card"><h2>'.esc_html__('Request history', 'georg-kloster-orthodox-donate').'</h2><p>'.esc_html__('For older requests, available dates are shown; the detailed log starts after the update.', 'georg-kloster-orthodox-donate').'</p><table class="widefat striped"><thead><tr><th>'.esc_html__('Date', 'georg-kloster-orthodox-donate').'</th><th>'.esc_html__('Event', 'georg-kloster-orthodox-donate').'</th><th>'.esc_html__('Staff member', 'georg-kloster-orthodox-donate').'</th></tr></thead><tbody>');
         foreach(['created_at'=>(__('Request received', 'georg-kloster-orthodox-donate')),'paid_at'=>(__('Payment confirmed', 'georg-kloster-orthodox-donate')),'confirmation_sent_at'=>(__('Last confirmation sent', 'georg-kloster-orthodox-donate')),'printed_at'=>(__('Last print status', 'georg-kloster-orthodox-donate'))] as $field=>$label) if(!empty($order->$field)) echo '<tr><td>'.esc_html($order->$field).'</td><td>'.esc_html($label).'</td><td>—</td></tr>';
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom request/archive/print ledger; current state and conditional updates must not use stale cache.
         $events=$wpdb->get_results($wpdb->prepare('SELECT * FROM %i WHERE order_id=%d ORDER BY id DESC', Database::table('order_history'),$id));
         foreach($events as $event) {
             $user=!empty($event->user_id)?get_userdata((int)$event->user_id):false;
@@ -111,7 +119,7 @@ final class Order_Workflow
         $args=$mode==='active'?[$date,$date]:($mode==='unset'?[]:[$date]);
         $page=max(1,absint(Input::get('paged')??1));
         $sql='SELECT i.*,o.names,o.intention,o.payment_status FROM %i i JOIN %i o ON o.id=i.order_id WHERE o.archived_at IS NULL AND o.payment_status=\'paid\' AND '.$clauses[$mode].' ORDER BY i.remembrance_end,i.id LIMIT 51 OFFSET %d';
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Clause selected from fixed whitelist; identifiers, dates and offset use placeholders.
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- Clause selected from fixed whitelist; identifiers, dates and offset use placeholders. Custom request/archive/print ledger; current state and conditional updates must not use stale cache.
         $rows=$wpdb->get_results($wpdb->prepare($sql,...array_merge([Database::table('order_items'),Database::table('orders')],$args,[($page-1)*50])));
         echo ('<div class="wrap gkod-admin"><h1>'.esc_html__('Commemoration', 'georg-kloster-orthodox-donate').'</h1><p>'.esc_html__('Paid requests outside the archive. Expired periods do not automatically archive requests.', 'georg-kloster-orthodox-donate').'</p><form method="get"><input type="hidden" name="page" value="georg-kloster-orthodox-donate-calendar"><input type="date" name="date" value="').esc_attr($date).'"> <select name="period">';
         foreach(['active'=>(__('Read on this date', 'georg-kloster-orthodox-donate')),'ending'=>(__('Ending on this date', 'georg-kloster-orthodox-donate')),'future'=>(__('Upcoming', 'georg-kloster-orthodox-donate')),'finished'=>(__('Finished', 'georg-kloster-orthodox-donate')),'unset'=>(__('No period', 'georg-kloster-orthodox-donate'))] as $key=>$label) echo '<option value="'.esc_attr($key).'" '.selected($mode,$key,false).'>'.esc_html($label).'</option>';

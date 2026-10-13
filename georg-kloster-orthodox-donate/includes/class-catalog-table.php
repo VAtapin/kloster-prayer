@@ -26,6 +26,7 @@ final class Catalog_Table extends \WP_List_Table
         return '';
     }
     protected function get_views() {
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Paginated custom form/service administration; current rows after edits are required.
         global $wpdb;$table=Database::table($this->kind);$counts=$wpdb->get_row($wpdb->prepare("SELECT COUNT(*) total,SUM(is_active=1) active,SUM(is_active=0) inactive FROM %i", $table));$views=[];
         foreach([''=>(__('All', 'georg-kloster-orthodox-donate')),'active'=>(__('Active items', 'georg-kloster-orthodox-donate')),'inactive'=>(__('Disabled items', 'georg-kloster-orthodox-donate'))] as $key=>$label){$n=$key===''?$counts->total:($key==='active'?$counts->active:$counts->inactive);$views[$key?:'all']='<a href="'.esc_url(add_query_arg(['page'=>'georg-kloster-orthodox-donate-'.$this->kind,'status'=>$key],admin_url('admin.php'))).'"'.((Input::get('status')??'')===$key?' class="current" aria-current="page"':'').'>'.esc_html($label).' <span class="count">('.(int)$n.')</span></a>';}
         return $views;
@@ -36,10 +37,10 @@ final class Catalog_Table extends \WP_List_Table
         if($search!==''){$where[]='(title_ru LIKE %s OR title_de LIKE %s OR title_uk LIKE %s OR title_pl LIKE %s OR slug LIKE %s)';$like='%'.$wpdb->esc_like($search).'%';array_push($args,$like,$like,$like,$like,$like);}
         if(in_array(Input::get('status')??'', ['active','inactive'],true)){$where[]='is_active=%d';$args[]=Input::get('status')==='active'?1:0;}
         $sql=' FROM %i WHERE '.implode(' AND ',$where);
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Fixed filter clauses, bound table identifier and search values.
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Fixed filter clauses, bound table identifier and search values. Paginated custom form/service administration; current rows after edits are required.
         $total=(int)$wpdb->get_var($wpdb->prepare('SELECT COUNT(*)'.$sql,...array_merge([$table],$args)));
         $sort=in_array(Input::get('orderby')??'', ['title_'.array_key_first(Admin::editor_languages()),'slug','updated_at'],true)?Input::get('orderby'):'id';$dir=strtolower(Input::get('order')??'asc')==='desc'?'DESC':'ASC';$per=20;
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- ORDER BY and direction are whitelist values; identifiers, filters and paging are bound.
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- ORDER BY and direction are whitelist values; identifiers, filters and paging are bound. Paginated custom form/service administration; current rows after edits are required.
         $this->items=$wpdb->get_results($wpdb->prepare('SELECT *'.$sql." ORDER BY {$sort} {$dir} LIMIT %d OFFSET %d",...array_merge([$table],$args,[$per,($this->get_pagenum()-1)*$per])));
         $this->_column_headers=[$this->get_columns(),[], $this->get_sortable_columns(),'title'];$this->set_pagination_args(['total_items'=>$total,'per_page'=>$per]);
     }

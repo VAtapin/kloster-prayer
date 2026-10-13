@@ -1,10 +1,7 @@
 <?php
 declare(strict_types=1);
 // Real disposable WordPress + SQLite. Run only against the local review site.
-$site=realpath($argv[1]??'');
-if(!$site||!str_contains(str_replace('\\','/',$site),'/tmp/wporg-review/wordpress'))throw new RuntimeException('Local review site required');
-require $site.'/wp-load.php';
-require_once $site.'/wp-content/plugins/georg-kloster-orthodox-donate/includes/class-orders-table.php';
+require __DIR__.'/bootstrap-wordpress.php';
 use GeorgKlosterOrthodoxDonate\Database;
 use GeorgKlosterOrthodoxDonate\Payments;
 use GeorgKlosterOrthodoxDonate\Input;

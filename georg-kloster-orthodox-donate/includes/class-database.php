@@ -33,14 +33,21 @@ final class Database
     {
         global $wpdb;
         $forms = self::table('forms');
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table schema/seed operation; WordPress has no equivalent post/meta API.
         $wpdb->query($wpdb->prepare("UPDATE %i SET intro_ru=%s WHERE intro_ru=%s", $forms, 'Подайте имена для церковной молитвы.', 'Подайте имена для молитвы в нашем монастыре.'));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table schema/seed operation; WordPress has no equivalent post/meta API.
         $wpdb->query($wpdb->prepare("UPDATE %i SET intro_de=%s WHERE intro_de=%s", $forms, 'Reichen Sie Namen für das kirchliche Gebet ein.', 'Reichen Sie Namen für das Gebet in unserem Kloster ein.'));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table schema/seed operation; WordPress has no equivalent post/meta API.
         $wpdb->query($wpdb->prepare("UPDATE %i SET intro_uk='Подайте імена для церковної молитви.' WHERE intro_uk='' OR intro_uk IS NULL", $forms));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table schema/seed operation; WordPress has no equivalent post/meta API.
         $wpdb->query($wpdb->prepare("UPDATE %i SET intro_pl='Prosimy podać imiona do modlitwy cerkiewnej.' WHERE intro_pl='' OR intro_pl IS NULL", $forms));
         $services=self::table('services');
         $translations=['sorokoust'=>['Сорокоуст','Sorokoust'],'moleben'=>['Молебень','Molebień'],'akathist'=>['Акафіст','Akatyst'],'altar-candle'=>['Свічка у вівтар','Świeca do ołtarza'],'panikhida'=>['Панахида','Panichida'],'psalter'=>['Неусипна Псалтир','Nieustające czytanie Psałterza']];
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table schema/seed operation; WordPress has no equivalent post/meta API.
         foreach($translations as $slug=>$titles){$wpdb->query($wpdb->prepare("UPDATE %i SET title_uk=%s,title_pl=%s WHERE slug=%s AND (title_uk='' OR title_uk IS NULL)", $services,$titles[0],$titles[1],$slug));}
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table schema/seed operation; WordPress has no equivalent post/meta API.
         $wpdb->query($wpdb->prepare("UPDATE %i SET title_uk=title_ru WHERE title_uk='' OR title_uk IS NULL", $forms));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table schema/seed operation; WordPress has no equivalent post/meta API.
         $wpdb->query($wpdb->prepare("UPDATE %i SET title_pl=title_de WHERE title_pl='' OR title_pl IS NULL", $forms));
     }
 
@@ -278,6 +285,7 @@ final class Database
     {
         global $wpdb;
         $services = self::table('services');
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table schema/seed operation; WordPress has no equivalent post/meta API.
         if ((int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM %i", $services)) > 0) {
             return;
         }
@@ -292,6 +300,7 @@ final class Database
             ['psalter', 'Неусыпаемая Псалтирь', 'Immerwährendes Psaltergedenken', 'Неусипна Псалтир', 'Nieustające czytanie Psałterza', 'both', 'per_sheet', 4000, 10],
         ];
         foreach ($defaults as $index => $row) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table schema/seed operation; WordPress has no equivalent post/meta API.
             $wpdb->insert($services, [
                 'slug' => $row[0], 'title_ru' => $row[1], 'title_de' => $row[2], 'title_uk' => $row[3], 'title_pl' => $row[4],
                 'intention_mode' => $row[5], 'pricing_mode' => $row[6], 'price_cents' => $row[7],
@@ -301,6 +310,7 @@ final class Database
         }
 
         $forms = self::table('forms');
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table schema/seed operation; WordPress has no equivalent post/meta API.
         $service_rows = $wpdb->get_results($wpdb->prepare("SELECT id,slug FROM %i", $services));
         $by_slug = [];
         foreach ($service_rows as $service) $by_slug[$service->slug] = (int) $service->id;
@@ -313,6 +323,7 @@ final class Database
             [5, 'moleben', 'Молебен', 'Moleben', 'standard', ['moleben']],
         ];
         foreach ($form_defaults as $definition) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table schema/seed operation; WordPress has no equivalent post/meta API.
             $wpdb->insert($forms, [
                 'id' => $definition[0], 'slug' => $definition[1], 'title_ru' => $definition[2], 'title_de' => $definition[3],
                 'intro_ru' => 'Подайте имена для церковной молитвы.',
@@ -324,6 +335,7 @@ final class Database
                 'is_active' => 1, 'created_at' => $now, 'updated_at' => $now,
             ]);
             foreach ($definition[5] as $sort => $slug) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table schema/seed operation; WordPress has no equivalent post/meta API.
                 if (isset($by_slug[$slug])) $wpdb->insert(self::table('form_services'), ['form_id' => $definition[0], 'service_id' => $by_slug[$slug], 'sort_order' => $sort]);
             }
         }

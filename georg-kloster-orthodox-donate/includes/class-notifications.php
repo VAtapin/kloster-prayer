@@ -26,6 +26,7 @@ final class Notifications
     {
         if ($order_id <= 0 || self::recipient() === '') return;
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Notification claims/retry state use conditional custom-table operations to prevent duplicate sends.
         $wpdb->query($wpdb->prepare(
             'INSERT IGNORE INTO %i (order_id,created_at) VALUES (%d,%s)', Database::table('notifications'),
             $order_id, gmdate('Y-m-d H:i:s')
@@ -36,6 +37,7 @@ final class Notifications
     {
         if (self::recipient() === '') return;
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Notification claims/retry state use conditional custom-table operations to prevent duplicate sends.
         $ids = $wpdb->get_col($wpdb->prepare(
             'SELECT order_id FROM %i WHERE sent_at IS NULL AND (locked_at IS NULL OR locked_at < %s) AND (last_attempt_at IS NULL OR last_attempt_at < %s) ORDER BY COALESCE(last_attempt_at,created_at),order_id LIMIT 25', Database::table('notifications'),
             gmdate('Y-m-d H:i:s', time() - 900), gmdate('Y-m-d H:i:s', time() - 3600)
@@ -50,16 +52,20 @@ final class Notifications
         global $wpdb;
         $table = Database::table('notifications');
         $now = gmdate('Y-m-d H:i:s');
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Notification claims/retry state use conditional custom-table operations to prevent duplicate sends.
         $claimed = $wpdb->query($wpdb->prepare(
             "UPDATE %i SET locked_at=%s,last_attempt_at=%s,attempts=attempts+1 WHERE order_id=%d AND sent_at IS NULL AND (locked_at IS NULL OR locked_at < %s)", $table,
             $now, $now, $order_id, gmdate('Y-m-d H:i:s', time() - 900)
         ));
         if (!$claimed) return false;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Notification claims/retry state use conditional custom-table operations to prevent duplicate sends.
         $order = $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'), $order_id));
         if (!$order || $order->payment_status !== 'paid') {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Notification claims/retry state use conditional custom-table operations to prevent duplicate sends.
             $wpdb->update($table, ['locked_at' => null], ['order_id' => $order_id]);
             return false;
         }
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Notification claims/retry state use conditional custom-table operations to prevent duplicate sends.
         $titles = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d', Database::table('order_items'), $order_id));
         /* translators: %d: prayer order ID. */
         $subject = sprintf(__('Prayer request #%d paid', 'georg-kloster-orthodox-donate'), $order_id);
@@ -91,6 +97,7 @@ final class Notifications
         $body .= '<p><a href="' . esc_url($url) . '">' . esc_html__('Open request in WordPress', 'georg-kloster-orthodox-donate') . '</a></p></div></body></html>';
         try { $sent = wp_mail($recipient, $subject, $body, ['Content-Type: text/html; charset=UTF-8']); }
         catch (\Throwable $e) { $sent = false; }
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Notification claims/retry state use conditional custom-table operations to prevent duplicate sends.
         $wpdb->update($table, ['sent_at' => $sent ? $now : null, 'locked_at' => null], ['order_id' => $order_id]);
         Order_Workflow::log($order_id, $sent ? 'notification_sent' : 'notification_failed', $sent
             ? __('The recipient notification was handed to the mail system.', 'georg-kloster-orthodox-donate')

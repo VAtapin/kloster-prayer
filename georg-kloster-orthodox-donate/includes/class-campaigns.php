@@ -14,6 +14,7 @@ final class Campaigns
     public static function get(int $id): ?object
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom campaign/expense ledger; read current confirmed income and refunds, without stale financial cache.
         return $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('campaigns'), $id));
     }
 
@@ -32,7 +33,9 @@ final class Campaigns
     public static function totals(int $id): array
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom campaign/expense ledger; read current confirmed income and refunds, without stale financial cache.
         $received = (int) $wpdb->get_var($wpdb->prepare("SELECT COALESCE(SUM(amount_cents-refunded_cents),0) FROM %i WHERE campaign_id=%d AND payment_status='paid'", Database::table('orders'), $id));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom campaign/expense ledger; read current confirmed income and refunds, without stale financial cache.
         $spent = (int) $wpdb->get_var($wpdb->prepare('SELECT COALESCE(SUM(amount_cents),0) FROM %i WHERE campaign_id=%d', Database::table('campaign_expenses'), $id));
         return ['received' => $received, 'spent' => $spent, 'balance' => $received - $spent];
     }
@@ -64,7 +67,9 @@ final class Campaigns
         $titles=[];
         foreach (['en','ru','de','uk','pl'] as $lang) $titles[]=$data['title_'.$lang]??($existing->{'title_'.$lang}??'');
         if (!array_filter($titles,static fn($title)=>$title!=='')) return new \WP_Error('invalid', __('Please complete all required fields.', 'georg-kloster-orthodox-donate'));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom campaign/expense ledger; read current confirmed income and refunds, without stale financial cache.
         if ($id) $ok = $wpdb->update(Database::table('campaigns'), $data, ['id' => $id]);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom campaign/expense ledger; read current confirmed income and refunds, without stale financial cache.
         else { $data['created_at'] = current_time('mysql'); $ok = $wpdb->insert(Database::table('campaigns'), $data); $id = (int) $wpdb->insert_id; }
         return $ok === false ? new \WP_Error('database', __('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donate')) : $id;
     }
@@ -81,6 +86,7 @@ final class Campaigns
         if (!self::get($id) || !$amount || $description === '' || strlen($description) > 250 || !$parsed || $parsed->format('Y-m-d') !== $date) {
             return new \WP_Error('invalid', __('Please complete all required fields.', 'georg-kloster-orthodox-donate'));
         }
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom campaign/expense ledger; read current confirmed income and refunds, without stale financial cache.
         return $wpdb->insert(Database::table('campaign_expenses'), ['campaign_id' => $id, 'amount_cents' => $amount, 'description' => $description, 'incurred_on' => $date, 'user_id' => get_current_user_id(), 'created_at' => current_time('mysql')]) !== false;
     }
 
@@ -108,6 +114,7 @@ final class Campaigns
         global $wpdb;
         $atts = shortcode_atts(['id' => 0, 'lang' => ''], $atts, 'gkod_campaigns');
         $lang = in_array($atts['lang'], ['en','ru','de','uk','pl'], true) ? $atts['lang'] : I18n::language();
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom campaign/expense ledger; read current confirmed income and refunds, without stale financial cache.
         $rows = $atts['id'] ? array_filter([self::get(absint($atts['id']))]) : $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE status IN ('open','closed') ORDER BY id DESC LIMIT 100", Database::table('campaigns')));
         return I18n::in_language(static function () use ($rows, $lang): string {
             $html = '<div class="gkod-campaigns">';

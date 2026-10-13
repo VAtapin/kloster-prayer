@@ -147,7 +147,7 @@ final class Payments
         } else {
             $services_table = Database::table('services');
             $placeholders = implode(',', array_fill(0, count($data['service_ids']), '%d'));
-            // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- One %d for each validated service ID, plus the %i table identifier; variadic count is tested on real WordPress.
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- One %d for each validated service ID, plus the %i table identifier; variadic count is tested on real WordPress. Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
             $services = $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE is_active=1 AND id IN ({$placeholders})", $services_table, ...$data['service_ids']));
             if (!$services || count($services) !== count($data['service_ids'])) {
                 return new WP_Error('invalid_services', I18n::text('error', $data['language']));
@@ -173,6 +173,7 @@ final class Payments
             return new WP_Error('invalid_amount', I18n::text('error', $data['language']));
         }
         $uuid = wp_generate_uuid4();
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $ok = $wpdb->insert(Database::table('orders'), [
             'public_id' => $uuid, 'form_id' => $data['form_id'] ?: null, 'language' => $data['language'],
             'campaign_id' => $campaign_id ?: null, 'donor_user_id' => $data['donor_user_id'] ?? get_current_user_id(),
@@ -188,6 +189,7 @@ final class Payments
         $order_id = (int) $wpdb->insert_id;
         foreach ($items as [$service, $quantity, $subtotal]) {
             $title_key = 'title_' . $data['language'];
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
             $wpdb->insert(Database::table('order_items'), [
                 'order_id' => $order_id, 'service_id' => (int) $service->id, 'service_title' => $service->{$title_key},
                 'pricing_mode' => $service->pricing_mode, 'unit_price_cents' => (int) $service->price_cents,
@@ -195,6 +197,7 @@ final class Payments
                 'subtotal_cents' => $subtotal,
             ]);
         }
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         return $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'), $order_id));
     }
 
@@ -232,6 +235,7 @@ final class Payments
     public static function refresh_customer(int $id): bool
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $order=$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'),$id));
         if(!$order || $order->payment_provider!=='stripe' || !preg_match('/^cs_(live|test)_[A-Za-z0-9]+$/',(string)$order->payment_id))return false;
         $secret=trim((string)get_option('gkod_stripe_secret'));
@@ -294,6 +298,7 @@ final class Payments
             return $campaign ? Campaigns::title($campaign, $order->language) : I18n::donation_text('title', $order->language);
         }
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $items = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d ORDER BY id', Database::table('order_items'), (int) $order->id));
         $prefix = I18n::text('payment_prefix', $order->language) . ' ';
         return mb_substr($prefix . implode(', ', $items), 0, 120);
@@ -318,12 +323,14 @@ final class Payments
         $order_id = (int) ($object['metadata']['order_id'] ?? $object['client_reference_id'] ?? 0);
         if (($event['type'] ?? '') === 'checkout.session.completed' && ($object['payment_status'] ?? '') === 'paid') {
             global $wpdb;
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
             $order = $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'), $order_id));
             if (!$order || !self::stripe_session_matches($order, $object)) return new WP_REST_Response(['error' => 'Payment does not match order'], 400);
         }
         if (!self::record_event('stripe', (string) $event['id'], (string) ($event['type'] ?? ''), $order_id, $payload)) return new WP_REST_Response(['received' => true], 200);
         if (($event['type'] ?? '') === 'checkout.session.completed' && ($object['payment_status'] ?? '') === 'paid') {
             self::store_customer_details($order_id, (array) ($object['customer_details'] ?? []));
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
             if (!empty($object['payment_intent'])) $wpdb->update(Database::table('orders'), ['payment_reference' => (string) $object['payment_intent']], ['id' => $order_id]);
             self::mark_paid($order_id, (string) ($object['id'] ?? ''));
         }
@@ -346,6 +353,7 @@ final class Payments
         global $wpdb;
         $public_id = sanitize_text_field((string) $request->get_param('order'));
         $token_id = sanitize_text_field((string) $request->get_param('token'));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $order = $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE public_id=%s', Database::table('orders'), $public_id));
         if (!$order || $order->payment_provider !== 'paypal' || !$token_id || !hash_equals((string)$order->payment_id, $token_id)) { wp_safe_redirect(home_url('/')); exit; }
         $token = self::paypal_access_token();
@@ -354,6 +362,7 @@ final class Payments
             $response = wp_remote_post($base . '/v2/checkout/orders/' . rawurlencode($token_id) . '/capture', ['timeout' => 25, 'headers' => ['Authorization' => 'Bearer ' . $token, 'Content-Type' => 'application/json'], 'body' => '{}']);
             $json = !is_wp_error($response) ? json_decode((string) wp_remote_retrieve_body($response), true) : [];
             if (is_array($json) && self::paypal_return_matches($order, $json)) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
                 $wpdb->update(Database::table('orders'), ['payment_reference' => (string) $json['purchase_units'][0]['payments']['captures'][0]['id']], ['id' => $order->id]);
                 self::mark_paid((int) $order->id, $token_id);
             }
@@ -380,15 +389,18 @@ final class Payments
         $order_id = (int) ($resource['custom_id'] ?? 0);
         if (!$order_id && !empty($resource['supplementary_data']['related_ids']['order_id'])) {
             global $wpdb;
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
             $order_id = (int) $wpdb->get_var($wpdb->prepare('SELECT id FROM %i WHERE payment_provider=\'paypal\' AND payment_id=%s', Database::table('orders'), (string) $resource['supplementary_data']['related_ids']['order_id']));
         }
         if (($payload['event_type'] ?? '') === 'PAYMENT.CAPTURE.COMPLETED') {
             global $wpdb;
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
             $order = $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'), $order_id));
             if (!$order || !self::paypal_capture_matches($order, $resource)) return new WP_REST_Response(['error' => 'Payment does not match order'], 400);
         }
         if (self::record_event('paypal', $event_id, (string) ($payload['event_type'] ?? ''), $order_id, $request->get_body())) {
             if (($payload['event_type'] ?? '') === 'PAYMENT.CAPTURE.COMPLETED') {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
                 $wpdb->update(Database::table('orders'), ['payment_reference' => (string) ($resource['id'] ?? '')], ['id' => $order_id]);
                 self::mark_paid($order_id, (string) ($resource['id'] ?? ''));
             }
@@ -445,16 +457,20 @@ final class Payments
     private static function record_event(string $provider, string $event_id, string $type, int $order_id, string $payload): bool
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         return (bool) $wpdb->query($wpdb->prepare('INSERT IGNORE INTO %i (provider,event_id,event_type,order_id,payload_hash,processed,created_at) VALUES (%s,%s,%s,%d,%s,1,%s)', Database::table('payment_events'), $provider, $event_id, $type, $order_id ?: null, hash('sha256', $payload), current_time('mysql')));
     }
 
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
     private static function set_payment_id(int $order_id, string $payment_id): void { global $wpdb; $wpdb->update(Database::table('orders'), ['payment_id' => $payment_id], ['id' => $order_id]); }
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
     private static function set_status(int $order_id, string $status): void { global $wpdb; $changed=$wpdb->update(Database::table('orders'), ['payment_status' => $status], ['id' => $order_id]); if($changed) Order_Workflow::log($order_id,'payment_status',__('Payment status:', 'georg-kloster-orthodox-donate').' '.$status); }
 
     private static function store_customer_details(int $order_id, array $details): void
     {
         if ($order_id <= 0) return;
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $wpdb->update(Database::table('orders'), [
             'billing_name' => sanitize_text_field((string) ($details['name'] ?? '')),
             'billing_email' => sanitize_email((string) ($details['email'] ?? '')),
@@ -468,11 +484,13 @@ final class Payments
         global $wpdb;
         if ($order_id <= 0) return;
         $table = Database::table('orders');
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $wpdb->query($wpdb->prepare("UPDATE %i SET payment_status='paid',payment_id=COALESCE(NULLIF(%s,''),payment_id),paid_at=COALESCE(paid_at,%s) WHERE id=%d AND payment_status IN ('pending','failed','cancelled')", $table, $payment_id, current_time('mysql'), $order_id));
         if ($wpdb->rows_affected > 0) {
             Notifications::enqueue($order_id);
             Order_Workflow::log($order_id,'paid',__('Payment confirmed', 'georg-kloster-orthodox-donate'));
         }
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $order = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id=%d", $table, $order_id));
         if ($order && $order->payment_status === 'paid' && !$order->confirmation_sent_at) self::send_confirmation($order);
         Notifications::send($order_id);
@@ -482,6 +500,7 @@ final class Payments
     {
         Notifications::retry();
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $rows = $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE payment_status='paid' AND confirmation_sent_at IS NULL ORDER BY paid_at ASC LIMIT 25", Database::table('orders')));
         foreach ($rows as $order) self::send_confirmation($order);
     }
@@ -490,6 +509,7 @@ final class Payments
     {
         global $wpdb;
         $cutoff = wp_date('Y-m-d H:i:s', time() - 7 * DAY_IN_SECONDS);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $wpdb->query($wpdb->prepare("UPDATE %i SET payment_status='cancelled' WHERE payment_status='pending' AND created_at < %s", Database::table('orders'), $cutoff));
     }
 
@@ -497,10 +517,13 @@ final class Payments
     {
         global $wpdb;
         $table = Database::table('orders');
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $order = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id=%d AND payment_status='paid'", $table, $order_id));
         if (!$order) return false;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $wpdb->update($table, ['confirmation_sent_at' => null], ['id' => $order_id]);
         self::send_confirmation($order);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         return (bool) $wpdb->get_var($wpdb->prepare("SELECT confirmation_sent_at FROM %i WHERE id=%d", $table, $order_id));
     }
 
@@ -508,6 +531,7 @@ final class Payments
     {
         global $wpdb;
         $orders = Database::table('orders');
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $claimed = $wpdb->query($wpdb->prepare("UPDATE %i SET confirmation_sent_at=%s WHERE id=%d AND confirmation_sent_at IS NULL", $orders, current_time('mysql'), (int) $order->id));
         if (!$claimed) return;
         if (($order->intention ?? '') === 'none') {
@@ -523,6 +547,7 @@ final class Payments
         $logo_id = (int) get_theme_mod('custom_logo');
         $logo_url = $logo_id ? (string) wp_get_attachment_image_url($logo_id, 'medium') : (string) get_site_icon_url(512);
         $subject=I18n::text('mail_subject',$lang); $greeting=esc_html(I18n::text('greeting',$lang)).($order->donor_name?', '.esc_html($order->donor_name):'').'!';
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $items = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d', Database::table('order_items'), (int) $order->id));
         $intention = I18n::text($order->intention === 'rest' ? 'rest' : 'health', $lang);
         $amount = number_format_i18n(((int) $order->amount_cents) / 100, 2) . ' €';
@@ -530,6 +555,7 @@ final class Payments
         $footer = esc_html(I18n::text('footer',$lang)) . '<br>' . esc_html($site_name);
         $body = '<!doctype html><html><body style="margin:0;background:#f3f5f7;font-family:Arial,sans-serif;color:#202936"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding:28px 12px"><table role="presentation" width="620" cellspacing="0" cellpadding="0" style="max-width:620px;width:100%;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 8px 30px rgba(25,40,55,.10)"><tr><td align="center" style="padding:28px 30px 22px;border-top:5px solid #198fd9">'.($logo_url!==''?'<img src="'.esc_url($logo_url).'" width="360" alt="'.esc_attr($site_name).'" style="display:block;max-width:100%;height:auto">':'<strong>'.esc_html($site_name).'</strong>').'</td></tr><tr><td style="padding:8px 42px 38px"><h1 style="margin:0 0 18px;font-size:25px;line-height:1.3;text-align:center">'.esc_html($subject).'</h1><p style="font-size:16px;line-height:1.65">'.$greeting.'</p><p style="font-size:16px;line-height:1.65">'.esc_html(I18n::text('thanks',$lang)).'</p><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:24px 0;border:1px solid #dce4ea;border-radius:5px"><tr><td style="padding:12px 16px;background:#f5f9fc"><strong>'.esc_html($labels[0]).'</strong></td><td style="padding:12px 16px;background:#f5f9fc;text-align:right">'.esc_html(implode(', ',$items)).'</td></tr><tr><td style="padding:12px 16px;border-top:1px solid #dce4ea"><strong>'.esc_html($labels[1]).'</strong></td><td style="padding:12px 16px;border-top:1px solid #dce4ea;text-align:right">'.esc_html($intention).'</td></tr><tr><td style="padding:12px 16px;border-top:1px solid #dce4ea"><strong>'.esc_html($labels[2]).'</strong></td><td style="padding:12px 16px;border-top:1px solid #dce4ea;text-align:right"><strong>'.esc_html($amount).'</strong></td></tr></table><h2 style="font-size:17px;margin:25px 0 10px">'.esc_html($labels[3]).'</h2><div style="padding:17px 20px;background:#f8fafb;border-left:4px solid #198fd9;font-size:16px;line-height:1.7">'.nl2br(esc_html($order->names)).'</div><p style="margin:28px 0 0;color:#53606d;font-size:15px;line-height:1.6">'.$footer.'</p></td></tr><tr><td style="padding:17px 30px;background:#202936;color:#cfd6dc;text-align:center;font-size:12px"><a href="'.esc_url(home_url('/')).'" style="color:#fff">'.esc_html($site_name).'</a></td></tr></table></td></tr></table></body></html>';
         }
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         if (!wp_mail($order->donor_email, $subject, $body, ['Content-Type: text/html; charset=UTF-8'])) { $wpdb->update($orders, ['confirmation_sent_at' => null], ['id' => (int) $order->id]); Order_Workflow::log((int)$order->id,'email_failed',__('Could not hand the email to the mail system', 'georg-kloster-orthodox-donate')); } else { Order_Workflow::log((int)$order->id,'email_sent',__('Confirmation handed to the mail system', 'georg-kloster-orthodox-donate')); }
     }
 }

@@ -1,100 +1,105 @@
-# WordPress.org preparation — new series 1.0.2
+# WordPress.org preparation — 1.0.3
 
-Prepared on 2026-10-11. Requested directory slug: `georg-kloster-orthodox-donate`.
-ZIP folder, main filename and text domain match the requested slug. New `gkod_`
-database tables, settings, hooks and webhook routes do not import the previous installation.
-PHP namespace GeorgKlosterOrthodoxDonate, gkod_* shortcodes, DOM/CSS selectors and JavaScript globals are isolated. Both plugins can remain active; integration and browser checks cover coexistence in both load orders. The Git repository is retained. The canonical English name is **Orthodox Donations**;
-bundled metadata translations retain the owner's Russian name.
-Directory acceptance and the assigned slug remain decisions of the Plugins Team;
-if the submission suggests another slug, request `georg-kloster-orthodox-donate` before approval.
+Prepared on 2026-10-13. English directory name: **Georg-Kloster Orthodox Donations**.
+Russian plugin name/menu: **Пожертвования**. Requested slug/text domain/package
+folder: `georg-kloster-orthodox-donate`. Author: Vladimir Atapin; contributor `atapin`.
+The public WordPress.org contributor profile was verified with HTTP 200.
 
-## Package and disclosure
+## Applied publication experience
 
-- Standard English readme headers/sections, tested version, GPL license and URI.
-- Stripe/PayPal purposes, transmitted fields, API origins, terms and privacy links.
-- Readable PHP/JS/CSS included; no custom updater or downloaded executable code.
-- Bundled upstream libraries and font/artwork notices in `third-party-notices.txt`.
-- Original prayer-slip ownership/GPL permission confirmed by the owner on 2026-10-11.
-- US English gettext source strings, complete Russian/German/Ukrainian/Polish
-  POT/PO/MO catalogs, including admin screens, PayPal help and donation messages.
-  English WordPress installations default to English, not German. Saved prayer
-  names/comments and configured localized service/form content remain data and
-  are not rewritten or translated automatically.
-- No remote monastery-logo reference; mail uses the site's own logo/name.
-- Database and settings are retained on uninstall, explicitly disclosed.
+The successful `wp_cu_translator` publication was consulted: distinctive brand
+prefix, isolated JavaScript globals, English source strings, separate manual and
+WordPress.org ZIPs, POT in the directory build, and standard WordPress language packs.
+The runtime, PHP namespace `GeorgKlosterOrthodoxDonate`, nine `gkod_*` shortcodes,
+payment hooks/settings/tables and assets remain independent from the legacy plugin.
 
-## Security and compatibility changes
+Both ZIPs contain identical runtime/assets and one correctly named root folder:
 
-- Custom table identifiers use `%i`; query values retain prepared placeholders.
-- Input normalizer rejects arrays for scalar fields, unslashes once, preserves
-  textarea line breaks, and keeps list input separate from scalar input.
-- Admin writes require `manage_options` and the admin nonce; payment creation
-  requires its AJAX nonce. Public webhook routes retain signature verification.
-- Completed Stripe/PayPal payments must match saved provider/payment identifiers,
-  amount and currency. PayPal browser return cannot capture a different order token.
-- Output escaping, explicit PHP echo tags and guarded executable entry points.
-- Correct one-index-per-line dbDelta formatting; schema version 1.2.11 performs
-  a compatible recheck/addition without deleting records or dropping tables.
+- `output/georg-kloster-orthodox-donate-1.0.3.zip`: 374 files, including all four PO/MO catalogs.
+- `output/georg-kloster-orthodox-donate-wordpress-org-1.0.3.zip`: 366 files; excludes only PO/MO and retains POT.
 
-## Verification
+Use the second ZIP for submission. WordPress.org builds obtain translations from
+`wp-content/languages/plugins`; until published on translate.wordpress.org the
+directory version uses English. Explicit saved email/PDF languages also prefer
+these standard language packs and fall back to bundled catalogs in manual installs.
+All 360 English msgid and RU/DE/UK/PL translations remain in the repository.
 
-New series 1.0.1: Plugin Check 2.1.0 on a cloned WordPress 7.1/SQLite database
-with PHP 8.4 and runtime preparation: **0 errors, 254 warnings**, no exclusions.
-133 direct-query and 120 no-caching warnings cover custom financial/administrative
-tables; one bundled text-domain loader warning supports manual ZIP installation.
-New list queries bind every identifier, owner and pagination value. Official WPML
-hooks and the cache privacy flag have narrowly documented naming exceptions.
-360 English messages have complete RU/DE/UK/PL PO/MO catalogs. Normal WordPress
-gettext loads UI translations; content uses the installed language plugin context.
-Actual WPML/Polylang installations are not present in the local fixture: their public
-language hooks are simulated. Fresh installation, backend, browser and rendered PDF
-checks pass; live provider/production tests and directory acceptance remain pending.
+Build both deterministic packages with `python tools/build-package.py`.
+For local verification, add `--extract-to tmp/publication-package-check`.
+No Git tags, releases, SVN submissions or production updates were performed.
 
-Historical checks of the previous plugin:
+## Readme and licenses
 
-Plugin Check 2.1.0 on WordPress 7.1 / PHP 8.4, with `cli.php` required for runtime
-checks: **0 errors, 170 warnings**. No categories or files were excluded.
+- English readme under 10,000 bytes, short description under 150 characters;
+  matching name/version/requirements, unique descending new-series changelog.
+- All nine shortcodes, payment setup, one-time/recurring webhook events, consent,
+  account privacy, retention, cancellation, external-service data/terms/privacy and
+  local PDF requirements are documented. No legacy compatibility claims remain.
+- Plugin URI points to this plugin's public source directory; Author URI is separate.
+- Readable source and GPL-compatible code/library/font/artwork notices are included.
+- Original prayer-slip ownership/GPL permission was confirmed by the owner previously;
+  third-party notices identify bundled library and illustration licenses.
+- The WordPress.org readme parser passes structural checks. Its contributor lookup
+  uses the local WordPress user database, so the local fixture's missing `atapin`
+  user is distinguished from the independently verified WordPress.org profile.
 
-Warnings are not hidden:
+## Plugin Check and SQL warning review
 
-- 89 `WordPress.DB.DirectDatabaseQuery.DirectQuery`: custom lifecycle/payment
-  tables have no equivalent WordPress post/meta API. Transactions and idempotency
-  need SQL rather than stale object-cache state.
-- 80 `WordPress.DB.DirectDatabaseQuery.NoCaching`: payment, notification and
-  archive state is intentionally read fresh; admin queries are paginated.
-- 1 `load_plugin_textdomainFound`: loading bundled MO catalogs is retained for
-  manual ZIP installations and deferred to `init`, not early translation access.
+Plugin Check **2.1.0**, all categories including runtime preparation, on WordPress
+**7.1.3** / PHP **8.4.25**, for both exact extracted ZIPs:
+**0 errors, 0 reported warnings**. No categories or files were excluded.
 
-Narrow annotated exceptions explain dynamic prepared queries built from fixed
-filter/sort whitelists, generated binary PDF output, closing `php://output`, the
-existing WPML hook, and normalization helpers whose callers enforce authorization.
-They do not disable authentication, escaping or runtime validation.
+The initial 254 warnings were individually accounted for:
 
-Tests include PHP lint, fixture admin/notification/API checks, payment binding,
-real disposable WordPress/SQLite activation and upgrade with data preservation,
-nonce/capability rejection, signed Stripe event processing, duplicate delivery,
-archive/comments, shortcode joins, reports and PDF queries. External HTTP and mail
-are intercepted in the integration test. PDF rendering and visual review preserve
-the original prayer slips.
+- 133 direct-query and 120 no-caching findings: these are custom financial,
+  workflow/configuration and paginated administration tables with no equivalent
+  WordPress post/meta operation. Current payment binding, conditional writes,
+  idempotency, refund totals, notification claims and ownership checks must not
+  read stale financial cache. 129 affected SQL statement lines have narrow PHPCS
+  exceptions explaining their role; existing prepared-query explanations remain.
+- One discouraged bundled text-domain loader: retained for manual ZIP installs,
+  with a narrow explanation; standard WordPress.org language packs take precedence.
 
-Version 1.2.13 also checks all 269 extracted English source messages against all
-four compiled catalogs and preserves the previous prayer-form/donation wording.
-Real WordPress gettext, admin/help/form/donation rendering, explicit email/PDF
-languages, decimal donation validation and both browser scenarios are verified.
+This is documented exception handling, not replacement of SQL operations with
+cached financial state. Executable-token comparison against the preceding commit
+confirmed that all 22 modules outside the language-pack helper are unchanged.
+Unrelated security, escaping, nonce, signature and query preparation checks remain active.
 
-The real WordPress integration test is local only:
+## Checks actually executed
 
-```text
-php -d extension=mbstring -d extension=pdo_sqlite -d extension=sqlite3 \
-    -d extension=gd -d memory_limit=512M tests/wporg-integration.php \
-    tmp/wporg-review/wordpress
-```
+- PHP syntax across all 275 source/test files, including bundled libraries; JS syntax.
+- i18n/POT/PO/MO completeness, placeholders and preserved translations in four locales.
+- Standalone API-domain, payment binding, notifications, workflow, archive/print state,
+  comments/admin behavior and Stripe/PayPal setup-help regressions.
+- Separate cloned WordPress/SQLite databases: real startup, activation/schema checks,
+  malformed-input rejection, nonce/capability checks, signed Stripe/PayPal events,
+  payment/refund idempotency, subscriptions, cancellation, owner-only history,
+  campaign totals/expenses/privacy, administration navigation and shortcode guide.
+- Real WordPress gettext and explicit email/PDF locale tests; standard language-pack
+  loading in four locales with no bundled MO in the WordPress.org ZIP.
+- Manual ZIP: install, metadata translation, backend/payment/subscription/admin/help tests.
+  Directory ZIP: readme/release metadata, real integration and language-pack tests.
+- Both real legacy/new plugins active in either order; separate menus, routes,
+  settings, tables, shortcode callbacks and resources. Browser submits both real
+  forms on one page independently, without duplicate requests.
+- Browser: native WordPress admin CSS/empty tables/mobile widths, shortcode copying
+  and denied clipboard recovery, Stripe help, donation bounds, name normalization,
+  support consent/cancellation and error recovery.
+- PDF smoke, rendered prayer-note and archive PDFs; layout/escaping/footer checks.
+- ZIP integrity, byte-for-byte source matching, excluded PO/MO, root paths and no
+  tests, Git, local databases, logs or credentials in either package.
+- actionlint 1.7.12 for the updated release workflow.
 
-The temporary WordPress core, checker, SQLite drop-in, test database, reports and
-fake credentials are not shipped or committed. MySQL/Plesk execution, actual
-Stripe/PayPal test-mode transactions and real SMTP delivery still need separate
-site-owner verification; passing Plugin Check is not a security guarantee.
+HTTP/payment and mail calls in automated fixtures are intercepted; they are not
+presented as live provider transactions. The owner explicitly confirmed on
+2026-10-13 that real payment accounts and installed WPML were already tested.
+Local MySQL/MariaDB/Docker executables are unavailable; automated databases use
+SQLite. This local environment limitation is separate from owner-confirmed site tests.
 
-The 1.2.13 release is separate from WordPress.org submission/SVN publication.
-Production is not updated: the owner installs the ZIP through WordPress.
-Do not replace the existing calendar-plugin review submission with this unrelated plugin.
+## Submission
+
+Submit the directory ZIP as this independent plugin. Request the exact slug
+`georg-kloster-orthodox-donate` before approval, rather than relying on the generated
+slug from the English display name. Keep the established translator/calendar
+submissions separate. Plugins Team decides name/slug acceptance and final approval;
+automated checks do not publish or approve a plugin.

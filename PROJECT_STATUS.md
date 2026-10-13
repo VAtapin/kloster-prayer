@@ -1,9 +1,9 @@
 # Состояние проекта
 
 ## Текущее состояние
-- Независимый плагин 1.0.2: «Пожертвования»; английское имя Orthodox Donations. Меню: Donations / Пожертвования / Spenden / Пожертви / Darowizny. Slug, папка, PHP-файл и text domain: georg-kloster-orthodox-donate.
-- PHP 8.4 / WordPress 7.1; main → origin/main; репозиторий https://github.com/VAtapin/kloster-prayer.git не переименован.
-- Проверенный ZIP: output/georg-kloster-orthodox-donate-1.0.2.zip, 374 файла. Новые tags/releases не создавались; прежний tag 1.0.0 не изменён.
+- Независимый плагин 1.0.3: «Пожертвования»; английское имя Georg-Kloster Orthodox Donations. Меню: Donations / Пожертвования / Spenden / Пожертви / Darowizny. Slug, папка, PHP-файл и text domain: georg-kloster-orthodox-donate.
+- PHP 8.4 / WordPress 7.1.3; main → origin/main; репозиторий https://github.com/VAtapin/kloster-prayer.git не переименован.
+- Проверены два ZIP 1.0.3: установочный output/georg-kloster-orthodox-donate-1.0.3.zip (374 файла, все PO/MO) и output/georg-kloster-orthodox-donate-wordpress-org-1.0.3.zip (366 файлов, POT и WordPress language packs, без PO/MO). Новые tags/releases не создавались; прежний tag 1.0.0 не изменён.
 - Владелец устанавливает ZIP через WordPress самостоятельно. Production не обновлялся. Автоматизация ожидания 1.2.13 приостановлена.
 
 ## Реализовано и решения
@@ -16,21 +16,21 @@
 - PDF-бланки, архив, комментарии, CSV и уведомления работают. Лицензии включены в ZIP. Frontend build не требуется.
 
 ## Проверки
-- 1.0.2: i18n (360 полных PO/MO), lint четырёх изменённых PHP, admin-navigation с точными названиями меню на пяти языках, fresh-install из ZIP с переводом имени через WordPress, integrity/374 файла/версии ZIP — PASS. Остальные функциональные и Plugin Check ниже выполнены для 1.0.1; переименование не меняет их обработчики.
-- plugin-coexistence в обоих порядках загрузки: оба реальных плагина активны при старте WordPress, раздельные классы/таблицы/настройки/шорткоды/меню/webhook/AJAX — PASS. Browser: две реальные формы и оба скрипта на одной странице отправляют только собственную форму, без дублей — PASS.
-- PHP 8.4 lint: 50 собственных файлов/тестов. i18n, api-domain, payment-binding, notifications, order-workflow, admin-comments/admin-behavior, paypal-help/stripe-help — PASS.
-- На отдельных копиях WordPress 7.1/SQLite: fresh-install, donations/campaigns/subscriptions, native-admin, admin-navigation, shortcode-help — PASS. HTTP/почта перехвачены, реальных платежей/писем нет.
-- Из ZIP: fresh-install, donations/campaigns/native-admin — PASS. Проверены отдельные таблицы/настройки, отсутствие импорта, перевод имени, один язык RU/DE, сохранение переводов новой установки, списки и nonce отмены.
-- Браузер: native-admin, shortcode-help, stripe-help, donations, names, support — PASS: CSS WordPress, таблицы, копирование, мобильная ширина. Редакторы/таблицы просмотрены визуально.
-- smoke, pdf-notes --render, pdf-archive --render — PASS.
-- Plugin Check 2.1.0 с runtime preparation: 0 ошибок, 254 предупреждения без исключения категорий/файлов. 133 direct-query и 120 no-caching для собственных таблиц; 1 bundled gettext loader для ручного ZIP. Подробности: docs/WORDPRESS-REVIEW.md.
-- ZIP: версии/папка, 374 файла, целостность и соответствие исходникам — PASS. Diff/check/stat проверены.
+- WordPress.org readme приведён к английскому описанию нового плагина, <10 КБ, уникальные версии; все девять шорткодов и внешние сервисы описаны. Проверен официальный парсер, метаданные и профиль автора atapin.
+- Применён опыт wp_cu_translator: отдельные каталоговый/установочный ZIP, бренд в английском имени, POT и стандартные language packs. Runtime двух пакетов одинаков; сборка воспроизводима через tools/build-package.py.
+- Plugin Check 2.1.0 на WordPress 7.1.3 / PHP 8.4.25, все категории и runtime-проверки для обоих точных ZIP: 0 ошибок, 0 предупреждений. Исходные 254 замечания разобраны: 129 SQL-строк имеют точечные обоснованные исключения; загрузчик MO нужен ручному ZIP. Категории/файлы не исключены, финансовая логика не изменена (сравнение исполняемых токенов 22 модулей).
+- Lint всех 275 PHP-файлов, JS syntax, i18n/360 строк/четыре PO/MO/placeholders, standalone API/payment binding/notifications/workflow/admin/help, реальные WordPress integration/gettext/donations/campaigns/subscriptions/native-admin/navigation/shortcode-help/fresh-install — PASS. Проверки выполнялись также из ZIP.
+- WordPress language packs в четырёх локалях без bundled MO, включая сохранённый язык писем/PDF — PASS.
+- Совместная загрузка обоих плагинов в двух порядках и обе реальные формы на одной странице — PASS.
+- Семь браузерных сценариев, PDF smoke и оба render-теста — PASS. actionlint 1.7.12, ZIP integrity/структура/побайтовое соответствие исходникам — PASS.
 
-## Ограничения и следующие шаги
-- Установить ZIP как отдельный плагин, настроить Stripe/PayPal и webhook заново, проверить WPML на тестовом сайте. В локальных проверках официальные языковые hooks симулируются; полноценные установки WPML/Polylang не тестировались.
-- MySQL/Plesk, реальные Sandbox/Live операции и SMTP не проверялись. Регулярной поддержке нужны WP-Cron и дополнительные webhook-события; приватные страницы исключить из внешнего кеша.
-- Slug и приём в WordPress.org утверждает Plugins Team; Plugin Check не равен одобрению каталога.
+## Подтверждения и следующие действия
+- Владелец 13.10.2026 подтвердил: реальные платёжные аккаунты и установленный WPML уже проверены. Эти пункты закрыты; локальные автоматические HTTP/почта остаются перехваченными тестовыми вызовами.
+- Локальные MySQL/MariaDB/Docker недоступны; автоматические базы — SQLite. Это ограничение локального стенда, а не утверждение о проверках сайта владельца.
+- Для WordPress.org использовать каталоговый ZIP; установочный ZIP сохраняет все четыре перевода для ручной установки. До публикации переводов на translate.wordpress.org каталоговая версия показывает английский интерфейс.
+- Подать независимый плагин и запросить slug georg-kloster-orthodox-donate. Финальное одобрение и имя/slug решает Plugins Team. Заявки переводчика/календаря не заменять.
+- Production/SVN/tag/release не выполнялись. Документация проверки: docs/WORDPRESS-REVIEW.md.
 
 ## Последний связанный commit
-- Текущая задача: Rename plugin and admin menu to Donations (этот commit).
-- Предыдущий: f6ed70c60bec855a558cdc8dbf04545394e24c5e — Isolate Parish plugin from legacy prayer plugin.
+- Текущая задача: Prepare Donations packages for WordPress.org submission (этот commit).
+- Предыдущий: 4fee594943c4dbaf17e735373062f34208f10e04 — Rename plugin and admin menu to Donations.

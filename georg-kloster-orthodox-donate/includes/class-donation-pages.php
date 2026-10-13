@@ -97,6 +97,7 @@ final class Donation_Pages
         global $wpdb;
         $page = min(1000, max(1, absint(Input::get('donation_page') ?? 1)));
         // Ownership is the authenticated WordPress user, never a posted ID or email.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Account-owned custom payment ledger; read current status/refunds without stale private history.
         $rows = $wpdb->get_results($wpdb->prepare('SELECT id,campaign_id,amount_cents,refunded_cents,currency,payment_status,created_at FROM %i WHERE donor_user_id=%d ORDER BY id DESC LIMIT 21 OFFSET %d', Database::table('orders'), get_current_user_id(), ($page - 1) * 20));
         $html = '<div class="gkod-donation-history"><h2>' . esc_html__('Your donations', 'georg-kloster-orthodox-donate') . '</h2><p>' . esc_html__('Only payments made while signed in to this account are shown. Guest payments are not linked by email.', 'georg-kloster-orthodox-donate') . '</p><table><thead><tr><th>' . esc_html__('Date', 'georg-kloster-orthodox-donate') . '</th><th>' . esc_html__('Campaign', 'georg-kloster-orthodox-donate') . '</th><th>' . esc_html__('Amount', 'georg-kloster-orthodox-donate') . '</th><th>' . esc_html__('Status', 'georg-kloster-orthodox-donate') . '</th></tr></thead><tbody>';
         foreach (array_slice($rows, 0, 20) as $order) {

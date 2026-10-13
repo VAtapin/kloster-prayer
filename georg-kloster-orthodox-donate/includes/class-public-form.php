@@ -32,10 +32,13 @@ final class Public_Form
         $atts = shortcode_atts(['id' => 0, 'slug' => '', 'layout' => '', 'lang' => '', 'header' => 'yes'], $atts, 'gkod_form');
         $forms = Database::table('forms');
         if ((int) $atts['id'] > 0) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Site-owned form/service configuration in custom tables; query has no post/meta API equivalent.
             $form = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id=%d AND is_active=1", $forms, (int) $atts['id']));
         } elseif ($atts['slug'] !== '') {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Site-owned form/service configuration in custom tables; query has no post/meta API equivalent.
             $form = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE slug=%s AND is_active=1", $forms, sanitize_title($atts['slug'])));
         } else {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Site-owned form/service configuration in custom tables; query has no post/meta API equivalent.
             $form = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE slug='gebetsanliegen' AND is_active=1 ORDER BY id LIMIT 1", $forms));
         }
         if (!$form) {
@@ -50,6 +53,7 @@ final class Public_Form
         $atts = shortcode_atts(['id' => 0, 'slug' => '', 'layout' => 'compact', 'lang' => ''], $atts, 'gkod_service');
         $services = Database::table('services');
         $service = (int) $atts['id'] > 0
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Site-owned form/service configuration in custom tables; query has no post/meta API equivalent.
             ? $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id=%d AND is_active=1", $services, (int) $atts['id']))
             : $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE slug=%s AND is_active=1", $services, sanitize_title($atts['slug'])));
         if (!$service) {
@@ -81,6 +85,7 @@ final class Public_Form
         if ($fixed_services === null) {
             $services_table = Database::table('services');
             $links = Database::table('form_services');
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Site-owned form/service configuration in custom tables; query has no post/meta API equivalent.
             $services = $wpdb->get_results($wpdb->prepare("SELECT s.* FROM %i s INNER JOIN %i fs ON fs.service_id=s.id WHERE fs.form_id=%d AND s.is_active=1 ORDER BY fs.sort_order,s.sort_order", $services_table, $links, (int) $form->id));
         } else {
             $services = $fixed_services;
@@ -190,6 +195,7 @@ final class Public_Form
         $state = 'cancelled';
         $lang = I18n::language();
         $public_id = sanitize_text_field((string) (Input::get('gkod_order') ?? ''));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Site-owned form/service configuration in custom tables; query has no post/meta API equivalent.
         $order = $public_id !== '' ? $wpdb->get_row($wpdb->prepare('SELECT payment_status,language,intention FROM %i WHERE public_id=%s', Database::table('orders'), $public_id)) : null;
         if ($status === 'success' || ($order && $order->payment_status === 'paid')) {
             $paid = $order && $order->payment_status === 'paid';

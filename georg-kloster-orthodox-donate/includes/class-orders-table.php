@@ -16,6 +16,7 @@ final class Orders_Table extends \WP_List_Table
         global $wpdb;
         switch($column){
             case 'donor': return $this->link($item,$item->billing_name?:$item->donor_name?:'—').'<br>'.esc_html($item->billing_email?:$item->donor_email?:'—');
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Paginated custom request ledger; current payment/archive state is required.
             case 'services':if (($item->intention ?? '') === 'none') return $this->link($item,I18n::donation_text('title')); return $this->link($item,implode(', ',$wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d', Database::table('order_items'),$item->id))));
             case 'names':return '<div class="gkod-names">'.nl2br(esc_html($item->names)).'</div>'.self::comment_html((string)($item->note??''));
             case 'amount_cents':return $this->link($item,number_format_i18n($item->amount_cents/100,2).' €');
@@ -40,10 +41,10 @@ final class Orders_Table extends \WP_List_Table
     }
     public function prepare_items(){
         global $wpdb;[$where,$args]=self::where(Input::get_all());$from=' FROM %i WHERE '.$where;
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Fixed clauses from where(); identifiers and values are bound.
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Fixed clauses from where(); identifiers and values are bound. Paginated custom request ledger; current payment/archive state is required.
         $total=(int)$wpdb->get_var($wpdb->prepare('SELECT COUNT(*)'.$from,...array_merge([Database::table('orders')],$args)));
         $sort=in_array(Input::get('orderby')??'', ['id','amount_cents','created_at'],true)?Input::get('orderby'):'id';$dir=strtolower(Input::get('order')??'desc')==='asc'?'ASC':'DESC';
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Sort/direction whitelist; identifiers, filter values and paging are bound.
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Sort/direction whitelist; identifiers, filter values and paging are bound. Paginated custom request ledger; current payment/archive state is required.
         $this->items=$wpdb->get_results($wpdb->prepare('SELECT *'.$from." ORDER BY {$sort} {$dir} LIMIT %d OFFSET %d",...array_merge([Database::table('orders')],$args,[30,($this->get_pagenum()-1)*30])));
         $this->_column_headers=[$this->get_columns(),[],$this->get_sortable_columns(),'id'];$this->set_pagination_args(['total_items'=>$total,'per_page'=>30]);
     }

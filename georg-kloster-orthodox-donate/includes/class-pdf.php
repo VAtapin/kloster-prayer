@@ -56,8 +56,9 @@ final class Pdf
         if(in_array($intention,['health','rest'],true)){ $where[]='o.intention=%s';$args[]=$intention; }
         if($printed==='yes')$where[]='o.printed_at IS NOT NULL';elseif($printed==='no')$where[]='o.printed_at IS NULL';
         $sql='SELECT o.*,i.service_title,i.service_id,s.slug AS service_slug FROM %i o INNER JOIN %i i ON i.order_id=o.id LEFT JOIN %i s ON s.id=i.service_id WHERE '.implode(' AND ',$where).' ORDER BY o.intention,o.created_at';
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Fixed filter clauses only; all identifiers and user values use placeholders.
+        // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- Fixed filter clauses only; all identifiers and user values use placeholders. Custom prayer/print ledger; export must read current selected rows and service configuration.
         $rows=$wpdb->get_results($wpdb->prepare($sql,...array_merge([Database::table('orders'),Database::table('order_items'),Database::table('services')],$args))); $cards=[];
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom prayer/print ledger; export must read current selected rows and service configuration.
         foreach($rows as $row){ $limit=(int)$wpdb->get_var($wpdb->prepare('SELECT names_per_sheet FROM %i WHERE id=%d', Database::table('services'),(int)$row->service_id))?:10; $names=Payments::split_names((string)$row->names); foreach(array_chunk($names,$limit) as $chunk)$cards[]=['order_date'=>self::order_date($row),'order_id'=>(int)$row->id,'printed_at'=>$row->printed_at,'intention'=>$row->intention,'language'=>$row->language==='ru'?'ru':'de','title'=>$row->service_title,'names'=>$chunk,'note'=>$row->note]; }
         return $cards;
     }

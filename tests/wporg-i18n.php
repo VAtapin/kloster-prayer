@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
-$site=realpath($argv[1]??'');
-if(!$site||!str_contains(str_replace('\\','/',$site),'/tmp/wporg-review/wordpress'))throw new RuntimeException('Local review site required');
-require $site.'/wp-load.php';
+require __DIR__.'/bootstrap-wordpress.php';
 require_once ABSPATH.'wp-admin/includes/template.php';
 use GeorgKlosterOrthodoxDonate\I18n;
 use GeorgKlosterOrthodoxDonate\Admin_Screens;
