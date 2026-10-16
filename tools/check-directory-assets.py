@@ -25,6 +25,7 @@ for name, dimensions in expected.items():
     assert (actual == dimensions if dimensions else min(actual) >= 200), (name, actual)
     print(f'PASS {name}: {actual[0]}x{actual[1]}')
 output = root / 'output/georg-kloster-orthodox-donations-wordpressorg-assets.zip'
+output.parent.mkdir(parents=True, exist_ok=True)
 with zipfile.ZipFile(output, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
     for name in sorted(expected):
         archive.write(assets / name, 'assets/' + name)

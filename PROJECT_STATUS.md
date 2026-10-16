@@ -38,8 +38,9 @@
 - Проверка WordPress.org завершена, заявка одобрена; slug georg-kloster-orthodox-donations, имя Georg Kloster – Orthodox Donations. Заявки переводчика/календаря не заменять.
 - Публикация 1.0.5 через Git завершена: GitHub Actions 38924938123 — success, каталоговая ревизия 3750698. Публичный ZIP содержит все 366 файлов Git tag (отличаются только переводы строк); SHA256 059d685471674e89d76a0027467b4d8954759d6924575861ecfb612143b830a0. Все десять исходных изображений побайтно проверены в каталоге. Страница уже показывает баннер/иконку; API artwork может обновляться с задержкой. Сайты владельца не обновлялись.
 - Локализованные баннеры: английский fallback, ru_RU/de_DE/uk/pl_PL выбираются каталогом автоматически. Новый images-only workflow публикует assets после push main без нового tag/версии; runtime/readme не меняет. Проверены размеры всех 18 PNG, ZIP, тексты и actionlint.
-- Переводы описания каталога публикуются отдельно через translate.wordpress.org; наличие переводов интерфейса не означает переведённую страницу каталога. Переводы readme для этого плагина ещё не подтверждены.
+- Переводы описания каталога публикуются отдельно через translate.wordpress.org; наличие переводов интерфейса не означает переведённую страницу каталога. Проект wp-plugins/georg-kloster-orthodox-donations возвращает Page not found (проверено 16.10 в авторизованном браузере); отправка переводов пока недоступна.
+- Исправлено создание output в проверке изображений: самостоятельный workflow работает и в чистом checkout. Regression-проверка без заранее созданной output — PASS.
 
 ## Последний связанный commit
-- Текущая задача: Publish localized WordPress directory banners (этот commit).
-- Предыдущий: 5b52cf8 — Publish WordPress releases from Git tags (публикация 1.0.5).
+- Текущая задача: Create asset output directory in clean checkouts (этот commit).
+- Предыдущий: 4d97e07 — Publish localized WordPress directory banners.
