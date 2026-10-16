@@ -3,9 +3,9 @@
 ## Текущее состояние
 - Независимый плагин 1.0.5: «Пожертвования»; английское имя Georg Kloster – Orthodox Donations. Меню: Donations / Пожертвования / Spenden / Пожертви / Darowizny. Slug, папка, PHP-файл и text domain: georg-kloster-orthodox-donations.
 - PHP 8.4 / WordPress 7.1.3; main → origin/main; репозиторий https://github.com/VAtapin/kloster-prayer.git не переименован.
-- Проверены два ZIP 1.0.5: установочный output/georg-kloster-orthodox-donations-1.0.5.zip (374 файла, все PO/MO) и output/georg-kloster-orthodox-donations-wordpress-org-1.0.5.zip (366 файлов, POT и WordPress language packs, без PO/MO). Новые tags/releases не создавались; прежний tag 1.0.0 не изменён.
+- Проверены два ZIP 1.0.5: установочный output/georg-kloster-orthodox-donations-1.0.5.zip (374 файла, все PO/MO) и output/georg-kloster-orthodox-donations-wordpress-org-1.0.5.zip (366 файлов, POT и WordPress language packs, без PO/MO). Версия 1.0.5 опубликована через Git tag georg-kloster-orthodox-donations-1.0.5; прежний tag 1.0.0 не изменён.
 - Владелец устанавливает ZIP через WordPress самостоятельно. Production не обновлялся. Автоматизация ожидания 1.2.13 приостановлена.
-- Для страницы WordPress.org подготовлены отдельные материалы: две иконки с запиской и свечой, два русских баннера без названия монастыря и шесть скриншотов реального русского интерфейса. Папка wordpressorg-assets; отдельный ZIP output/georg-kloster-orthodox-donations-wordpressorg-assets.zip. Подписи Screenshots в readme английские; материалы не включаются в plugin runtime ZIP.
+- Для страницы WordPress.org подготовлены отдельные материалы: две иконки с запиской и свечой, десять баннеров на EN/RU/DE/UK/PL без названия монастыря и шесть скриншотов реального русского интерфейса. Папка wordpressorg-assets; отдельный ZIP output/georg-kloster-orthodox-donations-wordpressorg-assets.zip. Подписи Screenshots в readme английские; материалы не включаются в plugin runtime ZIP.
 - WordPress.org одобрил плагин 16.10.2026 (письмо владельца). SVN: https://plugins.svn.wordpress.org/georg-kloster-orthodox-donations, username atapin. Владелец разрешил публикацию через Git.
 - Workflow выпуска дополнен deploy-wordpress-org после успешного release job: проверенный каталоговый пакет → SVN trunk/tags/<версия>, десять изображений → SVN assets. Имеющиеся SVN_USERNAME/SVN_PASSWORD используются только в шаге закреплённого 10up action; GitHub token этого job имеет только contents:read и не сохраняется checkout. Код плагина не изменён.
 
@@ -36,8 +36,10 @@
 - Полный WPCS выполнен: прежние замечания к стилю PHP (отступы, пробелы, short arrays, документационные комментарии) остаются; это не заявление о полном stylistic WPCS compliance. Массовое форматирование не включено в исправление безопасности. Отчёт: docs/SECURITY-REVIEW-1.0.5.md.
 - Для WordPress.org использовать каталоговый ZIP; установочный ZIP сохраняет все четыре перевода для ручной установки. До публикации переводов на translate.wordpress.org каталоговая версия показывает английский интерфейс.
 - Проверка WordPress.org завершена, заявка одобрена; slug georg-kloster-orthodox-donations, имя Georg Kloster – Orthodox Donations. Заявки переводчика/календаря не заменять.
-- Перед первой публикацией SVN trunk/tags пусты; release tag georg-kloster-orthodox-donations-1.0.5 ещё не создан. GitHub secrets и переменная WORDPRESS_ORG_SLUG настроены. Actionlint и воспроизводимая сборка пакетов/изображений проходят. Следующий шаг — commit/push workflow, разрешённый Git tag и проверка Actions/SVN/публичного ZIP. Сайты владельца не обновлять.
+- Публикация 1.0.5 через Git завершена: GitHub Actions 38924938123 — success, каталоговая ревизия 3750698. Публичный ZIP содержит все 366 файлов Git tag (отличаются только переводы строк); SHA256 059d685471674e89d76a0027467b4d8954759d6924575861ecfb612143b830a0. Все десять исходных изображений побайтно проверены в каталоге. Страница уже показывает баннер/иконку; API artwork может обновляться с задержкой. Сайты владельца не обновлялись.
+- Локализованные баннеры: английский fallback, ru_RU/de_DE/uk/pl_PL выбираются каталогом автоматически. Новый images-only workflow публикует assets после push main без нового tag/версии; runtime/readme не меняет. Проверены размеры всех 18 PNG, ZIP, тексты и actionlint.
+- Переводы описания каталога публикуются отдельно через translate.wordpress.org; наличие переводов интерфейса не означает переведённую страницу каталога. Переводы readme для этого плагина ещё не подтверждены.
 
 ## Последний связанный commit
-- Текущая задача: Publish WordPress releases from Git tags (этот commit).
-- Предыдущий: 2a56511546439ca1bf3a69235de1036164f49cd0 — Fix translation loading and admin output escaping.
+- Текущая задача: Publish localized WordPress directory banners (этот commit).
+- Предыдущий: 5b52cf8 — Publish WordPress releases from Git tags (публикация 1.0.5).

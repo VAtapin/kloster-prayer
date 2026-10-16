@@ -1,0 +1,45 @@
+name: Publish WordPress.org directory images
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'wordpressorg-assets/**'
+      - 'tools/check-directory-assets.py'
+      - '.github/workflows/directory-assets.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wordpress-org-georg-kloster-orthodox-donations
+  cancel-in-progress: false
+
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate image sizes and screenshot captions
+        run: python3 tools/check-directory-assets.py
+      - name: Prepare directory images only
+        run: |
+          set -euo pipefail
+          svn checkout --depth empty https://plugins.svn.wordpress.org/georg-kloster-orthodox-donations tmp/directory-images
+          svn update --set-depth infinity tmp/directory-images/assets
+          rsync -rc wordpressorg-assets/ tmp/directory-images/assets/
+          svn add --force tmp/directory-images/assets
+          svn propset svn:mime-type image/png tmp/directory-images/assets/*.png
+          svn status tmp/directory-images
+      - name: Publish images
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          set -euo pipefail
+          test -n "$SVN_USERNAME"
+          test -n "$SVN_PASSWORD"
+          svn commit tmp/directory-images/assets --message "Publish localized banners from GitHub" --no-auth-cache --non-interactive --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
