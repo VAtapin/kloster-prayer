@@ -39,8 +39,8 @@
 - Публикация 1.0.5 через Git завершена: GitHub Actions 38924938123 — success, каталоговая ревизия 3750698. Публичный ZIP содержит все 366 файлов Git tag (отличаются только переводы строк); SHA256 059d685471674e89d76a0027467b4d8954759d6924575861ecfb612143b830a0. Все десять исходных изображений побайтно проверены в каталоге. Страница уже показывает баннер/иконку; API artwork может обновляться с задержкой. Сайты владельца не обновлялись.
 - Локализованные баннеры: английский fallback, ru_RU/de_DE/uk/pl_PL выбираются каталогом автоматически. Новый images-only workflow публикует assets после push main без нового tag/версии; runtime/readme не меняет. Проверены размеры всех 18 PNG, ZIP, тексты и actionlint.
 - Переводы описания каталога публикуются отдельно через translate.wordpress.org; наличие переводов интерфейса не означает переведённую страницу каталога. Проект wp-plugins/georg-kloster-orthodox-donations возвращает Page not found (проверено 16.10 в авторизованном браузере); отправка переводов пока недоступна.
-- Исправлено создание output в проверке изображений; regression-проверка без заранее созданной output — PASS. Для images-only workflow явно устанавливается SVN-клиент: текущий Ubuntu runner не содержит его по умолчанию. Проверка actionlint — PASS; публикация проверяется отдельным результатом Actions.
+- Исправлено создание output в проверке изображений; regression-проверка без заранее созданной output — PASS. Для images-only workflow явно устанавливается SVN-клиент: текущий Ubuntu runner не содержит его по умолчанию. Проверка actionlint — PASS. Публикация изображений Actions 38927050102 — success; все 18 PNG побайтно сверены с опубликованными файлами. Немецкая страница сразу после commit ещё ссылается на прежнюю ревизию 3750698: обновление кэша каталога не подтверждено.
 
 ## Последний связанный commit
-- Текущая задача: Install directory upload client in image workflow (этот commit).
-- Предыдущий: 6e029c9 — Create asset output directory in clean checkouts; материалы — 4d97e07.
+- Текущая задача: Record verified localized banner publication (этот commit).
+- Предыдущий: 0c80db7 — Install directory upload client in image workflow; материалы — 4d97e07.

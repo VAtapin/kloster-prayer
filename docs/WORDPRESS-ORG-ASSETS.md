@@ -76,3 +76,7 @@ Built-in imagegen: text-localization существующего баннера; 
 точными строками таблицы; не добавлять Georg Kloster, монеты и watermark.
 Экспорт двух размеров: tools/export-localized-banners.ps1 -Source <PNG> -Locale <locale>.
 Проверка: python tools/check-directory-assets.py; actionlint.
+
+Публикация локализованных баннеров: Actions 38927050102 — success (16.10.2026).
+Все 18 опубликованных PNG побайтно совпали с Git-файлами. Обновление выбора
+баннера на локализованных страницах зависит от кэша WordPress.org.
