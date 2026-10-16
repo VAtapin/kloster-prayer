@@ -6,6 +6,8 @@
 - Проверены два ZIP 1.0.5: установочный output/georg-kloster-orthodox-donations-1.0.5.zip (374 файла, все PO/MO) и output/georg-kloster-orthodox-donations-wordpress-org-1.0.5.zip (366 файлов, POT и WordPress language packs, без PO/MO). Новые tags/releases не создавались; прежний tag 1.0.0 не изменён.
 - Владелец устанавливает ZIP через WordPress самостоятельно. Production не обновлялся. Автоматизация ожидания 1.2.13 приостановлена.
 - Для страницы WordPress.org подготовлены отдельные материалы: две иконки с запиской и свечой, два русских баннера без названия монастыря и шесть скриншотов реального русского интерфейса. Папка wordpressorg-assets; отдельный ZIP output/georg-kloster-orthodox-donations-wordpressorg-assets.zip. Подписи Screenshots в readme английские; материалы не включаются в plugin runtime ZIP.
+- WordPress.org одобрил плагин 16.10.2026 (письмо владельца). SVN: https://plugins.svn.wordpress.org/georg-kloster-orthodox-donations, username atapin. Владелец разрешил публикацию через Git.
+- Workflow выпуска дополнен deploy-wordpress-org после успешного release job: проверенный каталоговый пакет → SVN trunk/tags/<версия>, десять изображений → SVN assets. Имеющиеся SVN_USERNAME/SVN_PASSWORD используются только в шаге закреплённого 10up action; GitHub token этого job имеет только contents:read и не сохраняется checkout. Код плагина не изменён.
 
 ## Реализовано и решения
 - Стандартные формы и кнопки WordPress; сборы, расходы и регулярная поддержка используют WP_List_Table, пагинацию и штатное пустое состояние. Список сборов отделён от редактора.
@@ -33,9 +35,9 @@
 - Локальные MySQL/MariaDB/Docker недоступны; автоматические базы — SQLite. Это ограничение локального стенда, а не утверждение о проверках сайта владельца.
 - Полный WPCS выполнен: прежние замечания к стилю PHP (отступы, пробелы, short arrays, документационные комментарии) остаются; это не заявление о полном stylistic WPCS compliance. Массовое форматирование не включено в исправление безопасности. Отчёт: docs/SECURITY-REVIEW-1.0.5.md.
 - Для WordPress.org использовать каталоговый ZIP; установочный ZIP сохраняет все четыре перевода для ручной установки. До публикации переводов на translate.wordpress.org каталоговая версия показывает английский интерфейс.
-- Заявка уже подана владельцем. WordPress.org назначил georg-kloster-orthodox-donations; владелец принял этот slug и точное имя Georg Kloster – Orthodox Donations. Отчёт: 564 ошибки домена и одно предупреждение заголовка, одна причина — прежний donate. Исправленный ZIP 1.0.5 обновляет существующую заявку; новую не создавать. Заявки переводчика/календаря не заменять.
-- Production/SVN/tag/release не выполнялись. Документация проверки: docs/WORDPRESS-REVIEW.md.
+- Проверка WordPress.org завершена, заявка одобрена; slug georg-kloster-orthodox-donations, имя Georg Kloster – Orthodox Donations. Заявки переводчика/календаря не заменять.
+- Перед первой публикацией SVN trunk/tags пусты; release tag georg-kloster-orthodox-donations-1.0.5 ещё не создан. GitHub secrets и переменная WORDPRESS_ORG_SLUG настроены. Actionlint и воспроизводимая сборка пакетов/изображений проходят. Следующий шаг — commit/push workflow, разрешённый Git tag и проверка Actions/SVN/публичного ZIP. Сайты владельца не обновлять.
 
 ## Последний связанный commit
-- Текущая задача: Fix translation loading and admin output escaping (этот commit).
-- Предыдущий: a581733a373107fcf241ece886d6e8d8c64ca275 — Align plugin with assigned WordPress.org slug.
+- Текущая задача: Publish WordPress releases from Git tags (этот commit).
+- Предыдущий: 2a56511546439ca1bf3a69235de1036164f49cd0 — Fix translation loading and admin output escaping.

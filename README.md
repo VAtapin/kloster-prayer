@@ -83,11 +83,23 @@ PayPal — `PAYMENT.SALE.COMPLETED`, `PAYMENT.SALE.REFUNDED`, `BILLING.SUBSCRIPT
 
 ## Выпуск
 
-Номер версии должен совпадать в `georg-kloster-orthodox-donations/georg-kloster-orthodox-donations.php` и `georg-kloster-orthodox-donations/readme.txt`. В новой серии теги имеют вид `georg-kloster-orthodox-donations-<версия>`, чтобы не пересекаться с прежними тегами. Теги и releases создаются только по отдельному разрешению владельца; для 1.0.5 подготовлен локальный ZIP. Тег новой серии запускает GitHub Actions: проверяются версия и синтаксис PHP, затем создаётся GitHub Release с установочным и каталоговым архивами:
+Номер версии должен совпадать в `georg-kloster-orthodox-donations/georg-kloster-orthodox-donations.php` и `georg-kloster-orthodox-donations/readme.txt`. Теги имеют вид `georg-kloster-orthodox-donations-<версия>`. После разрешения владельца тег запускает `.github/workflows/release.yml`: проверки PHP/PDF/платежей/переводов, сборку и GitHub Release, затем публикацию в WordPress.org. До успешного завершения release job SVN не меняется.
 
 - `georg-kloster-orthodox-donations-<версия>.zip` — архив конкретного выпуска;
 - `georg-kloster-orthodox-donations-wordpress-org-<версия>.zip` — пакет для заявки в каталог;
 - `georg-kloster-orthodox-donations.zip` — постоянное имя для скачивания последней версии.
+- `georg-kloster-orthodox-donations-wordpressorg-assets.zip` — отдельные материалы страницы каталога.
+
+Job `deploy-wordpress-org` использует проверенный каталоговый пакет без PO/MO и публикует его в SVN `trunk` и `tags/<версия>`, а `wordpressorg-assets` — в SVN `assets`. Slug закреплён в workflow. `SVN_USERNAME` и `SVN_PASSWORD` хранятся в GitHub Actions secrets; используются только на шаге публикации. Параллельные публикации запрещены. Ошибочный job можно повторить в Actions; существующие SVN tags не переписываются.
+
+После успешных проверок и commit/push выпуск 1.0.5 запускается так:
+
+```text
+git tag georg-kloster-orthodox-donations-1.0.5
+git push origin refs/tags/georg-kloster-orthodox-donations-1.0.5
+```
+
+Это публикация плагина в каталоге, а не установка на сайты владельца. Не создавайте повторный тег, если он уже существует. Проверяйте результат обоих jobs и публичный пакет WordPress.org.
 
 ## Пакет для WordPress.org
 
@@ -99,6 +111,6 @@ PayPal — `PAYMENT.SALE.COMPLETED`, `PAYMENT.SALE.REFUNDED`, `BILLING.SUBSCRIPT
 python tools/build-package.py
 ```
 
-Проверки перед подачей описаны в [docs/WORDPRESS-REVIEW.md](docs/WORDPRESS-REVIEW.md). WordPress.org и production автоматически не обновляются; tag/release/SVN-публикация требуют отдельного разрешения.
+Проверки перед выпуском описаны в [docs/WORDPRESS-REVIEW.md](docs/WORDPRESS-REVIEW.md). Запрос одобрен WordPress.org 16.10.2026. Публикацию запускает разрешённый владельцем Git-тег; сайты владельца автоматически не обновляются.
 
 Иконки, русские баннеры и шесть настоящих скриншотов подготовлены отдельно в `wordpressorg-assets/`; архив — `output/georg-kloster-orthodox-donations-wordpressorg-assets.zip`. Они загружаются в SVN `assets` после одобрения заявки. Подписи в readme английские. Состав и получение: [docs/WORDPRESS-ORG-ASSETS.md](docs/WORDPRESS-ORG-ASSETS.md).

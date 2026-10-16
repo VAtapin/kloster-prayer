@@ -47,6 +47,7 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: |
           python3 tools/build-package.py
+          python3 tools/check-directory-assets.py
           version="${TAG#georg-kloster-orthodox-donations-}"
           cp "output/georg-kloster-orthodox-donations-$version.zip" georg-kloster-orthodox-donations.zip
 
@@ -56,6 +57,42 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: |
           version="${TAG#georg-kloster-orthodox-donations-}"
-          gh release create "$TAG" "output/georg-kloster-orthodox-donations-$version.zip" "output/georg-kloster-orthodox-donations-wordpress-org-$version.zip" georg-kloster-orthodox-donations.zip \
+          gh release create "$TAG" "output/georg-kloster-orthodox-donations-$version.zip" "output/georg-kloster-orthodox-donations-wordpress-org-$version.zip" "output/georg-kloster-orthodox-donations-wordpressorg-assets.zip" georg-kloster-orthodox-donations.zip \
             --title "Пожертвования $TAG" \
             --generate-notes
+
+  deploy-wordpress-org:
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: wordpress-org-georg-kloster-orthodox-donations
+      cancel-in-progress: false
+    steps:
+      - name: Checkout the tested release
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Prepare exact directory package and assets
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          [[ "$TAG" =~ ^georg-kloster-orthodox-donations-[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          version="${TAG#georg-kloster-orthodox-donations-}"
+          grep -Fx " * Version: $version" georg-kloster-orthodox-donations/georg-kloster-orthodox-donations.php
+          grep -Fx "Stable tag: $version" georg-kloster-orthodox-donations/readme.txt
+          python3 tools/build-package.py --extract-to tmp/wordpress-org-publish
+          python3 tools/check-directory-assets.py
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Publish code, version and images to WordPress.org
+        # Reviewed stable revision; keep SVN credentials scoped to this step.
+        uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: georg-kloster-orthodox-donations
+          BUILD_DIR: tmp/wordpress-org-publish/wordpress-org/georg-kloster-orthodox-donations
+          ASSETS_DIR: wordpressorg-assets
