@@ -1,0 +1,1074 @@
+# GPL-2.0-or-later. WordPress.org import catalog.
+msgid ""
+msgstr "Project-Id-Version: WordPress.org interface\nLanguage: ru_RU\nContent-Type: text/plain; charset=UTF-8\nPlural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+msgid "Cancel regular support"
+msgstr "Отменить регулярную поддержку"
+
+msgid "Log in to start regular support."
+msgstr "Войдите, чтобы начать регулярную поддержку."
+
+msgid "Stripe documentation: webhook setup and signatures"
+msgstr "Документация Stripe: настройка webhook и подписи"
+
+msgid "Stripe documentation: API keys"
+msgstr "Документация Stripe: API-ключи"
+
+msgid "After a domain move, update the destination URL in Stripe. Never publish API keys or signing secrets. Plugin diagnostics checks whether settings exist, not whether Stripe accepts them."
+msgstr "После смены домена обновите адрес назначения в Stripe. Не публикуйте API-ключи и секреты подписи. Диагностика плагина проверяет наличие настроек, а не принятие их Stripe."
+
+msgid "Opening the webhook URL in a browser sends GET and is not a payment test. A Dashboard sample event may not match a saved plugin order. Test a checkout created by this plugin and inspect its event delivery. A success return URL alone does not confirm payment."
+msgstr "Открытие webhook в браузере отправляет GET и не проверяет оплату. Пример события из Dashboard может не соответствовать сохранённому заказу плагина. Проверьте checkout, созданный плагином, и доставку его события. Сам возврат на страницу успеха не подтверждает оплату."
+
+msgid "In the destination, inspect event deliveries and their HTTP responses. A successful delivery should return 2xx. Fix the cause before resending a failed event: 400 can indicate a wrong signing secret, payload format or payment mismatch; 404 indicates a wrong endpoint URL; 403 or a security page can indicate blocked POST requests."
+msgstr "В назначении проверьте доставки событий и HTTP-ответы. Успешная доставка возвращает 2xx. Перед повторной отправкой исправьте причину: 400 может означать неверный секрет подписи, формат данных или несоответствие платежа; 404 — неправильный адрес; 403 или защитная страница — блокировку POST."
+
+msgid "Stripe test cards and testing guide"
+msgstr "Тестовые карты Stripe и инструкция по проверке"
+
+msgid "Submit a real checkout from a page on your test site. In the test environment, use a Stripe test card from the official testing guide, not a real card. Verify Paid status and configured emails. For regular support, also test a payment cycle, cancellation and refunds."
+msgstr "Пройдите настоящий checkout со страницы тестового сайта. В тестовой среде используйте тестовую карту Stripe из официальной инструкции, а не реальную карту. Проверьте статус «Оплачено» и настроенные письма. Для регулярной поддержки также проверьте цикл оплаты, отмену и возвраты."
+
+msgid "A blank Secret Key or Webhook Secret field preserves the saved value. When switching to Live, replace both values with the Live account key and Live endpoint signing secret. The plugin stores one set of Stripe credentials."
+msgstr "Пустые поля Secret Key и Webhook Secret сохраняют прежние значения. При переходе в Live замените оба значения ключом рабочего аккаунта и секретом подписи рабочего webhook. Плагин хранит один комплект данных Stripe."
+
+msgid "Open the saved destination and reveal its Signing secret, starting with whsec_. Paste it into Webhook Secret. Use the secret of this exact endpoint and environment, not a Stripe CLI listener secret. Enable Stripe and save the plugin settings."
+msgstr "Откройте сохранённое назначение и покажите Signing secret, начинающийся с whsec_. Вставьте его в Webhook Secret. Нужен секрет именно этой конечной точки и среды, а не слушателя Stripe CLI. Включите Stripe и сохраните настройки плагина."
+
+msgid "For one-time donations and prayer requests, select checkout.session.completed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
+msgstr "Для разовых пожертвований и записок выберите checkout.session.completed и charge.refunded. Для регулярной поддержки дополнительно выберите перечисленные ниже события подписок и счетов. Сохраните назначение."
+
+msgid "Paste the exact Endpoint URL below. It must be publicly accessible over HTTPS and accept POST requests without login, redirects or a security challenge. Do not enter the WordPress settings-page URL."
+msgstr "Вставьте указанный ниже адрес Endpoint URL без изменений. Он должен быть публично доступен по HTTPS и принимать POST без входа, перенаправлений и защитной проверки. Не вставляйте адрес страницы настроек WordPress."
+
+msgid "In Workbench → Webhooks, choose Create an event destination (or Add destination / Add endpoint in older dashboards). Choose Your account, the Snapshot payload format and Webhook endpoint as the destination. This plugin does not process Thin events."
+msgstr "В Workbench → Webhooks нажмите Create an event destination (в старом интерфейсе — Add destination / Add endpoint). Выберите Your account, формат данных Snapshot и назначение Webhook endpoint. Плагин не обрабатывает события Thin."
+
+msgid "Open Stripe Webhooks / Workbench"
+msgstr "Открыть Webhooks / Workbench Stripe"
+
+msgid "Reveal or create a Secret key on the API keys page and paste it into Secret Key. Test keys start with sk_test_, live keys with sk_live_. A pk_ publishable key, account password or whsec_ signing secret cannot replace it."
+msgstr "На странице API-ключей откройте или создайте Secret key и вставьте его в Secret Key. Тестовый ключ начинается с sk_test_, рабочий — с sk_live_. Публичный ключ pk_, пароль аккаунта и секрет подписи whsec_ не подходят."
+
+msgid "Open Stripe API keys"
+msgstr "Открыть API-ключи Stripe"
+
+msgid "Sign in to the Stripe account that will receive donations. Choose a Sandbox or test environment first. The API key and webhook must belong to the same account and environment."
+msgstr "Войдите в аккаунт Stripe получателя пожертвований. Начните с Sandbox или тестовой среды. API-ключ и webhook должны принадлежать одному аккаунту и одной среде."
+
+msgid "Stripe setup — step-by-step instructions"
+msgstr "Как подключить Stripe — пошаговая инструкция"
+
+msgid "Copy"
+msgstr "Копировать"
+
+msgid "Shortcode example"
+msgstr "Пример шорткода"
+
+msgid "Examples to copy"
+msgstr "Примеры для копирования"
+
+msgid "No parameters."
+msgstr "Без параметров."
+
+msgid "Parameters"
+msgstr "Параметры"
+
+msgid "Add a Shortcode block to a WordPress page and paste an example. Replace example IDs and slugs with your saved values. Publish the page to display the form or report."
+msgstr "Добавьте блок «Шорткод» на страницу WordPress и вставьте пример. Замените ID и slug своими сохранёнными значениями. Опубликуйте страницу, чтобы показать форму или отчёт."
+
+msgid "The example is selected. Copy it manually."
+msgstr "Пример выделен. Скопируйте его вручную."
+
+msgid "Copied."
+msgstr "Скопировано."
+
+msgid "Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which also checks login before showing the form."
+msgstr "Параметр совместимости gkod_donation: no (по умолчанию) — разовый платёж; yes показывает регулярные варианты. Используйте gkod_support: он также проверяет вход перед показом формы."
+
+msgid "Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired."
+msgstr "Необязательный ID сбора. Без него или при 0 — поддержка общих нужд храма. Указанный сбор должен быть открыт, а его срок не должен истечь."
+
+msgid "yes (default) shows the form heading; no hides it. Not supported by gkod_service."
+msgstr "yes (по умолчанию) показывает заголовок формы; no скрывает его. Шорткод gkod_service не поддерживает этот параметр."
+
+msgid "Language override: en, ru, de, uk or pl. Usually omit it: the site follows the current WPML/Polylang language, or WordPress without a language plugin. Existing prayer form/service content uses German as the English fallback."
+msgstr "Принудительный язык: en, ru, de, uk или pl. Обычно параметр не нужен: сайт использует текущий язык WPML/Polylang, а без языкового плагина — WordPress. Для английского языка тексты существующих форм записок и треб берутся из немецких полей."
+
+msgid "Layout: standard, compact, wide, two_columns, cards or minimal. Prayer forms default to their saved layout; other forms default to compact."
+msgstr "Макет: standard, compact, wide, two_columns, cards или minimal. Для записок по умолчанию используется сохранённый макет формы, для остальных форм — compact."
+
+msgid "Saved form or service slug. Used only when id is omitted or zero."
+msgstr "Сохранённый slug формы или требы. Используется, только если id отсутствует или равен 0."
+
+msgid "Numeric form, service or campaign ID. Find it in the corresponding admin section. Required for a campaign report; optional for the campaign list."
+msgstr "Числовой ID формы, требы или сбора из соответствующего раздела админки. Обязателен для отчёта сбора; необязателен для списка сборов."
+
+msgid "Payment result for the returned order, using its saved language. Has no shortcode parameters. Forms already include this block; use it separately on a custom return page. A return URL alone does not confirm payment."
+msgstr "Результат оплаты заказа после возврата с платёжной страницы, на сохранённом языке заказа. Параметров нет. Формы уже содержат этот блок; отдельно используйте его на своей странице возврата. Сам возврат на сайт не подтверждает оплату."
+
+msgid "Private payment history and regular-support cancellation for the signed-in account. Guest and historical payments are not assigned by email. Exclude this page from external full-page caches."
+msgstr "Личная история платежей и отмена регулярной поддержки вошедшего пользователя. Гостевые и прежние платежи не привязываются по email. Исключите страницу из внешнего полного кеша."
+
+msgid "Public report for one published campaign: goal, confirmed receipts after refunds, separately recorded expenses and balance. Does not disclose donor data or include a payment form."
+msgstr "Публичный отчёт одного опубликованного сбора: цель, подтверждённые поступления за вычетом возвратов, отдельно введённые расходы и остаток. Без данных жертвователей и формы оплаты."
+
+msgid "Published campaigns with progress, totals and donation forms. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
+msgstr "Опубликованные сборы с прогрессом, итогами и формами пожертвований. Без id показывается до 100 сборов. Черновики скрыты; закрытые и просроченные сборы не принимают новые платежи."
+
+msgid "Monthly or yearly support. Requires login and explicit consent. The owner can cancel in donation history; configure recurring webhooks and WP-Cron first."
+msgstr "Ежемесячная или ежегодная поддержка. Требуются вход и явное согласие. Владелец может отменить её в истории пожертвований; сначала настройте webhook-события подписок и WP-Cron."
+
+msgid "One-time donation without prayer names or services. The donor enters an amount from 0.50 to 999,999.99 EUR."
+msgstr "Разовое пожертвование без молитвенных имён и треб. Жертвователь вводит сумму от 0,50 до 999 999,99 EUR."
+
+msgid "Form for one active service. Specify its id or slug; an id takes precedence. Find these values in Services."
+msgstr "Форма одной активной требы. Укажите её id или slug; id имеет приоритет. Значения находятся в разделе «Требы»."
+
+msgid "Alias of gkod_form with the same parameters and behavior."
+msgstr "Другое имя gkod_form с теми же параметрами и поведением."
+
+msgid "Prayer form. Without id or slug, uses the active gebetsanliegen form. An id takes precedence over a slug."
+msgstr "Форма записок. Без id или slug используется активная форма gebetsanliegen. Параметр id имеет приоритет над slug."
+
+msgid "PayPal is preparing recurring support. Please try again shortly."
+msgstr "PayPal подготавливает регулярную поддержку. Повторите попытку немного позже."
+
+msgid "Invalid payment provider response."
+msgstr "Некорректный ответ платёжной системы."
+
+msgid "The payment provider could not complete this operation."
+msgstr "Платёжная система не смогла выполнить эту операцию."
+
+msgid "The payment provider is unavailable. Please try again."
+msgstr "Платёжная система недоступна. Попробуйте ещё раз."
+
+msgid "PayPal is not configured or authentication failed."
+msgstr "PayPal не настроен или не удалось пройти авторизацию."
+
+msgid "Stripe is not configured."
+msgstr "Stripe не настроен."
+
+msgid "Start regular support"
+msgstr "Начать регулярную поддержку"
+
+msgid "Repeat this amount at the selected interval until I cancel. I can cancel in my donation history."
+msgstr "Повторять эту сумму с выбранной периодичностью до моей отмены. Отменить поддержку можно в истории пожертвований."
+
+msgid "Frequency"
+msgstr "Периодичность"
+
+msgid "Regular support"
+msgstr "Регулярная поддержка"
+
+msgid "Kloster: form not found."
+msgstr "Форма молитвенных записок не найдена."
+
+msgid "Could not send the PDF: headers have already been sent."
+msgstr "Не удалось отправить PDF: заголовки уже отправлены."
+
+msgid "Could not generate the PDF."
+msgstr "Не удалось сформировать PDF."
+
+msgid "PayPal documentation: webhooks and signature verification"
+msgstr "Документация PayPal: webhook и проверка подписи"
+
+msgid "PayPal documentation: account and credentials"
+msgstr "Документация PayPal: аккаунт и ключи"
+
+msgid "If payment or webhooks fail, check the app/environment for all credentials, the exact URL and HTTPS/POST access. Update the PayPal webhook after a domain move. Disabled PayPal needs no configuration. Diagnostics checks whether credentials exist, not whether PayPal accepts them. Never publish the Secret in emails, screenshots or messages."
+msgstr "Если оплата или webhook не работают: проверьте одинаковый режим и приложение у всех ключей, точный URL и доступность HTTPS/POST. При переносе домена обновите webhook в PayPal. Отключённый PayPal настраивать не обязательно. Диагностика наличия ключей не проверяет их действительность в PayPal. Не публикуйте Secret в письмах, скриншотах или переписке."
+
+msgid "Webhooks Simulator generates artificial events. PayPal does not support verifying these through verify-webhook-signature, which the plugin uses. A signature failure for such an event does not prove the integration is broken. Test a real Sandbox payment and event delivery in the same app."
+msgstr "Webhooks Simulator создаёт искусственные события: PayPal не поддерживает их проверку через verify-webhook-signature, которую использует плагин. Ошибка подписи такого события не доказывает поломку интеграции. Проверяйте реальную Sandbox оплату и доставку события в том же приложении."
+
+msgid "To go live, replace Client ID, Secret and Webhook ID with the Live app's values and select Live. The plugin stores one set of credentials, not two. Always enter a new Secret when changing apps or environments; a blank field preserves the old one."
+msgstr "Для запуска замените Client ID, Secret и Webhook ID на значения приложения Live и переключите режим на Live. Плагин хранит один комплект ключей, не два. При смене приложения или режима обязательно введите новый Secret: пустое поле сохраняет старый."
+
+msgid "Test with Sandbox first: under Testing Tools → Sandbox Accounts, find separate Personal buyer and Business seller accounts. Submit a test prayer request and pay with the test buyer, not your real account. Check the Paid status, diagnostics event and emails if mail is configured. Sandbox does not transfer real money."
+msgstr "Для проверки сначала используйте Sandbox: в Testing Tools → Sandbox Accounts найдите отдельный Personal аккаунт покупателя и Business аккаунт продавца. Подайте тестовую записку и оплатите её тестовым покупателем, не своим реальным аккаунтом. Проверьте статус «Оплачено», событие в диагностике и письма при настроенной почте. Sandbox не переводит настоящие деньги."
+
+msgid "Copy the new webhook's ID from Webhooks into the plugin's Webhook ID field. This is not the Client ID or an individual WH-… event ID. Enable PayPal and save. The saved Secret is hidden; a blank field keeps the previous secret."
+msgstr "Скопируйте ID созданного webhook из раздела Webhooks в поле Webhook ID плагина. Это не Client ID и не ID отдельного события WH-…. Поставьте «Включить PayPal» и сохраните настройки. Secret после сохранения не показывается: пустое поле оставляет прежний секрет."
+
+msgid "Select PAYMENT.CAPTURE.COMPLETED and PAYMENT.CAPTURE.REFUNDED, then save the webhook. The first confirms payment; the second records refunds. All events, CHECKOUT.ORDER.APPROVED and IPN are not needed for this integration."
+msgstr "Выберите PAYMENT.CAPTURE.COMPLETED и PAYMENT.CAPTURE.REFUNDED и сохраните webhook. Первое событие подтверждает оплату, второе отмечает возврат. Выбирать все события, CHECKOUT.ORDER.APPROVED или IPN для этой интеграции не нужно."
+
+msgid "In the same app, find Webhooks and click Add Webhook. Paste the exact webhook URL shown below. It must be public HTTPS on port 443, without password protection, POST blocking or an intermediate security page."
+msgstr "На странице этого же приложения найдите Webhooks и нажмите Add Webhook. Вставьте точный Webhook URL из настроек ниже. Адрес должен быть публичным HTTPS на порту 443, без пароля, блокировки POST и промежуточной страницы защиты."
+
+msgid "On the app page, copy the Client ID and reveal the Secret. Paste them into the matching plugin fields. Select the same Live or Sandbox mode. Client ID, Secret and Webhook ID must all belong to the same app and environment."
+msgstr "На странице приложения скопируйте Client ID и раскройте Secret. Вставьте их в одноимённые поля плагина. Выберите тот же режим Live или Sandbox. Все три значения — Client ID, Secret и Webhook ID — должны принадлежать одному приложению и одному режиму."
+
+msgid "Open your REST API app or create one using Create App. For Sandbox, select the test seller's Business account; for Live, use the intended recipient's live app."
+msgstr "Откройте своё REST API приложение или создайте его через Create App. Для Sandbox выберите тестовый Business аккаунт продавца; для Live используйте приложение нужного реального получателя."
+
+msgid "Open Apps & Credentials"
+msgstr "Открыть Apps & Credentials"
+
+msgid "Open Apps & Credentials in the PayPal Developer Dashboard and sign in to the recipient's account. Select Sandbox for testing or Live for real payments."
+msgstr "Откройте Apps & Credentials в PayPal Developer Dashboard и войдите в аккаунт получателя. Выберите Sandbox для проверки или Live для настоящих платежей."
+
+msgid "Live payments require the recipient's PayPal Business account. Email, account password, App ID and Stripe whsec are not substitutes for PayPal credentials. The plugin uses REST API Orders v2, not legacy email payment buttons or IPN."
+msgstr "Для реальных платежей нужен PayPal Business аккаунт получателя. Email, пароль аккаунта, App ID и Stripe whsec не заменяют ключи PayPal. Плагин использует REST API Orders v2, а не старые кнопки оплаты по email или IPN."
+
+msgid "PayPal setup — step-by-step instructions"
+msgstr "Как подключить PayPal — пошаговая инструкция"
+
+msgid "Confirmation handed to the mail system"
+msgstr "Подтверждение передано почтовой системе"
+
+msgid "Could not hand the email to the mail system"
+msgstr "Не удалось передать письмо почтовой системе"
+
+msgid "Log in and confirm recurring support before continuing."
+msgstr "Войдите и подтвердите согласие на регулярную поддержку."
+
+msgid "Filter"
+msgstr "Фильтр"
+
+msgid "Not printed"
+msgstr "Не распечатано"
+
+msgid "All print statuses"
+msgstr "Вся печать"
+
+msgid "Both types"
+msgstr "Оба типа"
+
+msgid "All payments"
+msgstr "Все оплаты"
+
+msgid "Restore from archive"
+msgstr "Восстановить из архива"
+
+msgid "Printing"
+msgstr "Печать"
+
+msgid "Next →"
+msgstr "Далее →"
+
+msgid "← Previous"
+msgstr "← Назад"
+
+msgid "No requests."
+msgstr "Записок нет."
+
+msgid "Status on the selected date"
+msgstr "Состояние на выбранную дату"
+
+msgid "End"
+msgstr "Окончание"
+
+msgid "Start"
+msgstr "Начало"
+
+msgid "Request / service"
+msgstr "Записка / треба"
+
+msgid "No period"
+msgstr "Без срока"
+
+msgid "Finished"
+msgstr "Завершённые"
+
+msgid "Upcoming"
+msgstr "Предстоящие"
+
+msgid "Ending on this date"
+msgstr "Заканчиваются в этот день"
+
+msgid "Read on this date"
+msgstr "Читать в этот день"
+
+msgid "Paid requests outside the archive. Expired periods do not automatically archive requests."
+msgstr "Оплаченные записки вне архива. Окончание срока не архивирует записку автоматически."
+
+msgid "Commemoration"
+msgstr "Поминовение"
+
+msgid "System"
+msgstr "Система"
+
+msgid "Last print status"
+msgstr "Последняя отметка печати"
+
+msgid "Last confirmation sent"
+msgstr "Последнее подтверждение отправлено"
+
+msgid "Payment confirmed"
+msgstr "Оплата подтверждена"
+
+msgid "Request received"
+msgstr "Записка получена"
+
+msgid "Staff member"
+msgstr "Сотрудник"
+
+msgid "For older requests, available dates are shown; the detailed log starts after the update."
+msgstr "Для старых записок показаны сохранившиеся даты; подробный журнал ведётся после обновления."
+
+msgid "Request history"
+msgstr "История записки"
+
+msgid "Restore"
+msgstr "Восстановить"
+
+msgid "Archive request"
+msgstr "В архив"
+
+msgid "Clear print status"
+msgstr "Снять отметку"
+
+msgid "None"
+msgstr "Нет"
+
+msgid "Last PDF generation / print:"
+msgstr "Последнее формирование PDF / печать:"
+
+msgid "Printing and archive"
+msgstr "Печать и архив"
+
+msgid "Could not save the change."
+msgstr "Не удалось сохранить изменение."
+
+msgid "Print status cleared"
+msgstr "Отметка печати снята"
+
+msgid "Staff member confirmed printing"
+msgstr "Сотрудник подтвердил печать"
+
+msgid "Restored from archive"
+msgstr "Восстановлено из архива"
+
+msgid "Moved to archive"
+msgstr "Перемещено в архив"
+
+msgid "period removed"
+msgstr "срок снят"
+
+msgid "Could not save the period."
+msgstr "Не удалось сохранить срок."
+
+msgid "Restore the request from the archive first."
+msgstr "Сначала восстановите записку из архива."
+
+msgid "Service not found."
+msgstr "Треба не найдена."
+
+msgid "In progress · days remaining:"
+msgstr "В работе · осталось дней:"
+
+msgid "Completed"
+msgstr "Завершено"
+
+msgid "Starts"
+msgstr "Начнётся"
+
+msgid "Not assigned"
+msgstr "Не назначено"
+
+msgid "Enter a valid date and a duration between 1 and 36500 days."
+msgstr "Укажите корректную дату и срок от 1 до 36500 дней."
+
+msgid "PDF generated; the printed status was set automatically."
+msgstr "PDF сформирован; отметка «Распечатано» установлена автоматически."
+
+msgid "The PDF is ready, but the print status could not be saved. Please try again."
+msgstr "PDF готов, но не удалось сохранить отметку печати. Попробуйте ещё раз."
+
+msgid "Recipient notification failed. It will be retried."
+msgstr "Ошибка уведомления получателю записок. Будет повторная попытка."
+
+msgid "The recipient notification was handed to the mail system."
+msgstr "Уведомление получателю записок передано почтовой системе."
+
+msgid "Open request in WordPress"
+msgstr "Открыть записку в WordPress"
+
+msgid "Donor email"
+msgstr "E-mail жертвователя"
+
+msgid "Order date"
+msgstr "Дата заказа"
+
+msgid "Prayer request #%d paid"
+msgstr "Оплачена молитвенная записка №%d"
+
+msgid "Payment status:"
+msgstr "Статус оплаты:"
+
+msgid "Prayer request:"
+msgstr "Молитвенная записка:"
+
+msgid "Prayer type"
+msgstr "Тип молитвы"
+
+msgid "Order date:"
+msgstr "Дата заказа:"
+
+msgid "With gratitude and prayer,"
+msgstr "С благодарностью и молитвой,"
+
+msgid "Request type"
+msgstr "Тип записки"
+
+msgid "Prayer service"
+msgstr "Треба"
+
+msgid "Hello"
+msgstr "Здравствуйте"
+
+msgid "Your prayer request has been received"
+msgstr "Ваша молитвенная записка получена"
+
+msgid "per 10 names"
+msgstr "за 10 имён"
+
+msgid "per name"
+msgstr "за имя"
+
+msgid "Understood"
+msgstr "Понятно"
+
+msgid "Payment not completed"
+msgstr "Оплата не завершена"
+
+msgid "Checking payment"
+msgstr "Проверяем оплату"
+
+msgid "Payment successful"
+msgstr "Оплата прошла успешно"
+
+msgid "Payment was not completed. Your prayer request is temporarily saved."
+msgstr "Оплата не завершена. Записка временно сохранена."
+
+msgid "Thank you. Payment is still being confirmed. We will email you once the funds have arrived."
+msgstr "Благодарим вас. Оплата ещё подтверждается. После поступления средств мы отправим подтверждение по электронной почте."
+
+msgid "Thank you. Your payment is confirmed and your prayer request has been received."
+msgstr "Благодарим вас. Оплата подтверждена, и записка передана для молитвенного поминовения."
+
+msgid "Secure payment. Your information is used only to process your prayer request."
+msgstr "Безопасная оплата. Данные используются только для обработки молитвенной записки."
+
+msgid "Submit prayer request and donate"
+msgstr "Подать записку и пожертвовать"
+
+msgid "Donation amount"
+msgstr "Сумма пожертвования"
+
+msgid "Card / Stripe"
+msgstr "Карта / Stripe"
+
+msgid "Confirmation is sent only after payment is received."
+msgstr "Подтверждение будет отправлено только после получения оплаты."
+
+msgid "Email address"
+msgstr "Электронная почта"
+
+msgid "Your name (optional)"
+msgstr "Ваше имя (необязательно)"
+
+msgid "Comment (optional)"
+msgstr "Пояснение (необязательно)"
+
+msgid "Please use baptismal names. Prayer slips are automatically divided into groups."
+msgstr "Укажите крестильные имена. Записки автоматически разделяются на группы."
+
+msgid "Name\nName\nName"
+msgstr "Имя\nИмя\nИмя"
+
+msgid "Names, one person per line"
+msgstr "Имена, по одному человеку в строке"
+
+msgid "Choose prayer services"
+msgstr "Выберите требы"
+
+msgid "Enter a valid amount between 0.50 and 999,999.99 EUR."
+msgstr "Укажите корректную сумму от 0,50 до 999 999,99 EUR."
+
+msgid "Amount in EUR: 0.50 to 999,999.99. Up to two decimal places."
+msgstr "Сумма в EUR: от 0,50 до 999 999,99. Не более двух знаков после запятой."
+
+msgid "Thank you for your donation"
+msgstr "Благодарим за ваше пожертвование"
+
+msgid "Payment was not completed. Your donation has not been received."
+msgstr "Оплата не завершена. Пожертвование ещё не поступило."
+
+msgid "Thank you. Your donation is confirmed."
+msgstr "Благодарим вас. Ваше пожертвование подтверждено."
+
+msgid "Secure payment. Your information is used only to process your donation."
+msgstr "Безопасная оплата. Данные используются только для обработки пожертвования."
+
+msgid "Donate"
+msgstr "Пожертвовать"
+
+msgid "Donation for the church"
+msgstr "Пожертвование на нужды храма"
+
+msgid "Next"
+msgstr "Далее"
+
+msgid "Previous"
+msgstr "Назад"
+
+msgid "Partially refunded"
+msgstr "Частично возвращено"
+
+msgid "Only payments made while signed in to this account are shown. Guest payments are not linked by email."
+msgstr "Показаны только платежи, сделанные после входа в эту учётную запись. Гостевые платежи не привязываются по email."
+
+msgid "Your donations"
+msgstr "Ваши пожертвования"
+
+msgid "Log in to view your donations."
+msgstr "Войдите, чтобы посмотреть свои пожертвования."
+
+msgid "Expenses are entered separately; payment providers do not report how funds are spent."
+msgstr "Расходы вводятся отдельно; платёжные системы не сообщают, как расходуются средства."
+
+msgid "Record expense"
+msgstr "Записать расход"
+
+msgid "Save campaign"
+msgstr "Сохранить сбор"
+
+msgid "Closing a campaign prevents new submissions. Existing regular support continues until cancelled."
+msgstr "Закрытие сбора запрещает новые заявки. Действующая регулярная поддержка продолжается до её отмены."
+
+msgid "New campaign"
+msgstr "Новый сбор"
+
+msgid "Edit campaign"
+msgstr "Редактировать сбор"
+
+msgid "Campaigns"
+msgstr "Целевые сборы"
+
+msgid "Payment overdue"
+msgstr "Просрочена оплата"
+
+msgid "Closed"
+msgstr "Закрыт"
+
+msgid "Open"
+msgstr "Открыть"
+
+msgid "Draft"
+msgstr "Черновик"
+
+msgid "Monthly"
+msgstr "Ежемесячно"
+
+msgid "Yearly"
+msgstr "Ежегодно"
+
+msgid "Actions"
+msgstr "Действия"
+
+msgid "Payment method"
+msgstr "Способ оплаты"
+
+msgid "User"
+msgstr "Пользователь"
+
+msgid "Report"
+msgstr "Отчёт"
+
+msgid "Campaign"
+msgstr "Сбор"
+
+msgid "Disabled items"
+msgstr "Отключённые"
+
+msgid "Active items"
+msgstr "Активные"
+
+msgid "All"
+msgstr "Все"
+
+msgid "Disabled"
+msgstr "Отключена"
+
+msgid "Edit"
+msgstr "Редактировать"
+
+msgid "Select"
+msgstr "Выбрать"
+
+msgid "Disable"
+msgstr "Отключить"
+
+msgid "Updated"
+msgstr "Изменено"
+
+msgid "Donation"
+msgstr "Пожертвование"
+
+msgid "Shortcode"
+msgstr "Шорткод"
+
+msgid "This campaign is closed."
+msgstr "Приём пожертвований на этот сбор закрыт."
+
+msgid "Deadline"
+msgstr "Срок завершения"
+
+msgid "Campaign progress"
+msgstr "Ход сбора"
+
+msgid "Balance"
+msgstr "Остаток"
+
+msgid "Expenses"
+msgstr "Расходы"
+
+msgid "Goal"
+msgstr "Цель"
+
+msgid "The request could not be processed. Please try again."
+msgstr "Не удалось обработать запрос. Попробуйте ещё раз."
+
+msgid "Please complete all required fields."
+msgstr "Заполните обязательные поля."
+
+msgid "Campaign not found."
+msgstr "Сбор не найден."
+
+msgid "Forbidden"
+msgstr "Доступ запрещён"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "Add new"
+msgstr "Добавить новую"
+
+msgid "Polish"
+msgstr "Польский"
+
+msgid "Ukrainian"
+msgstr "Українська"
+
+msgid "German"
+msgstr "Немецкий"
+
+msgid "Russian"
+msgstr "Русский"
+
+msgid "No events yet."
+msgstr "Событий пока нет."
+
+msgid "Processed"
+msgstr "Обработано"
+
+msgid "Result"
+msgstr "Результат"
+
+msgid "Event"
+msgstr "Событие"
+
+msgid "Provider"
+msgstr "Провайдер"
+
+msgid "Recent payment events"
+msgstr "Последние события оплаты"
+
+msgid "Check configuration"
+msgstr "Проверьте настройку"
+
+msgid "Ready"
+msgstr "Готово"
+
+msgid "Disabled — no configuration required"
+msgstr "Отключён — настройка не требуется"
+
+msgid "Database tables"
+msgstr "Таблицы базы данных"
+
+msgid "Email retry scheduler"
+msgstr "Планировщик повторных писем"
+
+msgid "WordPress 7.1 or later"
+msgstr "WordPress 7.1 или новее"
+
+msgid "PHP 8.4 or later"
+msgstr "PHP 8.4 или новее"
+
+msgid "Payer email"
+msgstr "E-mail плательщика"
+
+msgid "Payer name"
+msgstr "Имя плательщика"
+
+msgid "Donor name"
+msgstr "Имя жертвователя"
+
+msgid "Note"
+msgstr "Примечание"
+
+msgid "Amount EUR"
+msgstr "Сумма EUR"
+
+msgid "Payment"
+msgstr "Оплата"
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "Default type"
+msgstr "Тип по умолчанию"
+
+msgid "The form always fills 100% of the shortcode block; the layout changes its internal arrangement."
+msgstr "Внешняя ширина всегда 100% блока шорткода; шаблон меняет внутреннюю компоновку."
+
+msgid "Minimal"
+msgstr "Минималистичный"
+
+msgid "Image cards"
+msgstr "Карточки с изображениями"
+
+msgid "Two columns"
+msgstr "Две колонки"
+
+msgid "Wide: 3 cards"
+msgstr "Широкий: 3 карточки"
+
+msgid "Compact"
+msgstr "Компактный"
+
+msgid "Classic"
+msgstr "Классический"
+
+msgid "Layout"
+msgstr "Шаблон"
+
+msgid "Services in this form"
+msgstr "Требы в форме"
+
+msgid "Introduction"
+msgstr "Введение"
+
+msgid "Add form"
+msgstr "Добавить форму"
+
+msgid "Edit form"
+msgstr "Редактировать форму"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Save changes"
+msgstr "Сохранить изменения"
+
+msgid "Active"
+msgstr "Активна"
+
+msgid "Sort order"
+msgstr "Порядок"
+
+msgid "Names per slip"
+msgstr "Имён в записке"
+
+msgid "Donation, EUR"
+msgstr "Пожертвование, EUR"
+
+msgid "Per request"
+msgstr "За записку"
+
+msgid "Per name"
+msgstr "За имя"
+
+msgid "Fixed amount"
+msgstr "Фиксированно"
+
+msgid "Pricing"
+msgstr "Расчёт"
+
+msgid "No type"
+msgstr "Без типа"
+
+msgid "Departed only"
+msgstr "Только об упокоении"
+
+msgid "Living only"
+msgstr "Только о здравии"
+
+msgid "Both"
+msgstr "Оба"
+
+msgid "Intention"
+msgstr "Назначение"
+
+msgid "The bundled thematic background is used when no image is selected."
+msgstr "Без выбора используется встроенный тематический фон."
+
+msgid "Reset to default"
+msgstr "Сбросить к стандартному"
+
+msgid "Choose from Media Library"
+msgstr "Выбрать из медиатеки"
+
+msgid "Background image"
+msgstr "Фоновое изображение"
+
+msgid "Slug"
+msgstr "Код"
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "Title"
+msgstr "Название"
+
+msgid "Add service"
+msgstr "Добавить требу"
+
+msgid "Edit service"
+msgstr "Редактировать требу"
+
+msgid "Search requests"
+msgstr "Поиск записок"
+
+msgid "Blank PDF forms:"
+msgstr "Пустые бланки PDF:"
+
+msgid "Archive"
+msgstr "Архив"
+
+msgid "Current requests"
+msgstr "Текущие записки"
+
+msgid "Request PDF"
+msgstr "PDF записки"
+
+msgid "Resend confirmation"
+msgstr "Отправить подтверждение повторно"
+
+msgid "Retrieve payer details from Stripe"
+msgstr "Получить данные плательщика из Stripe"
+
+msgid "Stripe did not return payer details."
+msgstr "Stripe не вернул данные плательщика."
+
+msgid "Customer details refreshed from Stripe."
+msgstr "Данные обновлены из Stripe."
+
+msgid "← Back to requests"
+msgstr "← К списку записок"
+
+msgid "No comment provided"
+msgstr "Комментарий не указан"
+
+msgid "Request comment"
+msgstr "Комментарий к записке"
+
+msgid "Names"
+msgstr "Имена"
+
+msgid "PayPal"
+msgstr "PayPal"
+
+msgid "Billing address"
+msgstr "Адрес плательщика"
+
+msgid "For the living"
+msgstr "О здравии"
+
+msgid "For the departed"
+msgstr "Об упокоении"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "Phone"
+msgstr "Телефон"
+
+msgid "Donor"
+msgstr "Жертвователь"
+
+msgid "Payment and request #"
+msgstr "Оплата и записка №"
+
+msgid "Prayer requests"
+msgstr "Молитвенные записки"
+
+msgid "Saved."
+msgstr "Сохранено."
+
+msgid "Enter an HTTPS domain without a path, query or credentials, for example https://example.org. Leave blank for automatic selection."
+msgstr "Укажите HTTPS-домен без пути, параметров и логина, например https://example.org. Для автоматического выбора оставьте поле пустым."
+
+msgid "Enter one valid notification email or leave the field blank."
+msgstr "Укажите один корректный email для уведомлений или оставьте поле пустым."
+
+msgid "No requests match the selected filter."
+msgstr "Нет записок для выбранного фильтра."
+
+msgid "Help"
+msgstr "Помощь"
+
+msgid "Help → Shortcodes"
+msgstr "Помощь → Шорткоды"
+
+msgid "Diagnostics"
+msgstr "Диагностика"
+
+msgid "Forms"
+msgstr "Формы"
+
+msgid "Prayer notes"
+msgstr "Записки"
+
+msgid "Donations"
+msgstr "Пожертвования"
+
+msgid "Use image"
+msgstr "Использовать"
+
+msgid "View image ↗"
+msgstr "Просмотреть изображение ↗"
+
+msgid "Service background image"
+msgstr "Фоновое изображение требы"
+
+msgid "Open background image"
+msgstr "Открыть фоновое изображение"
+
+msgid "No image selected."
+msgstr "Изображение не выбрано."
+
+msgid "No requests for the selected month."
+msgstr "За выбранный месяц записок нет."
+
+msgid "Canceled"
+msgstr "Отменено"
+
+msgid "Refunded"
+msgstr "Возвращено"
+
+msgid "Error"
+msgstr "Ошибка"
+
+msgid "Pending"
+msgstr "Ожидает"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Amount"
+msgstr "Сумма"
+
+msgid "Services"
+msgstr "Требы"
+
+msgid "Address"
+msgstr "Адрес"
+
+msgid "Payer"
+msgstr "Плательщик"
+
+msgid "Request"
+msgstr "Записка"
+
+msgid "Donations and donors"
+msgstr "Пожертвования и плательщики"
+
+msgid "Service"
+msgstr "Треба"
+
+msgid "By service"
+msgstr "По требам"
+
+msgid "Requests"
+msgstr "Записок"
+
+msgid "Method"
+msgstr "Способ"
+
+msgid "By payment method"
+msgstr "По способам оплаты"
+
+msgid "Donations received"
+msgstr "Получено пожертвований"
+
+msgid "Printed"
+msgstr "Распечатано"
+
+msgid "Paid"
+msgstr "Оплачено"
+
+msgid "Requests received"
+msgstr "Получено записок"
+
+msgid "Show"
+msgstr "Показать"
+
+msgid "Month"
+msgstr "Месяц"
+
+msgid "Reports"
+msgstr "Отчёты"
+
+msgid "Save settings"
+msgstr "Сохранить настройки"
+
+msgid "For regular support, also enable these webhook events:"
+msgstr "Для регулярной поддержки включите также эти webhook-события:"
+
+msgid "Configuration is required only for enabled payment methods."
+msgstr "Настройка нужна только для включённого способа оплаты."
+
+msgid "Saved — leave blank to keep unchanged"
+msgstr "Сохранено — оставьте пустым, чтобы не менять"
+
+msgid "Mode"
+msgstr "Режим"
+
+msgid "Enable"
+msgstr "Включить"
+
+msgid "After changing domains, save the settings and update the webhook URLs in Stripe and PayPal. The plugin does not change them automatically. Keep the old domain available for unfinished payments."
+msgstr "После смены домена сохраните настройки и обновите Webhook URL в кабинетах Stripe и PayPal. Плагин не меняет их автоматически. Старый домен оставьте доступным для незавершённых оплат."
+
+msgid "Optional. Leave blank to use the WordPress domain automatically. Enter an HTTPS domain only, without /wp-json/ or other paths. This domain must serve the same WordPress site with valid HTTPS."
+msgstr "Необязательно. Пустое поле — использовать домен WordPress автоматически. Только HTTPS-домен, без /wp-json/ и других путей. Указанный домен должен обслуживать этот же сайт WordPress с действующим HTTPS."
+
+msgid "API domain"
+msgstr "Домен API"
+
+msgid "A separate email is sent to this address after a new prayer request is paid. Leave blank to disable notifications; the administrator email is not used. Older orders are not emailed automatically. Failed notifications are retried by WordPress cron using the currently configured address."
+msgstr "На этот адрес отправляется отдельное письмо после подтверждения оплаты новой записки. Пустое поле отключает уведомления; email администратора не используется. Старые заказы автоматически не рассылаются. Неотправленные уведомления повторяются через планировщик WordPress на текущий указанный адрес."
+
+msgid "Recipient email"
+msgstr "Email получателя"
+
+msgid "Prayer request notifications"
+msgstr "Уведомления о записках"
+
+msgid "Settings saved."
+msgstr "Настройки сохранены."
+
+msgid "Payment settings"
+msgstr "Настройки оплаты"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "https://atapin.de/"
+msgstr "https://atapin.de/"
+
+msgid "Vladimir Atapin"
+msgstr "Vladimir Atapin"
+
+msgid "Orthodox prayer requests and donations with Stripe, PayPal, printable prayer slips and reports."
+msgstr "Православные молитвенные записки и пожертвования: Stripe, PayPal, PDF и отчёты."
+
+msgid "https://github.com/VAtapin/kloster-prayer/tree/main/georg-kloster-orthodox-donations"
+msgstr "https://github.com/VAtapin/kloster-prayer/tree/main/georg-kloster-orthodox-donations"
+
+msgid "Georg Kloster – Orthodox Donations"
+msgstr "Georg Kloster – Orthodox Donations"

@@ -1,0 +1,243 @@
+# GPL-2.0-or-later. WordPress.org import catalog.
+msgid ""
+msgstr "Project-Id-Version: WordPress.org readme\nLanguage: pl_PL\nContent-Type: text/plain; charset=UTF-8\nPlural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+msgid "Church donations and prayer requests with Stripe/PayPal, targeted campaigns, recurring support, private history and printable prayer slips."
+msgstr "Darowizny i intencje modlitewne ze Stripe/PayPal, zbiórki celowe, regularne wsparcie, prywatna historia i wydruk kartek modlitewnych."
+
+msgid "Georg Kloster – Orthodox Donations"
+msgstr "Georg Kloster – Orthodox Donations"
+
+msgid "Update provider webhook/return URLs after moving. An API-domain override must serve the same WordPress site over HTTPS."
+msgstr "Po przeniesieniu witryny zaktualizuj u dostawców adresy webhooków i powrotu. Zastępcza domena API musi obsługiwać tę samą witrynę WordPress przez HTTPS."
+
+msgid "No. Records and settings are retained. Site owners must manage retention and backups."
+msgstr "Nie. Dane i ustawienia są zachowywane. Właściciele witryn muszą zarządzać okresem przechowywania i kopiami zapasowymi."
+
+msgid "No. It checks configuration availability. Test real provider test/Sandbox transactions before enabling Live."
+msgstr "Nie. Diagnostyka sprawdza dostępność konfiguracji. Przed włączeniem Live przeprowadź rzeczywiste transakcje testowe w środowisku testowym dostawcy lub Sandbox."
+
+msgid "Yes. Disabled providers do not require credentials."
+msgstr "Tak. Wyłączeni dostawcy nie wymagają danych uwierzytelniających."
+
+msgid "What happens when the site's domain changes?"
+msgstr "Co się dzieje po zmianie domeny witryny?"
+
+msgid "Does deleting the plugin erase payment history?"
+msgstr "Czy usunięcie wtyczki usuwa historię płatności?"
+
+msgid "Does setup diagnostics test a real payment?"
+msgstr "Czy diagnostyka konfiguracji sprawdza rzeczywistą płatność?"
+
+msgid "Can I enable only one payment provider?"
+msgstr "Czy mogę włączyć tylko jednego dostawcę płatności?"
+
+msgid "Layouts: standard, compact, wide, two_columns, cards, minimal. header=\"no\" hides supported headings. Without lang, WordPress/the language plugin selects the language. The admin guide lists parameters/defaults. Editors preserve other translations. Guest payments are not linked to accounts by email."
+msgstr "Układy: standard, compact, wide, two_columns, cards, minimal. header=\"no\" ukrywa obsługiwane nagłówki. Bez lang język wybiera WordPress lub wtyczka językowa. Parametry i wartości domyślne opisano w pomocy administratora. Edytory zachowują pozostałe tłumaczenia. Płatności gości nie są przypisywane do kont na podstawie adresu e-mail."
+
+msgid "Donation/support forms accept campaign_id=\"1\" to allocate payments to an open, unexpired campaign. Amounts are EUR 0.50-999,999.99 with up to two decimal places. Confirmed partial refunds reduce received totals; fully refunded, failed and pending payments are excluded. Expenses are entered separately by staff with manage_options."
+msgstr "Formularze darowizn i wsparcia przyjmują campaign_id=\"1\", aby przypisać płatności do otwartej zbiórki, której termin jeszcze nie upłynął. Kwoty wynoszą od 0,50 do 999 999,99 EUR i mogą mieć do dwóch miejsc po przecinku. Potwierdzone częściowe zwroty zmniejszają wpływy; płatności całkowicie zwrócone, nieudane i oczekujące są pomijane. Wydatki wprowadzają osobno pracownicy z uprawnieniem manage_options."
+
+msgid "WP-Cron prepares new PayPal plans in the background; retry shortly if requested. Empty secret fields retain saved values; replace them when changing account/environment."
+msgstr "WP-Cron przygotowuje nowe plany PayPal w tle; jeśli pojawi się taki komunikat, spróbuj ponownie za chwilę. Puste pola sekretów zachowują zapisane wartości; zastąp je przy zmianie konta lub środowiska."
+
+msgid "Only verified payment events count as income; approval and return URLs do not. Cancellation stops future billing after the provider acknowledges it and does not refund previous payments. Closing a campaign prevents new payments/agreements but does not cancel existing agreements."
+msgstr "Tylko zweryfikowane zdarzenia płatnicze są zaliczane do wpływów; zatwierdzenie lub powrót pod wskazany adres nie wystarczają. Anulowanie zatrzymuje przyszłe obciążenia po potwierdzeniu przez dostawcę i nie zwraca wcześniejszych płatności. Zamknięcie zbiórki uniemożliwia nowe płatności i umowy, ale nie anuluje istniejących umów."
+
+msgid "Additional recurring events:\nStripe: invoice.payment_succeeded, invoice.payment_failed, customer.subscription.created, customer.subscription.updated, customer.subscription.deleted.\nPayPal: PAYMENT.SALE.COMPLETED, PAYMENT.SALE.REFUNDED, BILLING.SUBSCRIPTION.CREATED, BILLING.SUBSCRIPTION.ACTIVATED, BILLING.SUBSCRIPTION.CANCELLED, BILLING.SUBSCRIPTION.EXPIRED, BILLING.SUBSCRIPTION.SUSPENDED, BILLING.SUBSCRIPTION.PAYMENT.FAILED."
+msgstr "Dodatkowe zdarzenia regularnego wsparcia:\nStripe: invoice.payment_succeeded, invoice.payment_failed, customer.subscription.created, customer.subscription.updated, customer.subscription.deleted.\nPayPal: PAYMENT.SALE.COMPLETED, PAYMENT.SALE.REFUNDED, BILLING.SUBSCRIPTION.CREATED, BILLING.SUBSCRIPTION.ACTIVATED, BILLING.SUBSCRIPTION.CANCELLED, BILLING.SUBSCRIPTION.EXPIRED, BILLING.SUBSCRIPTION.SUSPENDED, BILLING.SUBSCRIPTION.PAYMENT.FAILED."
+
+msgid "One-time events:\nStripe: checkout.session.completed, charge.refunded.\nPayPal: PAYMENT.CAPTURE.COMPLETED, PAYMENT.CAPTURE.REFUNDED."
+msgstr "Zdarzenia płatności jednorazowych:\nStripe: checkout.session.completed, charge.refunded.\nPayPal: PAYMENT.CAPTURE.COMPLETED, PAYMENT.CAPTURE.REFUNDED."
+
+msgid "PayPal REST apps: https://developer.paypal.com/dashboard/applications/\nUse a matching Client ID, Secret, Webhook ID and Sandbox/Live environment. For testing, use a Sandbox Business seller and a separate Personal buyer. PayPal Webhooks Simulator events are not a substitute for a real Sandbox checkout."
+msgstr "Aplikacje REST PayPal: https://developer.paypal.com/dashboard/applications/\nUżyj pasujących do siebie Client ID, Secret, Webhook ID oraz środowiska Sandbox/Live. Do testów użyj sprzedawcy Sandbox Business i osobnego kupującego Personal. Zdarzenia PayPal Webhooks Simulator nie zastępują rzeczywistej płatności w Sandbox."
+
+msgid "Stripe API keys: https://dashboard.stripe.com/apikeys\nStripe webhook endpoints: https://dashboard.stripe.com/webhooks\nUse snapshot events for your account, with matching test/live credentials. Thin events are not supported."
+msgstr "Klucze API Stripe: https://dashboard.stripe.com/apikeys\nPunkty końcowe webhooków Stripe: https://dashboard.stripe.com/webhooks\nUżywaj zdarzeń snapshot dla swojego konta z odpowiednimi danymi testowymi lub produkcyjnymi. Zdarzenia Thin nie są obsługiwane."
+
+msgid "[gkod_support] - signed-in monthly/yearly support with explicit consent."
+msgstr "[gkod_support] - miesięczne lub roczne wsparcie z wyraźną zgodą dla zalogowanego użytkownika."
+
+msgid "[gkod_donation_history] - the signed-in account's donations and support cancellation controls."
+msgstr "[gkod_donation_history] - darowizny zalogowanego konta i opcje anulowania regularnego wsparcia."
+
+msgid "[gkod_campaign_report id=\"1\"] - public financial totals for a campaign."
+msgstr "[gkod_campaign_report id=\"1\"] - publiczne podsumowanie finansowe zbiórki."
+
+msgid "[gkod_campaigns] - public campaign list; id=\"1\" selects one campaign."
+msgstr "[gkod_campaigns] - publiczna lista zbiórek; id=\"1\" wybiera jedną zbiórkę."
+
+msgid "[gkod_payment_result] - result block; standard forms already include it."
+msgstr "[gkod_payment_result] - blok wyniku płatności; standardowe formularze już go zawierają."
+
+msgid "[gkod_donation] - one-time donation without prayer names/services."
+msgstr "[gkod_donation] - jednorazowa darowizna bez imion do modlitwy i nabożeństw."
+
+msgid "[gkod_service slug=\"altar-candle\"] - form for one active service."
+msgstr "[gkod_service slug=\"altar-candle\"] - formularz jednego aktywnego nabożeństwa."
+
+msgid "[gkod_prayer_form slug=\"gebetsanliegen\"] - alternate name for gkod_form."
+msgstr "[gkod_prayer_form slug=\"gebetsanliegen\"] - alternatywna nazwa gkod_form."
+
+msgid "[gkod_form] - active general prayer form; optional id or slug selects another form."
+msgstr "[gkod_form] - aktywny ogólny formularz intencji modlitewnych; opcjonalne id lub slug wybierają inny formularz."
+
+msgid "Test provider test/Sandbox payments, recurring billing, cancellation and refunds before enabling Live. Exclude personalized history/support pages from external full-page caches."
+msgstr "Przed włączeniem Live przetestuj płatności testowe lub Sandbox, cykliczne rozliczenia, anulowanie i zwroty. Wyklucz spersonalizowane strony historii i wsparcia z zewnętrznej pamięci podręcznej całych stron."
+
+msgid "Create pages using the shortcodes below. Donations &gt; Help &gt; Shortcodes explains all parameters and provides copy buttons."
+msgstr "Utwórz strony przy użyciu poniższych krótkich kodów. Sekcja Darowizny &gt; Pomoc &gt; Krótkie kody wyjaśnia wszystkie parametry i udostępnia przyciski kopiowania."
+
+msgid "Follow the translated Stripe/PayPal setup guides in settings. Register each exact HTTPS webhook URL shown there and save its signing secret or Webhook ID."
+msgstr "Postępuj zgodnie z przetłumaczonymi instrukcjami konfiguracji Stripe/PayPal w ustawieniach. Zarejestruj każdy dokładny adres webhooka HTTPS wyświetlony w tym miejscu i zapisz jego sekret podpisu lub Webhook ID."
+
+msgid "Open Donations &gt; Settings. Enable and configure only the payment providers you intend to use."
+msgstr "Otwórz Darowizny &gt; Ustawienia. Włącz i skonfiguruj tylko tych dostawców płatności, z których chcesz korzystać."
+
+msgid "Upload the ZIP using Plugins &gt; Add New &gt; Upload Plugin and activate Georg Kloster – Orthodox Donations."
+msgstr "Prześlij ZIP przez Wtyczki &gt; Dodaj nową &gt; Wyślij wtyczkę na serwer i włącz Georg Kloster – Orthodox Donations."
+
+msgid "Back up the site and database before updating."
+msgstr "Przed aktualizacją wykonaj kopię zapasową witryny i bazy danych."
+
+msgid "Shortcodes"
+msgstr "Krótkie kody"
+
+msgid "Payment setup"
+msgstr "Konfiguracja płatności"
+
+msgid "Source: https://github.com/VAtapin/kloster-prayer/tree/main/georg-kloster-orthodox-donations"
+msgstr "Kod źródłowy: https://github.com/VAtapin/kloster-prayer/tree/main/georg-kloster-orthodox-donations"
+
+msgid "Readable sources and GPL-compatible licenses are included in third-party-notices.txt. Code/prayer slips are GPL-2.0-or-later. No build or runtime code download is required."
+msgstr "Czytelny kod źródłowy i licencje zgodne z GPL wymieniono w third-party-notices.txt. Kod i kartki modlitewne są objęte licencją GPL-2.0-or-later. Kompilacja ani pobieranie kodu podczas działania nie są wymagane."
+
+msgid "The plugin author receives no requests, keys, telemetry or payments. Site owners must restrict access, define retention and document processing in their privacy policy. Deactivation and uninstall do not automatically delete records or settings."
+msgstr "Autor wtyczki nie otrzymuje intencji, kluczy, telemetrii ani płatności. Właściciele witryn muszą ograniczyć dostęp, określić okres przechowywania i opisać przetwarzanie w polityce prywatności. Wyłączenie i odinstalowanie nie usuwają automatycznie danych ani ustawień."
+
+msgid "Emails use wp_mail and can include names, comments and payer details. Empty recipient settings disable staff notifications, without an admin-email fallback. Failed notifications retry via WP-Cron. Acceptance does not guarantee Inbox delivery; a crash after acceptance can cause a retry."
+msgstr "Wiadomości e-mail korzystają z wp_mail i mogą zawierać imiona, komentarze i dane płatnika. Puste ustawienia odbiorców wyłączają powiadomienia dla pracowników bez zastępowania ich adresem administratora. Nieudane powiadomienia są ponawiane przez WP-Cron. Przyjęcie wiadomości do wysłania nie gwarantuje dostarczenia do skrzynki odbiorczej; awaria po przyjęciu może spowodować ponowną wysyłkę."
+
+msgid "The site stores prayer names/comments, donor email/name, WordPress account ownership, service selections, amounts, payment identifiers/statuses, available billing/contact details, timestamps, subscriptions, refunds and action history in its own database. Card numbers and security codes are not stored. Campaign reports publish aggregates only."
+msgstr "Witryna przechowuje we własnej bazie imiona do modlitwy i komentarze, adres e-mail i imię darczyńcy, powiązanie z kontem WordPress, wybrane nabożeństwa, kwoty, identyfikatory i statusy płatności, dostępne dane rozliczeniowe i kontaktowe, znaczniki czasu, subskrypcje, zwroty i historię działań. Numery kart i kody bezpieczeństwa nie są przechowywane. Raporty zbiórek publikują wyłącznie dane zbiorcze."
+
+msgid "Requests contain application credentials, EUR amounts, service titles, payment/subscription identifiers, billing interval and return URLs as applicable. Signature verification sends the received webhook event and transmission headers back to PayPal. Prayer names and comments are not sent when creating payments. PayPal collects payer information on its hosted checkout and returns payment results and available payer details."
+msgstr "Żądania zawierają odpowiednio dane uwierzytelniające aplikacji, kwoty w EUR, nazwy nabożeństw, identyfikatory płatności i subskrypcji, okres rozliczeniowy i adresy powrotu. Weryfikacja podpisu odsyła otrzymane zdarzenie webhooka i nagłówki transmisji do PayPal. Imiona do modlitwy i komentarze nie są wysyłane podczas tworzenia płatności. PayPal zbiera dane płatnika na własnej stronie płatności i zwraca wyniki płatności oraz dostępne dane płatnika."
+
+msgid "The plugin uses https://api-m.paypal.com (Live) or https://api-m.sandbox.paypal.com (Sandbox) for REST OAuth authentication, Orders v2 creation/capture, webhook signature verification, products/plans/subscriptions and cancellation. Capture references can be verified using the payments API."
+msgstr "Wtyczka używa https://api-m.paypal.com (Live) lub https://api-m.sandbox.paypal.com (Sandbox) do uwierzytelniania REST OAuth, tworzenia i pobierania płatności Orders v2, weryfikacji podpisów webhooków, obsługi produktów, planów, subskrypcji i ich anulowania. Odwołania do pobranych płatności mogą być weryfikowane przez API płatności."
+
+msgid "Stripe collects card/billing details on its hosted checkout. Signed webhooks return payment status and available payer information. The site owner supplies their API key and endpoint signing secret; the plugin author receives no payments or credentials."
+msgstr "Stripe zbiera dane karty i dane rozliczeniowe na własnej stronie płatności. Podpisane webhooki zwracają status płatności i dostępne dane płatnika. Właściciel witryny podaje własny klucz API i sekret podpisu punktu końcowego; autor wtyczki nie otrzymuje płatności ani danych uwierzytelniających."
+
+msgid "Stripe is contacted only for the configured payment features. The plugin uses https://api.stripe.com for Checkout sessions, subscriptions/cancellation, invoice payment identification and refund reconciliation. Requests contain API credentials, donor email, EUR amounts, service titles, internal/public payment identifiers, billing interval and return URLs as applicable. Prayer names and comments are not sent when creating payments."
+msgstr "Połączenia ze Stripe są wykonywane tylko dla skonfigurowanych funkcji płatniczych. Wtyczka używa https://api.stripe.com do sesji Checkout, subskrypcji i anulowania, identyfikacji płatności za faktury oraz uzgadniania zwrotów. Żądania zawierają odpowiednio dane uwierzytelniające API, adres e-mail darczyńcy, kwoty w EUR, nazwy nabożeństw, wewnętrzne i publiczne identyfikatory płatności, okres rozliczeniowy i adresy powrotu. Imiona do modlitwy i komentarze nie są wysyłane podczas tworzenia płatności."
+
+msgid "Requirements: WordPress 7.1+, PHP 8.4+, mbstring/GD for local PDFs, HTTPS callbacks and working WP-Cron."
+msgstr "Wymagania: WordPress 7.1+, PHP 8.4+, mbstring/GD dla lokalnych PDF, wywołania zwrotne HTTPS i działający WP-Cron."
+
+msgid "Manual ZIP: four translations. WordPress.org: standard language packs; English until translations are published."
+msgstr "ZIP do instalacji ręcznej: cztery tłumaczenia. WordPress.org: standardowe pakiety językowe; do czasu opublikowania tłumaczeń używany jest język angielski."
+
+msgid "Accept donations and Orthodox prayer requests on parish, church, cathedral or monastery websites using your own Stripe or PayPal account."
+msgstr "Przyjmuj darowizny i prawosławne intencje modlitewne na stronach parafii, cerkwi, soborów lub klasztorów za pomocą własnego konta Stripe lub PayPal."
+
+msgid "Webhooks: https://developer.paypal.com/api/rest/webhooks/rest/"
+msgstr "Webhooki: https://developer.paypal.com/api/rest/webhooks/rest/"
+
+msgid "API documentation: https://developer.paypal.com/api/get-started/"
+msgstr "Dokumentacja API: https://developer.paypal.com/api/get-started/"
+
+msgid "Privacy: https://www.paypal.com/legalhub/paypal/privacy-full"
+msgstr "Prywatność: https://www.paypal.com/legalhub/paypal/privacy-full"
+
+msgid "Terms: https://www.paypal.com/legalhub/paypal/useragreement-full"
+msgstr "Warunki: https://www.paypal.com/legalhub/paypal/useragreement-full"
+
+msgid "API documentation: https://docs.stripe.com/api/checkout/sessions"
+msgstr "Dokumentacja API: https://docs.stripe.com/api/checkout/sessions"
+
+msgid "Privacy: https://stripe.com/privacy"
+msgstr "Prywatność: https://stripe.com/privacy"
+
+msgid "Terms: https://stripe.com/legal/ssa"
+msgstr "Warunki: https://stripe.com/legal/ssa"
+
+msgid "WordPress gettext; WPML/Polylang for edited content."
+msgstr "WordPress gettext; WPML/Polylang dla edytowanych treści."
+
+msgid "English sources; Russian, German, Ukrainian and Polish translations."
+msgstr "Angielskie teksty źródłowe; tłumaczenia rosyjskie, niemieckie, ukraińskie i polskie."
+
+msgid "Local A4 landscape prayer-slip PDFs, including comments and archived requests."
+msgstr "Lokalne PDF kartek modlitewnych w poziomym formacie A4, w tym komentarze i zarchiwizowane intencje."
+
+msgid "WordPress administration tables, reports, CSV export and request archiving."
+msgstr "Standardowe tabele administracyjne WordPressa, raporty, eksport CSV i archiwizowanie intencji."
+
+msgid "Configurable services and forms with six responsive layouts."
+msgstr "Konfigurowalne nabożeństwa i formularze z sześcioma responsywnymi układami."
+
+msgid "Private donation history for signed-in users; public reports do not show donor identities."
+msgstr "Prywatna historia darowizn dla zalogowanych użytkowników; publiczne raporty nie ujawniają tożsamości darczyńców."
+
+msgid "Monthly or yearly support with explicit consent and cancellation."
+msgstr "Miesięczne lub roczne wsparcie z wyraźną zgodą i możliwością anulowania."
+
+msgid "Separately entered expenses and confirmed partial/full refund accounting."
+msgstr "Osobno wprowadzane wydatki i rozliczanie potwierdzonych częściowych i pełnych zwrotów."
+
+msgid "Targeted campaigns, goals, deadlines and public financial totals."
+msgstr "Zbiórki celowe, cele, terminy i publiczne podsumowania finansowe."
+
+msgid "One-time donations, with or without prayer requests."
+msgstr "Jednorazowe darowizny z intencjami modlitewnymi lub bez nich."
+
+msgid "Source code and licenses"
+msgstr "Kod źródłowy i licencje"
+
+msgid "Personal data and email"
+msgstr "Dane osobowe i poczta e-mail"
+
+msgid "External services: PayPal"
+msgstr "Usługi zewnętrzne: PayPal"
+
+msgid "External services: Stripe"
+msgstr "Usługi zewnętrzne: Stripe"
+
+msgid "WordPress support table and cancellation controls."
+msgstr "Standardowa tabela regularnego wsparcia WordPressa i opcje anulowania."
+
+msgid "WordPress campaign editor and expense records."
+msgstr "Edytor zbiórek WordPressa i rejestr wydatków."
+
+msgid "Monthly/yearly support with explicit consent."
+msgstr "Miesięczne lub roczne wsparcie z wyraźną zgodą."
+
+msgid "Campaign income, expenses, balance and donation form."
+msgstr "Wpływy, wydatki, saldo zbiórki i formularz darowizny."
+
+msgid "Prayer names, selected services and calculated donation."
+msgstr "Imiona do modlitwy, wybrane nabożeństwa i obliczona darowizna."
+
+msgid "Russian donation form: EUR amount and Stripe/PayPal choice."
+msgstr "Rosyjski formularz darowizny: kwota w EUR i wybór Stripe/PayPal."
+
+msgid "Introduce native WordPress administration and language-aware editors for the new plugin series."
+msgstr "Wprowadzono standardową administrację WordPressa i edytory uwzględniające język dla nowej serii wtyczki."
+
+msgid "Isolate PHP classes, nine shortcodes, assets, settings and callbacks; verify coexistence with the previous plugin."
+msgstr "Odizolowano klasy PHP, dziewięć krótkich kodów, zasoby, ustawienia i wywołania zwrotne; sprawdzono współistnienie z poprzednią wtyczką."
+
+msgid "Rename the plugin and menu to Donations with WordPress translations."
+msgstr "Zmieniono nazwę wtyczki i menu na Darowizny z tłumaczeniami WordPressa."
+
+msgid "Prepare the independent plugin's directory readme, metadata and reproducible package checks."
+msgstr "Przygotowano opis katalogowy, metadane i powtarzalne kontrole pakietów niezależnej wtyczki."
+
+msgid "Match text domain and package paths to the assigned WordPress.org slug."
+msgstr "Dostosowano domenę tekstową i ścieżki pakietu do slugu przydzielonego przez WordPress.org."
+
+msgid "Remove the translation loader call and escape translated admin output."
+msgstr "Usunięto wywołanie mechanizmu ładowania tłumaczeń i dodano zabezpieczanie przetłumaczonego wyjścia w panelu administracyjnym."

@@ -1,0 +1,39 @@
+"""Regression checks for complete, reproducible, safe directory translation imports."""
+from pathlib import Path
+import runpy
+
+root = Path(__file__).resolve().parent.parent
+builder = runpy.run_path(str(root / 'tools/build-wordpress-org-translations.py'))
+directory = root / 'translations/wordpress-org'
+before = {p.name: p.read_bytes() for p in directory.glob('*.po')}
+assert len(before) == 8
+builder['main']()
+assert before == {p.name: p.read_bytes() for p in directory.glob('*.po')}, 'Catalogs must reproduce'
+for locale in ('ru_RU', 'de_DE', 'uk', 'pl_PL'):
+    for kind, count in (('interface', 357), ('readme', 80)):
+        entries = builder['catalog'](directory / f'{kind}-{locale}.po')
+        translations = {e['msgid']: e['msgstr'] for e in entries if e['msgid']}
+        assert len(translations) == count
+        assert set(translations) == set(builder['originals'](kind))
+        assert translations[builder['NAME']] == builder['NAME']
+        assert all(translations.values())
+
+for source, bad in (
+    ('Donate', ''),
+    ('https://example.org/a', 'https://example.org/b'),
+    ('<strong>Donation</strong>', '<em>Пожертвование</em>'),
+    ('Donation: %s', 'Пожертвование'),
+    ('[gkod_campaign_report id="1"]', '[gkod_campaign_report id="2"]'),
+    ('PAYMENT.SALE.COMPLETED', 'PAYMENT.CAPTURE.COMPLETED'),
+    ('invoice.payment_succeeded', 'invoice.payment_failed'),
+    ('Help &gt; Shortcodes', 'Помощь > Шорткоды'),
+    ('Use manage_options', 'Используйте edit_posts'),
+    (builder['NAME'], 'Unapproved plugin rename'),
+):
+    try:
+        builder['validate'](source, bad)
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError(f'Unsafe translation accepted: {source}')
+print('PASS 4 x (357 interface + 80 readme), reproducibility, brand and negative token checks')
