@@ -25,9 +25,14 @@ jobs:
           persist-credentials: false
       - name: Validate image sizes and screenshot captions
         run: python3 tools/check-directory-assets.py
+      - name: Install directory upload client
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y subversion
       - name: Prepare directory images only
         run: |
           set -euo pipefail
+          mkdir -p tmp
           svn checkout --depth empty https://plugins.svn.wordpress.org/georg-kloster-orthodox-donations tmp/directory-images
           svn update --set-depth infinity tmp/directory-images/assets
           rsync -rc wordpressorg-assets/ tmp/directory-images/assets/
