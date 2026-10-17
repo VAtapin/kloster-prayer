@@ -45,10 +45,13 @@ shows the translated description and screenshots. Its stale “not translated”
 notice and language list had not refreshed at the time of verification; official
 language-pack availability remains unconfirmed.
 
-Russian, Ukrainian and Polish submissions from 16 October remain in Waiting;
-their approval was outside this German correction.
+Russian `ru/default` is also Current in both Stable and Development: 357/357
+interface strings and 80/80 Readme strings, with no Waiting, Fuzzy or Warnings.
+The [public Russian plugin page](https://ru.wordpress.org/plugins/georg-kloster-orthodox-donations/)
+shows the translated description, FAQ and screenshot captions. Existing approved
+strings were not reimported. Ukrainian and Polish submissions remain in Waiting.
 
-Monitor automation `wordpress-org` continues to check the other locales quietly.
+Monitor automation `wordpress-org` continues to check Ukrainian and Polish quietly.
 Do not reimport unchanged Waiting catalogs or replace translations approved by
 editors. Stop the automation only after all four locales and language packs are
 verified.
