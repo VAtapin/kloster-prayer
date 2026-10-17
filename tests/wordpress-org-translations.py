@@ -1,6 +1,7 @@
 """Regression checks for complete, reproducible, safe directory translation imports."""
 from pathlib import Path
 import runpy
+import re
 
 root = Path(__file__).resolve().parent.parent
 builder = runpy.run_path(str(root / 'tools/build-wordpress-org-translations.py'))
@@ -17,6 +18,31 @@ for locale in ('ru_RU', 'de_DE', 'uk', 'pl_PL'):
         assert set(translations) == set(builder['originals'](kind))
         assert translations[builder['NAME']] == builder['NAME']
         assert all(translations.values())
+
+german_runtime = {
+    entry['msgid']: entry['msgstr']
+    for entry in builder['catalog'](root / builder['SLUG'] / 'languages' / f"{builder['SLUG']}-de_DE.po")
+    if entry['msgid']
+}
+german_interface = {
+    entry['msgid']: entry['msgstr']
+    for entry in builder['catalog'](directory / 'interface-de_DE.po')
+    if entry['msgid']
+}
+german_readme = [
+    entry['msgstr'] for entry in builder['catalog'](directory / 'readme-de_DE.po') if entry['msgid']
+]
+assert all(
+    german_runtime[source] == translation
+    for source, translation in german_interface.items()
+    if source in german_runtime and source != builder['NAME']
+)
+assert not any(re.search(r'\b(?:Sie|Ihnen|Ihr\w*)\b', text) for text in (*german_runtime.values(), *german_readme))
+assert german_interface['Prayer service'] == 'Gebetsdienst'
+assert german_interface['Choose prayer services'] == 'Gebetsdienste auswählen'
+assert german_interface['Slug'] == 'Titelform'
+assert 'Spendenaktion' in german_interface['Campaign progress']
+assert not any('Gottesdienst' in text or 'Sammlung' in text for text in german_readme)
 
 for source, bad in (
     ('Donate', ''),

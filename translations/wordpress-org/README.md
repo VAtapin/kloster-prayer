@@ -1,7 +1,8 @@
 # WordPress.org translation imports
 
-Runtime code and bundled PO/MO catalogs are unchanged. These files are separate
-imports for translate.wordpress.org and are not included in the plugin ZIP.
+These files are separate imports for translate.wordpress.org and are not included
+in the plugin ZIP. The German bundled PO/MO catalogs are kept in sync for manual
+installations; runtime PHP code is unchanged.
 
 - `interface-source.pot`: exact 357 Stable originals exported from WordPress.org.
 - `readme-source.pot`: exact 80 Stable Readme originals, including FAQ, setup,
@@ -26,24 +27,28 @@ placeholders, HTML/entities, URLs, shortcodes, permissions and provider event na
 This follows the publication approach used in `wp_cu_translator`; that repository
 was read only.
 
-## Verified submission on 16 October 2026
+## Verified publication on 17 October 2026
 
-All four locales have, in each of Stable and Development:
+German `de/default` now has, in each of Stable and Development:
 
 | Component | Total | Waiting | Current | Untranslated | Warnings |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Interface | 357 | 357 | 0 | 0 | 0 |
-| Readme | 80 | 80 | 0 | 0 | 0 |
+| Interface | 357 | 0 | 357 | 0 | 1 |
+| Readme | 80 | 0 | 80 | 0 | 0 |
 
-All sixteen Waiting exports were downloaded through the authenticated WordPress.org
-browser and their complete msgid/msgstr maps exactly matched these import files.
-Waiting is a submitted suggestion, **not** an approved/public translation. The
-account's import form provides only Waiting for this plugin; approval requires
-the locale's existing translation editors. No permissions were changed and no
-editor request was sent. Language-pack generation and translated public pages
-remain unconfirmed until approval.
+The German locale's PTE rights allowed importing the corrected catalogs as
+Current. WordPress.org synced Stable to Development. The sole warning is an
+automatic false positive: the source `period removed` starts lowercase, but the
+German noun `Zeitraum` must be capitalized. It was approved manually. The
+[public German plugin page](https://de.wordpress.org/plugins/georg-kloster-orthodox-donations/)
+shows the translated description and screenshots. Its stale “not translated”
+notice and language list had not refreshed at the time of verification; official
+language-pack availability remains unconfirmed.
 
-Monitor automation `wordpress-org` continues in the current chat, quietly checking
-for approval changes. Do not reimport unchanged Waiting catalogs or replace
-translations approved by editors. Stop the automation only after all four locales
-are approved and their public descriptions and official language packs verified.
+Russian, Ukrainian and Polish submissions from 16 October remain in Waiting;
+their approval was outside this German correction.
+
+Monitor automation `wordpress-org` continues to check the other locales quietly.
+Do not reimport unchanged Waiting catalogs or replace translations approved by
+editors. Stop the automation only after all four locales and language packs are
+verified.

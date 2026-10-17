@@ -13,7 +13,7 @@
     },
     "choose": {
         "ru": "Выберите требы",
-        "de": "Gebetsanliegen auswählen",
+        "de": "Gebetsdienste auswählen",
         "uk": "Оберіть треби",
         "pl": "Wybierz intencje"
     },
@@ -31,7 +31,7 @@
     },
     "names_help": {
         "ru": "Укажите крестильные имена. Записки автоматически разделяются на группы.",
-        "de": "Bitte verwenden Sie die Taufnamen. Die Zettel werden automatisch in Gruppen aufgeteilt.",
+        "de": "Bitte verwende die Taufnamen. Die Zettel werden automatisch in Gruppen aufgeteilt.",
         "uk": "Вкажіть хресні імена. Записки автоматично розділяються на групи.",
         "pl": "Prosimy podać imiona chrzcielne. Kartki zostaną automatycznie podzielone na grupy."
     },
@@ -43,7 +43,7 @@
     },
     "donor_name": {
         "ru": "Ваше имя (необязательно)",
-        "de": "Ihr Name (optional)",
+        "de": "Dein Name (optional)",
         "uk": "Ваше ім’я (необов’язково)",
         "pl": "Imię ofiarodawcy (opcjonalnie)"
     },
@@ -79,7 +79,7 @@
     },
     "total": {
         "ru": "Сумма пожертвования",
-        "de": "Spendensumme",
+        "de": "Spendenbetrag",
         "uk": "Сума пожертви",
         "pl": "Kwota darowizny"
     },
@@ -91,37 +91,37 @@
     },
     "secure": {
         "ru": "Безопасная оплата. Данные используются только для обработки молитвенной записки.",
-        "de": "Sichere Zahlung. Ihre Daten werden ausschließlich zur Bearbeitung des Gebetsanliegens verwendet.",
+        "de": "Sichere Zahlung. Deine Daten werden ausschließlich zur Bearbeitung des Gebetsanliegens verwendet.",
         "uk": "Безпечна оплата. Дані використовуються лише для обробки молитовної записки.",
         "pl": "Bezpieczna płatność. Dane są używane wyłącznie do obsługi intencji modlitewnej."
     },
     "required": {
         "ru": "Заполните обязательные поля.",
-        "de": "Bitte füllen Sie alle Pflichtfelder aus.",
+        "de": "Bitte fülle alle Pflichtfelder aus.",
         "uk": "Заповніть обов’язкові поля.",
         "pl": "Prosimy wypełnić wymagane pola."
     },
     "error": {
         "ru": "Не удалось обработать запрос. Попробуйте ещё раз.",
-        "de": "Die Anfrage konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut.",
+        "de": "Die Anfrage konnte nicht verarbeitet werden. Bitte versuche es erneut.",
         "uk": "Не вдалося обробити запит. Спробуйте ще раз.",
         "pl": "Nie udało się przetworzyć zgłoszenia. Spróbuj ponownie."
     },
     "thanks": {
         "ru": "Благодарим вас. Оплата подтверждена, и записка передана для молитвенного поминовения.",
-        "de": "Vielen Dank. Ihre Zahlung wurde bestätigt und Ihr Gebetsanliegen ist bei uns eingegangen.",
+        "de": "Vielen Dank. Deine Zahlung wurde bestätigt und dein Gebetsanliegen ist bei uns eingegangen.",
         "uk": "Дякуємо. Оплату підтверджено, записку передано для молитовного поминання.",
         "pl": "Dziękujemy. Płatność została potwierdzona, a intencja przekazana do modlitwy."
     },
     "processing": {
         "ru": "Благодарим вас. Оплата ещё подтверждается. После поступления средств мы отправим подтверждение по электронной почте.",
-        "de": "Vielen Dank. Die Zahlung wird noch bestätigt. Sie erhalten unsere Bestätigung per E-Mail, sobald der Betrag eingegangen ist.",
+        "de": "Vielen Dank. Die Zahlung wird noch bestätigt. Du erhältst unsere Bestätigung per E-Mail, sobald der Betrag eingegangen ist.",
         "uk": "Дякуємо. Оплата ще підтверджується. Після надходження коштів ми надішлемо підтвердження електронною поштою.",
         "pl": "Dziękujemy. Płatność jest jeszcze potwierdzana. Po zaksięgowaniu środków wyślemy wiadomość e-mail."
     },
     "cancelled": {
         "ru": "Оплата не завершена. Записка временно сохранена.",
-        "de": "Die Zahlung wurde nicht abgeschlossen. Ihr Gebetsanliegen bleibt vorläufig gespeichert.",
+        "de": "Die Zahlung wurde nicht abgeschlossen. Dein Gebetsanliegen bleibt vorläufig gespeichert.",
         "uk": "Оплату не завершено. Записку тимчасово збережено.",
         "pl": "Płatność nie została zakończona. Intencja została tymczasowo zapisana."
     },

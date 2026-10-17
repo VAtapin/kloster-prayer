@@ -39,7 +39,7 @@ msgid "For one-time donations and prayer requests, select checkout.session.compl
 msgstr "Wähle für einmalige Spenden und Gebetsanliegen checkout.session.completed und charge.refunded. Wähle für regelmäßige Unterstützung zusätzlich die unten aufgeführten Abonnement- und Rechnungsereignisse. Speichere das Ziel."
 
 msgid "Paste the exact Endpoint URL below. It must be publicly accessible over HTTPS and accept POST requests without login, redirects or a security challenge. Do not enter the WordPress settings-page URL."
-msgstr "Füge die unten angegebene Endpoint URL unverändert ein. Sie muss öffentlich per HTTPS erreichbar sein und POST ohne Anmeldung, Weiterleitung oder Sicherheitsabfrage akzeptieren. Verwende nicht die URL der WordPress-Einstellungsseite."
+msgstr "Füge die unten angegebene Endpoint URL unverändert ein. Die URL muss öffentlich per HTTPS erreichbar sein und POST-Anfragen ohne Anmeldung, Weiterleitung oder Sicherheitsabfrage annehmen. Verwende nicht die URL der WordPress-Einstellungsseite."
 
 msgid "In Workbench → Webhooks, choose Create an event destination (or Add destination / Add endpoint in older dashboards). Choose Your account, the Snapshot payload format and Webhook endpoint as the destination. This plugin does not process Thin events."
 msgstr "Wähle in Workbench → Webhooks Create an event destination (in älteren Oberflächen Add destination / Add endpoint). Wähle Your account, das Datenformat Snapshot und das Ziel Webhook endpoint. Dieses Plugin verarbeitet keine Thin-Ereignisse."
@@ -87,7 +87,7 @@ msgid "Compatibility parameter for gkod_donation: no (default) means one-time pa
 msgstr "Kompatibilitätsparameter für gkod_donation: no (Standard) bedeutet Einmalzahlung, yes zeigt wiederkehrende Optionen. Verwende vorzugsweise gkod_support, das vor der Formularanzeige die Anmeldung prüft."
 
 msgid "Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired."
-msgstr "Optionale Sammlungs-ID. Ohne Angabe oder mit 0 wird die Kirche allgemein unterstützt. Eine angegebene Sammlung muss offen und noch nicht abgelaufen sein."
+msgstr "Optionale ID einer Spendenaktion. Ohne Angabe oder mit 0 wird die Kirche allgemein unterstützt. Eine angegebene Spendenaktion muss offen und noch nicht abgelaufen sein."
 
 msgid "yes (default) shows the form heading; no hides it. Not supported by gkod_service."
 msgstr "yes (Standard) zeigt die Formularüberschrift, no blendet sie aus. Von gkod_service nicht unterstützt."
@@ -96,13 +96,13 @@ msgid "Language override: en, ru, de, uk or pl. Usually omit it: the site follow
 msgstr "Sprachüberschreibung: en, ru, de, uk oder pl. Meist weglassen: Die Website folgt der aktuellen WPML/Polylang-Sprache, ohne Sprachplugin der WordPress-Sprache. Vorhandene Texte von Gebetsformularen und Diensten verwenden Deutsch als englischen Fallback."
 
 msgid "Layout: standard, compact, wide, two_columns, cards or minimal. Prayer forms default to their saved layout; other forms default to compact."
-msgstr "Layout: standard, compact, wide, two_columns, cards oder minimal. Gebetsformulare verwenden standardmäßig ihr gespeichertes Layout, andere Formulare compact."
+msgstr "Layout: standard, compact, wide, two_columns, cards oder minimal. Gebetsformulare verwenden standardmäßig ihr gespeichertes Layout. Bei anderen Formularen ist compact voreingestellt."
 
 msgid "Saved form or service slug. Used only when id is omitted or zero."
-msgstr "Gespeicherter Slug des Formulars oder Dienstes. Wird nur verwendet, wenn id fehlt oder 0 ist."
+msgstr "Gespeicherte Titelform des Formulars oder Gebetsdienstes. Wird nur verwendet, wenn id fehlt oder 0 ist."
 
 msgid "Numeric form, service or campaign ID. Find it in the corresponding admin section. Required for a campaign report; optional for the campaign list."
-msgstr "Numerische ID des Formulars, Dienstes oder der Sammlung aus dem entsprechenden Verwaltungsbereich. Für einen Sammlungsbericht erforderlich, für die Liste optional."
+msgstr "Numerische ID des Formulars, Gebetsdienstes oder der Spendenaktion aus dem entsprechenden Verwaltungsbereich. Für einen Bericht über eine Spendenaktion erforderlich, für die Liste optional."
 
 msgid "Payment result for the returned order, using its saved language. Has no shortcode parameters. Forms already include this block; use it separately on a custom return page. A return URL alone does not confirm payment."
 msgstr "Zahlungsergebnis des zurückgegebenen Auftrags in dessen gespeicherter Sprache. Keine Shortcode-Parameter. Formulare enthalten diesen Block bereits; separat für eine eigene Rückkehrseite verwenden. Die Rückkehr-URL allein bestätigt keine Zahlung."
@@ -111,19 +111,19 @@ msgid "Private payment history and regular-support cancellation for the signed-i
 msgstr "Privater Zahlungsverlauf und Kündigung regelmäßiger Unterstützung für das angemeldete Konto. Gast- und frühere Zahlungen werden nicht per E-Mail zugeordnet. Schließe die Seite von externen Ganzseiten-Caches aus."
 
 msgid "Public report for one published campaign: goal, confirmed receipts after refunds, separately recorded expenses and balance. Does not disclose donor data or include a payment form."
-msgstr "Öffentlicher Bericht einer veröffentlichten Sammlung: Ziel, bestätigte Einnahmen nach Erstattungen, separat erfasste Ausgaben und Saldo. Enthält weder Spenderdaten noch ein Zahlungsformular."
+msgstr "Öffentlicher Bericht über eine veröffentlichte Spendenaktion: Ziel, bestätigte Einnahmen nach Erstattungen, separat erfasste Ausgaben und Saldo. Enthält weder Spenderdaten noch ein Zahlungsformular."
 
 msgid "Published campaigns with progress, totals and donation forms. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
-msgstr "Veröffentlichte Sammlungen mit Fortschritt, Summen und Spendenformularen. Ohne id werden bis zu 100 Sammlungen angezeigt. Entwürfe bleiben verborgen; geschlossene oder abgelaufene Sammlungen nehmen keine neuen Zahlungen an."
+msgstr "Veröffentlichte Spendenaktionen mit Fortschritt, Summen und Spendenformularen. Ohne id werden bis zu 100 veröffentlichte Spendenaktionen angezeigt. Entwürfe bleiben verborgen; geschlossene oder abgelaufene Spendenaktionen nehmen keine neuen Zahlungen an."
 
 msgid "Monthly or yearly support. Requires login and explicit consent. The owner can cancel in donation history; configure recurring webhooks and WP-Cron first."
-msgstr "Monatliche oder jährliche Unterstützung. Anmeldung und ausdrückliche Zustimmung sind erforderlich. Der Inhaber kann sie im Spendenverlauf kündigen; richte zuerst Abonnement-Webhooks und WP-Cron ein."
+msgstr "Monatliche oder jährliche Unterstützung. Anmeldung und ausdrückliche Zustimmung sind erforderlich. Der Kontoinhaber kann sie im Spendenverlauf kündigen. Richte zuvor die Webhooks für wiederkehrende Zahlungen und WP-Cron ein."
 
 msgid "One-time donation without prayer names or services. The donor enters an amount from 0.50 to 999,999.99 EUR."
-msgstr "Einmalige Spende ohne Gebetsnamen oder Dienste. Der Spender gibt einen Betrag von 0,50 bis 999.999,99 EUR ein."
+msgstr "Einmalige Spende ohne Gebetsnamen oder Gebetsdienste. Der Spender gibt einen Betrag zwischen 0,50 und 999.999,99 EUR ein."
 
 msgid "Form for one active service. Specify its id or slug; an id takes precedence. Find these values in Services."
-msgstr "Formular für einen aktiven Gebetsdienst. Gib id oder slug an; id hat Vorrang. Die Werte findest du unter Dienste."
+msgstr "Formular für einen aktiven Gebetsdienst. Gib id oder slug an; id hat Vorrang. Die Werte findest du unter Gebetsdienste."
 
 msgid "Alias of gkod_form with the same parameters and behavior."
 msgstr "Alternativer Name für gkod_form mit denselben Parametern und derselben Funktion."
@@ -153,7 +153,7 @@ msgid "Start regular support"
 msgstr "Regelmäßige Unterstützung beginnen"
 
 msgid "Repeat this amount at the selected interval until I cancel. I can cancel in my donation history."
-msgstr "Diesen Betrag im gewählten Intervall wiederholen, bis ich kündige. Ich kann in meiner Spendenhistorie kündigen."
+msgstr "Diesen Betrag im gewählten Intervall wiederholen, bis ich kündige. Die Kündigung ist in meinem Spendenverlauf möglich."
 
 msgid "Frequency"
 msgstr "Häufigkeit"
@@ -276,13 +276,13 @@ msgid "Upcoming"
 msgstr "Bevorstehend"
 
 msgid "Ending on this date"
-msgstr "Enden an diesem Tag"
+msgstr "Endet an diesem Tag"
 
 msgid "Read on this date"
 msgstr "An diesem Tag lesen"
 
 msgid "Paid requests outside the archive. Expired periods do not automatically archive requests."
-msgstr "Bezahlte Anliegen außerhalb des Archivs. Ablaufende Zeiträume archivieren Anliegen nicht automatisch."
+msgstr "Bezahlte Anliegen außerhalb des Archivs. Abgelaufene Zeiträume archivieren Anliegen nicht automatisch."
 
 msgid "Commemoration"
 msgstr "Gedenken"
@@ -345,7 +345,7 @@ msgid "Moved to archive"
 msgstr "Ins Archiv verschoben"
 
 msgid "period removed"
-msgstr "zeitliche Zuordnung entfernt"
+msgstr "Zeitraum entfernt"
 
 msgid "Could not save the period."
 msgstr "Zeitraum konnte nicht gespeichert werden."
@@ -378,7 +378,7 @@ msgid "The PDF is ready, but the print status could not be saved. Please try aga
 msgstr "PDF ist fertig, der Druckstatus konnte jedoch nicht gespeichert werden. Bitte erneut versuchen."
 
 msgid "Recipient notification failed. It will be retried."
-msgstr "Empfängerbenachrichtigung fehlgeschlagen. Sie wird erneut versucht."
+msgstr "Die Benachrichtigung an den Empfänger ist fehlgeschlagen. Ein weiterer Zustellversuch folgt."
 
 msgid "The recipient notification was handed to the mail system."
 msgstr "Die Benachrichtigung wurde an das Mailsystem übergeben."
@@ -387,7 +387,7 @@ msgid "Open request in WordPress"
 msgstr "Anliegen in WordPress öffnen"
 
 msgid "Donor email"
-msgstr "E-Mail des Spenders"
+msgstr "E-Mail-Adresse des Spenders"
 
 msgid "Order date"
 msgstr "Bestelldatum"
@@ -414,7 +414,7 @@ msgid "Request type"
 msgstr "Gebetsart"
 
 msgid "Prayer service"
-msgstr "Gebetsanliegen"
+msgstr "Gebetsdienst"
 
 msgid "Hello"
 msgstr "Guten Tag"
@@ -456,7 +456,7 @@ msgid "Submit prayer request and donate"
 msgstr "Gebetsanliegen absenden und spenden"
 
 msgid "Donation amount"
-msgstr "Spendensumme"
+msgstr "Spendenbetrag"
 
 msgid "Card / Stripe"
 msgstr "Karte / Stripe"
@@ -483,13 +483,13 @@ msgid "Names, one person per line"
 msgstr "Namen, jeweils eine Person pro Zeile"
 
 msgid "Choose prayer services"
-msgstr "Gebetsanliegen auswählen"
+msgstr "Gebetsdienste auswählen"
 
 msgid "Enter a valid amount between 0.50 and 999,999.99 EUR."
-msgstr "Bitte gib einen gültigen Betrag zwischen 0,50 und 999.999,99 EUR ein."
+msgstr "Bitte gib einen gültigen Betrag zwischen 0,50 und 999.999,99 EUR ein."
 
 msgid "Amount in EUR: 0.50 to 999,999.99. Up to two decimal places."
-msgstr "Betrag in EUR: 0,50 bis 999.999,99. Maximal zwei Nachkommastellen."
+msgstr "Betrag in EUR: 0,50 bis 999.999,99. Höchstens zwei Nachkommastellen."
 
 msgid "Thank you for your donation"
 msgstr "Vielen Dank für deine Spende"
@@ -519,7 +519,7 @@ msgid "Partially refunded"
 msgstr "Teilweise erstattet"
 
 msgid "Only payments made while signed in to this account are shown. Guest payments are not linked by email."
-msgstr "Es werden nur Zahlungen angezeigt, die während der Anmeldung an diesem Konto getätigt wurden. Gastzahlungen werden nicht anhand der E-Mail zugeordnet."
+msgstr "Es werden nur Zahlungen angezeigt, die du angemeldet mit diesem Konto geleistet hast. Gastzahlungen werden nicht anhand der E-Mail-Adresse zugeordnet."
 
 msgid "Your donations"
 msgstr "Deine Spenden"
@@ -537,7 +537,7 @@ msgid "Save campaign"
 msgstr "Spendenaktion speichern"
 
 msgid "Closing a campaign prevents new submissions. Existing regular support continues until cancelled."
-msgstr "Das Schließen einer Spendenaktion verhindert neue Anträge. Bestehende regelmäßige Unterstützung läuft bis zur Kündigung weiter."
+msgstr "Nach dem Schließen einer Spendenaktion sind keine neuen Zahlungen möglich. Bestehende regelmäßige Unterstützung läuft bis zur Kündigung weiter."
 
 msgid "New campaign"
 msgstr "Neue Spendenaktion"
@@ -612,13 +612,13 @@ msgid "Shortcode"
 msgstr "Shortcode"
 
 msgid "This campaign is closed."
-msgstr "Diese Sammlung nimmt keine Spenden mehr an."
+msgstr "Diese Spendenaktion nimmt keine Spenden mehr an."
 
 msgid "Deadline"
 msgstr "Enddatum"
 
 msgid "Campaign progress"
-msgstr "Fortschritt der Sammlung"
+msgstr "Fortschritt der Spendenaktion"
 
 msgid "Balance"
 msgstr "Saldo"
@@ -636,7 +636,7 @@ msgid "Please complete all required fields."
 msgstr "Bitte fülle alle Pflichtfelder aus."
 
 msgid "Campaign not found."
-msgstr "Sammlung nicht gefunden."
+msgstr "Spendenaktion nicht gefunden."
 
 msgid "Forbidden"
 msgstr "Zugriff verweigert"
@@ -699,10 +699,10 @@ msgid "PHP 8.4 or later"
 msgstr "PHP 8.4 oder neuer"
 
 msgid "Payer email"
-msgstr "E-Mail der zahlenden Person"
+msgstr "E-Mail-Adresse des Zahlers"
 
 msgid "Payer name"
-msgstr "Name der zahlenden Person"
+msgstr "Name des Zahlers"
 
 msgid "Donor name"
 msgstr "Name des Spenders"
@@ -723,7 +723,7 @@ msgid "Default type"
 msgstr "Standard-Gebetsart"
 
 msgid "The form always fills 100% of the shortcode block; the layout changes its internal arrangement."
-msgstr "Das Formular füllt immer 100% des Shortcode-Blocks; das Layout ändert die innere Anordnung."
+msgstr "Das Formular füllt den Shortcode-Block immer zu 100 % aus. Das Layout bestimmt die Anordnung innerhalb des Formulars."
 
 msgid "Minimal"
 msgstr "Minimalistisch"
@@ -816,7 +816,7 @@ msgid "Background image"
 msgstr "Hintergrundbild"
 
 msgid "Slug"
-msgstr "Slug"
+msgstr "Titelform"
 
 msgid "Description"
 msgstr "Beschreibung"
@@ -900,7 +900,7 @@ msgid "Saved."
 msgstr "Gespeichert."
 
 msgid "Enter an HTTPS domain without a path, query or credentials, for example https://example.org. Leave blank for automatic selection."
-msgstr "Gib eine HTTPS-Domain ohne Pfad, Parameter oder Zugangsdaten ein, z. B. https://example.org. Für automatische Auswahl leer lassen."
+msgstr "Gib eine HTTPS-Domain ohne Pfad, Abfrageparameter oder Zugangsdaten ein, z. B. https://example.org. Lass das Feld für die automatische Auswahl leer."
 
 msgid "Enter one valid notification email or leave the field blank."
 msgstr "Gib eine gültige Benachrichtigungsadresse ein oder lass das Feld leer."
@@ -969,7 +969,7 @@ msgid "Address"
 msgstr "Adresse"
 
 msgid "Payer"
-msgstr "Zahlende Person"
+msgstr "Zahler"
 
 msgid "Request"
 msgstr "Anliegen"
@@ -1044,7 +1044,7 @@ msgid "A separate email is sent to this address after a new prayer request is pa
 msgstr "Nach der Bezahlung eines neuen Anliegens wird eine separate E-Mail an diese Adresse gesendet. Leer lassen deaktiviert Benachrichtigungen; die Administratoradresse wird nicht verwendet. Ältere Bestellungen werden nicht automatisch versendet. Fehlgeschlagene Benachrichtigungen werden durch WordPress-Cron an die aktuell eingestellte Adresse wiederholt."
 
 msgid "Recipient email"
-msgstr "E-Mail des Empfängers"
+msgstr "E-Mail-Adresse des Empfängers"
 
 msgid "Prayer request notifications"
 msgstr "Benachrichtigungen über Gebetsanliegen"

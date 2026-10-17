@@ -15,7 +15,7 @@ msgid "Prayer request notifications"
 msgstr "Benachrichtigungen über Gebetsanliegen"
 
 msgid "Recipient email"
-msgstr "E-Mail des Empfängers"
+msgstr "E-Mail-Adresse des Empfängers"
 
 msgid "API domain"
 msgstr "API-Domain"
@@ -78,7 +78,7 @@ msgid "Request"
 msgstr "Anliegen"
 
 msgid "Payer"
-msgstr "Zahlende Person"
+msgstr "Zahler"
 
 msgid "Address"
 msgstr "Adresse"
@@ -126,7 +126,7 @@ msgid "No requests match the selected filter."
 msgstr "Keine Anliegen für diesen Filter."
 
 msgid "Enter one valid notification email or leave the field blank."
-msgstr "Geben Sie eine gültige Benachrichtigungsadresse ein oder lassen Sie das Feld leer."
+msgstr "Gib eine gültige Benachrichtigungsadresse ein oder lass das Feld leer."
 
 msgid "Saved."
 msgstr "Gespeichert."
@@ -207,7 +207,7 @@ msgid "Description"
 msgstr "Beschreibung"
 
 msgid "Slug"
-msgstr "Slug"
+msgstr "Titelform"
 
 msgid "Background image"
 msgstr "Hintergrundbild"
@@ -300,7 +300,7 @@ msgid "Minimal"
 msgstr "Minimalistisch"
 
 msgid "The form always fills 100% of the shortcode block; the layout changes its internal arrangement."
-msgstr "Das Formular füllt immer 100% des Shortcode-Blocks; das Layout ändert die innere Anordnung."
+msgstr "Das Formular füllt den Shortcode-Block immer zu 100 % aus. Das Layout bestimmt die Anordnung innerhalb des Formulars."
 
 msgid "Default type"
 msgstr "Standard-Gebetsart"
@@ -321,10 +321,10 @@ msgid "Donor name"
 msgstr "Name des Spenders"
 
 msgid "Payer name"
-msgstr "Name der zahlenden Person"
+msgstr "Name des Zahlers"
 
 msgid "Payer email"
-msgstr "E-Mail der zahlenden Person"
+msgstr "E-Mail-Adresse des Zahlers"
 
 msgid "PHP 8.4 or later"
 msgstr "PHP 8.4 oder neuer"
@@ -417,7 +417,7 @@ msgid "Request type"
 msgstr "Gebetsart"
 
 msgid "Donor email"
-msgstr "E-Mail des Spenders"
+msgstr "E-Mail-Adresse des Spenders"
 
 msgid "Payment method"
 msgstr "Zahlungsart"
@@ -429,7 +429,7 @@ msgid "The recipient notification was handed to the mail system."
 msgstr "Die Benachrichtigung wurde an das Mailsystem übergeben."
 
 msgid "Recipient notification failed. It will be retried."
-msgstr "Empfängerbenachrichtigung fehlgeschlagen. Sie wird erneut versucht."
+msgstr "Die Benachrichtigung an den Empfänger ist fehlgeschlagen. Ein weiterer Zustellversuch folgt."
 
 msgid "The PDF is ready, but the print status could not be saved. Please try again."
 msgstr "PDF ist fertig, der Druckstatus konnte jedoch nicht gespeichert werden. Bitte erneut versuchen."
@@ -438,7 +438,7 @@ msgid "PDF generated; the printed status was set automatically."
 msgstr "PDF erstellt; der Druckstatus wurde automatisch gesetzt."
 
 msgid "Enter a valid date and a duration between 1 and 36500 days."
-msgstr "Geben Sie ein gültiges Datum und eine Dauer von 1 bis 36500 Tagen ein."
+msgstr "Gib ein gültiges Datum und eine Dauer von 1 bis 36500 Tagen ein."
 
 msgid "Not assigned"
 msgstr "Nicht zugewiesen"
@@ -456,7 +456,7 @@ msgid "Service not found."
 msgstr "Gebetsdienst nicht gefunden."
 
 msgid "Restore the request from the archive first."
-msgstr "Stellen Sie das Anliegen zuerst aus dem Archiv wieder her."
+msgstr "Stelle das Anliegen zuerst aus dem Archiv wieder her."
 
 msgid "Could not save the period."
 msgstr "Zeitraum konnte nicht gespeichert werden."
@@ -525,13 +525,13 @@ msgid "Commemoration"
 msgstr "Gedenken"
 
 msgid "Paid requests outside the archive. Expired periods do not automatically archive requests."
-msgstr "Bezahlte Anliegen außerhalb des Archivs. Ablaufende Zeiträume archivieren Anliegen nicht automatisch."
+msgstr "Bezahlte Anliegen außerhalb des Archivs. Abgelaufene Zeiträume archivieren Anliegen nicht automatisch."
 
 msgid "Read on this date"
 msgstr "An diesem Tag lesen"
 
 msgid "Ending on this date"
-msgstr "Enden an diesem Tag"
+msgstr "Endet an diesem Tag"
 
 msgid "Upcoming"
 msgstr "Bevorstehend"
@@ -594,13 +594,13 @@ msgid "Payment status:"
 msgstr "Zahlungsstatus:"
 
 msgid "Your prayer request has been received"
-msgstr "Ihr Gebetsanliegen ist eingegangen"
+msgstr "Dein Gebetsanliegen ist eingegangen"
 
 msgid "Hello"
 msgstr "Guten Tag"
 
 msgid "Donation amount"
-msgstr "Spendensumme"
+msgstr "Spendenbetrag"
 
 msgid "With gratitude and prayer,"
 msgstr "Mit Dankbarkeit und Gebet,"
@@ -666,16 +666,16 @@ msgid "After changing domains, save the settings and update the webhook URLs in 
 msgstr "Nach einem Domainwechsel Einstellungen speichern und Webhook-URLs in Stripe und PayPal aktualisieren. Das Plugin ändert sie nicht automatisch. Die alte Domain für unvollständige Zahlungen erreichbar lassen."
 
 msgid "Enter an HTTPS domain without a path, query or credentials, for example https://example.org. Leave blank for automatic selection."
-msgstr "Geben Sie eine HTTPS-Domain ohne Pfad, Parameter oder Zugangsdaten ein, z. B. https://example.org. Für automatische Auswahl leer lassen."
+msgstr "Gib eine HTTPS-Domain ohne Pfad, Abfrageparameter oder Zugangsdaten ein, z. B. https://example.org. Lass das Feld für die automatische Auswahl leer."
 
 msgid "Live payments require the recipient's PayPal Business account. Email, account password, App ID and Stripe whsec are not substitutes for PayPal credentials. The plugin uses REST API Orders v2, not legacy email payment buttons or IPN."
 msgstr "Live-Zahlungen erfordern das PayPal-Business-Konto des Empfängers. E-Mail, Kontopasswort, App ID und Stripe whsec ersetzen keine PayPal-Zugangsdaten. Das Plugin nutzt REST API Orders v2, keine alten E-Mail-Zahlungsbuttons oder IPN."
 
 msgid "Open Apps & Credentials in the PayPal Developer Dashboard and sign in to the recipient's account. Select Sandbox for testing or Live for real payments."
-msgstr "Öffnen Sie Apps & Credentials im PayPal Developer Dashboard und melden Sie sich mit dem Empfängerkonto an. Wählen Sie Sandbox zum Testen oder Live für echte Zahlungen."
+msgstr "Öffne Apps & Credentials im PayPal Developer Dashboard und melde dich mit dem Empfängerkonto an. Wähle Sandbox zum Testen oder Live für echte Zahlungen."
 
 msgid "Open your REST API app or create one using Create App. For Sandbox, select the test seller's Business account; for Live, use the intended recipient's live app."
-msgstr "Öffnen Sie Ihre REST-API-App oder erstellen Sie sie mit Create App. Für Sandbox das Business-Testkonto des Verkäufers wählen; für Live die App des tatsächlichen Empfängers verwenden."
+msgstr "Öffne deine REST-API-App oder erstelle sie mit Create App. Für Sandbox das Business-Testkonto des Verkäufers wählen; für Live die App des tatsächlichen Empfängers verwenden."
 
 msgid "On the app page, copy the Client ID and reveal the Secret. Paste them into the matching plugin fields. Select the same Live or Sandbox mode. Client ID, Secret and Webhook ID must all belong to the same app and environment."
 msgstr "Auf der App-Seite Client ID kopieren und Secret anzeigen. In die entsprechenden Plugin-Felder einfügen. Denselben Live- oder Sandbox-Modus wählen. Client ID, Secret und Webhook ID müssen zur selben App und Umgebung gehören."
@@ -702,7 +702,7 @@ msgid "If payment or webhooks fail, check the app/environment for all credential
 msgstr "Bei Zahlungs- oder Webhook-Fehlern App und Umgebung aller Zugangsdaten, die genaue URL und HTTPS/POST-Zugriff prüfen. Nach Domainwechsel den PayPal-Webhook aktualisieren. Deaktiviertes PayPal benötigt keine Einrichtung. Diagnose prüft nur das Vorhandensein, nicht die Gültigkeit der Zugangsdaten. Secret niemals in E-Mails, Screenshots oder Nachrichten veröffentlichen."
 
 msgid "Choose prayer services"
-msgstr "Gebetsanliegen auswählen"
+msgstr "Gebetsdienste auswählen"
 
 msgid "Names, one person per line"
 msgstr "Namen, jeweils eine Person pro Zeile"
@@ -717,13 +717,13 @@ msgstr ""
 "Vorname"
 
 msgid "Please use baptismal names. Prayer slips are automatically divided into groups."
-msgstr "Bitte verwenden Sie die Taufnamen. Die Zettel werden automatisch in Gruppen aufgeteilt."
+msgstr "Bitte verwende die Taufnamen. Die Zettel werden automatisch in Gruppen aufgeteilt."
 
 msgid "Comment (optional)"
 msgstr "Anmerkung (optional)"
 
 msgid "Your name (optional)"
-msgstr "Ihr Name (optional)"
+msgstr "Dein Name (optional)"
 
 msgid "Email address"
 msgstr "E-Mail-Adresse"
@@ -741,22 +741,22 @@ msgid "Submit prayer request and donate"
 msgstr "Gebetsanliegen absenden und spenden"
 
 msgid "Secure payment. Your information is used only to process your prayer request."
-msgstr "Sichere Zahlung. Ihre Daten werden ausschließlich zur Bearbeitung des Gebetsanliegens verwendet."
+msgstr "Sichere Zahlung. Deine Daten werden ausschließlich zur Bearbeitung des Gebetsanliegens verwendet."
 
 msgid "Please complete all required fields."
-msgstr "Bitte füllen Sie alle Pflichtfelder aus."
+msgstr "Bitte fülle alle Pflichtfelder aus."
 
 msgid "The request could not be processed. Please try again."
-msgstr "Die Anfrage konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut."
+msgstr "Die Anfrage konnte nicht verarbeitet werden. Bitte versuche es erneut."
 
 msgid "Thank you. Your payment is confirmed and your prayer request has been received."
-msgstr "Vielen Dank. Ihre Zahlung wurde bestätigt und Ihr Gebetsanliegen ist bei uns eingegangen."
+msgstr "Vielen Dank. Deine Zahlung wurde bestätigt und dein Gebetsanliegen ist bei uns eingegangen."
 
 msgid "Thank you. Payment is still being confirmed. We will email you once the funds have arrived."
-msgstr "Vielen Dank. Die Zahlung wird noch bestätigt. Sie erhalten unsere Bestätigung per E-Mail, sobald der Betrag eingegangen ist."
+msgstr "Vielen Dank. Die Zahlung wird noch bestätigt. Du erhältst unsere Bestätigung per E-Mail, sobald der Betrag eingegangen ist."
 
 msgid "Payment was not completed. Your prayer request is temporarily saved."
-msgstr "Die Zahlung wurde nicht abgeschlossen. Ihr Gebetsanliegen bleibt vorläufig gespeichert."
+msgstr "Die Zahlung wurde nicht abgeschlossen. Dein Gebetsanliegen bleibt vorläufig gespeichert."
 
 msgid "Payment successful"
 msgstr "Zahlung erfolgreich"
@@ -786,7 +786,7 @@ msgid "Kloster: form not found."
 msgstr "Gebetsformular nicht gefunden."
 
 msgid "Prayer service"
-msgstr "Gebetsanliegen"
+msgstr "Gebetsdienst"
 
 msgid "Forbidden"
 msgstr "Zugriff verweigert"
@@ -804,25 +804,25 @@ msgid "Donate"
 msgstr "Jetzt spenden"
 
 msgid "Secure payment. Your information is used only to process your donation."
-msgstr "Sichere Zahlung. Ihre Daten werden nur zur Bearbeitung Ihrer Spende verwendet."
+msgstr "Sichere Zahlung. Deine Daten werden nur zur Bearbeitung deiner Spende verwendet."
 
 msgid "Thank you. Your donation is confirmed."
-msgstr "Vielen Dank. Ihre Spende wurde bestätigt."
+msgstr "Vielen Dank. Deine Spende wurde bestätigt."
 
 msgid "Payment was not completed. Your donation has not been received."
-msgstr "Die Zahlung wurde nicht abgeschlossen. Ihre Spende ist noch nicht eingegangen."
+msgstr "Die Zahlung wurde nicht abgeschlossen. Deine Spende ist noch nicht eingegangen."
 
 msgid "Thank you for your donation"
-msgstr "Vielen Dank für Ihre Spende"
+msgstr "Vielen Dank für deine Spende"
 
 msgid "Amount in EUR: 0.50 to 999,999.99. Up to two decimal places."
-msgstr "Betrag in EUR: 0,50 bis 999.999,99. Maximal zwei Nachkommastellen."
+msgstr "Betrag in EUR: 0,50 bis 999.999,99. Höchstens zwei Nachkommastellen."
 
 msgid "Enter a valid amount between 0.50 and 999,999.99 EUR."
-msgstr "Bitte geben Sie einen gültigen Betrag zwischen 0,50 und 999.999,99 EUR ein."
+msgstr "Bitte gib einen gültigen Betrag zwischen 0,50 und 999.999,99 EUR ein."
 
 msgid "Campaign not found."
-msgstr "Sammlung nicht gefunden."
+msgstr "Spendenaktion nicht gefunden."
 
 msgid "Goal"
 msgstr "Ziel"
@@ -834,13 +834,13 @@ msgid "Balance"
 msgstr "Saldo"
 
 msgid "Campaign progress"
-msgstr "Fortschritt der Sammlung"
+msgstr "Fortschritt der Spendenaktion"
 
 msgid "Deadline"
 msgstr "Enddatum"
 
 msgid "This campaign is closed."
-msgstr "Diese Sammlung nimmt keine Spenden mehr an."
+msgstr "Diese Spendenaktion nimmt keine Spenden mehr an."
 
 msgid "Campaigns"
 msgstr "Spendenaktionen"
@@ -873,13 +873,13 @@ msgid "Closed"
 msgstr "Geschlossen"
 
 msgid "Log in to view your donations."
-msgstr "Melden Sie sich an, um Ihre Spenden zu sehen."
+msgstr "Melde dich an, um deine Spenden zu sehen."
 
 msgid "Your donations"
-msgstr "Ihre Spenden"
+msgstr "Deine Spenden"
 
 msgid "Only payments made while signed in to this account are shown. Guest payments are not linked by email."
-msgstr "Es werden nur Zahlungen angezeigt, die während der Anmeldung an diesem Konto getätigt wurden. Gastzahlungen werden nicht anhand der E-Mail zugeordnet."
+msgstr "Es werden nur Zahlungen angezeigt, die du angemeldet mit diesem Konto geleistet hast. Gastzahlungen werden nicht anhand der E-Mail-Adresse zugeordnet."
 
 msgid "Previous"
 msgstr "Zurück"
@@ -888,13 +888,13 @@ msgid "Next"
 msgstr "Weiter"
 
 msgid "For regular support, also enable these webhook events:"
-msgstr "Aktivieren Sie für regelmäßige Unterstützung zusätzlich diese Webhook-Ereignisse:"
+msgstr "Aktiviere für regelmäßige Unterstützung zusätzlich diese Webhook-Ereignisse:"
 
 msgid "Partially refunded"
 msgstr "Teilweise erstattet"
 
 msgid "Log in and confirm recurring support before continuing."
-msgstr "Melden Sie sich an und bestätigen Sie die regelmäßige Unterstützung."
+msgstr "Melde dich an und bestätige die regelmäßige Unterstützung."
 
 msgid "Regular support"
 msgstr "Regelmäßige Unterstützung"
@@ -909,7 +909,7 @@ msgid "Yearly"
 msgstr "Jährlich"
 
 msgid "Repeat this amount at the selected interval until I cancel. I can cancel in my donation history."
-msgstr "Diesen Betrag im gewählten Intervall wiederholen, bis ich kündige. Ich kann in meiner Spendenhistorie kündigen."
+msgstr "Diesen Betrag im gewählten Intervall wiederholen, bis ich kündige. Die Kündigung ist in meinem Spendenverlauf möglich."
 
 msgid "Start regular support"
 msgstr "Regelmäßige Unterstützung beginnen"
@@ -921,7 +921,7 @@ msgid "PayPal is not configured or authentication failed."
 msgstr "PayPal ist nicht eingerichtet oder die Anmeldung ist fehlgeschlagen."
 
 msgid "The payment provider is unavailable. Please try again."
-msgstr "Der Zahlungsanbieter ist nicht erreichbar. Bitte versuchen Sie es erneut."
+msgstr "Der Zahlungsanbieter ist nicht erreichbar. Bitte versuche es erneut."
 
 msgid "The payment provider could not complete this operation."
 msgstr "Der Zahlungsanbieter konnte diesen Vorgang nicht abschließen."
@@ -930,10 +930,10 @@ msgid "Invalid payment provider response."
 msgstr "Ungültige Antwort des Zahlungsanbieters."
 
 msgid "PayPal is preparing recurring support. Please try again shortly."
-msgstr "PayPal bereitet die regelmäßige Unterstützung vor. Bitte versuchen Sie es in Kürze erneut."
+msgstr "PayPal bereitet die regelmäßige Unterstützung vor. Bitte versuche es in Kürze erneut."
 
 msgid "Log in to start regular support."
-msgstr "Melden Sie sich an, um die regelmäßige Unterstützung zu beginnen."
+msgstr "Melde dich an, um die regelmäßige Unterstützung zu beginnen."
 
 msgid "Payment overdue"
 msgstr "Zahlung überfällig"
@@ -948,7 +948,7 @@ msgid "Cancel regular support"
 msgstr "Regelmäßige Unterstützung kündigen"
 
 msgid "Closing a campaign prevents new submissions. Existing regular support continues until cancelled."
-msgstr "Das Schließen einer Spendenaktion verhindert neue Anträge. Bestehende regelmäßige Unterstützung läuft bis zur Kündigung weiter."
+msgstr "Nach dem Schließen einer Spendenaktion sind keine neuen Zahlungen möglich. Bestehende regelmäßige Unterstützung läuft bis zur Kündigung weiter."
 
 msgid "Help → Shortcodes"
 msgstr "Hilfe → Shortcodes"
@@ -963,34 +963,34 @@ msgid "Alias of gkod_form with the same parameters and behavior."
 msgstr "Alternativer Name für gkod_form mit denselben Parametern und derselben Funktion."
 
 msgid "Form for one active service. Specify its id or slug; an id takes precedence. Find these values in Services."
-msgstr "Formular für einen aktiven Gebetsdienst. Geben Sie id oder slug an; id hat Vorrang. Die Werte finden Sie unter Dienste."
+msgstr "Formular für einen aktiven Gebetsdienst. Gib id oder slug an; id hat Vorrang. Die Werte findest du unter Gebetsdienste."
 
 msgid "One-time donation without prayer names or services. The donor enters an amount from 0.50 to 999,999.99 EUR."
-msgstr "Einmalige Spende ohne Gebetsnamen oder Dienste. Der Spender gibt einen Betrag von 0,50 bis 999.999,99 EUR ein."
+msgstr "Einmalige Spende ohne Gebetsnamen oder Gebetsdienste. Der Spender gibt einen Betrag zwischen 0,50 und 999.999,99 EUR ein."
 
 msgid "Monthly or yearly support. Requires login and explicit consent. The owner can cancel in donation history; configure recurring webhooks and WP-Cron first."
-msgstr "Monatliche oder jährliche Unterstützung. Anmeldung und ausdrückliche Zustimmung sind erforderlich. Der Inhaber kann sie im Spendenverlauf kündigen; richten Sie zuerst Abonnement-Webhooks und WP-Cron ein."
+msgstr "Monatliche oder jährliche Unterstützung. Anmeldung und ausdrückliche Zustimmung sind erforderlich. Der Kontoinhaber kann sie im Spendenverlauf kündigen. Richte zuvor die Webhooks für wiederkehrende Zahlungen und WP-Cron ein."
 
 msgid "Published campaigns with progress, totals and donation forms. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
-msgstr "Veröffentlichte Sammlungen mit Fortschritt, Summen und Spendenformularen. Ohne id werden bis zu 100 Sammlungen angezeigt. Entwürfe bleiben verborgen; geschlossene oder abgelaufene Sammlungen nehmen keine neuen Zahlungen an."
+msgstr "Veröffentlichte Spendenaktionen mit Fortschritt, Summen und Spendenformularen. Ohne id werden bis zu 100 veröffentlichte Spendenaktionen angezeigt. Entwürfe bleiben verborgen; geschlossene oder abgelaufene Spendenaktionen nehmen keine neuen Zahlungen an."
 
 msgid "Public report for one published campaign: goal, confirmed receipts after refunds, separately recorded expenses and balance. Does not disclose donor data or include a payment form."
-msgstr "Öffentlicher Bericht einer veröffentlichten Sammlung: Ziel, bestätigte Einnahmen nach Erstattungen, separat erfasste Ausgaben und Saldo. Enthält weder Spenderdaten noch ein Zahlungsformular."
+msgstr "Öffentlicher Bericht über eine veröffentlichte Spendenaktion: Ziel, bestätigte Einnahmen nach Erstattungen, separat erfasste Ausgaben und Saldo. Enthält weder Spenderdaten noch ein Zahlungsformular."
 
 msgid "Private payment history and regular-support cancellation for the signed-in account. Guest and historical payments are not assigned by email. Exclude this page from external full-page caches."
-msgstr "Privater Zahlungsverlauf und Kündigung regelmäßiger Unterstützung für das angemeldete Konto. Gast- und frühere Zahlungen werden nicht per E-Mail zugeordnet. Schließen Sie die Seite von externen Ganzseiten-Caches aus."
+msgstr "Privater Zahlungsverlauf und Kündigung regelmäßiger Unterstützung für das angemeldete Konto. Gast- und frühere Zahlungen werden nicht per E-Mail zugeordnet. Schließe die Seite von externen Ganzseiten-Caches aus."
 
 msgid "Payment result for the returned order, using its saved language. Has no shortcode parameters. Forms already include this block; use it separately on a custom return page. A return URL alone does not confirm payment."
 msgstr "Zahlungsergebnis des zurückgegebenen Auftrags in dessen gespeicherter Sprache. Keine Shortcode-Parameter. Formulare enthalten diesen Block bereits; separat für eine eigene Rückkehrseite verwenden. Die Rückkehr-URL allein bestätigt keine Zahlung."
 
 msgid "Numeric form, service or campaign ID. Find it in the corresponding admin section. Required for a campaign report; optional for the campaign list."
-msgstr "Numerische ID des Formulars, Dienstes oder der Sammlung aus dem entsprechenden Verwaltungsbereich. Für einen Sammlungsbericht erforderlich, für die Liste optional."
+msgstr "Numerische ID des Formulars, Gebetsdienstes oder der Spendenaktion aus dem entsprechenden Verwaltungsbereich. Für einen Bericht über eine Spendenaktion erforderlich, für die Liste optional."
 
 msgid "Saved form or service slug. Used only when id is omitted or zero."
-msgstr "Gespeicherter Slug des Formulars oder Dienstes. Wird nur verwendet, wenn id fehlt oder 0 ist."
+msgstr "Gespeicherte Titelform des Formulars oder Gebetsdienstes. Wird nur verwendet, wenn id fehlt oder 0 ist."
 
 msgid "Layout: standard, compact, wide, two_columns, cards or minimal. Prayer forms default to their saved layout; other forms default to compact."
-msgstr "Layout: standard, compact, wide, two_columns, cards oder minimal. Gebetsformulare verwenden standardmäßig ihr gespeichertes Layout, andere Formulare compact."
+msgstr "Layout: standard, compact, wide, two_columns, cards oder minimal. Gebetsformulare verwenden standardmäßig ihr gespeichertes Layout. Bei anderen Formularen ist compact voreingestellt."
 
 msgid "Language: en, ru, de, uk or pl. Omit it to use the current WordPress language. Existing prayer form/service content uses German as the English fallback."
 msgstr "Sprache: en, ru, de, uk oder pl. Ohne Angabe gilt die aktuelle WordPress-Sprache. Vorhandene Texte von Gebetsformularen und Diensten verwenden Deutsch als englischen Fallback."
@@ -999,25 +999,25 @@ msgid "yes (default) shows the form heading; no hides it. Not supported by gkod_
 msgstr "yes (Standard) zeigt die Formularüberschrift, no blendet sie aus. Von gkod_service nicht unterstützt."
 
 msgid "Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired."
-msgstr "Optionale Sammlungs-ID. Ohne Angabe oder mit 0 wird die Kirche allgemein unterstützt. Eine angegebene Sammlung muss offen und noch nicht abgelaufen sein."
+msgstr "Optionale ID einer Spendenaktion. Ohne Angabe oder mit 0 wird die Kirche allgemein unterstützt. Eine angegebene Spendenaktion muss offen und noch nicht abgelaufen sein."
 
 msgid "Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which also checks login before showing the form."
-msgstr "Kompatibilitätsparameter für gkod_donation: no (Standard) bedeutet Einmalzahlung, yes zeigt wiederkehrende Optionen. Verwenden Sie vorzugsweise gkod_support, das vor der Formularanzeige die Anmeldung prüft."
+msgstr "Kompatibilitätsparameter für gkod_donation: no (Standard) bedeutet Einmalzahlung, yes zeigt wiederkehrende Optionen. Verwende vorzugsweise gkod_support, das vor der Formularanzeige die Anmeldung prüft."
 
 msgid "Copied."
 msgstr "Kopiert."
 
 msgid "The example is selected. Copy it manually."
-msgstr "Das Beispiel ist markiert. Kopieren Sie es manuell."
+msgstr "Das Beispiel ist markiert. Kopiere es manuell."
 
 msgid "Language"
 msgstr "Sprache"
 
 msgid "Add a Shortcode block to a WordPress page and paste an example. Replace example IDs and slugs with your saved values. Publish the page to display the form or report."
-msgstr "Fügen Sie einer WordPress-Seite einen Shortcode-Block hinzu und setzen Sie ein Beispiel ein. Ersetzen Sie Beispiel-IDs und Slugs durch Ihre gespeicherten Werte. Veröffentlichen Sie die Seite, um Formular oder Bericht anzuzeigen."
+msgstr "Füge einer WordPress-Seite einen Shortcode-Block hinzu und setze ein Beispiel ein. Ersetze Beispiel-IDs und Slugs durch deine gespeicherten Werte. Veröffentliche die Seite, um Formular oder Bericht anzuzeigen."
 
 msgid "Choose a language above to translate this guide and the lang parameter in its examples. Keep shortcode names and parameter values unchanged."
-msgstr "Wählen Sie oben eine Sprache für diese Anleitung und den Parameter lang in den Beispielen. Lassen Sie Shortcode-Namen und Parameterwerte unverändert."
+msgstr "Wähle oben eine Sprache für diese Anleitung und den Parameter lang in den Beispielen. Lass Shortcode-Namen und Parameterwerte unverändert."
 
 msgid "Parameters"
 msgstr "Parameter"
@@ -1041,46 +1041,46 @@ msgid "Stripe setup — step-by-step instructions"
 msgstr "Stripe einrichten — Schritt für Schritt"
 
 msgid "Sign in to the Stripe account that will receive donations. Choose a Sandbox or test environment first. The API key and webhook must belong to the same account and environment."
-msgstr "Melden Sie sich beim Stripe-Konto des Spendenempfängers an. Beginnen Sie mit einer Sandbox oder Testumgebung. API-Schlüssel und Webhook müssen zum selben Konto und zur selben Umgebung gehören."
+msgstr "Melde dich beim Stripe-Konto des Spendenempfängers an. Beginne mit einer Sandbox oder Testumgebung. API-Schlüssel und Webhook müssen zum selben Konto und zur selben Umgebung gehören."
 
 msgid "Open Stripe API keys"
 msgstr "Stripe-API-Schlüssel öffnen"
 
 msgid "Reveal or create a Secret key on the API keys page and paste it into Secret Key. Test keys start with sk_test_, live keys with sk_live_. A pk_ publishable key, account password or whsec_ signing secret cannot replace it."
-msgstr "Zeigen Sie auf der API-Schlüsselseite einen Secret key an oder erstellen Sie ihn und tragen Sie ihn unter Secret Key ein. Testschlüssel beginnen mit sk_test_, Live-Schlüssel mit sk_live_. Ein öffentlicher pk_-Schlüssel, Kontopasswort oder whsec_-Signaturgeheimnis ersetzt ihn nicht."
+msgstr "Zeige auf der API-Schlüsselseite einen Secret key an oder erstelle ihn und trage ihn unter Secret Key ein. Testschlüssel beginnen mit sk_test_, Live-Schlüssel mit sk_live_. Ein öffentlicher pk_-Schlüssel, Kontopasswort oder whsec_-Signaturgeheimnis ersetzt ihn nicht."
 
 msgid "Open Stripe Webhooks / Workbench"
 msgstr "Stripe Webhooks / Workbench öffnen"
 
 msgid "In Workbench → Webhooks, choose Create an event destination (or Add destination / Add endpoint in older dashboards). Choose Your account, the Snapshot payload format and Webhook endpoint as the destination. This plugin does not process Thin events."
-msgstr "Wählen Sie in Workbench → Webhooks Create an event destination (in älteren Oberflächen Add destination / Add endpoint). Wählen Sie Your account, das Datenformat Snapshot und das Ziel Webhook endpoint. Dieses Plugin verarbeitet keine Thin-Ereignisse."
+msgstr "Wähle in Workbench → Webhooks Create an event destination (in älteren Oberflächen Add destination / Add endpoint). Wähle Your account, das Datenformat Snapshot und das Ziel Webhook endpoint. Dieses Plugin verarbeitet keine Thin-Ereignisse."
 
 msgid "Paste the exact Endpoint URL below. It must be publicly accessible over HTTPS and accept POST requests without login, redirects or a security challenge. Do not enter the WordPress settings-page URL."
-msgstr "Fügen Sie die unten angegebene Endpoint URL unverändert ein. Sie muss öffentlich per HTTPS erreichbar sein und POST ohne Anmeldung, Weiterleitung oder Sicherheitsabfrage akzeptieren. Verwenden Sie nicht die URL der WordPress-Einstellungsseite."
+msgstr "Füge die unten angegebene Endpoint URL unverändert ein. Die URL muss öffentlich per HTTPS erreichbar sein und POST-Anfragen ohne Anmeldung, Weiterleitung oder Sicherheitsabfrage annehmen. Verwende nicht die URL der WordPress-Einstellungsseite."
 
 msgid "For one-time donations and prayer requests, select checkout.session.completed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
-msgstr "Wählen Sie für einmalige Spenden und Gebetsanliegen checkout.session.completed und charge.refunded. Wählen Sie für regelmäßige Unterstützung zusätzlich die unten aufgeführten Abonnement- und Rechnungsereignisse. Speichern Sie das Ziel."
+msgstr "Wähle für einmalige Spenden und Gebetsanliegen checkout.session.completed und charge.refunded. Wähle für regelmäßige Unterstützung zusätzlich die unten aufgeführten Abonnement- und Rechnungsereignisse. Speichere das Ziel."
 
 msgid "Open the saved destination and reveal its Signing secret, starting with whsec_. Paste it into Webhook Secret. Use the secret of this exact endpoint and environment, not a Stripe CLI listener secret. Enable Stripe and save the plugin settings."
-msgstr "Öffnen Sie das gespeicherte Ziel und zeigen Sie dessen Signing secret mit Präfix whsec_ an. Tragen Sie es unter Webhook Secret ein. Verwenden Sie das Geheimnis genau dieses Endpunkts und dieser Umgebung, nicht eines Stripe-CLI-Listeners. Aktivieren Sie Stripe und speichern Sie die Plugin-Einstellungen."
+msgstr "Öffne das gespeicherte Ziel und zeige dessen Signing secret mit Präfix whsec_ an. Trage es unter Webhook Secret ein. Verwende das Geheimnis genau dieses Endpunkts und dieser Umgebung, nicht eines Stripe-CLI-Listeners. Aktiviere Stripe und speichere die Plugin-Einstellungen."
 
 msgid "A blank Secret Key or Webhook Secret field preserves the saved value. When switching to Live, replace both values with the Live account key and Live endpoint signing secret. The plugin stores one set of Stripe credentials."
-msgstr "Leere Felder Secret Key und Webhook Secret behalten den gespeicherten Wert. Ersetzen Sie beim Wechsel zu Live beide Werte durch den Live-Kontoschlüssel und das Signaturgeheimnis des Live-Endpunkts. Das Plugin speichert einen Satz Stripe-Zugangsdaten."
+msgstr "Leere Felder Secret Key und Webhook Secret behalten den gespeicherten Wert. Ersetze beim Wechsel zu Live beide Werte durch den Live-Kontoschlüssel und das Signaturgeheimnis des Live-Endpunkts. Das Plugin speichert einen Satz Stripe-Zugangsdaten."
 
 msgid "Submit a real checkout from a page on your test site. In the test environment, use a Stripe test card from the official testing guide, not a real card. Verify Paid status and configured emails. For regular support, also test a payment cycle, cancellation and refunds."
-msgstr "Durchlaufen Sie einen echten Checkout auf Ihrer Testwebsite. Verwenden Sie in der Testumgebung eine Stripe-Testkarte aus der offiziellen Anleitung, keine echte Karte. Prüfen Sie den Status Bezahlt und konfigurierte E-Mails. Testen Sie bei regelmäßiger Unterstützung auch Zahlungszyklus, Kündigung und Erstattungen."
+msgstr "Durchlaufe einen echten Checkout auf deiner Testwebsite. Verwende in der Testumgebung eine Stripe-Testkarte aus der offiziellen Anleitung, keine echte Karte. Prüfe den Status Bezahlt und konfigurierte E-Mails. Teste bei regelmäßiger Unterstützung auch Zahlungszyklus, Kündigung und Erstattungen."
 
 msgid "Stripe test cards and testing guide"
 msgstr "Stripe-Testkarten und Testanleitung"
 
 msgid "In the destination, inspect event deliveries and their HTTP responses. A successful delivery should return 2xx. Fix the cause before resending a failed event: 400 can indicate a wrong signing secret, payload format or payment mismatch; 404 indicates a wrong endpoint URL; 403 or a security page can indicate blocked POST requests."
-msgstr "Prüfen Sie im Ziel die Ereigniszustellungen und HTTP-Antworten. Erfolgreiche Zustellungen liefern 2xx. Beheben Sie vor erneutem Versand die Ursache: 400 kann auf ein falsches Signaturgeheimnis, Datenformat oder eine Zahlungsabweichung hinweisen; 404 auf eine falsche URL; 403 oder eine Sicherheitsseite auf blockierte POST-Anfragen."
+msgstr "Prüfe im Ziel die Ereigniszustellungen und HTTP-Antworten. Erfolgreiche Zustellungen liefern 2xx. Behebe vor erneutem Versand die Ursache: 400 kann auf ein falsches Signaturgeheimnis, Datenformat oder eine Zahlungsabweichung hinweisen; 404 auf eine falsche URL; 403 oder eine Sicherheitsseite auf blockierte POST-Anfragen."
 
 msgid "Opening the webhook URL in a browser sends GET and is not a payment test. A Dashboard sample event may not match a saved plugin order. Test a checkout created by this plugin and inspect its event delivery. A success return URL alone does not confirm payment."
-msgstr "Das Öffnen der Webhook-URL im Browser sendet GET und testet keine Zahlung. Ein Dashboard-Beispielereignis passt möglicherweise nicht zu einem gespeicherten Plugin-Auftrag. Testen Sie einen vom Plugin erzeugten Checkout und dessen Ereigniszustellung. Die Rückkehr zur Erfolgsseite allein bestätigt keine Zahlung."
+msgstr "Das Öffnen der Webhook-URL im Browser sendet GET und testet keine Zahlung. Ein Dashboard-Beispielereignis passt möglicherweise nicht zu einem gespeicherten Plugin-Auftrag. Teste einen vom Plugin erzeugten Checkout und dessen Ereigniszustellung. Die Rückkehr zur Erfolgsseite allein bestätigt keine Zahlung."
 
 msgid "After a domain move, update the destination URL in Stripe. Never publish API keys or signing secrets. Plugin diagnostics checks whether settings exist, not whether Stripe accepts them."
-msgstr "Aktualisieren Sie nach einem Domainwechsel die Ziel-URL in Stripe. Veröffentlichen Sie keine API-Schlüssel oder Signaturgeheimnisse. Die Plugin-Diagnose prüft vorhandene Einstellungen, nicht deren Akzeptanz durch Stripe."
+msgstr "Aktualisiere nach einem Domainwechsel die Ziel-URL in Stripe. Veröffentliche keine API-Schlüssel oder Signaturgeheimnisse. Die Plugin-Diagnose prüft vorhandene Einstellungen, nicht deren Akzeptanz durch Stripe."
 
 msgid "Stripe documentation: API keys"
 msgstr "Stripe-Dokumentation: API-Schlüssel"

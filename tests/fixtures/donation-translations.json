@@ -16,42 +16,42 @@
   "secure": {
     "en": "Secure payment. Your information is used only to process your donation.",
     "ru": "Безопасная оплата. Данные используются только для обработки пожертвования.",
-    "de": "Sichere Zahlung. Ihre Daten werden nur zur Bearbeitung Ihrer Spende verwendet.",
+        "de": "Sichere Zahlung. Deine Daten werden nur zur Bearbeitung deiner Spende verwendet.",
     "uk": "Безпечна оплата. Дані використовуються лише для обробки пожертви.",
     "pl": "Bezpieczna płatność. Dane są używane wyłącznie do obsługi darowizny."
   },
   "thanks": {
     "en": "Thank you. Your donation is confirmed.",
     "ru": "Благодарим вас. Ваше пожертвование подтверждено.",
-    "de": "Vielen Dank. Ihre Spende wurde bestätigt.",
+        "de": "Vielen Dank. Deine Spende wurde bestätigt.",
     "uk": "Дякуємо. Вашу пожертву підтверджено.",
     "pl": "Dziękujemy. Twoja darowizna została potwierdzona."
   },
   "cancelled": {
     "en": "Payment was not completed. Your donation has not been received.",
     "ru": "Оплата не завершена. Пожертвование ещё не поступило.",
-    "de": "Die Zahlung wurde nicht abgeschlossen. Ihre Spende ist noch nicht eingegangen.",
+        "de": "Die Zahlung wurde nicht abgeschlossen. Deine Spende ist noch nicht eingegangen.",
     "uk": "Оплату не завершено. Пожертва ще не надійшла.",
     "pl": "Płatność nie została zakończona. Darowizna jeszcze nie wpłynęła."
   },
   "subject": {
     "en": "Thank you for your donation",
     "ru": "Благодарим за ваше пожертвование",
-    "de": "Vielen Dank für Ihre Spende",
+        "de": "Vielen Dank für deine Spende",
     "uk": "Дякуємо за вашу пожертву",
     "pl": "Dziękujemy za Twoją darowiznę"
   },
   "amount_help": {
     "en": "Amount in EUR: 0.50 to 999,999.99. Up to two decimal places.",
     "ru": "Сумма в EUR: от 0,50 до 999 999,99. Не более двух знаков после запятой.",
-    "de": "Betrag in EUR: 0,50 bis 999.999,99. Maximal zwei Nachkommastellen.",
+        "de": "Betrag in EUR: 0,50 bis 999.999,99. Höchstens zwei Nachkommastellen.",
     "uk": "Сума в EUR: від 0,50 до 999 999,99. Не більше двох знаків після коми.",
     "pl": "Kwota w EUR: od 0,50 do 999 999,99. Maksymalnie dwa miejsca po przecinku."
   },
   "invalid_amount": {
     "en": "Enter a valid amount between 0.50 and 999,999.99 EUR.",
     "ru": "Укажите корректную сумму от 0,50 до 999 999,99 EUR.",
-    "de": "Bitte geben Sie einen gültigen Betrag zwischen 0,50 und 999.999,99 EUR ein.",
+        "de": "Bitte gib einen gültigen Betrag zwischen 0,50 und 999.999,99 EUR ein.",
     "uk": "Вкажіть коректну суму від 0,50 до 999 999,99 EUR.",
     "pl": "Podaj prawidłową kwotę od 0,50 do 999 999,99 EUR."
   }
