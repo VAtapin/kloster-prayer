@@ -49,9 +49,15 @@ Russian `ru/default` is also Current in both Stable and Development: 357/357
 interface strings and 80/80 Readme strings, with no Waiting, Fuzzy or Warnings.
 The [public Russian plugin page](https://ru.wordpress.org/plugins/georg-kloster-orthodox-donations/)
 shows the translated description, FAQ and screenshot captions. Existing approved
-strings were not reimported. Ukrainian and Polish submissions remain in Waiting.
+strings were not reimported.
 
-Monitor automation `wordpress-org` continues to check Ukrainian and Polish quietly.
+Ukrainian `uk/default` is also 100% Current in Stable, Development and both
+Readme projects, with no Waiting or Fuzzy strings. Stable has 357/357 Current
+interface strings. The [public Ukrainian plugin page](https://uk.wordpress.org/plugins/georg-kloster-orthodox-donations/)
+shows the translated description, FAQ and screenshot captions. No reimport was
+needed. Polish submissions remain in Waiting.
+
+Monitor automation `wordpress-org` continues to check Polish and language packs quietly.
 Do not reimport unchanged Waiting catalogs or replace translations approved by
 editors. Stop the automation only after all four locales and language packs are
 verified.
