@@ -89,7 +89,11 @@ final class Payments
         }
 
         $donation_amount = $donation ? self::donation_cents((string) (Input::post('donation_amount') ?? '')) : 0;
-        if ($donation && $donation_amount === null) wp_send_json_error(['message' => I18n::donation_text('invalid_amount', $language)], 422);
+        $campaign = $campaign_id ? Campaigns::get($campaign_id) : null;
+        if ($donation && ($donation_amount === null || ($campaign_id && !$campaign))) wp_send_json_error(['message' => I18n::donation_text('invalid_amount', $language)], 422);
+        if ($donation && $campaign && $donation_amount < max(100, (int) ($campaign->minimum_cents ?? 1000))) {
+            wp_send_json_error(['message' => sprintf(I18n::text('minimum_amount_error', $language), number_format_i18n(max(100, (int) ($campaign->minimum_cents ?? 1000)) / 100, 2))], 422);
+        }
 
         $order = self::create_order([
             'form_id' => $donation ? 0 : absint(Input::post('form_id') ?? 0), 'language' => $language, 'intention' => $donation ? 'none' : $intention,

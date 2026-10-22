@@ -62,7 +62,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var valid = /^[0-9]{1,6}([.,][0-9]{1,2})?$/.test(value);
         var parts = value.replace(',', '.').split('.');
         var donationCents = valid ? Number(parts[0]) * 100 + Number(((parts[1] || '') + '00').slice(0, 2)) : 0;
-        amount.setCustomValidity(valid && donationCents >= 50 && donationCents <= 99999999 ? '' : window.georgKlosterOrthodoxDonate.required);
+        var minimumCents = Math.round(Number(amount.min || 0.50) * 100);
+        amount.setCustomValidity(valid && donationCents >= minimumCents && donationCents <= 99999999 ? '' : window.georgKlosterOrthodoxDonate.required);
         output.textContent = new Intl.NumberFormat(lang, {style: 'currency', currency: currency}).format(donationCents / 100);
         return;
       }
@@ -82,6 +83,19 @@ document.addEventListener('DOMContentLoaded', function () {
       if (event.target.name === 'intention') refreshVisibility(); else calculate();
     });
     if (donation) amount.addEventListener('input', calculate);
+    if (donation) {
+      var amountChoices = form.querySelectorAll('input[name="donation_preset"]');
+      amountChoices.forEach(function (choice) {
+        choice.addEventListener('change', function () {
+          if (choice.value !== 'custom') amount.value = choice.value;
+          calculate();
+        });
+      });
+      amount.addEventListener('focus', function () {
+        var customChoice = form.querySelector('input[name="donation_preset"][value="custom"]');
+        if (customChoice) customChoice.checked = true;
+      });
+    }
     else {
     names.addEventListener('input', function (event) { if (!event.isComposing) normalizeNames(false); calculate(); });
     names.addEventListener('compositionend', function () { normalizeNames(false); calculate(); });

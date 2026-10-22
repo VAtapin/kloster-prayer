@@ -19,13 +19,15 @@ final class Admin
                 wp_enqueue_style('gkod-admin-native', plugins_url('assets/css/admin-native.css', FILE), ['gkod-admin'], VERSION);
                 if (str_ends_with($hook, '_page_georg-kloster-orthodox-donations-help')) wp_enqueue_script('gkod-admin-shortcodes', plugins_url('assets/js/admin-shortcodes.js', FILE), [], VERSION, true);
                 wp_enqueue_media();
-                wp_enqueue_script('gkod-admin-images', plugins_url('assets/js/admin-images.js', FILE), ['jquery','media-views'], VERSION, true);
+                wp_enqueue_script('gkod-admin-images', plugins_url('assets/js/admin-images.js', FILE), ['jquery','media-views'], VERSION . '.' . filemtime(DIR . '/assets/js/admin-images.js'), true);
                 wp_localize_script('gkod-admin-images', 'georgKlosterOrthodoxDonateAdmin', [
                     'empty' => __('No image selected.', 'georg-kloster-orthodox-donations'),
                     'open' => __('Open background image', 'georg-kloster-orthodox-donations'),
                     'title' => __('Service background image', 'georg-kloster-orthodox-donations'),
                     'view' => __('View image ↗', 'georg-kloster-orthodox-donations'),
                     'use' => __('Use image', 'georg-kloster-orthodox-donations'),
+                    'campaignTitle' => I18n::text('campaign_image'),
+                    'campaignUse' => I18n::text('use_image'),
                 ]);
             }
         });

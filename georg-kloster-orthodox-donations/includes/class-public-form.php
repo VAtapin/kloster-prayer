@@ -19,8 +19,8 @@ final class Public_Form
 
     public static function register_assets(): void
     {
-        wp_register_style('georg-kloster-orthodox-donations', plugins_url('assets/css/public.css', FILE), [], VERSION);
-        wp_register_script('georg-kloster-orthodox-donations', plugins_url('assets/js/public.js', FILE), [], VERSION, true);
+        wp_register_style('georg-kloster-orthodox-donations', plugins_url('assets/css/public.css', FILE), [], VERSION . '.' . filemtime(DIR . '/assets/css/public.css'));
+        wp_register_script('georg-kloster-orthodox-donations', plugins_url('assets/js/public.js', FILE), [], VERSION . '.' . filemtime(DIR . '/assets/js/public.js'), true);
         // Shortcodes are rendered after wp_head in many themes. Enqueue the small
         // stylesheet here so it is always printed in the document head.
         wp_enqueue_style('georg-kloster-orthodox-donations');
@@ -82,6 +82,7 @@ final class Public_Form
         global $wpdb;
         $lang = in_array($atts['lang'], ['en', 'de', 'ru', 'uk', 'pl'], true) ? $atts['lang'] : I18n::language();
         $donation = ($atts['request_type'] ?? '') === 'donation';
+        $campaign = $donation && !empty($atts['campaign_id']) ? Campaigns::get(absint($atts['campaign_id'])) : null;
         if ($fixed_services === null) {
             $services_table = Database::table('services');
             $links = Database::table('form_services');
@@ -151,10 +152,15 @@ final class Public_Form
                 </div>
                 <?php else : ?>
                 <div class="gkod-field">
-                    <label><?php echo esc_html(I18n::text('total', $lang)) ?> (EUR) <span>*</span>
-                        <input type="text" name="donation_amount" inputmode="decimal" required maxlength="9" pattern="[0-9]{1,6}([.,][0-9]{1,2})?" aria-describedby="<?php echo esc_attr($amount_id) ?>">
-                    </label>
-                    <small id="<?php echo esc_attr($amount_id) ?>"><?php echo esc_html(I18n::donation_text('amount_help', $lang)) ?></small>
+                    <label for="<?php echo esc_attr($amount_id.'-input') ?>"><?php echo esc_html(I18n::text('total', $lang)) ?> (EUR) <span>*</span></label>
+                    <?php if ($campaign) : ?><span class="gkod-amount-options" role="radiogroup" aria-label="<?php echo esc_attr(I18n::text('total', $lang)) ?>">
+                            <?php foreach ([1,2,3] as $index) : $preset=(int)($campaign->{'preset_'.$index.'_cents'}??[1=>1000,2=>2000,3=>10000][$index]); ?>
+                                <label><input type="radio" name="donation_preset" value="<?php echo esc_attr(number_format($preset/100,2,'.','')) ?>" <?php checked($index===1) ?>><span><?php echo esc_html(number_format_i18n($preset/100,2).' €') ?></span></label>
+                            <?php endforeach; ?>
+                            <label class="gkod-amount-custom"><input type="radio" name="donation_preset" value="custom"><span><?php echo esc_html(I18n::text('custom_amount', $lang)) ?></span></label>
+                    </span><?php endif; ?>
+                    <input id="<?php echo esc_attr($amount_id.'-input') ?>" type="text" name="donation_amount" inputmode="decimal" required maxlength="9" pattern="[0-9]{1,6}([.,][0-9]{1,2})?" min="<?php echo esc_attr(number_format(max(100,(int)($campaign->minimum_cents??1000))/100,2,'.','')) ?>" value="<?php echo $campaign ? esc_attr(number_format(($campaign->preset_1_cents??1000)/100,2,'.','')) : '' ?>" aria-describedby="<?php echo esc_attr($amount_id) ?>">
+                    <small id="<?php echo esc_attr($amount_id) ?>"><?php echo esc_html($campaign ? sprintf(I18n::text('minimum_amount_help', $lang), number_format_i18n(max(100,(int)($campaign->minimum_cents??1000))/100,2)) : I18n::donation_text('amount_help', $lang)) ?></small>
                 </div>
                 <?php endif; ?>
                 <div class="gkod-field"><label><?php echo  esc_html(I18n::text('note', $lang)) ?></label><textarea name="note" rows="<?php echo  $layout === 'compact' ? 1 : 2 ?>"></textarea></div>

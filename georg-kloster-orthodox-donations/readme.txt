@@ -4,7 +4,7 @@ Tags: orthodox, prayer, donations, stripe, paypal
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -134,6 +134,10 @@ Update provider webhook/return URLs after moving. An API-domain override must se
 6. WordPress support table and cancellation controls.
 
 == Changelog ==
+
+= 1.0.6 =
+* Add campaign images, rich text descriptions, compact campaign cards and suggested donation amounts.
+* Improve expense editing and reporting, campaign image selection, minimum donation validation and translations.
 
 = 1.0.5 =
 * Remove the translation loader call and escape translated admin output.

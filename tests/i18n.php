@@ -2,11 +2,20 @@
 declare(strict_types=1);
 // Standalone WordPress gettext/POMO regression check, without a database.
 define('ABSPATH', dirname(__DIR__).'/tmp/admin-check-core/wordpress/');
+define('WP_LANG_DIR', dirname(__DIR__).'/tmp/i18n-old-language-pack');
 require __DIR__.'/bootstrap-i18n.php';
 function ensure($ok,$message){if(!$ok)throw new RuntimeException($message);}
 require_once ABSPATH.'wp-includes/pomo/po.php';
 $root=dirname(__DIR__).'/georg-kloster-orthodox-donations';
 $pot=new PO();ensure($pot->import_from_file($root.'/languages/georg-kloster-orthodox-donations.pot'),'POT loads');
+$installed=new MO();ensure($installed->import_from_file($root.'/languages/georg-kloster-orthodox-donations-ru_RU.mo'),'Installed Russian catalog loads');
+$oldPack=new MO();$oldPack->headers=$installed->headers;
+$newStrings=['Campaign image','Choose image','Remove image','Use image','Minimum donation','Suggested amount %d','Other amount','Choose an amount or enter your own. Minimum: %s EUR.'];
+foreach($installed->entries as $entry)if(!in_array($entry->singular,$newStrings,true))$oldPack->add_entry($entry);
+$oldPackPath=WP_LANG_DIR.'/plugins/georg-kloster-orthodox-donations-ru_RU.mo';
+if(!is_dir(dirname($oldPackPath)))mkdir(dirname($oldPackPath),0777,true);
+ensure($oldPack->export_to_file($oldPackPath),'Simulated older WordPress.org language pack is written');
+$GLOBALS['fixture_mo_path']=$oldPackPath;
 $old=json_decode(file_get_contents(__DIR__.'/fixtures/public-translations.json'),true,512,JSON_THROW_ON_ERROR);
 $donation=json_decode(file_get_contents(__DIR__.'/fixtures/donation-translations.json'),true,512,JSON_THROW_ON_ERROR);
 foreach(['ru'=>'ru_RU','de'=>'de_DE','uk'=>'uk','pl'=>'pl_PL'] as $language=>$locale){
@@ -21,11 +30,12 @@ foreach(['ru'=>'ru_RU','de'=>'de_DE','uk'=>'uk','pl'=>'pl_PL'] as $language=>$lo
         preg_match_all('/%(?:\d+\$)?[ds]/',$entry->singular,$a);preg_match_all('/%(?:\d+\$)?[ds]/',$translated->translations[0],$b);
         sort($a[0]);sort($b[0]);ensure($a[0]===$b[0],'Format arguments preserved');
     }
-    foreach($old as $key=>$values)ensure(GeorgKlosterOrthodoxDonate\I18n::text($key,$language)===$values[$language],'Existing public translation retained: '.$language.'/'.$key);
+    foreach($old as $key=>$values){$actual=GeorgKlosterOrthodoxDonate\I18n::text($key,$language);ensure($actual===$values[$language],'Existing public translation retained: '.$language.'/'.$key.' got '.var_export($actual,true));}
     foreach($donation as $key=>$values)ensure(GeorgKlosterOrthodoxDonate\I18n::donation_text($key,$language)===$values[$language],'Existing donation translation retained: '.$language.'/'.$key);
     ensure(GeorgKlosterOrthodoxDonate\I18n::text('order_date',$language)===$mo->translate('Order date:'),'PDF date language');
     ensure(GeorgKlosterOrthodoxDonate\I18n::text('mail_subject',$language)===$mo->translate('Your prayer request has been received'),'Email language');
 }
+ensure(GeorgKlosterOrthodoxDonate\I18n::text('campaign_image','ru')==='Изображение сбора','New strings fall back to the bundled catalog when the installed language pack is stale');
 ensure(GeorgKlosterOrthodoxDonate\I18n::text('health','en')==='For the living','English source without translation');
 ensure(GeorgKlosterOrthodoxDonate\I18n::text('names_placeholder','en')==="Name\nName\nName",'English multiline placeholder');
 ensure($GLOBALS['fixture_gettext_filters']===[],'Gettext scope restored');

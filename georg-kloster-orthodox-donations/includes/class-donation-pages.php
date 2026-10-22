@@ -30,9 +30,21 @@ final class Donation_Pages
         if (!$action) return;
         if (!current_user_can('manage_options')) wp_die(esc_html__('Forbidden', 'georg-kloster-orthodox-donations'), '', ['response' => 403]);
         check_admin_referer('gkod_campaign_action');
-        $result = $action === 'save' ? Campaigns::save(Input::post_all()) : ($action === 'expense' ? Campaigns::expense(Input::post_all()) : new \WP_Error('invalid', __('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations')));
+        $post=Input::post_all();
+        foreach (['en','de','ru','uk','pl'] as $language) {
+            $key = 'description_' . $language;
+            if (array_key_exists($key, $_POST)) $post[$key] = Input::post_html($key);
+        }
+        $result = match ($action) {
+            'save' => Campaigns::save($post),
+            'expense', 'expense_update' => Campaigns::expense($post),
+            'expense_delete' => Campaigns::delete_expense(absint($post['campaign_id']??0),absint($post['expense_id']??0)),
+            default => new \WP_Error('invalid', __('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations')),
+        };
         if (is_wp_error($result) || $result === false) wp_die(esc_html(is_wp_error($result) ? $result->get_error_message() : __('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations')));
-        wp_safe_redirect(admin_url('admin.php?page=georg-kloster-orthodox-donations-campaigns')); exit;
+        $redirect = ['page'=>'georg-kloster-orthodox-donations-campaigns'];
+        if (in_array($action, ['expense','expense_update','expense_delete'], true)) $redirect['campaign_id'] = absint($post['campaign_id'] ?? 0);
+        wp_safe_redirect(add_query_arg($redirect, admin_url('admin.php'))); exit;
     }
 
     public static function admin(): void
@@ -47,34 +59,45 @@ final class Donation_Pages
         }
         if ($id && !$campaign) { echo '<p>'.esc_html__('Campaign not found.','georg-kloster-orthodox-donations').'</p></div>';return; }
         $lang=I18n::content_language();
+        $can_upload = current_user_can('upload_files');
+        if ($can_upload) wp_enqueue_media();
         echo '<h2>'.esc_html($campaign?__('Edit campaign','georg-kloster-orthodox-donations'):__('New campaign','georg-kloster-orthodox-donations')).'</h2><form method="post">';wp_nonce_field('gkod_campaign_action');
         echo '<input type="hidden" name="gkod_campaign_action" value="save"><input type="hidden" name="campaign_id" value="'.(int)($campaign->id??0).'">';
         echo '<table class="form-table" role="presentation"><tbody>';
         self::editor_row('title_'.$lang,__('Title','georg-kloster-orthodox-donations'),$campaign->{'title_'.$lang}??'','text',true);
-        self::editor_row('description_'.$lang,__('Description','georg-kloster-orthodox-donations'),$campaign->{'description_'.$lang}??'','textarea');
+        echo '<tr><th scope="row"><label for="description_'.esc_attr($lang).'">'.esc_html__('Description','georg-kloster-orthodox-donations').'</label></th><td>';
+        wp_editor((string)($campaign->{'description_'.$lang}??''),'description_'.$lang,['textarea_name'=>'description_'.$lang,'textarea_rows'=>9,'media_buttons'=>true,'teeny'=>false,'quicktags'=>true]);
+        echo '</td></tr>';
+        $image_id=(int)($campaign->image_id??0);$image_url=$image_id?wp_get_attachment_image_url($image_id,'medium'):'';
+        if($can_upload)echo '<tr><th scope="row"><label>'.esc_html(I18n::text('campaign_image')).'</label></th><td><input type="hidden" id="gkod-campaign-image-id" name="image_id" value="'.$image_id.'"><div id="gkod-campaign-image-preview">'.($image_url?'<img src="'.esc_url($image_url).'" alt="" style="max-width:320px;height:auto">':'').'</div><p><button type="button" class="button" id="gkod-campaign-image-select">'.esc_html(I18n::text('choose_image')).'</button> <button type="button" class="button" id="gkod-campaign-image-remove">'.esc_html(I18n::text('remove_image')).'</button></p></td></tr>';
         self::editor_row('goal',__('Goal','georg-kloster-orthodox-donations').' (EUR)',$campaign?number_format($campaign->goal_cents/100,2,'.',''):'','text',true);
+        self::editor_row('minimum',I18n::text('minimum_donation').' (EUR)',$campaign?number_format(max(1000,(int)($campaign->minimum_cents??1000))/100,2,'.',''):'10.00','number',true);
+        foreach ([1,2,3] as $index) self::editor_row('preset_'.$index,sprintf(I18n::text('suggested_amount'),$index).' (EUR)',$campaign?number_format(($campaign->{'preset_'.$index.'_cents'}??[1=>1000,2=>2000,3=>10000][$index])/100,2,'.',''):[1=>'10.00',2=>'20.00',3=>'100.00'][$index],'number',true);
         self::editor_row('deadline',__('Deadline','georg-kloster-orthodox-donations'),$campaign->deadline??'','date');
         echo '<tr><th scope="row"><label for="status">'.esc_html__('Status','georg-kloster-orthodox-donations').'</label></th><td><select name="status" id="status">';
         foreach (self::statuses() as $value=>$label) echo '<option value="'.esc_attr($value).'" '.selected($campaign->status??'draft',$value,false).'>'.esc_html($label).'</option>';
         echo '</select><p class="description">'.esc_html__('Closing a campaign prevents new submissions. Existing regular support continues until cancelled.','georg-kloster-orthodox-donations').'</p></td></tr></tbody></table>';
         submit_button(__('Save campaign','georg-kloster-orthodox-donations'));echo '</form><p><a class="button" href="'.esc_url(admin_url('admin.php?page=georg-kloster-orthodox-donations-campaigns')).'">'.esc_html__('Cancel','georg-kloster-orthodox-donations').'</a></p>';
+        if($campaign){$full='[gkod_campaigns id="'.(int)$campaign->id.'"]';$compact='[gkod_campaigns id="'.(int)$campaign->id.'" layout="compact" url="/spenden-2/"]';echo '<h2>'.esc_html__('Embed this campaign','georg-kloster-orthodox-donations').'</h2><p>'.esc_html__('Full campaign','georg-kloster-orthodox-donations').': <code>'.esc_html($full).'</code></p><p>'.esc_html__('Compact campaign block','georg-kloster-orthodox-donations').': <code>'.esc_html($compact).'</code></p><p class="description">'.esc_html__('Replace the URL in the compact shortcode with the page that contains the full campaign and donation form.','georg-kloster-orthodox-donations').'</p>';}
         if ($campaign) {
-            echo '<h2>'.esc_html__('Record expense','georg-kloster-orthodox-donations').'</h2><p>'.esc_html__('Expenses are entered separately; payment providers do not report how funds are spent.','georg-kloster-orthodox-donations').'</p><form method="post">';wp_nonce_field('gkod_campaign_action');
-            echo '<input type="hidden" name="gkod_campaign_action" value="expense"><input type="hidden" name="campaign_id" value="'.(int)$campaign->id.'"><table class="form-table" role="presentation"><tbody>';
-            self::editor_row('expense_amount',__('Amount','georg-kloster-orthodox-donations').' (EUR)','','text',true);
-            self::editor_row('expense_description',__('Description','georg-kloster-orthodox-donations'),'','text',true);
-            self::editor_row('expense_date',__('Date','georg-kloster-orthodox-donations'),wp_date('Y-m-d'),'date',true);
-            echo '</tbody></table>';submit_button(__('Record expense','georg-kloster-orthodox-donations'));echo '</form>';
+            global $wpdb;$expense_id=absint(Input::get('expense_id')??0);$expense=null;
+            if($expense_id)$expense=$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d AND campaign_id=%d',Database::table('campaign_expenses'),$expense_id,(int)$campaign->id));
+            echo '<h2>'.esc_html($expense?__('Edit expense','georg-kloster-orthodox-donations'):__('Record expense','georg-kloster-orthodox-donations')).'</h2><p>'.esc_html__('Expenses are entered separately; payment providers do not report how funds are spent.','georg-kloster-orthodox-donations').'</p><form method="post">';wp_nonce_field('gkod_campaign_action');
+            echo '<input type="hidden" name="gkod_campaign_action" value="'.($expense?'expense_update':'expense').'"><input type="hidden" name="campaign_id" value="'.(int)$campaign->id.'"><input type="hidden" name="expense_id" value="'.(int)($expense->id??0).'"><table class="form-table" role="presentation"><tbody>';
+            self::editor_row('expense_amount',__('Amount','georg-kloster-orthodox-donations').' (EUR)',$expense?number_format($expense->amount_cents/100,2,'.',''):'','number',true,'0.01');
+            self::editor_row('expense_description',__('Description','georg-kloster-orthodox-donations'),$expense->description??'','text',true);
+            self::editor_row('expense_date',__('Date','georg-kloster-orthodox-donations'),$expense->incurred_on??wp_date('Y-m-d'),'date',true);
+            echo '</tbody></table>';submit_button($expense?__('Save changes','georg-kloster-orthodox-donations'):__('Record expense','georg-kloster-orthodox-donations'));if($expense)echo ' <a class="button" href="'.esc_url(admin_url('admin.php?page=georg-kloster-orthodox-donations-campaigns&campaign_id='.(int)$campaign->id)).'">'.esc_html__('Cancel','georg-kloster-orthodox-donations').'</a>';echo '</form>';
             $table=new Donation_Admin_Table('campaign_expenses',(int)$campaign->id);$table->prepare_items();$table->display();
         }
         echo '</div>';
     }
 
-    private static function editor_row(string $name,string $label,string $value,string $type,bool $required=false): void
+    private static function editor_row(string $name,string $label,string $value,string $type,bool $required=false,string $minimum='0.50'): void
     {
         echo '<tr><th scope="row"><label for="'.esc_attr($name).'">'.esc_html($label).'</label></th><td>';
         if ($type==='textarea') echo '<textarea class="large-text" rows="5" id="'.esc_attr($name).'" name="'.esc_attr($name).'">'.esc_textarea($value).'</textarea>';
-        else echo '<input class="regular-text" type="'.esc_attr($type).'" id="'.esc_attr($name).'" name="'.esc_attr($name).'" value="'.esc_attr($value).'" '.($required?'required':'').'>';
+        else echo '<input class="regular-text" type="'.esc_attr($type).'" id="'.esc_attr($name).'" name="'.esc_attr($name).'" value="'.esc_attr($value).'" '.($type==='number'?'step="0.01" min="'.esc_attr($minimum).'" ':'').($required?'required':'').'>';
         echo '</td></tr>';
     }
 

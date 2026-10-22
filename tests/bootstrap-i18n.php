@@ -8,8 +8,9 @@ $GLOBALS['fixture_gettext_filters'] = [];
 function fixture_translate(string $source, string $domain = 'georg-kloster-orthodox-donations'): string {
     static $mo = null;
     if ($domain !== 'georg-kloster-orthodox-donations') return $source;
-    if (!$mo) { $mo = new MO(); $mo->import_from_file(dirname(__DIR__) . '/georg-kloster-orthodox-donations/languages/georg-kloster-orthodox-donations-ru_RU.mo'); }
+    if (!$mo) { $mo = new MO(); $mo->import_from_file($GLOBALS['fixture_mo_path'] ?? dirname(__DIR__) . '/georg-kloster-orthodox-donations/languages/georg-kloster-orthodox-donations-ru_RU.mo'); }
     $value = $mo->translate($source);
+    if (!is_string($value)) $value = $source;
     foreach ($GLOBALS['fixture_gettext_filters'] as $filter) $value = $filter($value, $source, $domain);
     return $value;
 }

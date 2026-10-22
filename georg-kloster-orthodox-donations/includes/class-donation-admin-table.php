@@ -14,7 +14,7 @@ final class Donation_Admin_Table extends \WP_List_Table
     }
     public function get_columns()
     {
-        if ($this->kind==='campaign_expenses') return ['date'=>esc_html__('Date','georg-kloster-orthodox-donations'),'description'=>esc_html__('Description','georg-kloster-orthodox-donations'),'expense'=>esc_html__('Amount','georg-kloster-orthodox-donations')];
+        if ($this->kind==='campaign_expenses') return ['date'=>esc_html__('Date','georg-kloster-orthodox-donations'),'description'=>esc_html__('Description','georg-kloster-orthodox-donations'),'expense'=>esc_html__('Amount','georg-kloster-orthodox-donations'),'actions'=>esc_html__('Actions','georg-kloster-orthodox-donations')];
         return $this->kind==='campaigns'
             ? ['title'=>esc_html__('Campaign','georg-kloster-orthodox-donations'),'status'=>esc_html__('Status','georg-kloster-orthodox-donations'),'report'=>esc_html__('Report','georg-kloster-orthodox-donations')]
             : ['account'=>esc_html__('User','georg-kloster-orthodox-donations'),'amount'=>esc_html__('Amount','georg-kloster-orthodox-donations'),'status'=>esc_html__('Status','georg-kloster-orthodox-donations'),'provider'=>esc_html__('Payment method','georg-kloster-orthodox-donations'),'actions'=>esc_html__('Actions','georg-kloster-orthodox-donations')];
@@ -41,6 +41,11 @@ final class Donation_Admin_Table extends \WP_List_Table
         if ($column==='date') return esc_html($item->incurred_on);
         if ($column==='description') return esc_html($item->description);
         if ($column==='expense') return esc_html(number_format_i18n($item->amount_cents/100,2).' EUR');
+        if ($column==='actions' && $this->kind==='campaign_expenses') {
+            $edit=admin_url('admin.php?page=georg-kloster-orthodox-donations-campaigns&campaign_id='.$this->campaign_id.'&expense_id='.(int)$item->id);
+            $delete=wp_nonce_field('gkod_campaign_action','_wpnonce',false,false);
+            return '<a class="button button-small" href="'.esc_url($edit).'">'.esc_html__('Edit','georg-kloster-orthodox-donations').'</a> <form method="post" style="display:inline" onsubmit="return confirm(\''.esc_js(__('Delete this expense?','georg-kloster-orthodox-donations')).'\')">'.$delete.'<input type="hidden" name="gkod_campaign_action" value="expense_delete"><input type="hidden" name="campaign_id" value="'.$this->campaign_id.'"><input type="hidden" name="expense_id" value="'.(int)$item->id.'"><button class="button button-small" type="submit">'.esc_html__('Delete','georg-kloster-orthodox-donations').'</button></form>';
+        }
         if ($column==='title') {
             $url=add_query_arg(['page'=>'georg-kloster-orthodox-donations-campaigns','campaign_id'=>(int)$item->id],admin_url('admin.php'));
             return '<strong><a class="row-title" href="'.esc_url($url).'">'.esc_html(Campaigns::title($item,I18n::content_language())).'</a></strong>'.$this->row_actions(['edit'=>'<a href="'.esc_url($url).'">'.esc_html__('Edit','georg-kloster-orthodox-donations').'</a>']);

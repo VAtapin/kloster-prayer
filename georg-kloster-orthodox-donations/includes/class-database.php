@@ -5,7 +5,7 @@ namespace GeorgKlosterOrthodoxDonate;
 
 final class Database
 {
-    private const DB_VERSION = '1.0.1';
+    private const DB_VERSION = '1.0.3';
 
     public static function table(string $name): string
     {
@@ -26,7 +26,16 @@ final class Database
             self::install();
             self::seed();
             self::update_generic_copy();
+            self::enforce_campaign_minimum();
         }
+    }
+
+    private static function enforce_campaign_minimum(): void
+    {
+        global $wpdb;
+        // Existing campaigns must satisfy the same €10 floor as new campaigns.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-time schema upgrade of custom campaign records.
+        $wpdb->query($wpdb->prepare('UPDATE %i SET minimum_cents=1000 WHERE minimum_cents<1000', self::table('campaigns')));
     }
 
     private static function update_generic_copy(): void
@@ -74,7 +83,6 @@ final class Database
             description_de text NULL,
             description_uk text NULL,
             description_pl text NULL,
-            image_id bigint unsigned NOT NULL DEFAULT 0,
             intention_mode enum('both','health','rest','none') NOT NULL DEFAULT 'both',
             pricing_mode enum('flat','per_person','per_sheet') NOT NULL DEFAULT 'flat',
             price_cents int unsigned NOT NULL DEFAULT 0,
@@ -226,6 +234,11 @@ final class Database
             description_uk text NULL,
             description_pl text NULL,
             goal_cents int unsigned NOT NULL,
+            image_id bigint unsigned NOT NULL DEFAULT 0,
+            minimum_cents int unsigned NOT NULL DEFAULT 1000,
+            preset_1_cents int unsigned NOT NULL DEFAULT 1000,
+            preset_2_cents int unsigned NOT NULL DEFAULT 2000,
+            preset_3_cents int unsigned NOT NULL DEFAULT 10000,
             status varchar(20) NOT NULL DEFAULT 'draft',
             deadline date NULL,
             created_at datetime NOT NULL,

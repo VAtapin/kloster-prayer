@@ -23,6 +23,15 @@ final class Input
         return self::scalar($_POST, $key, true);
     }
 
+    public static function post_html(string $key): ?string
+    {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Called after the campaign action nonce is verified.
+        if (!isset($_POST[$key])) return null;
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Rich text is unslashed and passed through wp_kses_post before persistence.
+        $value = $_POST[$key];
+        return is_scalar($value) ? wp_kses_post(wp_unslash((string) $value)) : '';
+    }
+
     public static function post_list(string $key): array
     {
         // phpcs:ignore WordPress.Security.NonceVerification.Missing -- List normalization only; action authorization remains mandatory.

@@ -62,23 +62,30 @@ final class I18n
      */
     public static function in_language(callable $render, string $language): string
     {
-        if ($language === self::language()) return (string) $render();
         $locales = ['ru' => 'ru_RU', 'de' => 'de_DE', 'uk' => 'uk', 'pl' => 'pl_PL'];
         static $catalogs = [];
         if (!array_key_exists($language, $catalogs)) {
-            $catalogs[$language] = null;
+            $catalogs[$language] = [];
             if (isset($locales[$language])) {
                 if (!class_exists('MO')) require_once ABSPATH . 'wp-includes/pomo/mo.php';
-                $mo = new \MO();
                 $paths=[];
                 if (defined('WP_LANG_DIR')) $paths[]=WP_LANG_DIR.'/plugins/georg-kloster-orthodox-donations-'.$locales[$language].'.mo';
                 $paths[]=__DIR__.'/../languages/georg-kloster-orthodox-donations-'.$locales[$language].'.mo';
-                foreach ($paths as $path) if (is_readable($path) && $mo->import_from_file($path)) { $catalogs[$language]=$mo; break; }
+                foreach ($paths as $path) {
+                    $mo = new \MO();
+                    if (is_readable($path) && $mo->import_from_file($path)) $catalogs[$language][] = $mo;
+                }
             }
         }
-        $catalog = $catalogs[$language];
-        $filter = static function (string $translation, string $source, string $domain) use ($catalog): string {
-            return $domain === 'georg-kloster-orthodox-donations' ? ($catalog ? $catalog->translate($source) : $source) : $translation;
+        $catalogsForLanguage = $catalogs[$language];
+        $filter = static function (string $translation, string $source, string $domain) use ($catalogsForLanguage, $language): string {
+            if ($domain !== 'georg-kloster-orthodox-donations') return $translation;
+            if ($language === 'en') return $source;
+            foreach ($catalogsForLanguage as $catalog) {
+                $candidate = $catalog->translate($source);
+                if ($candidate !== false && $candidate !== '' && $candidate !== $source) return $candidate;
+            }
+            return $language === self::language() ? $translation : $source;
         };
         add_filter('gettext', $filter, 20, 3);
         try { return (string) $render(); }
@@ -102,6 +109,15 @@ final class I18n
             'stripe' => __('Card / Stripe', 'georg-kloster-orthodox-donations'),
             'paypal' => __('PayPal', 'georg-kloster-orthodox-donations'),
             'total' => __('Donation amount', 'georg-kloster-orthodox-donations'),
+            'custom_amount' => __('Other amount', 'georg-kloster-orthodox-donations'),
+            'minimum_amount_help' => __('Choose an amount or enter your own. Minimum: %s EUR.', 'georg-kloster-orthodox-donations'),
+            'campaign_image' => __('Campaign image', 'georg-kloster-orthodox-donations'),
+            'choose_image' => __('Choose image', 'georg-kloster-orthodox-donations'),
+            'remove_image' => __('Remove image', 'georg-kloster-orthodox-donations'),
+            'use_image' => __('Use image', 'georg-kloster-orthodox-donations'),
+            'minimum_donation' => __('Minimum donation', 'georg-kloster-orthodox-donations'),
+            'suggested_amount' => __('Suggested amount %d', 'georg-kloster-orthodox-donations'),
+            'minimum_amount_error' => __('The minimum donation for this campaign is %s EUR.', 'georg-kloster-orthodox-donations'),
             'submit' => __('Submit prayer request and donate', 'georg-kloster-orthodox-donations'),
             'secure' => __('Secure payment. Your information is used only to process your prayer request.', 'georg-kloster-orthodox-donations'),
             'required' => __('Please complete all required fields.', 'georg-kloster-orthodox-donations'),
