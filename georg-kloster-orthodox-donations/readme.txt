@@ -4,7 +4,7 @@ Tags: orthodox, prayer, donations, stripe, paypal
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,7 +110,7 @@ Donation/support forms accept campaign_id="1" to allocate payments to an open, u
 
 Layouts: standard, compact, wide, two_columns, cards, minimal. header="no" hides supported headings. Without lang, WordPress/the language plugin selects the language. The admin guide lists parameters/defaults. Editors preserve other translations. After payment, the confirmation email contains a reusable private link to the donor cabinet. It shows donations made with that email and allows recurring support to be canceled without registration or login. Donors can optionally register a WordPress account with the same email; linking it disables the personal link. Exclude the private cabinet page from full-page/CDN caching.
 
-The **Donors** admin page groups donations by email and reads billing contact details from the existing payment records. Staff can manually send a personalized thank-you PDF for a paid donation; these letters are never sent automatically. The PDF layout can be replaced with the monastery's supplied design.
+The **Donors** admin page groups donations by email and reads billing contact details from the existing payment records. Staff can preview a personalized PDF, send a test copy to the configured test address, and manually send the letter to a donor; donor letters are never sent automatically. Configure the background and drag the text fields under **Donations → Thank-you letter**. PDF, JPEG and PNG backgrounds are supported. PDF backgrounds require the server ImageMagick extension with PDF/Ghostscript support; JPEG/PNG backgrounds do not. The editor includes a sample preview and sample test email that do not mark a real donation as thanked.
 
 == Frequently Asked Questions ==
 
@@ -136,6 +136,11 @@ Update provider webhook/return URLs after moving. An API-domain override must se
 6. WordPress support table and cancellation controls.
 
 == Changelog ==
+
+= 1.0.7 =
+* Add the donor directory and payment history in WordPress administration.
+* Add reusable thank-you letter templates and personalized PDF emails.
+* Include complete RU/DE/UK/PL interface imports for the new strings.
 
 = 1.0.6 =
 * Add campaign images, rich text descriptions, compact campaign cards and suggested donation amounts.

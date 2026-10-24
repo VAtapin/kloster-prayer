@@ -36,6 +36,9 @@ jobs:
           mkdir -p tmp/pdfs output/pdf
           php -d zend.assertions=1 -d assert.exception=1 tests/smoke.php
           php tests/notifications.php
+          php -d zend.assertions=1 -d assert.exception=1 tests/donor-actions.php
+          php -d zend.assertions=1 -d assert.exception=1 tests/thank-you-template.php
+          python3 tests/wordpress-org-translations.py
           php tests/pdf-archive.php --render
           php tests/pdf-notes.php --render
           php -d zend.assertions=1 -d assert.exception=1 tests/api-domain.php

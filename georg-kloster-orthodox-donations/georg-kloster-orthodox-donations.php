@@ -3,7 +3,7 @@
  * Plugin Name: Georg Kloster – Orthodox Donations
  * Plugin URI: https://github.com/VAtapin/kloster-prayer/tree/main/georg-kloster-orthodox-donations
  * Description: Orthodox prayer requests and donations with Stripe, PayPal, printable prayer slips and reports.
- * Version: 1.0.6
+ * Version: 1.0.7
  * Author: Vladimir Atapin
  * Author URI: https://atapin.de/
  * Text Domain: georg-kloster-orthodox-donations
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const VERSION = '1.0.6';
+const VERSION = '1.0.7';
 const FILE = __FILE__;
 const DIR = __DIR__;
 
@@ -36,6 +36,7 @@ require_once DIR . '/includes/class-stripe-catalog.php';
 require_once DIR . '/includes/class-campaigns.php';
 require_once DIR . '/includes/class-donors.php';
 require_once DIR . '/includes/class-thank-you.php';
+require_once DIR . '/includes/class-thank-you-template-admin.php';
 require_once DIR . '/includes/class-donor-admin.php';
 require_once DIR . '/includes/class-donation-pages.php';
 require_once DIR . '/includes/class-recurring-gateways.php';
@@ -62,6 +63,7 @@ add_action('plugins_loaded', static function (): void {
     Campaigns::init();
     Donors::init();
     Donor_Admin::init();
+    Thank_You_Template_Admin::init();
     Donation_Pages::init();
     Subscriptions::init();
     Support_Pages::init();

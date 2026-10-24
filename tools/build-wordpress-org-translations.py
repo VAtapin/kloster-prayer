@@ -20,6 +20,11 @@ def catalog(path):
             if 'msgid' in entry:
                 entries.append(entry)
             entry, field = {}, None
+        elif line.startswith('msgid ') and 'msgid' in entry:
+            entries.append(entry)
+            entry, field = {}, None
+            field, value = line.split(' ', 1)
+            entry[field] = ast.literal_eval(value)
         elif line.startswith(('msgid ', 'msgstr ', 'msgctxt ')):
             field, value = line.split(' ', 1)
             entry[field] = ast.literal_eval(value)
@@ -60,9 +65,12 @@ def write(kind, locale, entries):
 
 def main(interface_only=False):
     source = originals('interface')
-    assert len(source) == 357
+    runtime_source = [e['msgid'] for e in catalog(ROOT / SLUG / 'languages' / f'{SLUG}.pot') if e['msgid']]
+    assert set(runtime_source).issubset(source) and len(source) == len(set(source)), 'Interface import must include every current runtime string while preserving prior originals'
     for locale in ('ru_RU', 'de_DE', 'uk', 'pl_PL'):
-        translations = {e['msgid']: e['msgstr'] for e in catalog(ROOT / SLUG / 'languages' / f'{SLUG}-{locale}.po')}
+        previous = DIRECTORY / f'interface-{locale}.po'
+        translations = {e['msgid']: e['msgstr'] for e in catalog(previous)} if previous.exists() else {}
+        translations.update({e['msgid']: e['msgstr'] for e in catalog(ROOT / SLUG / 'languages' / f'{SLUG}-{locale}.po')})
         translations.update({NAME: NAME, 'Vladimir Atapin': 'Vladimir Atapin', AUTHOR_URL: AUTHOR_URL})
         if locale == 'ru_RU':
             translations['None'] = 'Нет'

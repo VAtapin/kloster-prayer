@@ -4,7 +4,7 @@ These files are separate imports for translate.wordpress.org and are not include
 in the plugin ZIP. The German bundled PO/MO catalogs are kept in sync for manual
 installations; runtime PHP code is unchanged.
 
-- `interface-source.pot`: exact 357 Stable originals exported from WordPress.org.
+- `interface-source.pot`: union of current runtime originals and prior WordPress.org interface originals, so existing approved translations remain importable.
 - `readme-source.pot`: exact 80 Stable Readme originals, including FAQ, setup,
   screenshots and changelog.
 - Four `readme-<locale>.json` files: complete descriptions in RU/DE/UK/PL.
@@ -20,14 +20,16 @@ python tools/build-wordpress-org-translations.py
 python tests/wordpress-org-translations.py
 ```
 
-The generator takes existing runtime translations, adds the unchanged author,
+The generator parses standard PO entries with or without blank separators, combines prior imports with current runtime translations, adds the unchanged author,
 source URL and plugin name required by the directory, and applies reviewed
 publication overrides. `None` is capitalized in Russian. It checks all originals,
 placeholders, HTML/entities, URLs, shortcodes, permissions and provider event names.
+Version 1.0.7 catalogs contain 536 interface strings (including prior originals) and 80 readme strings per RU/DE/UK/PL import. The current runtime POT is included in full; prior originals and translations are retained. These files are prepared for import after the code release.
+
 This follows the publication approach used in `wp_cu_translator`; that repository
 was read only.
 
-## Verified publication on 17 October 2026
+## Previously verified publication on 17 October 2026
 
 German `de/default` now has, in each of Stable and Development:
 

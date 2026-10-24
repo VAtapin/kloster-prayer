@@ -1319,8 +1319,8 @@ msgstr "Nie udało się utworzyć PDF z podziękowaniem."
 msgid "Could not prepare the thank-you PDF attachment."
 msgstr "Nie udało się przygotować załącznika PDF z podziękowaniem."
 
-msgid "We sincerely thank you for supporting the monastery. Your personal thank-you letter is attached as a PDF."
-msgstr "Serdecznie dziękujemy za wsparcie klasztoru. Osobisty list z podziękowaniem znajduje się w załączniku PDF."
+msgid "Thank you for your donation and for supporting our monastery. Your kindness helps sustain our community and its prayerful work.\n\nPlease find your personal letter of gratitude attached as a PDF.\n\nWith gratitude,\nThe monastery brotherhood"
+msgstr "serdecznie dziękujemy za darowiznę i wsparcie naszego klasztoru. Państwa życzliwość pomaga naszej wspólnocie kontynuować modlitwę i służbę.\n\nOsobiste podziękowanie w formacie PDF znajdą Państwo w załączniku.\n\nZ wdzięcznością,\nbracia z klasztoru"
 
 msgid "The thank-you email could not be sent. Please try again."
 msgstr "Nie udało się wysłać wiadomości z podziękowaniem. Spróbuj ponownie."
@@ -1360,3 +1360,227 @@ msgstr "Kolor przełącznika „Za zmarłych”"
 
 msgid "These colors apply only to the intention selectors. Submit buttons use the active WordPress theme."
 msgstr "Te kolory dotyczą tylko przełączników intencji. Przyciski wysyłania korzystają z aktywnego motywu WordPress."
+
+msgid "Choose a PDF or image background"
+msgstr "Wybierz tło PDF lub obraz"
+
+msgid "Use this background"
+msgstr "Użyj tego tła"
+
+msgid "PDF selected. Save the template to load its first page preview."
+msgstr "Wybrano PDF. Zapisz szablon, aby wczytać podgląd pierwszej strony."
+
+msgid "Choose a background to begin positioning fields."
+msgstr "Wybierz tło, aby rozpocząć rozmieszczanie pól."
+
+msgid "Thank-you text"
+msgstr "Tekst podziękowania"
+
+msgid "Donation purpose"
+msgstr "Cel darowizny"
+
+msgid "Donation date"
+msgstr "Data darowizny"
+
+msgid "Abbot / signer"
+msgstr "Igumen / podpis"
+
+msgid "Monastery address"
+msgstr "Adres klasztoru"
+
+msgid "Thank-you letter template"
+msgstr "Szablon listu z podziękowaniem"
+
+msgid "Template saved."
+msgstr "Szablon został zapisany."
+
+msgid "Test copy sent to the configured test address."
+msgstr "Kopia testowa została wysłana na skonfigurowany adres testowy."
+
+msgid "The background file is not a supported PDF, JPEG or PNG image."
+msgstr "Plik tła musi być plikiem PDF, JPEG lub PNG."
+
+msgid "PDF backgrounds need the server ImageMagick extension with PDF/Ghostscript support for preview and final letter generation. JPEG and PNG backgrounds do not need this."
+msgstr "Do podglądu i utworzenia listu z PDF wymagany jest ImageMagick z obsługą PDF/Ghostscript. Pliki JPEG i PNG tego nie wymagają."
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized."
+msgstr "Wybierz plik PDF lub obraz jako tło strony. Przeciągnij przykładowe pola; pozycje są zapisywane w procentach i pozostają właściwe po zmianie rozmiaru podglądu."
+
+msgid "Choose PDF or image"
+msgstr "Wybierz PDF lub obraz"
+
+msgid "Remove background"
+msgstr "Usuń tło"
+
+msgid "No background selected"
+msgstr "Nie wybrano tła"
+
+msgid "Page orientation"
+msgstr "Orientacja strony"
+
+msgid "Portrait"
+msgstr "Pionowa"
+
+msgid "Landscape"
+msgstr "Pozioma"
+
+msgid "Test email address"
+msgstr "Testowy adres e-mail"
+
+msgid "A paid donation can be sent as a test copy to this address from its donor record. Test copies do not mark the donation letter as sent."
+msgstr "Kopię opłaconej darowizny można wysłać na ten adres z profilu darczyńcy. Kopia testowa nie oznacza listu jako wysłanego."
+
+msgid "Place the fields"
+msgstr "Rozmieść pola"
+
+msgid "Drag each field on the page. Select a field below the preview to adjust its width, font size, color and alignment."
+msgstr "Przeciągnij pola na stronie. Wybierz pole poniżej podglądu, aby zmienić szerokość, rozmiar czcionki, kolor i wyrównanie."
+
+msgid "Selected field"
+msgstr "Wybrane pole"
+
+msgid "Width (%)"
+msgstr "Szerokość (%)"
+
+msgid "Font size (pt)"
+msgstr "Rozmiar czcionki (pt)"
+
+msgid "Text color"
+msgstr "Kolor tekstu"
+
+msgid "Alignment"
+msgstr "Wyrównanie"
+
+msgid "Left"
+msgstr "Do lewej"
+
+msgid "Center"
+msgstr "Do środka"
+
+msgid "Right"
+msgstr "Do prawej"
+
+msgid "Save template"
+msgstr "Zapisz szablon"
+
+msgid "Test the letter"
+msgstr "Testuj list"
+
+msgid "Preview a sample PDF or email a sample copy to the test address. Neither action sends to a donor or marks a donation as thanked."
+msgstr "Wyświetl przykładowy PDF lub wyślij kopię na adres testowy. Żadna z tych czynności nie wysyła wiadomości do darczyńcy ani nie oznacza darowizny jako podziękowanej."
+
+msgid "Preview sample PDF"
+msgstr "Podgląd przykładowego PDF"
+
+msgid "Send sample to test address"
+msgstr "Wyślij próbkę na adres testowy"
+
+msgid "Alexey Donor"
+msgstr "Aleksiej Darczyńca"
+
+msgid "Donation: Prayer request"
+msgstr "Darowizna: prośba modlitewna"
+
+msgid "Abbot"
+msgstr "Igumen"
+
+msgid "Set a valid test email address in the thank-you letter settings first."
+msgstr "Najpierw ustaw prawidłowy adres testowy w ustawieniach listu z podziękowaniem."
+
+msgid "The recipient email address is invalid."
+msgstr "Nieprawidłowy adres e-mail odbiorcy."
+
+msgid "This server needs ImageMagick with PDF support to use a PDF letter background. Use an image background or enable PDF conversion."
+msgstr "Tło PDF wymaga ImageMagick z obsługą PDF. Użyj obrazu lub włącz konwersję PDF na serwerze."
+
+msgid "Could not convert the PDF letter background to an image."
+msgstr "Nie udało się przekonwertować tła listu z PDF na obraz."
+
+msgid "Preview PDF"
+msgstr "Podgląd PDF"
+
+msgid "Send test copy"
+msgstr "Wyślij kopię testową"
+
+msgid "Thank you for supporting the monastery."
+msgstr "Dziękujemy za wsparcie klasztoru."
+
+msgid "PDF letter background support"
+msgstr "Obsługa tła listu PDF"
+
+msgid "Bible quote / additional text"
+msgstr "Cytat biblijny / dodatkowy tekst"
+
+msgid "Additional text block"
+msgstr "Dodatkowy blok tekstu"
+
+msgid "Show this field"
+msgstr "Pokaż to pole"
+msgid "Template"
+msgstr "Szablon"
+
+msgid "Add template"
+msgstr "Dodaj szablon"
+
+msgid "Delete template"
+msgstr "Usuń szablon"
+
+msgid "Template name"
+msgstr "Nazwa szablonu"
+
+msgid "Any language"
+msgstr "Dowolny język"
+
+msgid "Donation case"
+msgstr "Rodzaj darowizny"
+
+msgid "Any case"
+msgstr "Każdy przypadek"
+
+msgid "One-time donation"
+msgstr "Jednorazowa darowizna"
+
+
+msgid "Delete this template?"
+msgstr "Usunąć ten szablon?"
+
+msgid "Default template"
+msgstr "Szablon domyślny"
+
+
+msgid "Template not found."
+msgstr "Nie znaleziono szablonu."
+
+msgid "The last template cannot be deleted."
+msgstr "Nie można usunąć ostatniego szablonu."
+
+msgid "New template %d"
+msgstr "Nowy szablon %d"
+
+msgid "Prayer request"
+msgstr "Prośba modlitewna"
+
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized. Choose the template manually for each donor letter; language and case are labels to help you identify it."
+msgstr "Wybierz plik PDF lub obraz jako tło strony. Przeciągnij przykładowe etykiety, aby ustawić pola tekstowe; pozycje są zapisywane w procentach i dopasowują się do rozmiaru podglądu. Szablon listu wybierz ręcznie dla każdego darczyńcy; język i przypadek służą jako etykiety."
+
+msgid "Thank-you letter templates"
+msgstr "Szablony listów z podziękowaniem"
+
+msgid "Back to templates"
+msgstr "Wróć do szablonów"
+
+msgid "Search templates"
+msgstr "Szukaj szablonów"
+
+msgid "View donations"
+msgstr "Zobacz darowizny"
+
+msgid "Thank you for supporting our monastery"
+msgstr "Dziękujemy za wsparcie naszego klasztoru"
+
+msgid "Hello!"
+msgstr "Dzień dobry!"
+
+msgid "Hello, %s!"
+msgstr "Dzień dobry, %s!"

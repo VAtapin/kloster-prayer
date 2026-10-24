@@ -1072,3 +1072,540 @@ msgstr "https://github.com/VAtapin/kloster-prayer/tree/main/georg-kloster-orthod
 
 msgid "Georg Kloster – Orthodox Donations"
 msgstr "Georg Kloster – Orthodox Donations"
+
+msgid "atapin.de"
+msgstr "atapin.de"
+
+msgid "Select all events for one-time donations, prayer requests and regular support:"
+msgstr "Выберите все события для разовых пожертвований, молитвенных записок и регулярной поддержки:"
+
+msgid "Language: en, ru, de, uk or pl. Omit it to use the current WordPress language. Existing prayer form/service content uses German as the English fallback."
+msgstr "Язык: en, ru, de, uk или pl. Без параметра используется текущий язык WordPress. Для английского языка тексты существующих форм записок и треб берутся из немецких полей."
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "Choose a language above to translate this guide and the lang parameter in its examples. Keep shortcode names and parameter values unchanged."
+msgstr "Выберите язык выше: изменится язык справки и параметр lang в примерах. Названия шорткодов и значения остальных параметров не переводите."
+
+msgid "English"
+msgstr "Английский"
+
+msgid "For one-time donations and prayer requests, select checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
+msgstr "Для разовых пожертвований и записок выберите checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed и charge.refunded. Для регулярной поддержки дополнительно выберите перечисленные ниже события подписок и счетов. Сохраните назначение."
+
+msgid "Campaign image"
+msgstr "Изображение сбора"
+
+msgid "Replace the URL in the compact shortcode with the page that contains the full campaign and donation form."
+msgstr "Замените URL в компактном шорткоде адресом страницы с полным описанием сбора и формой пожертвования."
+
+msgid "Compact campaign block"
+msgstr "Компактный блок сбора"
+
+msgid "Recorded expenses"
+msgstr "Расходы"
+
+msgid "Full campaign"
+msgstr "Полный сбор"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Layout for forms: standard, compact, wide, two_columns, cards or minimal. For campaign lists, use compact for a small linked card; full shows the description, reports, and donation form."
+msgstr "Вариант формы: standard, compact, wide, two_columns, cards или minimal. Для списка сборов используйте compact, чтобы показать небольшой блок со ссылкой; full показывает описание, отчёты и форму пожертвования."
+
+msgid "Embed this campaign"
+msgstr "Встраивание сбора"
+
+msgid "Choose an amount or enter your own. Minimum: %s EUR."
+msgstr "Выберите сумму или введите свою. Минимум: %s EUR."
+
+msgid "Use this image"
+msgstr "Использовать это изображение"
+
+msgid "Published campaigns with progress, totals and donation forms. Use layout=\"compact\" for a small campaign card and url=\"/donate/\" to link it to the full campaign page. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
+msgstr "Опубликованные сборы с прогрессом, итогами и формами пожертвования. Используйте layout=\"compact\" для небольшого блока со ссылкой на полную страницу сбора. Без id выводятся до 100 опубликованных сборов. Черновики скрыты; закрытые и просроченные сборы не принимают пожертвования."
+
+msgid "Remove image"
+msgstr "Удалить изображение"
+
+msgid "Other amount"
+msgstr "Другая сумма"
+
+msgid "Choose image"
+msgstr "Выбрать изображение"
+
+msgid "Delete this expense?"
+msgstr "Удалить этот расход?"
+
+msgid "The expense could not be found."
+msgstr "Расход не найден."
+
+msgid "Destination page for a compact campaign card, normally the page containing the full campaign and donation form."
+msgstr "Страница назначения для компактного блока сбора — обычно страница с полным описанием и формой пожертвования."
+
+msgid "Edit expense"
+msgstr "Изменить расход"
+
+msgid "Choose campaign image"
+msgstr "Выберите изображение сбора"
+
+msgid "Suggested amount %d"
+msgstr "Предлагаемая сумма %d"
+
+msgid "Minimum donation"
+msgstr "Минимальное пожертвование"
+
+msgid "The minimum donation for this campaign is %s EUR."
+msgstr "Минимальная сумма пожертвования для этого сбора — %s EUR."
+
+msgid "A valid Stripe Secret Key is required to synchronize products."
+msgstr "Для синхронизации товаров нужен действительный секретный ключ Stripe."
+
+msgid "Stripe did not return a product and its price."
+msgstr "Stripe не вернул товар и его цену."
+
+msgid "The Stripe product was created but its link could not be saved in WordPress."
+msgstr "Товар создан в Stripe, но сохранить связь с ним в WordPress не удалось."
+
+msgid "Stripe did not return a price ID."
+msgstr "Stripe не вернул идентификатор цены."
+
+msgid "The Stripe product was updated but its link could not be saved in WordPress."
+msgstr "Товар обновлён в Stripe, но сохранить связь с ним в WordPress не удалось."
+
+msgid "Stripe API request failed."
+msgstr "Запрос к API Stripe завершился ошибкой."
+
+msgid "Stripe synchronization finished: %1$d created, %2$d updated, %3$d failed."
+msgstr "Синхронизация со Stripe завершена: создано — %1$d, обновлено — %2$d, ошибок — %3$d."
+
+msgid "names"
+msgstr "имён"
+
+msgid "prayer slips"
+msgstr "молитвенных записок"
+
+msgid "Synchronize selected with Stripe"
+msgstr "Синхронизировать выбранные со Stripe"
+
+msgid "Stripe"
+msgstr "Stripe"
+
+msgid "Not synchronized"
+msgstr "Не синхронизировано"
+
+msgid "Synchronized"
+msgstr "Синхронизировано"
+
+msgid "Update required"
+msgstr "Требуется обновление"
+
+msgid "Select at least one service to synchronize."
+msgstr "Выберите хотя бы одну требу для синхронизации."
+
+msgid "No selected services were found."
+msgstr "Выбранные требы не найдены."
+
+msgid "Form appearance"
+msgstr "Оформление форм"
+
+msgid "Donations and regular support"
+msgstr "Пожертвования и регулярная поддержка"
+
+msgid "The forms keep the page background. Choose an accent color for each form type."
+msgstr "Формы сохраняют фон страницы. Выберите акцентный цвет для каждого типа формы."
+
+msgid "Open the personal account link from your donation email, or sign in to the WordPress account linked to your donation."
+msgstr "Откройте личную ссылку из письма о пожертвовании или войдите в WordPress-аккаунт, связанный с вашим пожертвованием."
+
+msgid "No donations found."
+msgstr "Пожертвования не найдены."
+
+msgid "Make another donation"
+msgstr "Сделать ещё одно пожертвование"
+
+msgid "Use a WordPress account"
+msgstr "Использовать аккаунт WordPress"
+
+msgid "This email already has a WordPress account. Sign in with it to connect your donations and turn off the personal link."
+msgstr "Для этого адреса уже есть аккаунт WordPress. Войдите в него, чтобы связать пожертвования и отключить личную ссылку."
+
+msgid "Sign in and connect account"
+msgstr "Войти и связать аккаунт"
+
+msgid "Register a WordPress account"
+msgstr "Зарегистрировать аккаунт WordPress"
+
+msgid "Registration is optional. Your donations stay available through this personal link if you do not register."
+msgstr "Регистрация необязательна. Если вы не зарегистрируетесь, пожертвования останутся доступны по этой личной ссылке."
+
+msgid "Choose a different username."
+msgstr "Выберите другое имя пользователя."
+
+msgid "Use a password with at least 12 characters."
+msgstr "Используйте пароль длиной не менее 12 символов."
+
+msgid "This email already has a WordPress account. Sign in to connect it."
+msgstr "Для этого адреса уже есть аккаунт WordPress. Войдите, чтобы связать его."
+
+msgid "The account could not be created. Please try again."
+msgstr "Не удалось создать аккаунт. Попробуйте ещё раз."
+
+msgid "Username"
+msgstr "Имя пользователя"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Register"
+msgstr "Зарегистрироваться"
+
+msgid "Your donations are connected to your WordPress account."
+msgstr "Ваши пожертвования связаны с аккаунтом WordPress."
+
+msgid "Donors"
+msgstr "Жертвователи"
+
+msgid "Thank-you letter sent."
+msgstr "Благодарственное письмо отправлено."
+
+msgid "Thank-you letter could not be sent."
+msgstr "Не удалось отправить благодарственное письмо."
+
+msgid "Search donors"
+msgstr "Поиск жертвователей"
+
+msgid "Donors: %s"
+msgstr "Жертвователей: %s"
+
+msgid "Paid total"
+msgstr "Всего оплачено"
+
+msgid "Latest donation"
+msgstr "Последнее пожертвование"
+
+msgid "No donors found."
+msgstr "Жертвователи не найдены."
+
+msgid "Donor not found."
+msgstr "Жертвователь не найден."
+
+msgid "Back to donors"
+msgstr "Назад к жертвователям"
+
+msgid "Linked to a WordPress account."
+msgstr "Связан с аккаунтом WordPress."
+
+msgid "Uses a personal donor link."
+msgstr "Использует личную ссылку жертвователя."
+
+msgid "Thank-you letter"
+msgstr "Благодарственное письмо"
+
+msgid "Send thank-you letter"
+msgstr "Отправить благодарственное письмо"
+
+msgid "The donation does not belong to this donor."
+msgstr "Это пожертвование не принадлежит этому жертвователю."
+
+msgid "Donor account"
+msgstr "Кабинет жертвователя"
+
+msgid "This donor link is no longer available. Please use the latest link from your donation email."
+msgstr "Эта ссылка больше недоступна. Используйте последнюю ссылку из письма о пожертвовании."
+
+msgid "Open your donor account link before registering."
+msgstr "Перед регистрацией откройте личную ссылку из письма о пожертвовании."
+
+msgid "Choose a valid payment frequency and agree to recurring payments."
+msgstr "Выберите периодичность и подтвердите согласие на регулярные платежи."
+
+msgid "View your donations and make another donation"
+msgstr "Посмотреть пожертвования и сделать ещё одно"
+
+msgid "Anyone can start monthly or yearly support without an account. An email address and explicit consent are required; manage or cancel support in the donor cabinet. Configure recurring webhooks and WP-Cron first."
+msgstr "Оформить ежемесячную или ежегодную поддержку можно без аккаунта. Нужны адрес электронной почты и явное согласие. Управлять поддержкой и отменять её можно в кабинете жертвователя. Сначала настройте вебхуки регулярных платежей и WP-Cron."
+
+msgid "Private donation history and recurring-support cancellation for a donor reached through the personal link in the payment email or a linked WordPress account. Exclude this page from external full-page caches."
+msgstr "Личная история пожертвований и отмена регулярной поддержки доступны по персональной ссылке из письма об оплате или через связанный аккаунт WordPress. Исключите эту страницу из внешнего кеширования целых страниц."
+
+msgid "Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which presents recurring choices without requiring login."
+msgstr "Совместимый параметр для gkod_donation: no (по умолчанию) — разовый платёж; yes показывает варианты регулярной поддержки. Предпочтительно использовать gkod_support: он показывает их без входа в аккаунт."
+
+msgid "A thank-you letter is available only for paid donations with an email address."
+msgstr "Благодарственное письмо можно отправить только по оплаченному пожертвованию с указанным адресом электронной почты."
+
+msgid "Dear donor"
+msgstr "Дорогой жертвователь"
+
+msgid "Could not generate the thank-you PDF."
+msgstr "Не удалось создать PDF с благодарственным письмом."
+
+msgid "Could not prepare the thank-you PDF attachment."
+msgstr "Не удалось подготовить PDF-вложение с благодарственным письмом."
+
+msgid "Thank you for your donation and for supporting our monastery. Your kindness helps sustain our community and its prayerful work.\n\nPlease find your personal letter of gratitude attached as a PDF.\n\nWith gratitude,\nThe monastery brotherhood"
+msgstr "Благодарим вас за пожертвование и поддержку Свято-Георгиевского монастыря. Ваше участие помогает нашей общине продолжать молитвенное служение и заботиться об обители.\n\nК письму приложена именная благодарственная грамота в формате PDF.\n\nС благодарностью,\nбратия монастыря"
+
+msgid "The thank-you email could not be sent. Please try again."
+msgstr "Не удалось отправить письмо с благодарностью. Попробуйте ещё раз."
+
+msgid "A thank-you letter was emailed to the donor."
+msgstr "Благодарственное письмо отправлено жертвователю по электронной почте."
+
+msgid "With gratitude for your donation"
+msgstr "С благодарностью за ваше пожертвование"
+
+msgid "Dear %s,"
+msgstr "Дорогой(ая) %s,"
+
+msgid "Thank you for your generous support of the monastery. Your gift helps sustain our prayer and service."
+msgstr "Благодарим за щедрую поддержку монастыря. Ваш дар помогает монастырю продолжать молитву и служение."
+
+msgid "Form and button color"
+msgstr "Цвет формы и кнопок"
+
+msgid "This color is used for buttons and selected options. The form background remains transparent."
+msgstr "Этот цвет используется для кнопок и выбранных параметров. Фон формы остаётся прозрачным."
+
+msgid "This color is used for the campaign donation form, progress indicator and links."
+msgstr "Этот цвет используется для формы пожертвования, индикатора сбора и ссылок кампании."
+
+msgid "Hex color override for this shortcode. It takes precedence over a saved prayer-form color. Campaign forms use the color set in the campaign editor; set this value for a standalone one-time or regular donation form."
+msgstr "Цвет в формате HEX для этой формы. Он заменяет цвет сохранённой формы записки. Для сбора цвет задаётся в редакторе сбора; здесь можно задать цвет отдельной формы разового или регулярного пожертвования."
+
+msgid "Campaign accent color"
+msgstr "Акцентный цвет целевого сбора"
+
+msgid "Color for the living intention"
+msgstr "Цвет переключателя «О здравии»"
+
+msgid "Color for the departed intention"
+msgstr "Цвет переключателя «Об упокоении»"
+
+msgid "These colors apply only to the intention selectors. Submit buttons use the active WordPress theme."
+msgstr "Эти цвета применяются только к переключателям «О здравии» и «Об упокоении». Кнопки отправки оформляются активной темой WordPress."
+
+msgid "Choose a PDF or image background"
+msgstr "Выберите фон — PDF или изображение"
+
+msgid "Use this background"
+msgstr "Использовать этот фон"
+
+msgid "PDF selected. Save the template to load its first page preview."
+msgstr "PDF выбран. Сохраните шаблон, чтобы загрузить предварительный просмотр первой страницы."
+
+msgid "Choose a background to begin positioning fields."
+msgstr "Выберите фон, чтобы начать размещение полей."
+
+msgid "Thank-you text"
+msgstr "Текст благодарности"
+
+msgid "Donation purpose"
+msgstr "Назначение пожертвования"
+
+msgid "Donation date"
+msgstr "Дата пожертвования"
+
+msgid "Abbot / signer"
+msgstr "Игумен / подпись"
+
+msgid "Monastery address"
+msgstr "Адрес монастыря"
+
+msgid "Thank-you letter template"
+msgstr "Шаблон благодарственного письма"
+
+msgid "Template saved."
+msgstr "Шаблон сохранён."
+
+msgid "Test copy sent to the configured test address."
+msgstr "Тестовая копия отправлена на указанный тестовый адрес."
+
+msgid "The background file is not a supported PDF, JPEG or PNG image."
+msgstr "Фоновый файл должен быть PDF, JPEG или PNG."
+
+msgid "PDF backgrounds need the server ImageMagick extension with PDF/Ghostscript support for preview and final letter generation. JPEG and PNG backgrounds do not need this."
+msgstr "Для предпросмотра и создания письма из PDF требуется ImageMagick с поддержкой PDF/Ghostscript. Для JPEG и PNG это не требуется."
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized."
+msgstr "Выберите PDF или изображение в качестве фона. Перетаскивайте образцы полей; позиции сохраняются в процентах и не зависят от размера предпросмотра."
+
+msgid "Choose PDF or image"
+msgstr "Выбрать PDF или изображение"
+
+msgid "Remove background"
+msgstr "Удалить фон"
+
+msgid "No background selected"
+msgstr "Фон не выбран"
+
+msgid "Page orientation"
+msgstr "Ориентация страницы"
+
+msgid "Portrait"
+msgstr "Книжная"
+
+msgid "Landscape"
+msgstr "Альбомная"
+
+msgid "Test email address"
+msgstr "Тестовый адрес электронной почты"
+
+msgid "A paid donation can be sent as a test copy to this address from its donor record. Test copies do not mark the donation letter as sent."
+msgstr "Из карточки жертвователя можно отправить копию оплаченного пожертвования на этот адрес. Тестовая копия не отмечает письмо как отправленное."
+
+msgid "Place the fields"
+msgstr "Разместите поля"
+
+msgid "Drag each field on the page. Select a field below the preview to adjust its width, font size, color and alignment."
+msgstr "Перетащите поля на странице. Выберите поле ниже предпросмотра, чтобы изменить ширину, размер шрифта, цвет и выравнивание."
+
+msgid "Selected field"
+msgstr "Выбранное поле"
+
+msgid "Width (%)"
+msgstr "Ширина (%)"
+
+msgid "Font size (pt)"
+msgstr "Размер шрифта (пт)"
+
+msgid "Text color"
+msgstr "Цвет текста"
+
+msgid "Alignment"
+msgstr "Выравнивание"
+
+msgid "Left"
+msgstr "Слева"
+
+msgid "Center"
+msgstr "По центру"
+
+msgid "Right"
+msgstr "Справа"
+
+msgid "Save template"
+msgstr "Сохранить шаблон"
+
+msgid "Test the letter"
+msgstr "Проверить письмо"
+
+msgid "Preview a sample PDF or email a sample copy to the test address. Neither action sends to a donor or marks a donation as thanked."
+msgstr "Просмотрите образец PDF или отправьте его на тестовый адрес. Эти действия не отправляют письмо жертвователю и не отмечают пожертвование как получившее благодарность."
+
+msgid "Preview sample PDF"
+msgstr "Предпросмотр образца PDF"
+
+msgid "Send sample to test address"
+msgstr "Отправить образец на тестовый адрес"
+
+msgid "Alexey Donor"
+msgstr "Алексей Жертвователь"
+
+msgid "Donation: Prayer request"
+msgstr "Пожертвование: записка"
+
+msgid "Abbot"
+msgstr "Игумен"
+
+msgid "Set a valid test email address in the thank-you letter settings first."
+msgstr "Сначала укажите действительный тестовый адрес в настройках благодарственного письма."
+
+msgid "The recipient email address is invalid."
+msgstr "Неверный адрес электронной почты получателя."
+
+msgid "This server needs ImageMagick with PDF support to use a PDF letter background. Use an image background or enable PDF conversion."
+msgstr "Для фона PDF требуется ImageMagick с поддержкой PDF. Используйте изображение или включите конвертацию PDF на сервере."
+
+msgid "Could not convert the PDF letter background to an image."
+msgstr "Не удалось преобразовать фон письма из PDF в изображение."
+
+msgid "Preview PDF"
+msgstr "Предпросмотр PDF"
+
+msgid "Send test copy"
+msgstr "Отправить тестовую копию"
+
+msgid "Thank you for supporting the monastery."
+msgstr "Спасибо за поддержку монастыря."
+
+msgid "PDF letter background support"
+msgstr "Поддержка PDF-фона письма"
+
+msgid "Bible quote / additional text"
+msgstr "Библейская цитата / дополнительный текст"
+
+msgid "Additional text block"
+msgstr "Дополнительный текстовый блок"
+
+msgid "Show this field"
+msgstr "Показывать это поле"
+
+msgid "Template"
+msgstr "Шаблон"
+
+msgid "Add template"
+msgstr "Добавить шаблон"
+
+msgid "Delete template"
+msgstr "Удалить шаблон"
+
+msgid "Template name"
+msgstr "Название шаблона"
+
+msgid "Any language"
+msgstr "Любой язык"
+
+msgid "Donation case"
+msgstr "Случай пожертвования"
+
+msgid "Any case"
+msgstr "Любой случай"
+
+msgid "One-time donation"
+msgstr "Разовое пожертвование"
+
+msgid "Delete this template?"
+msgstr "Удалить этот шаблон?"
+
+msgid "Default template"
+msgstr "Шаблон по умолчанию"
+
+msgid "Template not found."
+msgstr "Шаблон не найден."
+
+msgid "The last template cannot be deleted."
+msgstr "Нельзя удалить последний шаблон."
+
+msgid "New template %d"
+msgstr "Новый шаблон %d"
+
+msgid "Prayer request"
+msgstr "Молитвенная записка"
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized. Choose the template manually for each donor letter; language and case are labels to help you identify it."
+msgstr "Выберите PDF или изображение в качестве фона страницы. Перетаскивайте образцы подписей, чтобы разместить текстовые поля; позиции сохраняются в процентах и масштабируются вместе с предпросмотром. Для каждого письма жертвователю выбирайте шаблон вручную; язык и случай помогают его определить."
+
+msgid "Thank-you letter templates"
+msgstr "Шаблоны благодарственных писем"
+
+msgid "Back to templates"
+msgstr "Назад к шаблонам"
+
+msgid "Search templates"
+msgstr "Поиск шаблонов"
+
+msgid "View donations"
+msgstr "Просмотреть пожертвования"
+
+msgid "Thank you for supporting our monastery"
+msgstr "Спасибо за поддержку Свято-Георгиевского монастыря"
+
+msgid "Hello!"
+msgstr "Здравствуйте!"
+
+msgid "Hello, %s!"
+msgstr "Здравствуйте, %s!"

@@ -5,7 +5,7 @@ namespace GeorgKlosterOrthodoxDonate;
 
 final class Database
 {
-    private const DB_VERSION = '1.0.7';
+    private const DB_VERSION = '1.0.8';
 
     public static function table(string $name): string
     {
@@ -321,6 +321,19 @@ final class Database
             PRIMARY KEY  (id),
             UNIQUE KEY provider_refund (provider,refund_id),
             KEY order_id (order_id)
+        ) {$charset};");
+        $thank_you_templates = self::table('thank_you_templates');
+        dbDelta("CREATE TABLE {$thank_you_templates} (
+            id bigint unsigned NOT NULL AUTO_INCREMENT,
+            template_name varchar(190) NOT NULL,
+            language varchar(32) NOT NULL DEFAULT 'any',
+            occasion varchar(20) NOT NULL DEFAULT 'any',
+            config longtext NOT NULL,
+            created_at datetime NOT NULL,
+            updated_at datetime NOT NULL,
+            PRIMARY KEY  (id),
+            KEY language_occasion (language,occasion),
+            KEY updated_at (updated_at)
         ) {$charset};");
         update_option('gkod_db_version', self::DB_VERSION, true);
     }

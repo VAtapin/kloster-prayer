@@ -1072,3 +1072,540 @@ msgstr "https://github.com/VAtapin/kloster-prayer/tree/main/georg-kloster-orthod
 
 msgid "Georg Kloster – Orthodox Donations"
 msgstr "Georg Kloster – Orthodox Donations"
+
+msgid "atapin.de"
+msgstr "atapin.de"
+
+msgid "Select all events for one-time donations, prayer requests and regular support:"
+msgstr "Виберіть усі події для разових пожертв, молитовних записок і регулярної підтримки:"
+
+msgid "Language: en, ru, de, uk or pl. Omit it to use the current WordPress language. Existing prayer form/service content uses German as the English fallback."
+msgstr "Мова: en, ru, de, uk або pl. Без параметра використовується поточна мова WordPress. Для англійської мови тексти наявних форм записок і треб беруться з німецьких полів."
+
+msgid "Language"
+msgstr "Мова"
+
+msgid "Choose a language above to translate this guide and the lang parameter in its examples. Keep shortcode names and parameter values unchanged."
+msgstr "Виберіть мову вище: зміниться мова довідки та параметр lang у прикладах. Назви шорткодів і значення решти параметрів не перекладайте."
+
+msgid "English"
+msgstr "Англійська"
+
+msgid "For one-time donations and prayer requests, select checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
+msgstr "Для разових пожертв і записок виберіть checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed та charge.refunded. Для регулярної підтримки додатково виберіть наведені нижче події підписок і рахунків. Збережіть призначення."
+
+msgid "Campaign image"
+msgstr "Зображення збору"
+
+msgid "Replace the URL in the compact shortcode with the page that contains the full campaign and donation form."
+msgstr "Замініть URL у компактному шорткоді адресою сторінки з повним описом збору та формою пожертви."
+
+msgid "Compact campaign block"
+msgstr "Компактний блок збору"
+
+msgid "Recorded expenses"
+msgstr "Витрати"
+
+msgid "Full campaign"
+msgstr "Повний збір"
+
+msgid "Delete"
+msgstr "Видалити"
+
+msgid "Layout for forms: standard, compact, wide, two_columns, cards or minimal. For campaign lists, use compact for a small linked card; full shows the description, reports, and donation form."
+msgstr "Варіант форми: standard, compact, wide, two_columns, cards або minimal. Для списку зборів compact показує невеликий блок із посиланням; full — опис, звіти та форму пожертви."
+
+msgid "Embed this campaign"
+msgstr "Вбудувати збір"
+
+msgid "Choose an amount or enter your own. Minimum: %s EUR."
+msgstr "Виберіть суму або введіть власну. Мінімум: %s EUR."
+
+msgid "Use this image"
+msgstr "Використати це зображення"
+
+msgid "Published campaigns with progress, totals and donation forms. Use layout=\"compact\" for a small campaign card and url=\"/donate/\" to link it to the full campaign page. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
+msgstr "Опубліковані збори з перебігом, підсумками та формами пожертв. Використовуйте layout=\"compact\" для невеликого блоку з посиланням на повну сторінку збору. Без id показуються до 100 опублікованих зборів. Чернетки приховані; закриті або прострочені збори не приймають пожертви."
+
+msgid "Remove image"
+msgstr "Видалити зображення"
+
+msgid "Other amount"
+msgstr "Інша сума"
+
+msgid "Choose image"
+msgstr "Вибрати зображення"
+
+msgid "Delete this expense?"
+msgstr "Видалити цю витрату?"
+
+msgid "The expense could not be found."
+msgstr "Витрату не знайдено."
+
+msgid "Destination page for a compact campaign card, normally the page containing the full campaign and donation form."
+msgstr "Сторінка призначення для компактного блоку збору — зазвичай сторінка з повним описом і формою пожертви."
+
+msgid "Edit expense"
+msgstr "Змінити витрату"
+
+msgid "Choose campaign image"
+msgstr "Виберіть зображення збору"
+
+msgid "Suggested amount %d"
+msgstr "Запропонована сума %d"
+
+msgid "Minimum donation"
+msgstr "Мінімальна пожертва"
+
+msgid "The minimum donation for this campaign is %s EUR."
+msgstr "Мінімальна сума пожертви для цього збору — %s EUR."
+
+msgid "A valid Stripe Secret Key is required to synchronize products."
+msgstr "Для синхронізації товарів потрібен дійсний секретний ключ Stripe."
+
+msgid "Stripe did not return a product and its price."
+msgstr "Stripe не повернув товар і його ціну."
+
+msgid "The Stripe product was created but its link could not be saved in WordPress."
+msgstr "Товар створено у Stripe, але зберегти зв’язок із ним у WordPress не вдалося."
+
+msgid "Stripe did not return a price ID."
+msgstr "Stripe не повернув ідентифікатор ціни."
+
+msgid "The Stripe product was updated but its link could not be saved in WordPress."
+msgstr "Товар оновлено у Stripe, але зберегти зв’язок із ним у WordPress не вдалося."
+
+msgid "Stripe API request failed."
+msgstr "Запит до API Stripe завершився помилкою."
+
+msgid "Stripe synchronization finished: %1$d created, %2$d updated, %3$d failed."
+msgstr "Синхронізацію зі Stripe завершено: створено — %1$d, оновлено — %2$d, помилок — %3$d."
+
+msgid "names"
+msgstr "імен"
+
+msgid "prayer slips"
+msgstr "молитовних записок"
+
+msgid "Synchronize selected with Stripe"
+msgstr "Синхронізувати вибрані зі Stripe"
+
+msgid "Stripe"
+msgstr "Stripe"
+
+msgid "Not synchronized"
+msgstr "Не синхронізовано"
+
+msgid "Synchronized"
+msgstr "Синхронізовано"
+
+msgid "Update required"
+msgstr "Потрібне оновлення"
+
+msgid "Select at least one service to synchronize."
+msgstr "Виберіть хоча б одну требу для синхронізації."
+
+msgid "No selected services were found."
+msgstr "Вибрані треби не знайдено."
+
+msgid "Form appearance"
+msgstr "Оформлення форм"
+
+msgid "Donations and regular support"
+msgstr "Пожертви та регулярна підтримка"
+
+msgid "The forms keep the page background. Choose an accent color for each form type."
+msgstr "Форми зберігають тло сторінки. Виберіть акцентний колір для кожного типу форми."
+
+msgid "Open the personal account link from your donation email, or sign in to the WordPress account linked to your donation."
+msgstr "Відкрийте особисте посилання з листа про пожертву або увійдіть до WordPress-облікового запису, пов’язаного з вашою пожертвою."
+
+msgid "No donations found."
+msgstr "Пожертв не знайдено."
+
+msgid "Make another donation"
+msgstr "Зробити ще одну пожертву"
+
+msgid "Use a WordPress account"
+msgstr "Використати обліковий запис WordPress"
+
+msgid "This email already has a WordPress account. Sign in with it to connect your donations and turn off the personal link."
+msgstr "Для цієї адреси вже є обліковий запис WordPress. Увійдіть до нього, щоб пов’язати пожертви й вимкнути особисте посилання."
+
+msgid "Sign in and connect account"
+msgstr "Увійти та пов’язати обліковий запис"
+
+msgid "Register a WordPress account"
+msgstr "Зареєструвати обліковий запис WordPress"
+
+msgid "Registration is optional. Your donations stay available through this personal link if you do not register."
+msgstr "Реєстрація необов’язкова. Якщо ви не зареєструєтеся, пожертви залишаться доступними за цим особистим посиланням."
+
+msgid "Choose a different username."
+msgstr "Виберіть інше ім’я користувача."
+
+msgid "Use a password with at least 12 characters."
+msgstr "Використовуйте пароль щонайменше з 12 символів."
+
+msgid "This email already has a WordPress account. Sign in to connect it."
+msgstr "Для цієї адреси вже є обліковий запис WordPress. Увійдіть, щоб пов’язати його."
+
+msgid "The account could not be created. Please try again."
+msgstr "Не вдалося створити обліковий запис. Спробуйте ще раз."
+
+msgid "Username"
+msgstr "Ім’я користувача"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Register"
+msgstr "Зареєструватися"
+
+msgid "Your donations are connected to your WordPress account."
+msgstr "Ваші пожертви пов’язані з обліковим записом WordPress."
+
+msgid "Donors"
+msgstr "Жертводавці"
+
+msgid "Thank-you letter sent."
+msgstr "Подячного листа надіслано."
+
+msgid "Thank-you letter could not be sent."
+msgstr "Не вдалося надіслати подячний лист."
+
+msgid "Search donors"
+msgstr "Пошук жертводавців"
+
+msgid "Donors: %s"
+msgstr "Жертводавців: %s"
+
+msgid "Paid total"
+msgstr "Усього сплачено"
+
+msgid "Latest donation"
+msgstr "Остання пожертва"
+
+msgid "No donors found."
+msgstr "Жертводавців не знайдено."
+
+msgid "Donor not found."
+msgstr "Жертводавця не знайдено."
+
+msgid "Back to donors"
+msgstr "Назад до жертводавців"
+
+msgid "Linked to a WordPress account."
+msgstr "Пов’язаний з обліковим записом WordPress."
+
+msgid "Uses a personal donor link."
+msgstr "Використовує особисте посилання жертводавця."
+
+msgid "Thank-you letter"
+msgstr "Подячний лист"
+
+msgid "Send thank-you letter"
+msgstr "Надіслати подячний лист"
+
+msgid "The donation does not belong to this donor."
+msgstr "Ця пожертва не належить цьому жертводавцю."
+
+msgid "Donor account"
+msgstr "Кабінет жертводавця"
+
+msgid "This donor link is no longer available. Please use the latest link from your donation email."
+msgstr "Це посилання більше недоступне. Скористайтеся останнім посиланням із листа про пожертву."
+
+msgid "Open your donor account link before registering."
+msgstr "Перед реєстрацією відкрийте особисте посилання з листа про пожертву."
+
+msgid "Choose a valid payment frequency and agree to recurring payments."
+msgstr "Виберіть періодичність і підтвердьте згоду на регулярні платежі."
+
+msgid "View your donations and make another donation"
+msgstr "Переглянути пожертви та зробити ще одну"
+
+msgid "Anyone can start monthly or yearly support without an account. An email address and explicit consent are required; manage or cancel support in the donor cabinet. Configure recurring webhooks and WP-Cron first."
+msgstr "Щомісячну або щорічну підтримку можна оформити без облікового запису. Потрібні адреса електронної пошти та явна згода. Керувати підтримкою й скасовувати її можна в кабінеті жертводавця. Спершу налаштуйте вебхуки регулярних платежів і WP-Cron."
+
+msgid "Private donation history and recurring-support cancellation for a donor reached through the personal link in the payment email or a linked WordPress account. Exclude this page from external full-page caches."
+msgstr "Приватна історія пожертв і скасування регулярної підтримки доступні за особистим посиланням із листа про оплату або через пов’язаний обліковий запис WordPress. Виключіть цю сторінку із зовнішнього кешування цілих сторінок."
+
+msgid "Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which presents recurring choices without requiring login."
+msgstr "Сумісний параметр gkod_donation: no (типово) — разовий платіж; yes показує варіанти регулярної підтримки. Радимо gkod_support: він показує їх без входу до облікового запису."
+
+msgid "A thank-you letter is available only for paid donations with an email address."
+msgstr "Подячний лист доступний лише для сплаченої пожертви з адресою електронної пошти."
+
+msgid "Dear donor"
+msgstr "Шановний жертводавцю"
+
+msgid "Could not generate the thank-you PDF."
+msgstr "Не вдалося створити PDF із подячним листом."
+
+msgid "Could not prepare the thank-you PDF attachment."
+msgstr "Не вдалося підготувати PDF-вкладення з подячним листом."
+
+msgid "Thank you for your donation and for supporting our monastery. Your kindness helps sustain our community and its prayerful work.\n\nPlease find your personal letter of gratitude attached as a PDF.\n\nWith gratitude,\nThe monastery brotherhood"
+msgstr "Дякуємо вам за пожертву та підтримку Свято-Георгіївського монастиря. Ваша участь допомагає нашій громаді продовжувати молитовне служіння й дбати про обитель.\n\nДо листа додається іменна подячна грамота у форматі PDF.\n\nЗ вдячністю,\nбратія монастиря"
+
+msgid "The thank-you email could not be sent. Please try again."
+msgstr "Не вдалося надіслати лист із подякою. Спробуйте ще раз."
+
+msgid "A thank-you letter was emailed to the donor."
+msgstr "Подячний лист надіслано жертводавцю електронною поштою."
+
+msgid "With gratitude for your donation"
+msgstr "З вдячністю за вашу пожертву"
+
+msgid "Dear %s,"
+msgstr "Шановний(а) %s,"
+
+msgid "Thank you for your generous support of the monastery. Your gift helps sustain our prayer and service."
+msgstr "Дякуємо за щедру підтримку монастиря. Ваш дар допомагає продовжувати молитву та служіння."
+
+msgid "Form and button color"
+msgstr "Колір форми та кнопок"
+
+msgid "This color is used for buttons and selected options. The form background remains transparent."
+msgstr "Цей колір використовується для кнопок і вибраних параметрів. Фон форми залишається прозорим."
+
+msgid "This color is used for the campaign donation form, progress indicator and links."
+msgstr "Цей колір використовується для форми пожертви, індикатора збору та посилань кампанії."
+
+msgid "Hex color override for this shortcode. It takes precedence over a saved prayer-form color. Campaign forms use the color set in the campaign editor; set this value for a standalone one-time or regular donation form."
+msgstr "Колір у форматі HEX для цієї форми. Він має перевагу над кольором збереженої форми записки. Для зборів використовується колір з редактора збору; тут можна задати колір окремої форми разової або регулярної пожертви."
+
+msgid "Campaign accent color"
+msgstr "Акцентний колір збору"
+
+msgid "Color for the living intention"
+msgstr "Колір перемикача «За здоров’я»"
+
+msgid "Color for the departed intention"
+msgstr "Колір перемикача «За упокій»"
+
+msgid "These colors apply only to the intention selectors. Submit buttons use the active WordPress theme."
+msgstr "Ці кольори застосовуються лише до перемикачів «За здоров’я» та «За упокій». Кнопки надсилання оформлює активна тема WordPress."
+
+msgid "Choose a PDF or image background"
+msgstr "Виберіть фон — PDF або зображення"
+
+msgid "Use this background"
+msgstr "Використати цей фон"
+
+msgid "PDF selected. Save the template to load its first page preview."
+msgstr "PDF вибрано. Збережіть шаблон, щоб завантажити попередній перегляд першої сторінки."
+
+msgid "Choose a background to begin positioning fields."
+msgstr "Виберіть фон, щоб почати розміщення полів."
+
+msgid "Thank-you text"
+msgstr "Текст подяки"
+
+msgid "Donation purpose"
+msgstr "Призначення пожертви"
+
+msgid "Donation date"
+msgstr "Дата пожертви"
+
+msgid "Abbot / signer"
+msgstr "Ігумен / підпис"
+
+msgid "Monastery address"
+msgstr "Адреса монастиря"
+
+msgid "Thank-you letter template"
+msgstr "Шаблон подячного листа"
+
+msgid "Template saved."
+msgstr "Шаблон збережено."
+
+msgid "Test copy sent to the configured test address."
+msgstr "Тестову копію надіслано на вказану тестову адресу."
+
+msgid "The background file is not a supported PDF, JPEG or PNG image."
+msgstr "Фоновий файл має бути PDF, JPEG або PNG."
+
+msgid "PDF backgrounds need the server ImageMagick extension with PDF/Ghostscript support for preview and final letter generation. JPEG and PNG backgrounds do not need this."
+msgstr "Для попереднього перегляду та створення листа з PDF потрібен ImageMagick із підтримкою PDF/Ghostscript. Для JPEG і PNG це не потрібно."
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized."
+msgstr "Виберіть PDF або зображення як тло сторінки. Перетягуйте зразки полів; позиції зберігаються у відсотках і не залежать від розміру попереднього перегляду."
+
+msgid "Choose PDF or image"
+msgstr "Вибрати PDF або зображення"
+
+msgid "Remove background"
+msgstr "Видалити фон"
+
+msgid "No background selected"
+msgstr "Фон не вибрано"
+
+msgid "Page orientation"
+msgstr "Орієнтація сторінки"
+
+msgid "Portrait"
+msgstr "Книжкова"
+
+msgid "Landscape"
+msgstr "Альбомна"
+
+msgid "Test email address"
+msgstr "Тестова електронна адреса"
+
+msgid "A paid donation can be sent as a test copy to this address from its donor record. Test copies do not mark the donation letter as sent."
+msgstr "З картки жертводавця можна надіслати копію сплаченої пожертви на цю адресу. Тестова копія не позначає лист як надісланий."
+
+msgid "Place the fields"
+msgstr "Розмістіть поля"
+
+msgid "Drag each field on the page. Select a field below the preview to adjust its width, font size, color and alignment."
+msgstr "Перетягніть поля на сторінці. Виберіть поле під попереднім переглядом, щоб змінити ширину, розмір шрифту, колір і вирівнювання."
+
+msgid "Selected field"
+msgstr "Вибране поле"
+
+msgid "Width (%)"
+msgstr "Ширина (%)"
+
+msgid "Font size (pt)"
+msgstr "Розмір шрифту (пт)"
+
+msgid "Text color"
+msgstr "Колір тексту"
+
+msgid "Alignment"
+msgstr "Вирівнювання"
+
+msgid "Left"
+msgstr "Ліворуч"
+
+msgid "Center"
+msgstr "По центру"
+
+msgid "Right"
+msgstr "Праворуч"
+
+msgid "Save template"
+msgstr "Зберегти шаблон"
+
+msgid "Test the letter"
+msgstr "Перевірити лист"
+
+msgid "Preview a sample PDF or email a sample copy to the test address. Neither action sends to a donor or marks a donation as thanked."
+msgstr "Перегляньте зразок PDF або надішліть його на тестову адресу. Ці дії не надсилають лист жертводавцю й не позначають пожертву як таку, за яку подякували."
+
+msgid "Preview sample PDF"
+msgstr "Попередній перегляд зразка PDF"
+
+msgid "Send sample to test address"
+msgstr "Надіслати зразок на тестову адресу"
+
+msgid "Alexey Donor"
+msgstr "Олексій Жертводавець"
+
+msgid "Donation: Prayer request"
+msgstr "Пожертва: записка"
+
+msgid "Abbot"
+msgstr "Ігумен"
+
+msgid "Set a valid test email address in the thank-you letter settings first."
+msgstr "Спочатку вкажіть дійсну тестову адресу в налаштуваннях подячного листа."
+
+msgid "The recipient email address is invalid."
+msgstr "Неправильна електронна адреса одержувача."
+
+msgid "This server needs ImageMagick with PDF support to use a PDF letter background. Use an image background or enable PDF conversion."
+msgstr "Для тла PDF потрібен ImageMagick із підтримкою PDF. Використайте зображення або ввімкніть конвертацію PDF на сервері."
+
+msgid "Could not convert the PDF letter background to an image."
+msgstr "Не вдалося перетворити тло листа з PDF на зображення."
+
+msgid "Preview PDF"
+msgstr "Попередній перегляд PDF"
+
+msgid "Send test copy"
+msgstr "Надіслати тестову копію"
+
+msgid "Thank you for supporting the monastery."
+msgstr "Дякуємо за підтримку монастиря."
+
+msgid "PDF letter background support"
+msgstr "Підтримка PDF-тла листа"
+
+msgid "Bible quote / additional text"
+msgstr "Біблійна цитата / додатковий текст"
+
+msgid "Additional text block"
+msgstr "Додатковий текстовий блок"
+
+msgid "Show this field"
+msgstr "Показувати це поле"
+
+msgid "Template"
+msgstr "Шаблон"
+
+msgid "Add template"
+msgstr "Додати шаблон"
+
+msgid "Delete template"
+msgstr "Видалити шаблон"
+
+msgid "Template name"
+msgstr "Назва шаблону"
+
+msgid "Any language"
+msgstr "Будь-яка мова"
+
+msgid "Donation case"
+msgstr "Випадок пожертви"
+
+msgid "Any case"
+msgstr "Будь-який випадок"
+
+msgid "One-time donation"
+msgstr "Разова пожертва"
+
+msgid "Delete this template?"
+msgstr "Видалити цей шаблон?"
+
+msgid "Default template"
+msgstr "Шаблон за замовчуванням"
+
+msgid "Template not found."
+msgstr "Шаблон не знайдено."
+
+msgid "The last template cannot be deleted."
+msgstr "Не можна видалити останній шаблон."
+
+msgid "New template %d"
+msgstr "Новий шаблон %d"
+
+msgid "Prayer request"
+msgstr "Молитовна записка"
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized. Choose the template manually for each donor letter; language and case are labels to help you identify it."
+msgstr "Виберіть PDF або зображення як фон сторінки. Перетягуйте зразки підписів, щоб розмістити текстові поля; позиції зберігаються у відсотках і масштабуються разом із попереднім переглядом. Для кожного листа жертводавцю вибирайте шаблон вручну; мова та випадок допоможуть його визначити."
+
+msgid "Thank-you letter templates"
+msgstr "Шаблони листів подяки"
+
+msgid "Back to templates"
+msgstr "Назад до шаблонів"
+
+msgid "Search templates"
+msgstr "Пошук шаблонів"
+
+msgid "View donations"
+msgstr "Переглянути пожертви"
+
+msgid "Thank you for supporting our monastery"
+msgstr "Дякуємо за підтримку Свято-Георгіївського монастиря"
+
+msgid "Hello!"
+msgstr "Вітаємо!"
+
+msgid "Hello, %s!"
+msgstr "Вітаємо, %s!"

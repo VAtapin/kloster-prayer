@@ -15,6 +15,7 @@ final class Admin
         add_filter('plugin_row_meta', [self::class, 'external_meta'], 10, 2);
         add_action('admin_enqueue_scripts', static function (string $hook): void {
             if (str_contains($hook, 'georg-kloster-orthodox-donations')) {
+                wp_enqueue_style('dashicons');
                 wp_enqueue_style('gkod-admin', plugins_url('assets/css/admin.css', FILE), [], VERSION . '.' . substr(md5_file(DIR . '/assets/css/admin.css'), 0, 12));
                 if (str_ends_with($hook, '_page_georg-kloster-orthodox-donations-help')) wp_enqueue_script('gkod-admin-shortcodes', plugins_url('assets/js/admin-shortcodes.js', FILE), [], VERSION, true);
                 wp_enqueue_media();
@@ -403,6 +404,7 @@ final class Admin
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Authorized administration of custom request/form/service tables; read current rows after edits.
             (__('Database tables', 'georg-kloster-orthodox-donations'))=>$wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s',Database::table('orders')))===Database::table('orders'),
             'Dompdf'=>is_file(DIR.'/includes/lib/dompdf/autoload.inc.php'),
+            (__('PDF letter background support', 'georg-kloster-orthodox-donations'))=>class_exists('Imagick')&&in_array('PDF',\Imagick::queryFormats(),true),
         ];
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Authorized administration of custom request/form/service tables; read current rows after edits.
         $events=$wpdb->get_results($wpdb->prepare('SELECT provider,event_type,order_id,processed,error_message,created_at FROM %i ORDER BY id DESC LIMIT 20',Database::table('payment_events'))); ?>

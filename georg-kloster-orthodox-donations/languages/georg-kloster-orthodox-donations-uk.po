@@ -1319,8 +1319,8 @@ msgstr "Не вдалося створити PDF із подячним лист�
 msgid "Could not prepare the thank-you PDF attachment."
 msgstr "Не вдалося підготувати PDF-вкладення з подячним листом."
 
-msgid "We sincerely thank you for supporting the monastery. Your personal thank-you letter is attached as a PDF."
-msgstr "Щиро дякуємо за підтримку монастиря. Особистий подячний лист додається у форматі PDF."
+msgid "Thank you for your donation and for supporting our monastery. Your kindness helps sustain our community and its prayerful work.\n\nPlease find your personal letter of gratitude attached as a PDF.\n\nWith gratitude,\nThe monastery brotherhood"
+msgstr "Дякуємо вам за пожертву та підтримку Свято-Георгіївського монастиря. Ваша участь допомагає нашій громаді продовжувати молитовне служіння й дбати про обитель.\n\nДо листа додається іменна подячна грамота у форматі PDF.\n\nЗ вдячністю,\nбратія монастиря"
 
 msgid "The thank-you email could not be sent. Please try again."
 msgstr "Не вдалося надіслати лист із подякою. Спробуйте ще раз."
@@ -1360,3 +1360,227 @@ msgstr "Колір перемикача «За упокій»"
 
 msgid "These colors apply only to the intention selectors. Submit buttons use the active WordPress theme."
 msgstr "Ці кольори застосовуються лише до перемикачів «За здоров’я» та «За упокій». Кнопки надсилання оформлює активна тема WordPress."
+
+msgid "Choose a PDF or image background"
+msgstr "Виберіть фон — PDF або зображення"
+
+msgid "Use this background"
+msgstr "Використати цей фон"
+
+msgid "PDF selected. Save the template to load its first page preview."
+msgstr "PDF вибрано. Збережіть шаблон, щоб завантажити попередній перегляд першої сторінки."
+
+msgid "Choose a background to begin positioning fields."
+msgstr "Виберіть фон, щоб почати розміщення полів."
+
+msgid "Thank-you text"
+msgstr "Текст подяки"
+
+msgid "Donation purpose"
+msgstr "Призначення пожертви"
+
+msgid "Donation date"
+msgstr "Дата пожертви"
+
+msgid "Abbot / signer"
+msgstr "Ігумен / підпис"
+
+msgid "Monastery address"
+msgstr "Адреса монастиря"
+
+msgid "Thank-you letter template"
+msgstr "Шаблон подячного листа"
+
+msgid "Template saved."
+msgstr "Шаблон збережено."
+
+msgid "Test copy sent to the configured test address."
+msgstr "Тестову копію надіслано на вказану тестову адресу."
+
+msgid "The background file is not a supported PDF, JPEG or PNG image."
+msgstr "Фоновий файл має бути PDF, JPEG або PNG."
+
+msgid "PDF backgrounds need the server ImageMagick extension with PDF/Ghostscript support for preview and final letter generation. JPEG and PNG backgrounds do not need this."
+msgstr "Для попереднього перегляду та створення листа з PDF потрібен ImageMagick із підтримкою PDF/Ghostscript. Для JPEG і PNG це не потрібно."
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized."
+msgstr "Виберіть PDF або зображення як тло сторінки. Перетягуйте зразки полів; позиції зберігаються у відсотках і не залежать від розміру попереднього перегляду."
+
+msgid "Choose PDF or image"
+msgstr "Вибрати PDF або зображення"
+
+msgid "Remove background"
+msgstr "Видалити фон"
+
+msgid "No background selected"
+msgstr "Фон не вибрано"
+
+msgid "Page orientation"
+msgstr "Орієнтація сторінки"
+
+msgid "Portrait"
+msgstr "Книжкова"
+
+msgid "Landscape"
+msgstr "Альбомна"
+
+msgid "Test email address"
+msgstr "Тестова електронна адреса"
+
+msgid "A paid donation can be sent as a test copy to this address from its donor record. Test copies do not mark the donation letter as sent."
+msgstr "З картки жертводавця можна надіслати копію сплаченої пожертви на цю адресу. Тестова копія не позначає лист як надісланий."
+
+msgid "Place the fields"
+msgstr "Розмістіть поля"
+
+msgid "Drag each field on the page. Select a field below the preview to adjust its width, font size, color and alignment."
+msgstr "Перетягніть поля на сторінці. Виберіть поле під попереднім переглядом, щоб змінити ширину, розмір шрифту, колір і вирівнювання."
+
+msgid "Selected field"
+msgstr "Вибране поле"
+
+msgid "Width (%)"
+msgstr "Ширина (%)"
+
+msgid "Font size (pt)"
+msgstr "Розмір шрифту (пт)"
+
+msgid "Text color"
+msgstr "Колір тексту"
+
+msgid "Alignment"
+msgstr "Вирівнювання"
+
+msgid "Left"
+msgstr "Ліворуч"
+
+msgid "Center"
+msgstr "По центру"
+
+msgid "Right"
+msgstr "Праворуч"
+
+msgid "Save template"
+msgstr "Зберегти шаблон"
+
+msgid "Test the letter"
+msgstr "Перевірити лист"
+
+msgid "Preview a sample PDF or email a sample copy to the test address. Neither action sends to a donor or marks a donation as thanked."
+msgstr "Перегляньте зразок PDF або надішліть його на тестову адресу. Ці дії не надсилають лист жертводавцю й не позначають пожертву як таку, за яку подякували."
+
+msgid "Preview sample PDF"
+msgstr "Попередній перегляд зразка PDF"
+
+msgid "Send sample to test address"
+msgstr "Надіслати зразок на тестову адресу"
+
+msgid "Alexey Donor"
+msgstr "Олексій Жертводавець"
+
+msgid "Donation: Prayer request"
+msgstr "Пожертва: записка"
+
+msgid "Abbot"
+msgstr "Ігумен"
+
+msgid "Set a valid test email address in the thank-you letter settings first."
+msgstr "Спочатку вкажіть дійсну тестову адресу в налаштуваннях подячного листа."
+
+msgid "The recipient email address is invalid."
+msgstr "Неправильна електронна адреса одержувача."
+
+msgid "This server needs ImageMagick with PDF support to use a PDF letter background. Use an image background or enable PDF conversion."
+msgstr "Для тла PDF потрібен ImageMagick із підтримкою PDF. Використайте зображення або ввімкніть конвертацію PDF на сервері."
+
+msgid "Could not convert the PDF letter background to an image."
+msgstr "Не вдалося перетворити тло листа з PDF на зображення."
+
+msgid "Preview PDF"
+msgstr "Попередній перегляд PDF"
+
+msgid "Send test copy"
+msgstr "Надіслати тестову копію"
+
+msgid "Thank you for supporting the monastery."
+msgstr "Дякуємо за підтримку монастиря."
+
+msgid "PDF letter background support"
+msgstr "Підтримка PDF-тла листа"
+
+msgid "Bible quote / additional text"
+msgstr "Біблійна цитата / додатковий текст"
+
+msgid "Additional text block"
+msgstr "Додатковий текстовий блок"
+
+msgid "Show this field"
+msgstr "Показувати це поле"
+msgid "Template"
+msgstr "Шаблон"
+
+msgid "Add template"
+msgstr "Додати шаблон"
+
+msgid "Delete template"
+msgstr "Видалити шаблон"
+
+msgid "Template name"
+msgstr "Назва шаблону"
+
+msgid "Any language"
+msgstr "Будь-яка мова"
+
+msgid "Donation case"
+msgstr "Випадок пожертви"
+
+msgid "Any case"
+msgstr "Будь-який випадок"
+
+msgid "One-time donation"
+msgstr "Разова пожертва"
+
+
+msgid "Delete this template?"
+msgstr "Видалити цей шаблон?"
+
+msgid "Default template"
+msgstr "Шаблон за замовчуванням"
+
+
+msgid "Template not found."
+msgstr "Шаблон не знайдено."
+
+msgid "The last template cannot be deleted."
+msgstr "Не можна видалити останній шаблон."
+
+msgid "New template %d"
+msgstr "Новий шаблон %d"
+
+msgid "Prayer request"
+msgstr "Молитовна записка"
+
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized. Choose the template manually for each donor letter; language and case are labels to help you identify it."
+msgstr "Виберіть PDF або зображення як фон сторінки. Перетягуйте зразки підписів, щоб розмістити текстові поля; позиції зберігаються у відсотках і масштабуються разом із попереднім переглядом. Для кожного листа жертводавцю вибирайте шаблон вручну; мова та випадок допоможуть його визначити."
+
+msgid "Thank-you letter templates"
+msgstr "Шаблони листів подяки"
+
+msgid "Back to templates"
+msgstr "Назад до шаблонів"
+
+msgid "Search templates"
+msgstr "Пошук шаблонів"
+
+msgid "View donations"
+msgstr "Переглянути пожертви"
+
+msgid "Thank you for supporting our monastery"
+msgstr "Дякуємо за підтримку Свято-Георгіївського монастиря"
+
+msgid "Hello!"
+msgstr "Вітаємо!"
+
+msgid "Hello, %s!"
+msgstr "Вітаємо, %s!"

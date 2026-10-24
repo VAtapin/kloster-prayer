@@ -1072,3 +1072,540 @@ msgstr "https://github.com/VAtapin/kloster-prayer/tree/main/georg-kloster-orthod
 
 msgid "Georg Kloster – Orthodox Donations"
 msgstr "Georg Kloster – Orthodox Donations"
+
+msgid "atapin.de"
+msgstr "atapin.de"
+
+msgid "Select all events for one-time donations, prayer requests and regular support:"
+msgstr "Wähle alle Ereignisse für Einzelspenden, Gebetsanliegen und regelmäßige Unterstützung aus:"
+
+msgid "Language: en, ru, de, uk or pl. Omit it to use the current WordPress language. Existing prayer form/service content uses German as the English fallback."
+msgstr "Sprache: en, ru, de, uk oder pl. Ohne Angabe gilt die aktuelle WordPress-Sprache. Vorhandene Texte von Gebetsformularen und Diensten verwenden Deutsch als englischen Fallback."
+
+msgid "Language"
+msgstr "Sprache"
+
+msgid "Choose a language above to translate this guide and the lang parameter in its examples. Keep shortcode names and parameter values unchanged."
+msgstr "Wähle oben eine Sprache für diese Anleitung und den Parameter lang in den Beispielen. Lass Shortcode-Namen und Parameterwerte unverändert."
+
+msgid "English"
+msgstr "Englisch"
+
+msgid "For one-time donations and prayer requests, select checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
+msgstr "Wähle für einmalige Spenden und Gebetsanliegen checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed und charge.refunded. Wähle für regelmäßige Unterstützung zusätzlich die unten aufgeführten Abonnement- und Rechnungsereignisse. Speichere das Ziel."
+
+msgid "Campaign image"
+msgstr "Bild der Spendenaktion"
+
+msgid "Replace the URL in the compact shortcode with the page that contains the full campaign and donation form."
+msgstr "Ersetze die URL im kompakten Shortcode durch die Seite mit der vollständigen Spendenaktion und dem Spendenformular."
+
+msgid "Compact campaign block"
+msgstr "Kompakter Spendenaktionsblock"
+
+msgid "Recorded expenses"
+msgstr "Erfasste Ausgaben"
+
+msgid "Full campaign"
+msgstr "Vollständige Spendenaktion"
+
+msgid "Delete"
+msgstr "Löschen"
+
+msgid "Layout for forms: standard, compact, wide, two_columns, cards or minimal. For campaign lists, use compact for a small linked card; full shows the description, reports, and donation form."
+msgstr "Formularlayout: standard, compact, wide, two_columns, cards oder minimal. Für Spendenaktionen zeigt compact eine kleine Karte mit Link; full zeigt Beschreibung, Berichte und Spendenformular."
+
+msgid "Embed this campaign"
+msgstr "Diese Spendenaktion einbetten"
+
+msgid "Choose an amount or enter your own. Minimum: %s EUR."
+msgstr "Wähle einen Betrag oder gib einen eigenen ein. Mindestbetrag: %s EUR."
+
+msgid "Use this image"
+msgstr "Dieses Bild verwenden"
+
+msgid "Published campaigns with progress, totals and donation forms. Use layout=\"compact\" for a small campaign card and url=\"/donate/\" to link it to the full campaign page. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
+msgstr "Veröffentlichte Spendenaktionen mit Fortschritt, Summen und Spendenformularen. Verwende layout=\"compact\" für eine kleine Karte mit Link zur vollständigen Aktionsseite. Ohne id werden bis zu 100 veröffentlichte Aktionen angezeigt. Entwürfe bleiben verborgen; geschlossene oder abgelaufene Aktionen nehmen keine Spenden an."
+
+msgid "Remove image"
+msgstr "Bild entfernen"
+
+msgid "Other amount"
+msgstr "Anderer Betrag"
+
+msgid "Choose image"
+msgstr "Bild auswählen"
+
+msgid "Delete this expense?"
+msgstr "Diese Ausgabe löschen?"
+
+msgid "The expense could not be found."
+msgstr "Die Ausgabe wurde nicht gefunden."
+
+msgid "Destination page for a compact campaign card, normally the page containing the full campaign and donation form."
+msgstr "Zielseite für eine kompakte Spendenaktionskarte, normalerweise die Seite mit der vollständigen Aktion und dem Spendenformular."
+
+msgid "Edit expense"
+msgstr "Ausgabe bearbeiten"
+
+msgid "Choose campaign image"
+msgstr "Bild für die Spendenaktion auswählen"
+
+msgid "Suggested amount %d"
+msgstr "Vorgeschlagener Betrag %d"
+
+msgid "Minimum donation"
+msgstr "Mindestspende"
+
+msgid "The minimum donation for this campaign is %s EUR."
+msgstr "Die Mindestspende für diese Spendenaktion beträgt %s EUR."
+
+msgid "A valid Stripe Secret Key is required to synchronize products."
+msgstr "Zum Synchronisieren der Produkte ist ein gültiger Stripe-Geheimschlüssel erforderlich."
+
+msgid "Stripe did not return a product and its price."
+msgstr "Stripe hat weder ein Produkt noch dessen Preis zurückgegeben."
+
+msgid "The Stripe product was created but its link could not be saved in WordPress."
+msgstr "Das Stripe-Produkt wurde erstellt, aber die Zuordnung konnte nicht in WordPress gespeichert werden."
+
+msgid "Stripe did not return a price ID."
+msgstr "Stripe hat keine Preis-ID zurückgegeben."
+
+msgid "The Stripe product was updated but its link could not be saved in WordPress."
+msgstr "Das Stripe-Produkt wurde aktualisiert, aber die Zuordnung konnte nicht in WordPress gespeichert werden."
+
+msgid "Stripe API request failed."
+msgstr "Die Stripe-API-Anfrage ist fehlgeschlagen."
+
+msgid "Stripe synchronization finished: %1$d created, %2$d updated, %3$d failed."
+msgstr "Stripe-Synchronisierung abgeschlossen: %1$d erstellt, %2$d aktualisiert, %3$d fehlgeschlagen."
+
+msgid "names"
+msgstr "Namen"
+
+msgid "prayer slips"
+msgstr "Gebetszettel"
+
+msgid "Synchronize selected with Stripe"
+msgstr "Ausgewählte mit Stripe synchronisieren"
+
+msgid "Stripe"
+msgstr "Stripe"
+
+msgid "Not synchronized"
+msgstr "Nicht synchronisiert"
+
+msgid "Synchronized"
+msgstr "Synchronisiert"
+
+msgid "Update required"
+msgstr "Aktualisierung erforderlich"
+
+msgid "Select at least one service to synchronize."
+msgstr "Wähle mindestens einen Gebetsdienst zur Synchronisierung aus."
+
+msgid "No selected services were found."
+msgstr "Keine ausgewählten Gebetsdienste gefunden."
+
+msgid "Form appearance"
+msgstr "Formulargestaltung"
+
+msgid "Donations and regular support"
+msgstr "Spenden und regelmäßige Unterstützung"
+
+msgid "The forms keep the page background. Choose an accent color for each form type."
+msgstr "Die Formulare behalten den Hintergrund der Seite. Wähle eine Akzentfarbe für jeden Formulartyp."
+
+msgid "Open the personal account link from your donation email, or sign in to the WordPress account linked to your donation."
+msgstr "Öffne den persönlichen Kontolink aus deiner Spenden-E-Mail oder melde dich mit dem mit deiner Spende verknüpften WordPress-Konto an."
+
+msgid "No donations found."
+msgstr "Keine Spenden gefunden."
+
+msgid "Make another donation"
+msgstr "Noch einmal spenden"
+
+msgid "Use a WordPress account"
+msgstr "WordPress-Konto verwenden"
+
+msgid "This email already has a WordPress account. Sign in with it to connect your donations and turn off the personal link."
+msgstr "Für diese E-Mail-Adresse gibt es bereits ein WordPress-Konto. Melde dich an damit an, um deine Spenden zu verknüpfen und den persönlichen Link zu deaktivieren."
+
+msgid "Sign in and connect account"
+msgstr "Anmelden und Konto verknüpfen"
+
+msgid "Register a WordPress account"
+msgstr "WordPress-Konto registrieren"
+
+msgid "Registration is optional. Your donations stay available through this personal link if you do not register."
+msgstr "Die Registrierung ist freiwillig. Ohne Registrierung bleiben deine Spenden über diesen persönlichen Link verfügbar."
+
+msgid "Choose a different username."
+msgstr "Wähle einen anderen Benutzernamen."
+
+msgid "Use a password with at least 12 characters."
+msgstr "Verwende ein Passwort mit mindestens 12 Zeichen."
+
+msgid "This email already has a WordPress account. Sign in to connect it."
+msgstr "Für diese E-Mail-Adresse gibt es bereits ein WordPress-Konto. Melde dich an an, um es zu verknüpfen."
+
+msgid "The account could not be created. Please try again."
+msgstr "Das Konto konnte nicht erstellt werden. Bitte versuche es erneut."
+
+msgid "Username"
+msgstr "Benutzername"
+
+msgid "Password"
+msgstr "Passwort"
+
+msgid "Register"
+msgstr "Registrieren"
+
+msgid "Your donations are connected to your WordPress account."
+msgstr "deine Spenden sind mit deinem WordPress-Konto verknüpft."
+
+msgid "Donors"
+msgstr "Spender"
+
+msgid "Thank-you letter sent."
+msgstr "Dankesschreiben wurde gesendet."
+
+msgid "Thank-you letter could not be sent."
+msgstr "Dankesschreiben konnte nicht gesendet werden."
+
+msgid "Search donors"
+msgstr "Spender suchen"
+
+msgid "Donors: %s"
+msgstr "Spender: %s"
+
+msgid "Paid total"
+msgstr "Summe der Zahlungen"
+
+msgid "Latest donation"
+msgstr "Letzte Spende"
+
+msgid "No donors found."
+msgstr "Keine Spender gefunden."
+
+msgid "Donor not found."
+msgstr "Spender nicht gefunden."
+
+msgid "Back to donors"
+msgstr "Zurück zu den Spendern"
+
+msgid "Linked to a WordPress account."
+msgstr "Mit einem WordPress-Konto verknüpft."
+
+msgid "Uses a personal donor link."
+msgstr "Verwendet einen persönlichen Spendenlink."
+
+msgid "Thank-you letter"
+msgstr "Dankesschreiben"
+
+msgid "Send thank-you letter"
+msgstr "Dankesschreiben senden"
+
+msgid "The donation does not belong to this donor."
+msgstr "Diese Spende gehört nicht zu diesem Spender."
+
+msgid "Donor account"
+msgstr "Spenderkonto"
+
+msgid "This donor link is no longer available. Please use the latest link from your donation email."
+msgstr "Dieser Spendenlink ist nicht mehr verfügbar. Bitte verwende den neuesten Link aus deiner Spenden-E-Mail."
+
+msgid "Open your donor account link before registering."
+msgstr "Öffne vor der Registrierung deinen persönlichen Spendenlink."
+
+msgid "Choose a valid payment frequency and agree to recurring payments."
+msgstr "Wähle einen gültigen Zahlungsrhythmus und stimme den wiederkehrenden Zahlungen zu."
+
+msgid "View your donations and make another donation"
+msgstr "Spenden ansehen und erneut spenden"
+
+msgid "Anyone can start monthly or yearly support without an account. An email address and explicit consent are required; manage or cancel support in the donor cabinet. Configure recurring webhooks and WP-Cron first."
+msgstr "Monatliche oder jährliche Unterstützung ist ohne Konto möglich. E-Mail-Adresse und ausdrückliche Zustimmung sind erforderlich; verwalte oder beende die Unterstützung im Spenderkonto. Richte zuvor die Webhooks für wiederkehrende Zahlungen und WP-Cron ein."
+
+msgid "Private donation history and recurring-support cancellation for a donor reached through the personal link in the payment email or a linked WordPress account. Exclude this page from external full-page caches."
+msgstr "Private Spendenübersicht und Kündigung regelmäßiger Unterstützung für Spender, die über den persönlichen Link in der Zahlungs-E-Mail oder ein verknüpftes WordPress-Konto zugreifen. Nimm diese Seite aus externen Seitencaches heraus."
+
+msgid "Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which presents recurring choices without requiring login."
+msgstr "Kompatibilitätsparameter für gkod_donation: no (Standard) bedeutet einmalige Zahlung; yes zeigt wiederkehrende Zahlungen. Verwende vorzugsweise gkod_support, das die Auswahl ohne Anmeldung anzeigt."
+
+msgid "A thank-you letter is available only for paid donations with an email address."
+msgstr "Ein Dankesschreiben ist nur für bezahlte Spenden mit E-Mail-Adresse verfügbar."
+
+msgid "Dear donor"
+msgstr "Liebe Spenderin, lieber Spender"
+
+msgid "Could not generate the thank-you PDF."
+msgstr "Das Dankes-PDF konnte nicht erstellt werden."
+
+msgid "Could not prepare the thank-you PDF attachment."
+msgstr "Der PDF-Anhang mit dem Dankesschreiben konnte nicht vorbereitet werden."
+
+msgid "Thank you for your donation and for supporting our monastery. Your kindness helps sustain our community and its prayerful work.\n\nPlease find your personal letter of gratitude attached as a PDF.\n\nWith gratitude,\nThe monastery brotherhood"
+msgstr "herzlichen Dank für deine Spende und deine Unterstützung unseres Klosters. Dein Beitrag hilft unserer Gemeinschaft, ihr Gebetsleben und ihren Dienst fortzuführen.\n\nDein persönliches Dankesschreiben findest du als PDF im Anhang.\n\nMit herzlichem Dank\nDie Bruderschaft des Klosters"
+
+msgid "The thank-you email could not be sent. Please try again."
+msgstr "Die E-Mail mit dem Dankesschreiben konnte nicht gesendet werden. Bitte versuche es erneut."
+
+msgid "A thank-you letter was emailed to the donor."
+msgstr "Das Dankesschreiben wurde per E-Mail an den Spender gesendet."
+
+msgid "With gratitude for your donation"
+msgstr "Mit Dankbarkeit für deine Spende"
+
+msgid "Dear %s,"
+msgstr "Liebe/r %s,"
+
+msgid "Thank you for your generous support of the monastery. Your gift helps sustain our prayer and service."
+msgstr "Vielen Dank für deine großzügige Unterstützung des Klosters. Deine Gabe trägt unser Gebet und unseren Dienst."
+
+msgid "Form and button color"
+msgstr "Farbe von Formular und Schaltflächen"
+
+msgid "This color is used for buttons and selected options. The form background remains transparent."
+msgstr "Diese Farbe wird für Schaltflächen und ausgewählte Optionen verwendet. Der Formularhintergrund bleibt transparent."
+
+msgid "This color is used for the campaign donation form, progress indicator and links."
+msgstr "Diese Farbe wird für das Spendenformular, den Fortschrittsbalken und Links der Kampagne verwendet."
+
+msgid "Hex color override for this shortcode. It takes precedence over a saved prayer-form color. Campaign forms use the color set in the campaign editor; set this value for a standalone one-time or regular donation form."
+msgstr "HEX-Farbwert für diesen Shortcode. Er hat Vorrang vor der Farbe eines gespeicherten Gebetsformulars. Kampagnenformulare verwenden die Farbe aus dem Kampagneneditor; hier lässt sich die Farbe für ein eigenständiges Spendenformular für einmalige oder regelmäßige Spenden festlegen."
+
+msgid "Campaign accent color"
+msgstr "Akzentfarbe der Spendenkampagne"
+
+msgid "Color for the living intention"
+msgstr "Farbe der Auswahl „Für die Lebenden“"
+
+msgid "Color for the departed intention"
+msgstr "Farbe der Auswahl „Für die Verstorbenen“"
+
+msgid "These colors apply only to the intention selectors. Submit buttons use the active WordPress theme."
+msgstr "Diese Farben gelten nur für die Auswahl „Für die Lebenden“ und „Für die Verstorbenen“. Sendeschaltflächen verwenden das aktive WordPress-Theme."
+
+msgid "Choose a PDF or image background"
+msgstr "PDF- oder Bildhintergrund auswählen"
+
+msgid "Use this background"
+msgstr "Diesen Hintergrund verwenden"
+
+msgid "PDF selected. Save the template to load its first page preview."
+msgstr "PDF ausgewählt. Speichere die Vorlage, um die Vorschau der ersten Seite zu laden."
+
+msgid "Choose a background to begin positioning fields."
+msgstr "Wähle einen Hintergrund, um die Felder zu positionieren."
+
+msgid "Thank-you text"
+msgstr "Dankestext"
+
+msgid "Donation purpose"
+msgstr "Verwendungszweck der Spende"
+
+msgid "Donation date"
+msgstr "Datum der Spende"
+
+msgid "Abbot / signer"
+msgstr "Abt / Unterzeichner"
+
+msgid "Monastery address"
+msgstr "Anschrift des Klosters"
+
+msgid "Thank-you letter template"
+msgstr "Vorlage für das Dankesschreiben"
+
+msgid "Template saved."
+msgstr "Vorlage gespeichert."
+
+msgid "Test copy sent to the configured test address."
+msgstr "Testkopie an die konfigurierte Testadresse gesendet."
+
+msgid "The background file is not a supported PDF, JPEG or PNG image."
+msgstr "Die Hintergrunddatei muss eine PDF-, JPEG- oder PNG-Datei sein."
+
+msgid "PDF backgrounds need the server ImageMagick extension with PDF/Ghostscript support for preview and final letter generation. JPEG and PNG backgrounds do not need this."
+msgstr "Für Vorschau und Erstellung des Briefs aus PDF wird ImageMagick mit PDF-/Ghostscript-Unterstützung benötigt. Für JPEG und PNG ist dies nicht erforderlich."
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized."
+msgstr "Wähle eine PDF- oder Bilddatei als Seitenhintergrund. Ziehe die Feldbeispiele an die gewünschte Stelle; Positionen werden prozentual gespeichert und bleiben beim Ändern der Vorschaugröße erhalten."
+
+msgid "Choose PDF or image"
+msgstr "PDF oder Bild auswählen"
+
+msgid "Remove background"
+msgstr "Hintergrund entfernen"
+
+msgid "No background selected"
+msgstr "Kein Hintergrund ausgewählt"
+
+msgid "Page orientation"
+msgstr "Seitenausrichtung"
+
+msgid "Portrait"
+msgstr "Hochformat"
+
+msgid "Landscape"
+msgstr "Querformat"
+
+msgid "Test email address"
+msgstr "Test-E-Mail-Adresse"
+
+msgid "A paid donation can be sent as a test copy to this address from its donor record. Test copies do not mark the donation letter as sent."
+msgstr "Eine Kopie einer bezahlten Spende kann aus dem Spenderprofil an diese Adresse gesendet werden. Testkopien markieren den Brief nicht als versendet."
+
+msgid "Place the fields"
+msgstr "Felder platzieren"
+
+msgid "Drag each field on the page. Select a field below the preview to adjust its width, font size, color and alignment."
+msgstr "Ziehe die Felder auf der Seite an die gewünschte Stelle. Wähle unter der Vorschau ein Feld, um Breite, Schriftgröße, Farbe und Ausrichtung zu ändern."
+
+msgid "Selected field"
+msgstr "Ausgewähltes Feld"
+
+msgid "Width (%)"
+msgstr "Breite (%)"
+
+msgid "Font size (pt)"
+msgstr "Schriftgröße (pt)"
+
+msgid "Text color"
+msgstr "Textfarbe"
+
+msgid "Alignment"
+msgstr "Ausrichtung"
+
+msgid "Left"
+msgstr "Links"
+
+msgid "Center"
+msgstr "Zentriert"
+
+msgid "Right"
+msgstr "Rechts"
+
+msgid "Save template"
+msgstr "Vorlage speichern"
+
+msgid "Test the letter"
+msgstr "Brief testen"
+
+msgid "Preview a sample PDF or email a sample copy to the test address. Neither action sends to a donor or marks a donation as thanked."
+msgstr "Schau dir ein PDF-Muster an oder sende eine Kopie an die Testadresse. Keine dieser Aktionen sendet an einen Spender oder markiert die Spende als bedankt."
+
+msgid "Preview sample PDF"
+msgstr "PDF-Muster anzeigen"
+
+msgid "Send sample to test address"
+msgstr "Muster an Testadresse senden"
+
+msgid "Alexey Donor"
+msgstr "Alexej Spender"
+
+msgid "Donation: Prayer request"
+msgstr "Spende: Gebetsanliegen"
+
+msgid "Abbot"
+msgstr "Abt"
+
+msgid "Set a valid test email address in the thank-you letter settings first."
+msgstr "Lege zuerst in den Einstellungen des Dankesschreibens eine gültige Test-E-Mail-Adresse fest."
+
+msgid "The recipient email address is invalid."
+msgstr "Die E-Mail-Adresse des Empfängers ist ungültig."
+
+msgid "This server needs ImageMagick with PDF support to use a PDF letter background. Use an image background or enable PDF conversion."
+msgstr "Für einen PDF-Hintergrund benötigt der Server ImageMagick mit PDF-Unterstützung. Verwende ein Bild oder aktiviere die PDF-Konvertierung."
+
+msgid "Could not convert the PDF letter background to an image."
+msgstr "Der PDF-Briefhintergrund konnte nicht in ein Bild umgewandelt werden."
+
+msgid "Preview PDF"
+msgstr "PDF-Vorschau"
+
+msgid "Send test copy"
+msgstr "Testkopie senden"
+
+msgid "Thank you for supporting the monastery."
+msgstr "Vielen Dank für deine Unterstützung des Klosters."
+
+msgid "PDF letter background support"
+msgstr "Unterstützung für PDF-Briefhintergründe"
+
+msgid "Bible quote / additional text"
+msgstr "Bibelzitat / zusätzlicher Text"
+
+msgid "Additional text block"
+msgstr "Zusätzlicher Textblock"
+
+msgid "Show this field"
+msgstr "Dieses Feld anzeigen"
+
+msgid "Template"
+msgstr "Vorlage"
+
+msgid "Add template"
+msgstr "Vorlage hinzufügen"
+
+msgid "Delete template"
+msgstr "Vorlage löschen"
+
+msgid "Template name"
+msgstr "Vorlagenname"
+
+msgid "Any language"
+msgstr "Alle Sprachen"
+
+msgid "Donation case"
+msgstr "Spendenart"
+
+msgid "Any case"
+msgstr "Alle Fälle"
+
+msgid "One-time donation"
+msgstr "Einmalige Spende"
+
+msgid "Delete this template?"
+msgstr "Diese Vorlage löschen?"
+
+msgid "Default template"
+msgstr "Standardvorlage"
+
+msgid "Template not found."
+msgstr "Vorlage nicht gefunden."
+
+msgid "The last template cannot be deleted."
+msgstr "Die letzte Vorlage kann nicht gelöscht werden."
+
+msgid "New template %d"
+msgstr "Neue Vorlage %d"
+
+msgid "Prayer request"
+msgstr "Gebetsanliegen"
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized. Choose the template manually for each donor letter; language and case are labels to help you identify it."
+msgstr "Wähle eine PDF- oder Bilddatei als Seitengrafik. Ziehe die Beispielbeschriftungen, um die Textfelder zu platzieren; die Positionen werden in Prozent gespeichert und passen sich der Vorschaugröße an. Wähle die Vorlage für jeden Spenderbrief manuell aus; Sprache und Anlass dienen zur Orientierung."
+
+msgid "Thank-you letter templates"
+msgstr "Vorlagen für Dankesschreiben"
+
+msgid "Back to templates"
+msgstr "Zurück zu den Vorlagen"
+
+msgid "Search templates"
+msgstr "Vorlagen suchen"
+
+msgid "View donations"
+msgstr "Spenden anzeigen"
+
+msgid "Thank you for supporting our monastery"
+msgstr "Vielen Dank für deine Unterstützung unseres Klosters"
+
+msgid "Hello!"
+msgstr "Guten Tag!"
+
+msgid "Hello, %s!"
+msgstr "Guten Tag, %s!"

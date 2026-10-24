@@ -1699,7 +1699,7 @@ msgstr ""
 msgid "Could not prepare the thank-you PDF attachment."
 msgstr ""
 
-msgid "We sincerely thank you for supporting the monastery. Your personal thank-you letter is attached as a PDF."
+msgid "Thank you for your donation and for supporting our monastery. Your kindness helps sustain our community and its prayerful work.\n\nPlease find your personal letter of gratitude attached as a PDF.\n\nWith gratitude,\nThe monastery brotherhood"
 msgstr ""
 
 msgid "The thank-you email could not be sent. Please try again."
@@ -1739,4 +1739,228 @@ msgid "Color for the departed intention"
 msgstr ""
 
 msgid "These colors apply only to the intention selectors. Submit buttons use the active WordPress theme."
+msgstr ""
+
+msgid "Choose a PDF or image background"
+msgstr ""
+
+msgid "Use this background"
+msgstr ""
+
+msgid "PDF selected. Save the template to load its first page preview."
+msgstr ""
+
+msgid "Choose a background to begin positioning fields."
+msgstr ""
+
+msgid "Thank-you text"
+msgstr ""
+
+msgid "Donation purpose"
+msgstr ""
+
+msgid "Donation date"
+msgstr ""
+
+msgid "Abbot / signer"
+msgstr ""
+
+msgid "Monastery address"
+msgstr ""
+
+msgid "Thank-you letter template"
+msgstr ""
+
+msgid "Template saved."
+msgstr ""
+
+msgid "Test copy sent to the configured test address."
+msgstr ""
+
+msgid "The background file is not a supported PDF, JPEG or PNG image."
+msgstr ""
+
+msgid "PDF backgrounds need the server ImageMagick extension with PDF/Ghostscript support for preview and final letter generation. JPEG and PNG backgrounds do not need this."
+msgstr ""
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized."
+msgstr ""
+
+msgid "Choose PDF or image"
+msgstr ""
+
+msgid "Remove background"
+msgstr ""
+
+msgid "No background selected"
+msgstr ""
+
+msgid "Page orientation"
+msgstr ""
+
+msgid "Portrait"
+msgstr ""
+
+msgid "Landscape"
+msgstr ""
+
+msgid "Test email address"
+msgstr ""
+
+msgid "A paid donation can be sent as a test copy to this address from its donor record. Test copies do not mark the donation letter as sent."
+msgstr ""
+
+msgid "Place the fields"
+msgstr ""
+
+msgid "Drag each field on the page. Select a field below the preview to adjust its width, font size, color and alignment."
+msgstr ""
+
+msgid "Selected field"
+msgstr ""
+
+msgid "Width (%)"
+msgstr ""
+
+msgid "Font size (pt)"
+msgstr ""
+
+msgid "Text color"
+msgstr ""
+
+msgid "Alignment"
+msgstr ""
+
+msgid "Left"
+msgstr ""
+
+msgid "Center"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Save template"
+msgstr ""
+
+msgid "Test the letter"
+msgstr ""
+
+msgid "Preview a sample PDF or email a sample copy to the test address. Neither action sends to a donor or marks a donation as thanked."
+msgstr ""
+
+msgid "Preview sample PDF"
+msgstr ""
+
+msgid "Send sample to test address"
+msgstr ""
+
+msgid "Alexey Donor"
+msgstr ""
+
+msgid "Donation: Prayer request"
+msgstr ""
+
+msgid "Abbot"
+msgstr ""
+
+msgid "Set a valid test email address in the thank-you letter settings first."
+msgstr ""
+
+msgid "The recipient email address is invalid."
+msgstr ""
+
+msgid "This server needs ImageMagick with PDF support to use a PDF letter background. Use an image background or enable PDF conversion."
+msgstr ""
+
+msgid "Could not convert the PDF letter background to an image."
+msgstr ""
+
+msgid "Preview PDF"
+msgstr ""
+
+msgid "Send test copy"
+msgstr ""
+
+msgid "Thank you for supporting the monastery."
+msgstr ""
+
+msgid "PDF letter background support"
+msgstr ""
+
+msgid "Bible quote / additional text"
+msgstr ""
+
+msgid "Additional text block"
+msgstr ""
+
+msgid "Show this field"
+msgstr ""
+msgid "Template"
+msgstr ""
+
+msgid "Add template"
+msgstr ""
+
+msgid "Delete template"
+msgstr ""
+
+msgid "Template name"
+msgstr ""
+
+msgid "Any language"
+msgstr ""
+
+msgid "Donation case"
+msgstr ""
+
+msgid "Any case"
+msgstr ""
+
+msgid "One-time donation"
+msgstr ""
+
+
+msgid "Delete this template?"
+msgstr ""
+
+msgid "Default template"
+msgstr ""
+
+
+msgid "Template not found."
+msgstr ""
+
+msgid "The last template cannot be deleted."
+msgstr ""
+
+msgid "New template %d"
+msgstr ""
+
+msgid "Prayer request"
+msgstr ""
+
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized. Choose the template manually for each donor letter; language and case are labels to help you identify it."
+msgstr ""
+
+msgid "Thank-you letter templates"
+msgstr ""
+
+msgid "Back to templates"
+msgstr ""
+
+msgid "Search templates"
+msgstr ""
+
+msgid "View donations"
+msgstr ""
+
+msgid "Thank you for supporting our monastery"
+msgstr ""
+
+msgid "Hello!"
+msgstr ""
+
+msgid "Hello, %s!"
 msgstr ""

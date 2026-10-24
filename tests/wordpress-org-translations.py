@@ -11,7 +11,7 @@ assert len(before) == 8
 builder['main']()
 assert before == {p.name: p.read_bytes() for p in directory.glob('*.po')}, 'Catalogs must reproduce'
 for locale in ('ru_RU', 'de_DE', 'uk', 'pl_PL'):
-    for kind, count in (('interface', 357), ('readme', 80)):
+    for kind, count in (('interface', len(builder['originals']('interface'))), ('readme', 80)):
         entries = builder['catalog'](directory / f'{kind}-{locale}.po')
         translations = {e['msgid']: e['msgstr'] for e in entries if e['msgid']}
         assert len(translations) == count
@@ -41,6 +41,8 @@ assert not any(re.search(r'\b(?:Sie|Ihnen|Ihr\w*)\b', text) for text in (*german
 assert german_interface['Prayer service'] == 'Gebetsdienst'
 assert german_interface['Choose prayer services'] == 'Gebetsdienste auswählen'
 assert german_interface['Slug'] == 'Titelform'
+assert german_interface['Donors'] == 'Spender'
+assert german_interface['Thank-you letter'] == 'Dankesschreiben'
 assert 'Spendenaktion' in german_interface['Campaign progress']
 assert not any('Gottesdienst' in text or 'Sammlung' in text for text in german_readme)
 
@@ -62,4 +64,4 @@ for source, bad in (
         pass
     else:
         raise AssertionError(f'Unsafe translation accepted: {source}')
-print('PASS 4 x (357 interface + 80 readme), reproducibility, brand and negative token checks')
+print('PASS 4 complete interface + readme catalogs, reproducibility, brand and negative token checks')

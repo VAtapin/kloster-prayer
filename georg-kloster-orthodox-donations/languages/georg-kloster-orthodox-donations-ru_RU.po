@@ -1319,8 +1319,8 @@ msgstr "Не удалось создать PDF с благодарственны
 msgid "Could not prepare the thank-you PDF attachment."
 msgstr "Не удалось подготовить PDF-вложение с благодарственным письмом."
 
-msgid "We sincerely thank you for supporting the monastery. Your personal thank-you letter is attached as a PDF."
-msgstr "Искренне благодарим вас за поддержку монастыря. Персональное благодарственное письмо приложено в формате PDF."
+msgid "Thank you for your donation and for supporting our monastery. Your kindness helps sustain our community and its prayerful work.\n\nPlease find your personal letter of gratitude attached as a PDF.\n\nWith gratitude,\nThe monastery brotherhood"
+msgstr "Благодарим вас за пожертвование и поддержку Свято-Георгиевского монастыря. Ваше участие помогает нашей общине продолжать молитвенное служение и заботиться об обители.\n\nК письму приложена именная благодарственная грамота в формате PDF.\n\nС благодарностью,\nбратия монастыря"
 
 msgid "The thank-you email could not be sent. Please try again."
 msgstr "Не удалось отправить письмо с благодарностью. Попробуйте ещё раз."
@@ -1360,3 +1360,227 @@ msgstr "Цвет переключателя «Об упокоении»"
 
 msgid "These colors apply only to the intention selectors. Submit buttons use the active WordPress theme."
 msgstr "Эти цвета применяются только к переключателям «О здравии» и «Об упокоении». Кнопки отправки оформляются активной темой WordPress."
+
+msgid "Choose a PDF or image background"
+msgstr "Выберите фон — PDF или изображение"
+
+msgid "Use this background"
+msgstr "Использовать этот фон"
+
+msgid "PDF selected. Save the template to load its first page preview."
+msgstr "PDF выбран. Сохраните шаблон, чтобы загрузить предварительный просмотр первой страницы."
+
+msgid "Choose a background to begin positioning fields."
+msgstr "Выберите фон, чтобы начать размещение полей."
+
+msgid "Thank-you text"
+msgstr "Текст благодарности"
+
+msgid "Donation purpose"
+msgstr "Назначение пожертвования"
+
+msgid "Donation date"
+msgstr "Дата пожертвования"
+
+msgid "Abbot / signer"
+msgstr "Игумен / подпись"
+
+msgid "Monastery address"
+msgstr "Адрес монастыря"
+
+msgid "Thank-you letter template"
+msgstr "Шаблон благодарственного письма"
+
+msgid "Template saved."
+msgstr "Шаблон сохранён."
+
+msgid "Test copy sent to the configured test address."
+msgstr "Тестовая копия отправлена на указанный тестовый адрес."
+
+msgid "The background file is not a supported PDF, JPEG or PNG image."
+msgstr "Фоновый файл должен быть PDF, JPEG или PNG."
+
+msgid "PDF backgrounds need the server ImageMagick extension with PDF/Ghostscript support for preview and final letter generation. JPEG and PNG backgrounds do not need this."
+msgstr "Для предпросмотра и создания письма из PDF требуется ImageMagick с поддержкой PDF/Ghostscript. Для JPEG и PNG это не требуется."
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized."
+msgstr "Выберите PDF или изображение в качестве фона. Перетаскивайте образцы полей; позиции сохраняются в процентах и не зависят от размера предпросмотра."
+
+msgid "Choose PDF or image"
+msgstr "Выбрать PDF или изображение"
+
+msgid "Remove background"
+msgstr "Удалить фон"
+
+msgid "No background selected"
+msgstr "Фон не выбран"
+
+msgid "Page orientation"
+msgstr "Ориентация страницы"
+
+msgid "Portrait"
+msgstr "Книжная"
+
+msgid "Landscape"
+msgstr "Альбомная"
+
+msgid "Test email address"
+msgstr "Тестовый адрес электронной почты"
+
+msgid "A paid donation can be sent as a test copy to this address from its donor record. Test copies do not mark the donation letter as sent."
+msgstr "Из карточки жертвователя можно отправить копию оплаченного пожертвования на этот адрес. Тестовая копия не отмечает письмо как отправленное."
+
+msgid "Place the fields"
+msgstr "Разместите поля"
+
+msgid "Drag each field on the page. Select a field below the preview to adjust its width, font size, color and alignment."
+msgstr "Перетащите поля на странице. Выберите поле ниже предпросмотра, чтобы изменить ширину, размер шрифта, цвет и выравнивание."
+
+msgid "Selected field"
+msgstr "Выбранное поле"
+
+msgid "Width (%)"
+msgstr "Ширина (%)"
+
+msgid "Font size (pt)"
+msgstr "Размер шрифта (пт)"
+
+msgid "Text color"
+msgstr "Цвет текста"
+
+msgid "Alignment"
+msgstr "Выравнивание"
+
+msgid "Left"
+msgstr "Слева"
+
+msgid "Center"
+msgstr "По центру"
+
+msgid "Right"
+msgstr "Справа"
+
+msgid "Save template"
+msgstr "Сохранить шаблон"
+
+msgid "Test the letter"
+msgstr "Проверить письмо"
+
+msgid "Preview a sample PDF or email a sample copy to the test address. Neither action sends to a donor or marks a donation as thanked."
+msgstr "Просмотрите образец PDF или отправьте его на тестовый адрес. Эти действия не отправляют письмо жертвователю и не отмечают пожертвование как получившее благодарность."
+
+msgid "Preview sample PDF"
+msgstr "Предпросмотр образца PDF"
+
+msgid "Send sample to test address"
+msgstr "Отправить образец на тестовый адрес"
+
+msgid "Alexey Donor"
+msgstr "Алексей Жертвователь"
+
+msgid "Donation: Prayer request"
+msgstr "Пожертвование: записка"
+
+msgid "Abbot"
+msgstr "Игумен"
+
+msgid "Set a valid test email address in the thank-you letter settings first."
+msgstr "Сначала укажите действительный тестовый адрес в настройках благодарственного письма."
+
+msgid "The recipient email address is invalid."
+msgstr "Неверный адрес электронной почты получателя."
+
+msgid "This server needs ImageMagick with PDF support to use a PDF letter background. Use an image background or enable PDF conversion."
+msgstr "Для фона PDF требуется ImageMagick с поддержкой PDF. Используйте изображение или включите конвертацию PDF на сервере."
+
+msgid "Could not convert the PDF letter background to an image."
+msgstr "Не удалось преобразовать фон письма из PDF в изображение."
+
+msgid "Preview PDF"
+msgstr "Предпросмотр PDF"
+
+msgid "Send test copy"
+msgstr "Отправить тестовую копию"
+
+msgid "Thank you for supporting the monastery."
+msgstr "Спасибо за поддержку монастыря."
+
+msgid "PDF letter background support"
+msgstr "Поддержка PDF-фона письма"
+
+msgid "Bible quote / additional text"
+msgstr "Библейская цитата / дополнительный текст"
+
+msgid "Additional text block"
+msgstr "Дополнительный текстовый блок"
+
+msgid "Show this field"
+msgstr "Показывать это поле"
+msgid "Template"
+msgstr "Шаблон"
+
+msgid "Add template"
+msgstr "Добавить шаблон"
+
+msgid "Delete template"
+msgstr "Удалить шаблон"
+
+msgid "Template name"
+msgstr "Название шаблона"
+
+msgid "Any language"
+msgstr "Любой язык"
+
+msgid "Donation case"
+msgstr "Случай пожертвования"
+
+msgid "Any case"
+msgstr "Любой случай"
+
+msgid "One-time donation"
+msgstr "Разовое пожертвование"
+
+
+msgid "Delete this template?"
+msgstr "Удалить этот шаблон?"
+
+msgid "Default template"
+msgstr "Шаблон по умолчанию"
+
+
+msgid "Template not found."
+msgstr "Шаблон не найден."
+
+msgid "The last template cannot be deleted."
+msgstr "Нельзя удалить последний шаблон."
+
+msgid "New template %d"
+msgstr "Новый шаблон %d"
+
+msgid "Prayer request"
+msgstr "Молитвенная записка"
+
+
+msgid "Choose a PDF or image as the page artwork. Drag the sample labels to place each text field; positions are saved as percentages so they follow the page when its preview is resized. Choose the template manually for each donor letter; language and case are labels to help you identify it."
+msgstr "Выберите PDF или изображение в качестве фона страницы. Перетаскивайте образцы подписей, чтобы разместить текстовые поля; позиции сохраняются в процентах и масштабируются вместе с предпросмотром. Для каждого письма жертвователю выбирайте шаблон вручную; язык и случай помогают его определить."
+
+msgid "Thank-you letter templates"
+msgstr "Шаблоны благодарственных писем"
+
+msgid "Back to templates"
+msgstr "Назад к шаблонам"
+
+msgid "Search templates"
+msgstr "Поиск шаблонов"
+
+msgid "View donations"
+msgstr "Просмотреть пожертвования"
+
+msgid "Thank you for supporting our monastery"
+msgstr "Спасибо за поддержку Свято-Георгиевского монастыря"
+
+msgid "Hello!"
+msgstr "Здравствуйте!"
+
+msgid "Hello, %s!"
+msgstr "Здравствуйте, %s!"
