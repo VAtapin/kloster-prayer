@@ -887,11 +887,8 @@ msgstr "Назад"
 msgid "Next"
 msgstr "Далее"
 
-msgid "Required for one-time donations and prayer requests:"
-msgstr "Обязательные события для разовых пожертвований и молитвенных записок:"
-
-msgid "For regular support, also enable these webhook events:"
-msgstr "Для регулярной поддержки включите также эти webhook-события:"
+msgid "Select all events for one-time donations, prayer requests and regular support:"
+msgstr "Выберите все события для разовых пожертвований, молитвенных записок и регулярной поддержки:"
 
 msgid "Partially refunded"
 msgstr "Частично возвращено"

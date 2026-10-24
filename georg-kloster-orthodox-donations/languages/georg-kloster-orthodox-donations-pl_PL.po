@@ -887,11 +887,8 @@ msgstr "Poprzednia"
 msgid "Next"
 msgstr "Następna"
 
-msgid "Required for one-time donations and prayer requests:"
-msgstr "Wymagane zdarzenia dla jednorazowych darowizn i próśb modlitewnych:"
-
-msgid "For regular support, also enable these webhook events:"
-msgstr "Dla regularnego wsparcia włącz również te zdarzenia webhook:"
+msgid "Select all events for one-time donations, prayer requests and regular support:"
+msgstr "Wybierz wszystkie zdarzenia dla jednorazowych darowizn, próśb modlitewnych i regularnego wsparcia:"
 
 msgid "Partially refunded"
 msgstr "Częściowo zwrócono"
