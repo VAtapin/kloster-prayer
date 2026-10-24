@@ -1349,3 +1349,15 @@ msgstr "Diese Farbe wird für das Spendenformular, den Fortschrittsbalken und Li
 
 msgid "Hex color override for this shortcode. It takes precedence over a saved prayer-form color. Campaign forms use the color set in the campaign editor; set this value for a standalone one-time or regular donation form."
 msgstr "HEX-Farbwert für diesen Shortcode. Er hat Vorrang vor der Farbe eines gespeicherten Gebetsformulars. Kampagnenformulare verwenden die Farbe aus dem Kampagneneditor; hier lässt sich die Farbe für ein eigenständiges Spendenformular für einmalige oder regelmäßige Spenden festlegen."
+
+msgid "Campaign accent color"
+msgstr "Akzentfarbe der Spendenkampagne"
+
+msgid "Color for the living intention"
+msgstr "Farbe der Auswahl „Für die Lebenden“"
+
+msgid "Color for the departed intention"
+msgstr "Farbe der Auswahl „Für die Verstorbenen“"
+
+msgid "These colors apply only to the intention selectors. Submit buttons use the active WordPress theme."
+msgstr "Diese Farben gelten nur für die Auswahl „Für die Lebenden“ und „Für die Verstorbenen“. Sendeschaltflächen verwenden das aktive WordPress-Theme."

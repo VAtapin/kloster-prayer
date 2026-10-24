@@ -1728,3 +1728,15 @@ msgstr ""
 
 msgid "Hex color override for this shortcode. It takes precedence over a saved prayer-form color. Campaign forms use the color set in the campaign editor; set this value for a standalone one-time or regular donation form."
 msgstr ""
+
+msgid "Campaign accent color"
+msgstr ""
+
+msgid "Color for the living intention"
+msgstr ""
+
+msgid "Color for the departed intention"
+msgstr ""
+
+msgid "These colors apply only to the intention selectors. Submit buttons use the active WordPress theme."
+msgstr ""

@@ -5,7 +5,7 @@ namespace GeorgKlosterOrthodoxDonate;
 
 final class Database
 {
-    private const DB_VERSION = '1.0.6';
+    private const DB_VERSION = '1.0.7';
 
     public static function table(string $name): string
     {
@@ -111,6 +111,8 @@ final class Database
             layout varchar(30) NOT NULL DEFAULT 'standard',
             default_intention enum('health','rest') NOT NULL DEFAULT 'health',
             accent_color varchar(7) NOT NULL DEFAULT '',
+            health_color varchar(7) NOT NULL DEFAULT '#ad5754',
+            rest_color varchar(7) NOT NULL DEFAULT '#595959',
             is_active tinyint(1) NOT NULL DEFAULT 1,
             created_at datetime NOT NULL,
             updated_at datetime NOT NULL,

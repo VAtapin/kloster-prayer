@@ -29,7 +29,7 @@ final class Public_Form
     public static function shortcode(array|string $atts = []): string
     {
         global $wpdb;
-        $atts = shortcode_atts(['id' => 0, 'slug' => '', 'layout' => '', 'lang' => '', 'header' => 'yes', 'accent_color' => ''], $atts, 'gkod_form');
+        $atts = shortcode_atts(['id' => 0, 'slug' => '', 'layout' => '', 'lang' => '', 'header' => 'yes'], $atts, 'gkod_form');
         $forms = Database::table('forms');
         if ((int) $atts['id'] > 0) {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Site-owned form/service configuration in custom tables; query has no post/meta API equivalent.
@@ -50,7 +50,7 @@ final class Public_Form
     public static function service_shortcode(array|string $atts = []): string
     {
         global $wpdb;
-        $atts = shortcode_atts(['id' => 0, 'slug' => '', 'layout' => 'compact', 'lang' => '', 'accent_color' => ''], $atts, 'gkod_service');
+        $atts = shortcode_atts(['id' => 0, 'slug' => '', 'layout' => 'compact', 'lang' => ''], $atts, 'gkod_service');
         $services = Database::table('services');
         $service = (int) $atts['id'] > 0
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Site-owned form/service configuration in custom tables; query has no post/meta API equivalent.
@@ -65,7 +65,7 @@ final class Public_Form
 
     public static function donation_shortcode(array|string $atts = []): string
     {
-        $atts = shortcode_atts(['layout' => 'compact', 'lang' => '', 'header' => 'yes', 'campaign_id' => 0, 'support' => 'no', 'accent_color' => ''], $atts, 'gkod_donation');
+        $atts = shortcode_atts(['layout' => 'compact', 'lang' => '', 'header' => 'yes', 'campaign_id' => 0, 'support' => 'no'], $atts, 'gkod_donation');
         $campaign = absint($atts['campaign_id']) ? Campaigns::get(absint($atts['campaign_id'])) : null;
         if (absint($atts['campaign_id']) && (!$campaign || !Campaigns::accepting($campaign))) return I18n::in_language(static fn(): string => '<p>' . esc_html__('This campaign is closed.', 'georg-kloster-orthodox-donations') . '</p>', in_array($atts['lang'], ['en','ru','de','uk','pl'], true) ? $atts['lang'] : I18n::language());
         $atts['request_type'] = 'donation';
@@ -112,16 +112,15 @@ final class Public_Form
             $enabled = ['stripe'];
         }
         $amount_id = wp_unique_id('gkod-donation-');
-        $shortcode_accent = sanitize_hex_color((string) ($atts['accent_color'] ?? '')) ?: '';
         if ($campaign) {
             $accent_color = sanitize_hex_color((string) ($campaign->accent_color ?? '')) ?: '#8c2732';
-        } elseif (!$donation) {
-            $default_accent = ($form->default_intention ?? 'health') === 'rest' ? '#17191c' : '#8c2732';
-            $accent_color = $shortcode_accent ?: (sanitize_hex_color((string) ($form->accent_color ?? '')) ?: $default_accent);
         } else {
-            $accent_color = $shortcode_accent;
+            $accent_color = '';
         }
+        $health_color = !$donation ? (sanitize_hex_color((string) ($form->health_color ?? '')) ?: '#ad5754') : '';
+        $rest_color = !$donation ? (sanitize_hex_color((string) ($form->rest_color ?? '')) ?: '#595959') : '';
         $form_style = $accent_color !== '' ? '--gkod-accent:' . $accent_color : '';
+        if (!$donation) $form_style .= ($form_style !== '' ? ';' : '') . '--gkod-health-accent:' . $health_color . ';--gkod-rest-accent:' . $rest_color;
         ob_start();
         ?>
         <section class="gkod-form gkod-form--<?php echo  esc_attr($layout) ?>" style="<?php echo esc_attr($form_style) ?>" data-request-type="<?php echo $donation ? 'donation' : 'prayer' ?>" data-currency="EUR" data-lang="<?php echo  esc_attr($lang) ?>">
@@ -192,7 +191,7 @@ final class Public_Form
                 <?php else : ?><input type="hidden" name="provider" value="<?php echo  esc_attr($enabled[0] ?? 'stripe') ?>"><?php endif; ?>
                 <div class="gkod-summary"><span><?php echo  esc_html(I18n::text('total', $lang)) ?></span><strong><output>0,00 €</output></strong></div>
                 <div class="gkod-error" role="alert" hidden></div>
-                <button class="gkod-submit" type="submit"><span><?php echo esc_html(($atts['support'] ?? 'no') === 'yes' ? I18n::in_language(static fn() => __('Start regular support', 'georg-kloster-orthodox-donations'), $lang) : ($donation ? I18n::donation_text('submit', $lang) : I18n::text('submit', $lang))) ?></span><b aria-hidden="true">→</b></button>
+                <button class="wp-element-button gkod-submit" type="submit"><?php echo esc_html(($atts['support'] ?? 'no') === 'yes' ? I18n::in_language(static fn() => __('Start regular support', 'georg-kloster-orthodox-donations'), $lang) : ($donation ? I18n::donation_text('submit', $lang) : I18n::text('submit', $lang))) ?></button>
                 <p class="gkod-secure">♙ <?php echo  esc_html(($donation ? I18n::donation_text('secure', $lang) : I18n::text('secure', $lang))) ?></p>
             </form>
         </section>

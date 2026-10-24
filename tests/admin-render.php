@@ -53,7 +53,7 @@ foreach($pages as $name=>[$method,$query]){
     $_GET=$query;$_POST=[];$_REQUEST=$query;ob_start();GeorgKlosterOrthodoxDonate\Admin::$method();$body=ob_get_clean();
     if(str_contains($name,'edit-')){if(str_contains($body,'name="title_uk"')||str_contains($body,'name="title_pl"'))throw new Exception('Inactive languages displayed');}
     if($name==='settings'&&str_contains($body,'name="form_color_'))throw new Exception('Global form colors must be configured on each form or campaign');
-    if($name==='edit-form'&&(!str_contains($body,'name="accent_color"')||!str_contains($body,'Цвет формы и кнопок')))throw new Exception('Form editor exposes its own accent color');
+    if($name==='edit-form'&&(!str_contains($body,'name="health_color"')||!str_contains($body,'name="rest_color"')||!str_contains($body,'Цвет переключателя «О здравии»')||!str_contains($body,'Цвет переключателя «Об упокоении»')))throw new Exception('Form editor exposes separate intention colors');
     if($name==='diagnostics'&&!str_contains($body,'Отключён — настройка не требуется'))throw new Exception('Inactive PayPal error');
     if($name==='services'){
         $table_start=strpos($body,'<table class="wp-list-table');$table_end=$table_start===false?false:strpos($body,'>',$table_start);$table_open=$table_start===false||$table_end===false?'':substr($body,$table_start,$table_end-$table_start+1);

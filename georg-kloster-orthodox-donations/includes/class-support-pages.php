@@ -19,7 +19,7 @@ final class Support_Pages
 
     public static function form(array|string $atts = []): string
     {
-        $atts = shortcode_atts(['lang' => '', 'campaign_id' => 0, 'layout' => 'compact', 'header' => 'yes', 'accent_color' => ''], $atts, 'gkod_support');
+        $atts = shortcode_atts(['lang' => '', 'campaign_id' => 0, 'layout' => 'compact', 'header' => 'yes'], $atts, 'gkod_support');
         $lang = in_array($atts['lang'], ['en','ru','de','uk','pl'], true) ? $atts['lang'] : I18n::language();
         $atts['support'] = 'yes';
         return Public_Form::donation_shortcode($atts);

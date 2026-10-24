@@ -53,16 +53,17 @@ foreach (['ru','de','uk','pl'] as $lang) {
     $form = do_shortcode('[gkod_donation lang="'.$lang.'"]');
     donation_assert(str_contains($form,'name="donation_amount"') && !str_contains($form,'name="names"') && !str_contains($form,'name="services[]"') && !str_contains($form,'name="intention"'), 'Donation form without prayer inputs');
     $custom_form = do_shortcode('[gkod_donation lang="'.$lang.'" accent_color="#a03f3f"]');
-    donation_assert(str_contains($custom_form,'style="--gkod-accent:#a03f3f"'), 'Shortcode accent is exposed on the donation form');
+    donation_assert(!str_contains($custom_form,'--gkod-accent:#a03f3f'), 'Standalone donation does not override theme button color');
+    donation_assert(str_contains($form,'class="wp-element-button gkod-submit"'), 'Submit button uses the WordPress theme button class');
     donation_assert(str_contains($form,esc_html(GeorgKlosterOrthodoxDonate\I18n::donation_text('submit',$lang))), 'Localized donation form');
 }
 $pair=do_shortcode('[gkod_donation][gkod_donation]');
 preg_match_all('/aria-describedby="([^"]+)"/', $pair, $ids);
 donation_assert(count($ids[1])===2 && count(array_unique($ids[1]))===2, 'Multiple forms have unique help IDs');
-$wpdb->update(Database::table('forms'),['accent_color'=>'#ad5754'],['id'=>1]);
+$wpdb->update(Database::table('forms'),['health_color'=>'#ad5754','rest_color'=>'#333333'],['id'=>1]);
 $prayer_form=do_shortcode('[gkod_form id="1"]');
 donation_assert(str_contains($prayer_form,'name="names"'), 'Prayer form preserved');
-donation_assert(str_contains($prayer_form,'style="--gkod-accent:#ad5754"'), 'Saved prayer form color reaches its front-end shortcode');
+donation_assert(str_contains($prayer_form,'--gkod-health-accent:#ad5754;--gkod-rest-accent:#333333'), 'Separate saved intention colors reach the prayer form');
 class DonationJson extends RuntimeException { public function __construct(public array $json) { parent::__construct('AJAX response'); } }
 $die=static fn()=>static function () { throw new DonationJson(json_decode(ob_get_contents() ?: '{}',true) ?: []); };
 add_filter('wp_die_ajax_handler',$die);

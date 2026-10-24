@@ -1348,3 +1348,15 @@ msgstr "Цей колір використовується для форми п�
 
 msgid "Hex color override for this shortcode. It takes precedence over a saved prayer-form color. Campaign forms use the color set in the campaign editor; set this value for a standalone one-time or regular donation form."
 msgstr "Колір у форматі HEX для цієї форми. Він має перевагу над кольором збереженої форми записки. Для зборів використовується колір з редактора збору; тут можна задати колір окремої форми разової або регулярної пожертви."
+
+msgid "Campaign accent color"
+msgstr "Акцентний колір збору"
+
+msgid "Color for the living intention"
+msgstr "Колір перемикача «За здоров’я»"
+
+msgid "Color for the departed intention"
+msgstr "Колір перемикача «За упокій»"
+
+msgid "These colors apply only to the intention selectors. Submit buttons use the active WordPress theme."
+msgstr "Ці кольори застосовуються лише до перемикачів «За здоров’я» та «За упокій». Кнопки надсилання оформлює активна тема WordPress."
