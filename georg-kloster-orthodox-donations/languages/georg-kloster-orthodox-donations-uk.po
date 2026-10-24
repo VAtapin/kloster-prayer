@@ -1157,14 +1157,32 @@ msgstr "Запит до API Stripe завершився помилкою."
 msgid "Stripe synchronization finished: %1$d created, %2$d updated, %3$d failed."
 msgstr "Синхронізацію зі Stripe завершено: створено — %1$d, оновлено — %2$d, помилок — %3$d."
 
-msgid "Sync every service to the Stripe Product Catalog. Product titles, descriptions, images and the current unit prices are maintained there; Checkout uses the calculated quantity."
-msgstr "Синхронізуйте всі треби з каталогом товарів Stripe. Там оновлюватимуться назви, описи, зображення та поточні ціни; під час оплати використовується розрахована кількість."
-
-msgid "Synchronize services with Stripe"
-msgstr "Синхронізувати треби зі Stripe"
-
 msgid "names"
 msgstr "імен"
 
 msgid "prayer slips"
 msgstr "молитовних записок"
+
+msgid "Select the services to sync, then choose “Synchronize selected with Stripe” in Actions. Stripe product titles, descriptions, images and prices are updated only for the selected services."
+msgstr "Позначте потрібні треби й виберіть у меню «Дії» пункт «Синхронізувати вибрані зі Stripe». У каталозі Stripe оновляться лише позначені треби."
+
+msgid "Synchronize selected with Stripe"
+msgstr "Синхронізувати вибрані зі Stripe"
+
+msgid "Stripe"
+msgstr "Stripe"
+
+msgid "Not synchronized"
+msgstr "Не синхронізовано"
+
+msgid "Synchronized"
+msgstr "Синхронізовано"
+
+msgid "Update required"
+msgstr "Потрібне оновлення"
+
+msgid "Select at least one service to synchronize."
+msgstr "Виберіть хоча б одну требу для синхронізації."
+
+msgid "No selected services were found."
+msgstr "Вибрані треби не знайдено."

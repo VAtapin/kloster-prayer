@@ -1537,14 +1537,32 @@ msgstr ""
 msgid "Stripe synchronization finished: %1$d created, %2$d updated, %3$d failed."
 msgstr ""
 
-msgid "Sync every service to the Stripe Product Catalog. Product titles, descriptions, images and the current unit prices are maintained there; Checkout uses the calculated quantity."
-msgstr ""
-
-msgid "Synchronize services with Stripe"
-msgstr ""
-
 msgid "names"
 msgstr ""
 
 msgid "prayer slips"
+msgstr ""
+
+msgid "Select the services to sync, then choose “Synchronize selected with Stripe” in Actions. Stripe product titles, descriptions, images and prices are updated only for the selected services."
+msgstr ""
+
+msgid "Synchronize selected with Stripe"
+msgstr ""
+
+msgid "Stripe"
+msgstr ""
+
+msgid "Not synchronized"
+msgstr ""
+
+msgid "Synchronized"
+msgstr ""
+
+msgid "Update required"
+msgstr ""
+
+msgid "Select at least one service to synchronize."
+msgstr ""
+
+msgid "No selected services were found."
 msgstr ""

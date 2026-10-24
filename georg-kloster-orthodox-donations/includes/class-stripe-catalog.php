@@ -6,11 +6,17 @@ use WP_Error;
 
 final class Stripe_Catalog
 {
-    /** Synchronize every service to the Stripe account/environment of the saved key. */
-    public static function sync_all(): array
+    /** Synchronize only selected services to the Stripe account/environment of the saved key. */
+    public static function sync_selected(array $ids): array
     {
         global $wpdb;
         $result = ['created' => 0, 'updated' => 0, 'failed' => 0, 'errors' => []];
+        $ids = array_values(array_unique(array_filter(array_map('absint', $ids))));
+        if (!$ids) {
+            $result['failed'] = 1;
+            $result['errors'][] = __('Select at least one service to synchronize.', 'georg-kloster-orthodox-donations');
+            return $result;
+        }
         $secret = trim((string) get_option('gkod_stripe_secret'));
         if (!preg_match('/^sk_(test|live)_/', $secret, $matches)) {
             $result['failed'] = 1;
@@ -19,7 +25,16 @@ final class Stripe_Catalog
         }
 
         $live = $matches[1] === 'live' ? 1 : 0;
-        $services = $wpdb->get_results($wpdb->prepare('SELECT * FROM %i ORDER BY sort_order,id', Database::table('services')));
+        $placeholders = implode(',', array_fill(0, count($ids), '%d'));
+        $services = $wpdb->get_results($wpdb->prepare(
+            'SELECT * FROM %i WHERE id IN (' . $placeholders . ') ORDER BY sort_order,id',
+            ...array_merge([Database::table('services')], $ids)
+        ));
+        if (!$services) {
+            $result['failed'] = 1;
+            $result['errors'][] = __('No selected services were found.', 'georg-kloster-orthodox-donations');
+            return $result;
+        }
         foreach ($services as $service) {
             $synced = self::sync_service($service, $secret, $live);
             if (is_wp_error($synced)) {
@@ -30,6 +45,16 @@ final class Stripe_Catalog
             $result[$synced === 'created' ? 'created' : 'updated']++;
         }
         return $result;
+    }
+
+    /** Whether the mapping displayed in the service table matches its current content and price. */
+    public static function is_current(object $service): bool
+    {
+        return !empty($service->stripe_product_id)
+            && !empty($service->stripe_price_id)
+            && (int) ($service->stripe_amount_cents ?? 0) === (int) $service->price_cents
+            && !empty($service->stripe_catalog_hash)
+            && hash_equals((string) $service->stripe_catalog_hash, self::catalog_hash($service));
     }
 
     /** Return catalog-backed Checkout items, or null to keep the aggregate-price fallback. */

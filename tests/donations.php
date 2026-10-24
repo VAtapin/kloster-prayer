@@ -84,6 +84,7 @@ donation_assert($checkout['line_items[0][price_data][unit_amount]']==='1234' && 
 
 // Before sync, prayer payments retain the existing aggregate Checkout behavior.
 $candle_id=(int)$wpdb->get_var($wpdb->prepare('SELECT id FROM %i WHERE slug=%s',Database::table('services'),'altar-candle'));
+$akathist_id=(int)$wpdb->get_var($wpdb->prepare('SELECT id FROM %i WHERE slug=%s',Database::table('services'),'akathist'));
 delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
 $prayer=array_replace($base,['request_type'=>'prayer','donation_amount'=>'','names'=>"Anna\nOlga\nMaria\nIrina\nElena",'services'=>[(string)$candle_id],'intention'=>'health']);
 $before_sync=donation_ajax($prayer);
@@ -93,8 +94,17 @@ donation_assert(isset($fallback_checkout['line_items[0][price_data][product_data
 
 // Sync the service catalog, then verify Checkout uses the catalog price and computed quantity.
 update_option('gkod_stripe_secret','sk_test_catalog_fixture');
-$catalog=GeorgKlosterOrthodoxDonate\Stripe_Catalog::sync_all();
-donation_assert($catalog['created']>=6 && $catalog['failed']===0,'All prayer services synchronize to Stripe products');
+$catalog=GeorgKlosterOrthodoxDonate\Stripe_Catalog::sync_selected([$candle_id,$akathist_id]);
+donation_assert($catalog['created']===2 && $catalog['failed']===0,'Only the two selected services synchronize to Stripe products');
+$mapped=(int)$wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i WHERE livemode=0 AND key_hash=%s',Database::table('service_stripe_products'),hash('sha256','sk_test_catalog_fixture')));
+donation_assert($mapped===2,'Unselected services are not added to the Stripe catalog');
+require_once dirname(__DIR__).'/georg-kloster-orthodox-donations/includes/class-catalog-table.php';
+$service_table=new GeorgKlosterOrthodoxDonate\Catalog_Table('services');$service_table->prepare_items();
+$synced_row=current(array_filter($service_table->items,static fn($row)=>(int)$row->id===$candle_id));
+$unselected_id=(int)$wpdb->get_var($wpdb->prepare('SELECT id FROM %i WHERE id NOT IN (%d,%d) ORDER BY id LIMIT 1',Database::table('services'),$candle_id,$akathist_id));
+$unselected_row=current(array_filter($service_table->items,static fn($row)=>(int)$row->id===$unselected_id));
+donation_assert($synced_row&&GeorgKlosterOrthodoxDonate\Stripe_Catalog::is_current($synced_row),'Service table identifies current Stripe mapping');
+donation_assert($unselected_row&&empty($unselected_row->stripe_product_id),'Service table shows an unselected service as not synchronized');
 delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
 $prayer_result=donation_ajax($prayer);
 donation_assert(($prayer_result['success']??false)===true,'Prayer request creates Stripe Checkout');
@@ -103,8 +113,8 @@ donation_assert(($prayer_checkout['line_items[0][price]']??'')==='price_service_
 donation_assert(($prayer_checkout['line_items[0][quantity]']??'')==='5','Five names use quantity 5 at €30 per name');
 donation_assert(!isset($prayer_checkout['line_items[0][price_data][product_data][name]']),'Stripe Checkout does not create a duplicate inline product');
 $wpdb->update(Database::table('services'),['price_cents'=>3500],['id'=>$candle_id]);
-$repriced=GeorgKlosterOrthodoxDonate\Stripe_Catalog::sync_all();
-donation_assert($repriced['failed']===0 && $repriced['updated']>=6,'Changed service price synchronizes without creating another product');
+$repriced=GeorgKlosterOrthodoxDonate\Stripe_Catalog::sync_selected([$candle_id,$akathist_id]);
+donation_assert($repriced['failed']===0 && $repriced['updated']===2,'Changed selected service price synchronizes without creating another product');
 donation_assert((bool)array_filter($http,static fn($call)=>str_ends_with($call[0],'/v1/prices')),'A changed service price creates a new Stripe Price');
 delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
 $repriced_result=donation_ajax($prayer);

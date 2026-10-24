@@ -1158,14 +1158,32 @@ msgstr "Die Stripe-API-Anfrage ist fehlgeschlagen."
 msgid "Stripe synchronization finished: %1$d created, %2$d updated, %3$d failed."
 msgstr "Stripe-Synchronisierung abgeschlossen: %1$d erstellt, %2$d aktualisiert, %3$d fehlgeschlagen."
 
-msgid "Sync every service to the Stripe Product Catalog. Product titles, descriptions, images and the current unit prices are maintained there; Checkout uses the calculated quantity."
-msgstr "Synchronisieren Sie alle Gebetsanliegen mit dem Stripe-Produktkatalog. Dort werden Namen, Beschreibungen, Bilder und aktuelle Einzelpreise gepflegt; beim Checkout wird die berechnete Anzahl verwendet."
-
-msgid "Synchronize services with Stripe"
-msgstr "Gebetsanliegen mit Stripe synchronisieren"
-
 msgid "names"
 msgstr "Namen"
 
 msgid "prayer slips"
 msgstr "Gebetszettel"
+
+msgid "Select the services to sync, then choose “Synchronize selected with Stripe” in Actions. Stripe product titles, descriptions, images and prices are updated only for the selected services."
+msgstr "Wähle die zu synchronisierenden Gebetsdienste aus und wähle unter „Aktionen“ die Option „Ausgewählte mit Stripe synchronisieren“. Nur die ausgewählten Gebetsdienste werden im Stripe-Produktkatalog aktualisiert."
+
+msgid "Synchronize selected with Stripe"
+msgstr "Ausgewählte mit Stripe synchronisieren"
+
+msgid "Stripe"
+msgstr "Stripe"
+
+msgid "Not synchronized"
+msgstr "Nicht synchronisiert"
+
+msgid "Synchronized"
+msgstr "Synchronisiert"
+
+msgid "Update required"
+msgstr "Aktualisierung erforderlich"
+
+msgid "Select at least one service to synchronize."
+msgstr "Wähle mindestens einen Gebetsdienst zur Synchronisierung aus."
+
+msgid "No selected services were found."
+msgstr "Keine ausgewählten Gebetsdienste gefunden."

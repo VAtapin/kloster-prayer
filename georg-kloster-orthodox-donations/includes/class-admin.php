@@ -51,11 +51,6 @@ final class Admin
         check_admin_referer('gkod_admin_action', '_gkod_nonce');
         global $wpdb;
         $action = sanitize_key((string) Input::post('gkod_action'));
-        if ($action === 'sync_stripe_catalog') {
-            $result = Stripe_Catalog::sync_all();
-            set_transient('gkod_stripe_sync_' . get_current_user_id(), $result, MINUTE_IN_SECONDS);
-            self::redirect('georg-kloster-orthodox-donations-services', 'stripe_sync');
-        }
         if ($action === 'refresh_customer') {
             $id=absint(Input::post('order_id')??0);$ok=Payments::refresh_customer($id);
             wp_safe_redirect(add_query_arg(['page'=>'georg-kloster-orthodox-donations','view'=>$id,'customer_sync'=>$ok?'ok':'unavailable'],admin_url('admin.php')));exit;
@@ -63,8 +58,14 @@ final class Admin
         if ($action === 'catalog_bulk') {
             $kind=in_array(Input::post('catalog')??'', ['forms','services'],true)?Input::post('catalog'):'forms';
             $operation=(Input::post('action')??'-1')!=='-1'?Input::post('action'):(Input::post('action2')??'');
+            $ids=array_filter(array_map('absint',(array)(Input::post_list('ids')??[])));
+            if ($kind==='services' && $operation==='sync_stripe_catalog') {
+                $result=Stripe_Catalog::sync_selected($ids);
+                set_transient('gkod_stripe_sync_' . get_current_user_id(), $result, MINUTE_IN_SECONDS);
+                self::redirect('georg-kloster-orthodox-donations-services', 'stripe_sync');
+            }
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Authorized administration of custom request/form/service tables; read current rows after edits.
-            if(in_array($operation,['enable','disable'],true))foreach(array_filter(array_map('absint',(array)(Input::post_list('ids')??[]))) as $item_id) $wpdb->update(Database::table($kind),['is_active'=>$operation==='enable'?1:0,'updated_at'=>current_time('mysql')],['id'=>$item_id]);
+            if(in_array($operation,['enable','disable'],true))foreach($ids as $item_id) $wpdb->update(Database::table($kind),['is_active'=>$operation==='enable'?1:0,'updated_at'=>current_time('mysql')],['id'=>$item_id]);
             self::redirect('georg-kloster-orthodox-donations-'.$kind,'updated');
         }
         if ($action === 'orders_bulk') $action=(Input::post('action')??'-1')!=='-1'?sanitize_key(Input::post('action')):sanitize_key(Input::post('action2')??'');
@@ -322,13 +323,7 @@ final class Admin
         require_once DIR.'/includes/class-catalog-table.php';
         self::header($kind==='forms'?(__('Forms', 'georg-kloster-orthodox-donations')):(__('Services', 'georg-kloster-orthodox-donations')));
         echo '<a class="page-title-action" href="'.esc_url(admin_url('admin.php?page=georg-kloster-orthodox-donations-'.$kind.'&new=1')).('">'.esc_html__('Add new', 'georg-kloster-orthodox-donations').'</a><hr class="wp-header-end">');
-        if ($kind === 'services') {
-            echo '<div class="notice notice-info"><p>'.esc_html__('Sync every service to the Stripe Product Catalog. Product titles, descriptions, images and the current unit prices are maintained there; Checkout uses the calculated quantity.', 'georg-kloster-orthodox-donations').'</p><form method="post">';
-            wp_nonce_field('gkod_admin_action', '_gkod_nonce');
-            echo '<input type="hidden" name="gkod_action" value="sync_stripe_catalog">';
-            submit_button(__('Synchronize services with Stripe', 'georg-kloster-orthodox-donations'), 'secondary', 'submit', false);
-            echo '</form></div>';
-        }
+        if ($kind === 'services') echo '<div class="notice notice-info"><p>'.esc_html__('Select the services to sync, then choose “Synchronize selected with Stripe” in Actions. Stripe product titles, descriptions, images and prices are updated only for the selected services.', 'georg-kloster-orthodox-donations').'</p></div>';
         $table=new Catalog_Table($kind); $table->prepare_items(); $table->views();
         echo '<form method="get"><input type="hidden" name="page" value="georg-kloster-orthodox-donations-'.esc_attr($kind).'">';
         $table->search_box((__('Search', 'georg-kloster-orthodox-donations')),'gkod-catalog');echo '</form>';
