@@ -887,6 +887,9 @@ msgstr "Zurück"
 msgid "Next"
 msgstr "Weiter"
 
+msgid "Required for one-time donations and prayer requests:"
+msgstr "Erforderliche Ereignisse für einmalige Spenden und Gebetsanliegen:"
+
 msgid "For regular support, also enable these webhook events:"
 msgstr "Aktiviere für regelmäßige Unterstützung zusätzlich diese Webhook-Ereignisse:"
 

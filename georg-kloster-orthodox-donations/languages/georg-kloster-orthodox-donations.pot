@@ -1267,6 +1267,9 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
+msgid "Required for one-time donations and prayer requests:"
+msgstr ""
+
 msgid "For regular support, also enable these webhook events:"
 msgstr ""
 
