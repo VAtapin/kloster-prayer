@@ -1135,3 +1135,36 @@ msgstr "Минимальное пожертвование"
 
 msgid "The minimum donation for this campaign is %s EUR."
 msgstr "Минимальная сумма пожертвования для этого сбора — %s EUR."
+
+msgid "A valid Stripe Secret Key is required to synchronize products."
+msgstr "Для синхронизации товаров нужен действительный секретный ключ Stripe."
+
+msgid "Stripe did not return a product and its price."
+msgstr "Stripe не вернул товар и его цену."
+
+msgid "The Stripe product was created but its link could not be saved in WordPress."
+msgstr "Товар создан в Stripe, но сохранить связь с ним в WordPress не удалось."
+
+msgid "Stripe did not return a price ID."
+msgstr "Stripe не вернул идентификатор цены."
+
+msgid "The Stripe product was updated but its link could not be saved in WordPress."
+msgstr "Товар обновлён в Stripe, но сохранить связь с ним в WordPress не удалось."
+
+msgid "Stripe API request failed."
+msgstr "Запрос к API Stripe завершился ошибкой."
+
+msgid "Stripe synchronization finished: %1$d created, %2$d updated, %3$d failed."
+msgstr "Синхронизация со Stripe завершена: создано — %1$d, обновлено — %2$d, ошибок — %3$d."
+
+msgid "Sync every service to the Stripe Product Catalog. Product titles, descriptions, images and the current unit prices are maintained there; Checkout uses the calculated quantity."
+msgstr "Синхронизируйте все требы с каталогом товаров Stripe. Там будут поддерживаться названия, описания, изображения и текущие цены; при оплате используется рассчитанное количество."
+
+msgid "Synchronize services with Stripe"
+msgstr "Синхронизировать требы со Stripe"
+
+msgid "names"
+msgstr "имён"
+
+msgid "prayer slips"
+msgstr "молитвенных записок"

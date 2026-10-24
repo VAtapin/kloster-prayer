@@ -32,6 +32,7 @@ require_once DIR . '/includes/class-i18n.php';
 require_once DIR . '/includes/class-public-form.php';
 require_once DIR . '/includes/class-service-images.php';
 require_once DIR . '/includes/class-payments.php';
+require_once DIR . '/includes/class-stripe-catalog.php';
 require_once DIR . '/includes/class-campaigns.php';
 require_once DIR . '/includes/class-donation-pages.php';
 require_once DIR . '/includes/class-recurring-gateways.php';

@@ -51,6 +51,11 @@ final class Admin
         check_admin_referer('gkod_admin_action', '_gkod_nonce');
         global $wpdb;
         $action = sanitize_key((string) Input::post('gkod_action'));
+        if ($action === 'sync_stripe_catalog') {
+            $result = Stripe_Catalog::sync_all();
+            set_transient('gkod_stripe_sync_' . get_current_user_id(), $result, MINUTE_IN_SECONDS);
+            self::redirect('georg-kloster-orthodox-donations-services', 'stripe_sync');
+        }
         if ($action === 'refresh_customer') {
             $id=absint(Input::post('order_id')??0);$ok=Payments::refresh_customer($id);
             wp_safe_redirect(add_query_arg(['page'=>'georg-kloster-orthodox-donations','view'=>$id,'customer_sync'=>$ok?'ok':'unavailable'],admin_url('admin.php')));exit;
@@ -144,7 +149,21 @@ final class Admin
     private static function header(string $title): void
     {
         echo '<div class="wrap gkod-admin"><h1>' . esc_html($title) . '</h1>';
-        if (!empty(Input::get('gkod_notice'))) echo ('<div class="notice notice-success is-dismissible"><p>'.esc_html__('Saved.', 'georg-kloster-orthodox-donations').'</p></div>');
+        if (Input::get('gkod_notice') === 'stripe_sync') {
+            $key = 'gkod_stripe_sync_' . get_current_user_id();
+            $result = get_transient($key);
+            delete_transient($key);
+            if (is_array($result)) {
+                echo '<div class="notice '.(!empty($result['failed'])?'notice-warning':'notice-success').' is-dismissible"><p>';
+                printf(esc_html__('Stripe synchronization finished: %1$d created, %2$d updated, %3$d failed.', 'georg-kloster-orthodox-donations'), (int) $result['created'], (int) $result['updated'], (int) $result['failed']);
+                if (!empty($result['errors'])) {
+                    echo '</p><ul>';
+                    foreach ($result['errors'] as $error) echo '<li>'.esc_html((string) $error).'</li>';
+                    echo '</ul><p>';
+                }
+                echo '</p></div>';
+            }
+        } elseif (!empty(Input::get('gkod_notice'))) echo ('<div class="notice notice-success is-dismissible"><p>'.esc_html__('Saved.', 'georg-kloster-orthodox-donations').'</p></div>');
     }
 
     public static function orders(): void
@@ -303,6 +322,13 @@ final class Admin
         require_once DIR.'/includes/class-catalog-table.php';
         self::header($kind==='forms'?(__('Forms', 'georg-kloster-orthodox-donations')):(__('Services', 'georg-kloster-orthodox-donations')));
         echo '<a class="page-title-action" href="'.esc_url(admin_url('admin.php?page=georg-kloster-orthodox-donations-'.$kind.'&new=1')).('">'.esc_html__('Add new', 'georg-kloster-orthodox-donations').'</a><hr class="wp-header-end">');
+        if ($kind === 'services') {
+            echo '<div class="notice notice-info"><p>'.esc_html__('Sync every service to the Stripe Product Catalog. Product titles, descriptions, images and the current unit prices are maintained there; Checkout uses the calculated quantity.', 'georg-kloster-orthodox-donations').'</p><form method="post">';
+            wp_nonce_field('gkod_admin_action', '_gkod_nonce');
+            echo '<input type="hidden" name="gkod_action" value="sync_stripe_catalog">';
+            submit_button(__('Synchronize services with Stripe', 'georg-kloster-orthodox-donations'), 'secondary', 'submit', false);
+            echo '</form></div>';
+        }
         $table=new Catalog_Table($kind); $table->prepare_items(); $table->views();
         echo '<form method="get"><input type="hidden" name="page" value="georg-kloster-orthodox-donations-'.esc_attr($kind).'">';
         $table->search_box((__('Search', 'georg-kloster-orthodox-donations')),'gkod-catalog');echo '</form>';

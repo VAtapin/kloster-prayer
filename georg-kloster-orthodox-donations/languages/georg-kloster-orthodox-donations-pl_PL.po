@@ -1135,3 +1135,36 @@ msgstr "Minimalna darowizna"
 
 msgid "The minimum donation for this campaign is %s EUR."
 msgstr "Minimalna darowizna na tę zbiórkę wynosi %s EUR."
+
+msgid "A valid Stripe Secret Key is required to synchronize products."
+msgstr "Do synchronizacji produktów wymagany jest prawidłowy klucz tajny Stripe."
+
+msgid "Stripe did not return a product and its price."
+msgstr "Stripe nie zwrócił produktu ani jego ceny."
+
+msgid "The Stripe product was created but its link could not be saved in WordPress."
+msgstr "Produkt utworzono w Stripe, ale nie udało się zapisać jego powiązania w WordPressie."
+
+msgid "Stripe did not return a price ID."
+msgstr "Stripe nie zwrócił identyfikatora ceny."
+
+msgid "The Stripe product was updated but its link could not be saved in WordPress."
+msgstr "Produkt zaktualizowano w Stripe, ale nie udało się zapisać jego powiązania w WordPressie."
+
+msgid "Stripe API request failed."
+msgstr "Żądanie do API Stripe nie powiodło się."
+
+msgid "Stripe synchronization finished: %1$d created, %2$d updated, %3$d failed."
+msgstr "Synchronizacja ze Stripe zakończona: utworzono — %1$d, zaktualizowano — %2$d, błędów — %3$d."
+
+msgid "Sync every service to the Stripe Product Catalog. Product titles, descriptions, images and the current unit prices are maintained there; Checkout uses the calculated quantity."
+msgstr "Synchronizuj wszystkie intencje modlitewne z katalogiem produktów Stripe. Będą tam aktualizowane nazwy, opisy, obrazy i bieżące ceny jednostkowe; przy płatności używana jest obliczona liczba."
+
+msgid "Synchronize services with Stripe"
+msgstr "Synchronizuj intencje ze Stripe"
+
+msgid "names"
+msgstr "imion"
+
+msgid "prayer slips"
+msgstr "kartek modlitewnych"

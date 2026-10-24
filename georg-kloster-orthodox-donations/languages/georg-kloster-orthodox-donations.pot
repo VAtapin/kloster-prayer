@@ -1515,3 +1515,36 @@ msgstr ""
 
 msgid "The minimum donation for this campaign is %s EUR."
 msgstr ""
+
+msgid "A valid Stripe Secret Key is required to synchronize products."
+msgstr ""
+
+msgid "Stripe did not return a product and its price."
+msgstr ""
+
+msgid "The Stripe product was created but its link could not be saved in WordPress."
+msgstr ""
+
+msgid "Stripe did not return a price ID."
+msgstr ""
+
+msgid "The Stripe product was updated but its link could not be saved in WordPress."
+msgstr ""
+
+msgid "Stripe API request failed."
+msgstr ""
+
+msgid "Stripe synchronization finished: %1$d created, %2$d updated, %3$d failed."
+msgstr ""
+
+msgid "Sync every service to the Stripe Product Catalog. Product titles, descriptions, images and the current unit prices are maintained there; Checkout uses the calculated quantity."
+msgstr ""
+
+msgid "Synchronize services with Stripe"
+msgstr ""
+
+msgid "names"
+msgstr ""
+
+msgid "prayer slips"
+msgstr ""

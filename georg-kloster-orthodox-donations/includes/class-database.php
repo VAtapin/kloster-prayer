@@ -5,7 +5,7 @@ namespace GeorgKlosterOrthodoxDonate;
 
 final class Database
 {
-    private const DB_VERSION = '1.0.3';
+    private const DB_VERSION = '1.0.4';
 
     public static function table(string $name): string
     {
@@ -71,6 +71,7 @@ final class Database
         $orders = self::table('orders');
         $items = self::table('order_items');
         $events = self::table('payment_events');
+        $stripe_products = self::table('service_stripe_products');
 
         dbDelta("CREATE TABLE {$services} (
             id bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -122,6 +123,19 @@ final class Database
             sort_order int NOT NULL DEFAULT 0,
             PRIMARY KEY  (form_id,service_id),
             KEY service_id (service_id)
+        ) {$charset};");
+
+        dbDelta("CREATE TABLE {$stripe_products} (
+            service_id bigint unsigned NOT NULL,
+            livemode tinyint(1) NOT NULL DEFAULT 0,
+            key_hash char(64) NOT NULL,
+            product_id varchar(80) NOT NULL,
+            price_id varchar(80) NOT NULL,
+            amount_cents int unsigned NOT NULL,
+            catalog_hash char(64) NOT NULL,
+            synced_at datetime NOT NULL,
+            PRIMARY KEY  (service_id,livemode),
+            KEY product_id (product_id)
         ) {$charset};");
 
         dbDelta("CREATE TABLE {$orders} (

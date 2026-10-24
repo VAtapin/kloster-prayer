@@ -73,7 +73,7 @@ final class I18n
                 $paths[]=__DIR__.'/../languages/georg-kloster-orthodox-donations-'.$locales[$language].'.mo';
                 foreach ($paths as $path) {
                     $mo = new \MO();
-                    if (is_readable($path) && $mo->import_from_file($path)) $catalogs[$language][] = $mo;
+                    if (file_exists($path) && $mo->import_from_file($path)) $catalogs[$language][] = $mo;
                 }
             }
         }

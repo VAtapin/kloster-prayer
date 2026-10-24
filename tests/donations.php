@@ -28,6 +28,13 @@ add_filter('pre_wp_mail', static function ($value, $args) use (&$mail) { $mail[]
 add_filter('pre_http_request', static function ($value, $args, $url) use (&$http) {
     $http[] = [$url, $args];
     if (str_ends_with($url, '/v1/checkout/sessions')) $body = ['id'=>'cs_donation_fixture', 'url'=>'https://checkout.stripe.com/c/pay/donation_fixture'];
+    elseif (str_ends_with($url, '/v1/products')) {
+        $service_id=(string)($args['body']['metadata[gkod_service_id]']??'0');
+        $body=['id'=>'prod_service_'.$service_id,'default_price'=>'price_service_'.$service_id];
+    }
+    elseif (str_contains($url, '/v1/products/')) $body=['id'=>basename($url),'object'=>'product'];
+    elseif (str_ends_with($url, '/v1/prices')) $body=['id'=>'price_updated_fixture','object'=>'price'];
+    elseif (str_contains($url, '/v1/prices/')) $body=['id'=>basename($url),'object'=>'price'];
     elseif (str_ends_with($url, '/v1/oauth2/token')) $body = ['access_token'=>'local-fixture-token'];
     elseif (str_ends_with($url, '/v2/checkout/orders')) $body = ['id'=>'PAYPAL-DONATION', 'links'=>[['rel'=>'payer-action','href'=>'https://www.sandbox.paypal.com/checkoutnow?token=PAYPAL-DONATION']]];
     else return new WP_Error('blocked', 'Unexpected external call blocked');
@@ -74,6 +81,36 @@ donation_assert($order->intention==='none' && $order->names==='' && (int)$order-
 donation_assert((int)$wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i WHERE order_id=%d',Database::table('order_items'),$order->id))===0,'No fictitious prayer services');
 $checkout=end($http)[1]['body'];
 donation_assert($checkout['line_items[0][price_data][unit_amount]']==='1234' && $checkout['line_items[0][price_data][product_data][name]']===GeorgKlosterOrthodoxDonate\I18n::donation_text('title','ru'),'Stripe amount and donation label');
+
+// Before sync, prayer payments retain the existing aggregate Checkout behavior.
+$candle_id=(int)$wpdb->get_var($wpdb->prepare('SELECT id FROM %i WHERE slug=%s',Database::table('services'),'altar-candle'));
+delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
+$prayer=array_replace($base,['request_type'=>'prayer','donation_amount'=>'','names'=>"Anna\nOlga\nMaria\nIrina\nElena",'services'=>[(string)$candle_id],'intention'=>'health']);
+$before_sync=donation_ajax($prayer);
+donation_assert(($before_sync['success']??false)===true,'Prayer checkout keeps working before catalog sync');
+$fallback_checkout=end($http)[1]['body'];
+donation_assert(isset($fallback_checkout['line_items[0][price_data][product_data][name]']),'Unsynced services use the compatible aggregate Checkout item');
+
+// Sync the service catalog, then verify Checkout uses the catalog price and computed quantity.
+update_option('gkod_stripe_secret','sk_test_catalog_fixture');
+$catalog=GeorgKlosterOrthodoxDonate\Stripe_Catalog::sync_all();
+donation_assert($catalog['created']>=6 && $catalog['failed']===0,'All prayer services synchronize to Stripe products');
+delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
+$prayer_result=donation_ajax($prayer);
+donation_assert(($prayer_result['success']??false)===true,'Prayer request creates Stripe Checkout');
+$prayer_checkout=end($http)[1]['body'];
+donation_assert(($prayer_checkout['line_items[0][price]']??'')==='price_service_'.$candle_id,'Stripe Checkout references the synchronized service price');
+donation_assert(($prayer_checkout['line_items[0][quantity]']??'')==='5','Five names use quantity 5 at €30 per name');
+donation_assert(!isset($prayer_checkout['line_items[0][price_data][product_data][name]']),'Stripe Checkout does not create a duplicate inline product');
+$wpdb->update(Database::table('services'),['price_cents'=>3500],['id'=>$candle_id]);
+$repriced=GeorgKlosterOrthodoxDonate\Stripe_Catalog::sync_all();
+donation_assert($repriced['failed']===0 && $repriced['updated']>=6,'Changed service price synchronizes without creating another product');
+donation_assert((bool)array_filter($http,static fn($call)=>str_ends_with($call[0],'/v1/prices')),'A changed service price creates a new Stripe Price');
+delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
+$repriced_result=donation_ajax($prayer);
+donation_assert(($repriced_result['success']??false)===true,'Repriced prayer service remains payable');
+$repriced_checkout=end($http)[1]['body'];
+donation_assert(($repriced_checkout['line_items[0][price]']??'')==='price_updated_fixture'&&($repriced_checkout['line_items[0][quantity]']??'')==='5','New Stripe unit price retains calculated name quantity');
 $_GET=['gkod_payment'=>'success','gkod_order'=>$order->public_id];
 donation_assert(!str_contains(Public_Form::result_shortcode(),GeorgKlosterOrthodoxDonate\I18n::donation_text('thanks','ru')),'Return URL cannot claim an unpaid donation');
 function donation_event(object $order, int $amount, string $id): WP_REST_Response {

@@ -228,10 +228,21 @@ final class Payments
             'billing_address_collection' => 'required', 'phone_number_collection[enabled]' => 'true',
             'metadata[order_id]' => (string) $order->id, 'metadata[public_id]' => $order->public_id,
             'payment_intent_data[metadata][order_id]' => (string) $order->id,
-            'line_items[0][quantity]' => '1', 'line_items[0][price_data][currency]' => 'eur',
-            'line_items[0][price_data][unit_amount]' => (string) $order->amount_cents,
-            'line_items[0][price_data][product_data][name]' => self::payment_label($order),
         ];
+        $lines = $order->intention !== 'none'
+            ? Stripe_Catalog::checkout_items((int) $order->id, str_starts_with($secret, 'sk_live_') ? 1 : 0, (int) $order->amount_cents, hash('sha256', $secret))
+            : null;
+        if ($lines) {
+            foreach ($lines as $index => $line) {
+                $body["line_items[{$index}][price]"] = $line['price'];
+                $body["line_items[{$index}][quantity]"] = (string) $line['quantity'];
+            }
+        } else {
+            $body['line_items[0][quantity]'] = '1';
+            $body['line_items[0][price_data][currency]'] = 'eur';
+            $body['line_items[0][price_data][unit_amount]'] = (string) $order->amount_cents;
+            $body['line_items[0][price_data][product_data][name]'] = self::payment_label($order);
+        }
         $response = wp_remote_post('https://api.stripe.com/v1/checkout/sessions', ['timeout' => 25, 'headers' => ['Authorization' => 'Bearer ' . $secret], 'body' => $body]);
         return self::payment_url_from_response($response, 'url', (int) $order->id, 'stripe');
     }
