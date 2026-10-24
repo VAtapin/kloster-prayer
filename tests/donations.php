@@ -41,6 +41,9 @@ add_filter('pre_http_request', static function ($value, $args, $url) use (&$http
     return ['headers'=>[], 'body'=>wp_json_encode($body), 'response'=>['code'=>200,'message'=>'OK'], 'cookies'=>[]];
 }, 10, 3);
 update_option('gkod_payment_methods', ['stripe','paypal']);
+update_option('gkod_form_color_donation', '#a03f3f');
+update_option('gkod_form_color_health', '#ad5754');
+update_option('gkod_form_color_rest', '#595959');
 update_option('gkod_stripe_secret','local-fixture');
 update_option('gkod_stripe_webhook_secret','local-fixture-signing');
 update_option('gkod_paypal_client_id','local-fixture');
@@ -52,6 +55,7 @@ foreach (['','0','0.49','-1','+1','1e3','1.234','1,234.56','1000000','NaN','1.00
 foreach (['ru','de','uk','pl'] as $lang) {
     $form = do_shortcode('[gkod_donation lang="'.$lang.'"]');
     donation_assert(str_contains($form,'name="donation_amount"') && !str_contains($form,'name="names"') && !str_contains($form,'name="services[]"') && !str_contains($form,'name="intention"'), 'Donation form without prayer inputs');
+    donation_assert(str_contains($form,'--gkod-donation-accent:#a03f3f') && str_contains($form,'--gkod-health-accent:#ad5754') && str_contains($form,'--gkod-rest-accent:#595959'), 'Configured, escaped form accent colors are exposed as CSS variables');
     donation_assert(str_contains($form,esc_html(GeorgKlosterOrthodoxDonate\I18n::donation_text('submit',$lang))), 'Localized donation form');
 }
 $pair=do_shortcode('[gkod_donation][gkod_donation]');
@@ -74,10 +78,13 @@ $count=(int)$wpdb->get_var('SELECT COUNT(*) FROM '.Database::table('orders'));
 foreach ([['donation_amount'=>'0.49'],['donation_amount'=>'1e3'],['donation_amount'=>['12']],['donor_email'=>'bad'],['services'=>['1']],['names'=>'Мария'],['provider'=>'none'],['request_type'=>'unknown']] as $bad) donation_assert(!(donation_ajax(array_replace($base,$bad))['success']??true), 'Server rejects malformed/mixed requests');
 donation_assert((int)$wpdb->get_var('SELECT COUNT(*) FROM '.Database::table('orders'))===$count,'Invalid requests create no order');
 delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
-$result=donation_ajax($base);
+wp_set_current_user(0);
+$guest_base=array_replace($base,['nonce'=>wp_create_nonce('gkod_payment')]);
+$result=donation_ajax($guest_base);
+wp_set_current_user(1);
 donation_assert(($result['success']??false) && str_starts_with($result['data']['redirect'],'https://checkout.stripe.com/'),'Stripe donation AJAX checkout');
 $order=$wpdb->get_row('SELECT * FROM '.Database::table('orders').' ORDER BY id DESC LIMIT 1');
-donation_assert($order->intention==='none' && $order->names==='' && (int)$order->amount_cents===1234 && $order->form_id===null,'Stored standalone donation');
+donation_assert($order->intention==='none' && $order->names==='' && (int)$order->amount_cents===1234 && $order->form_id===null && (int)$order->donor_user_id===0,'Guest standalone donation is stored without a WordPress account');
 donation_assert((int)$wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i WHERE order_id=%d',Database::table('order_items'),$order->id))===0,'No fictitious prayer services');
 $checkout=end($http)[1]['body'];
 donation_assert($checkout['line_items[0][price_data][unit_amount]']==='1234' && $checkout['line_items[0][price_data][product_data][name]']===GeorgKlosterOrthodoxDonate\I18n::donation_text('title','ru'),'Stripe amount and donation label');
@@ -85,6 +92,7 @@ donation_assert($checkout['line_items[0][price_data][unit_amount]']==='1234' && 
 // Before sync, prayer payments retain the existing aggregate Checkout behavior.
 $candle_id=(int)$wpdb->get_var($wpdb->prepare('SELECT id FROM %i WHERE slug=%s',Database::table('services'),'altar-candle'));
 $akathist_id=(int)$wpdb->get_var($wpdb->prepare('SELECT id FROM %i WHERE slug=%s',Database::table('services'),'akathist'));
+$wpdb->update(Database::table('services'),['description_de'=>'','description_ru'=>''],['id'=>$candle_id]);
 delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
 $prayer=array_replace($base,['request_type'=>'prayer','donation_amount'=>'','names'=>"Anna\nOlga\nMaria\nIrina\nElena",'services'=>[(string)$candle_id],'intention'=>'health']);
 $before_sync=donation_ajax($prayer);
@@ -96,6 +104,8 @@ donation_assert(isset($fallback_checkout['line_items[0][price_data][product_data
 update_option('gkod_stripe_secret','sk_test_catalog_fixture');
 $catalog=GeorgKlosterOrthodoxDonate\Stripe_Catalog::sync_selected([$candle_id,$akathist_id]);
 donation_assert($catalog['created']===2 && $catalog['failed']===0,'Only the two selected services synchronize to Stripe products');
+$empty_description_calls=array_values(array_filter($http,static fn($call)=>str_ends_with($call[0],'/v1/products')&&(string)($call[1]['body']['metadata[gkod_service_id]']??'')===(string)$candle_id));
+donation_assert(isset($empty_description_calls[0])&&!isset($empty_description_calls[0][1]['body']['description']),'Empty service descriptions are omitted from Stripe product requests');
 $mapped=(int)$wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i WHERE livemode=0 AND key_hash=%s',Database::table('service_stripe_products'),hash('sha256','sk_test_catalog_fixture')));
 donation_assert($mapped===2,'Unselected services are not added to the Stripe catalog');
 require_once dirname(__DIR__).'/georg-kloster-orthodox-donations/includes/class-catalog-table.php';
@@ -133,6 +143,21 @@ donation_assert(donation_event($order,1,'evt_donation_bad')->get_status()===400 
 donation_assert(donation_event($order,1234,'evt_donation_paid')->get_status()===200 && count($mail)===2,'Signed donation webhook confirms and sends two emails');
 donation_assert($wpdb->get_var($wpdb->prepare('SELECT payment_reference FROM %i WHERE id=%d',Database::table('orders'),$order->id))==='pi_donation_fixture','Verified checkout stores the refund reference');
 donation_assert($mail[0]['subject']===GeorgKlosterOrthodoxDonate\I18n::donation_text('subject','ru') && !str_contains($mail[0]['message'],'Имена'),'Donor confirmation describes donation');
+require_once dirname(__DIR__).'/georg-kloster-orthodox-donations/includes/class-donation-pages.php';
+$donor_token=GeorgKlosterOrthodoxDonate\Donors::access_token($order->donor_email);
+donation_assert($donor_token!==''&&str_contains($mail[0]['message'],'gkod_donor='.$donor_token)&&str_contains($mail[0]['message'],'gkod_lang=ru'),'Paid donation email includes a reusable, language-specific personal cabinet link');
+donation_assert(GeorgKlosterOrthodoxDonate\Donors::access_token($order->donor_email)===$donor_token,'The donor link remains stable for later donations');
+$donor=GeorgKlosterOrthodoxDonate\Donors::find($order->donor_email);$session_payload=(int)$donor->id.'.'.(time()+DAY_IN_SECONDS);
+$_COOKIE['gkod_donor_access']=$session_payload.'.'.hash_hmac('sha256',$session_payload,wp_salt('auth'));
+$history=GeorgKlosterOrthodoxDonate\Donation_Pages::history(['lang'=>'en']);
+donation_assert((bool)preg_match('/12[.,]34/',$history)&&str_contains($history,'Make another donation')&&!str_contains($history,'Log in'),'Guest donor cabinet shows the payment and another-donation action without registration');
+$thank_you_start=count($mail);
+$thank_you=GeorgKlosterOrthodoxDonate\Thank_You::send_order((int)$order->id);
+$thank_you_args=$mail[$thank_you_start]??[];$thank_you_attachment=$thank_you_args['attachments'][0]??'';
+donation_assert($thank_you===true&&trim((string)($thank_you_args['subject']??''))!=='','Staff-triggered thank-you sends only after the payment is paid');
+donation_assert(is_string($thank_you_attachment)&&is_file($thank_you_attachment)&&str_starts_with((string)file_get_contents($thank_you_attachment),'%PDF-'),'Thank-you email contains a generated PDF attachment');
+donation_assert(!file_exists($thank_you_attachment),'Temporary thank-you PDF is removed after the mail handoff');
+unset($_COOKIE['gkod_donor_access']);
 donation_assert(!str_contains($mail[1]['message'],'<h2') && !str_contains($mail[1]['message'],'О здравии'),'Recipient notification omits prayer names/type');
 $delivered=count($mail); donation_event($order,1234,'evt_donation_paid'); donation_assert(count($mail)===$delivered,'Duplicate webhook does not resend');
 $_GET=['gkod_payment'=>'success','gkod_order'=>$order->public_id];

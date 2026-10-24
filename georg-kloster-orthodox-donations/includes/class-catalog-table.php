@@ -9,6 +9,11 @@ final class Catalog_Table extends \WP_List_Table
 {
     private string $kind;
     public function __construct(string $kind) { $this->kind=$kind; parent::__construct(['singular'=>'gkod-item','plural'=>'gkod-items','ajax'=>false]); }
+    protected function get_table_classes() {
+        $classes = parent::get_table_classes();
+        if ($this->kind === 'services') $classes = array_values(array_diff($classes, ['fixed']));
+        return $classes;
+    }
     public function get_columns() {
         $columns=['cb'=>'<input type="checkbox">','title'=>(esc_html__('Title', 'georg-kloster-orthodox-donations')),'slug'=>(esc_html__('Slug', 'georg-kloster-orthodox-donations')),'details'=>$this->kind==='forms'?(esc_html__('Shortcode', 'georg-kloster-orthodox-donations')):(esc_html__('Donation', 'georg-kloster-orthodox-donations')),'status'=>(esc_html__('Status', 'georg-kloster-orthodox-donations'))];
         if ($this->kind==='services') $columns['stripe']=esc_html__('Stripe', 'georg-kloster-orthodox-donations');

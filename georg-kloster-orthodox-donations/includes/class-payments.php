@@ -69,8 +69,8 @@ final class Payments
         if (!in_array($request_type, ['prayer', 'donation'], true)) wp_send_json_error(['message' => I18n::text('required', $language)], 422);
         $donation = $request_type === 'donation';
         $frequency = Input::post('frequency') ?? 'once';
-        if (!in_array($frequency, ['once', 'month', 'year'], true) || ($frequency !== 'once' && (!$donation || !is_user_logged_in() || Input::post('recurring_consent') !== '1'))) {
-            wp_send_json_error(['message' => I18n::in_language(static fn() => __('Log in and confirm recurring support before continuing.', 'georg-kloster-orthodox-donations'), $language)], 422);
+        if (!in_array($frequency, ['once', 'month', 'year'], true) || ($frequency !== 'once' && (!$donation || Input::post('recurring_consent') !== '1'))) {
+            wp_send_json_error(['message' => I18n::text('recurring_required', $language)], 422);
         }
         $campaign_id = absint(Input::post('campaign_id') ?? 0);
         if ($campaign_id) {
@@ -178,9 +178,14 @@ final class Payments
         }
         $uuid = wp_generate_uuid4();
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
+        $donor_user_id = (int) ($data['donor_user_id'] ?? 0);
+        if (!array_key_exists('donor_user_id', $data) && is_user_logged_in()) {
+            $user = wp_get_current_user();
+            if (Donors::normalize_email((string) $user->user_email) === Donors::normalize_email((string) $data['donor_email'])) $donor_user_id = get_current_user_id();
+        }
         $ok = $wpdb->insert(Database::table('orders'), [
             'public_id' => $uuid, 'form_id' => $data['form_id'] ?: null, 'language' => $data['language'],
-            'campaign_id' => $campaign_id ?: null, 'donor_user_id' => $data['donor_user_id'] ?? get_current_user_id(),
+            'campaign_id' => $campaign_id ?: null, 'donor_user_id' => $donor_user_id,
             'subscription_id' => $data['subscription_id'] ?? null, 'payment_id' => $data['payment_id'] ?? null, 'payment_reference' => $data['payment_reference'] ?? null,
             'intention' => $data['intention'], 'names' => $data['names'], 'note' => $data['note'],
             'donor_name' => $data['donor_name'], 'donor_email' => $data['donor_email'], 'amount_cents' => $amount,
@@ -549,6 +554,10 @@ final class Payments
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $claimed = $wpdb->query($wpdb->prepare("UPDATE %i SET confirmation_sent_at=%s WHERE id=%d AND confirmation_sent_at IS NULL", $orders, current_time('mysql'), (int) $order->id));
         if (!$claimed) return;
+        $language = in_array($order->language, ['en','de','ru','uk','pl'], true) ? $order->language : 'en';
+        $cabinet_url = Donors::cabinet_url((string) $order->donor_email, $language);
+        $cabinet_label = I18n::in_language(static fn() => __('View your donations and make another donation', 'georg-kloster-orthodox-donations'), $language);
+        $cabinet_link = '<p style="margin:24px 0;text-align:center"><a href="' . esc_url($cabinet_url) . '" style="display:inline-block;padding:12px 20px;background:#8b3e37;color:#fff;text-decoration:none">' . esc_html($cabinet_label) . '</a></p>';
         if (($order->intention ?? '') === 'none') {
             $subject = I18n::donation_text('subject', $order->language);
             $site_name = wp_specialchars_decode((string) get_bloginfo('name'), ENT_QUOTES);
@@ -570,6 +579,7 @@ final class Payments
         $footer = esc_html(I18n::text('footer',$lang)) . '<br>' . esc_html($site_name);
         $body = '<!doctype html><html><body style="margin:0;background:#f3f5f7;font-family:Arial,sans-serif;color:#202936"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding:28px 12px"><table role="presentation" width="620" cellspacing="0" cellpadding="0" style="max-width:620px;width:100%;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 8px 30px rgba(25,40,55,.10)"><tr><td align="center" style="padding:28px 30px 22px;border-top:5px solid #198fd9">'.($logo_url!==''?'<img src="'.esc_url($logo_url).'" width="360" alt="'.esc_attr($site_name).'" style="display:block;max-width:100%;height:auto">':'<strong>'.esc_html($site_name).'</strong>').'</td></tr><tr><td style="padding:8px 42px 38px"><h1 style="margin:0 0 18px;font-size:25px;line-height:1.3;text-align:center">'.esc_html($subject).'</h1><p style="font-size:16px;line-height:1.65">'.$greeting.'</p><p style="font-size:16px;line-height:1.65">'.esc_html(I18n::text('thanks',$lang)).'</p><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:24px 0;border:1px solid #dce4ea;border-radius:5px"><tr><td style="padding:12px 16px;background:#f5f9fc"><strong>'.esc_html($labels[0]).'</strong></td><td style="padding:12px 16px;background:#f5f9fc;text-align:right">'.esc_html(implode(', ',$items)).'</td></tr><tr><td style="padding:12px 16px;border-top:1px solid #dce4ea"><strong>'.esc_html($labels[1]).'</strong></td><td style="padding:12px 16px;border-top:1px solid #dce4ea;text-align:right">'.esc_html($intention).'</td></tr><tr><td style="padding:12px 16px;border-top:1px solid #dce4ea"><strong>'.esc_html($labels[2]).'</strong></td><td style="padding:12px 16px;border-top:1px solid #dce4ea;text-align:right"><strong>'.esc_html($amount).'</strong></td></tr></table><h2 style="font-size:17px;margin:25px 0 10px">'.esc_html($labels[3]).'</h2><div style="padding:17px 20px;background:#f8fafb;border-left:4px solid #198fd9;font-size:16px;line-height:1.7">'.nl2br(esc_html($order->names)).'</div><p style="margin:28px 0 0;color:#53606d;font-size:15px;line-height:1.6">'.$footer.'</p></td></tr><tr><td style="padding:17px 30px;background:#202936;color:#cfd6dc;text-align:center;font-size:12px"><a href="'.esc_url(home_url('/')).'" style="color:#fff">'.esc_html($site_name).'</a></td></tr></table></td></tr></table></body></html>';
         }
+        $body = str_replace('</body>', $cabinet_link . '</body>', $body);
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         if (!wp_mail($order->donor_email, $subject, $body, ['Content-Type: text/html; charset=UTF-8'])) { $wpdb->update($orders, ['confirmation_sent_at' => null], ['id' => (int) $order->id]); Order_Workflow::log((int)$order->id,'email_failed',__('Could not hand the email to the mail system', 'georg-kloster-orthodox-donations')); } else { Order_Workflow::log((int)$order->id,'email_sent',__('Confirmation handed to the mail system', 'georg-kloster-orthodox-donations')); }
     }

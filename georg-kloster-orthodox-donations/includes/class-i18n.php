@@ -121,6 +121,7 @@ final class I18n
             'submit' => __('Submit prayer request and donate', 'georg-kloster-orthodox-donations'),
             'secure' => __('Secure payment. Your information is used only to process your prayer request.', 'georg-kloster-orthodox-donations'),
             'required' => __('Please complete all required fields.', 'georg-kloster-orthodox-donations'),
+            'recurring_required' => __('Choose a valid payment frequency and agree to recurring payments.', 'georg-kloster-orthodox-donations'),
             'error' => __('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'),
             'thanks' => __('Thank you. Your payment is confirmed and your prayer request has been received.', 'georg-kloster-orthodox-donations'),
             'processing' => __('Thank you. Payment is still being confirmed. We will email you once the funds have arrived.', 'georg-kloster-orthodox-donations'),

@@ -29,9 +29,9 @@ final class Subscriptions
     public static function checkout(object $order, string $interval): string|\WP_Error
     {
         global $wpdb;
-        if (!is_user_logged_in() || $order->intention !== 'none' || (int) $order->donor_user_id !== get_current_user_id() || !in_array($interval, ['month','year'], true)) return new \WP_Error('invalid', __('Please complete all required fields.', 'georg-kloster-orthodox-donations'));
+        if ($order->intention !== 'none' || !in_array($interval, ['month','year'], true)) return new \WP_Error('invalid', __('Please complete all required fields.', 'georg-kloster-orthodox-donations'));
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Subscription ownership and provider lifecycle/idempotency require current custom ledger state.
-        $ok = $wpdb->insert(Database::table('subscriptions'), ['public_id' => wp_generate_uuid4(), 'donor_user_id' => get_current_user_id(), 'initial_order_id' => $order->id, 'provider' => $order->payment_provider, 'amount_cents' => $order->amount_cents, 'billing_interval' => $interval, 'status' => 'pending', 'created_at' => current_time('mysql'), 'updated_at' => current_time('mysql')]);
+        $ok = $wpdb->insert(Database::table('subscriptions'), ['public_id' => wp_generate_uuid4(), 'donor_user_id' => (int) $order->donor_user_id, 'initial_order_id' => $order->id, 'provider' => $order->payment_provider, 'amount_cents' => $order->amount_cents, 'billing_interval' => $interval, 'status' => 'pending', 'created_at' => current_time('mysql'), 'updated_at' => current_time('mysql')]);
         if (!$ok) return new \WP_Error('database', __('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'));
         $id = (int) $wpdb->insert_id;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Subscription ownership and provider lifecycle/idempotency require current custom ledger state.
@@ -192,7 +192,10 @@ final class Subscriptions
     {
         global $wpdb;
         $sub = self::get($id);
-        if (!$sub || !is_user_logged_in() || ((int) $sub->donor_user_id !== get_current_user_id() && !current_user_can('manage_options'))) return new \WP_Error('forbidden', __('Forbidden', 'georg-kloster-orthodox-donations'));
+        $initial = $sub ? $wpdb->get_row($wpdb->prepare('SELECT donor_email FROM %i WHERE id=%d', Database::table('orders'), (int) $sub->initial_order_id)) : null;
+        $account_owner = $sub && is_user_logged_in() && (int) $sub->donor_user_id > 0 && (int) $sub->donor_user_id === get_current_user_id();
+        $link_owner = $initial && Donors::has_access_to_email((string) $initial->donor_email);
+        if (!$sub || (!$account_owner && !$link_owner && !current_user_can('manage_options'))) return new \WP_Error('forbidden', __('Forbidden', 'georg-kloster-orthodox-donations'));
         if ($sub->status === 'cancelled') return true;
         $result = Recurring_Gateways::cancel($sub);
         if (is_wp_error($result)) return $result;

@@ -34,6 +34,9 @@ require_once DIR . '/includes/class-service-images.php';
 require_once DIR . '/includes/class-payments.php';
 require_once DIR . '/includes/class-stripe-catalog.php';
 require_once DIR . '/includes/class-campaigns.php';
+require_once DIR . '/includes/class-donors.php';
+require_once DIR . '/includes/class-thank-you.php';
+require_once DIR . '/includes/class-donor-admin.php';
 require_once DIR . '/includes/class-donation-pages.php';
 require_once DIR . '/includes/class-recurring-gateways.php';
 require_once DIR . '/includes/class-payment-refunds.php';
@@ -57,6 +60,8 @@ add_action('plugins_loaded', static function (): void {
     Public_Form::init();
     Payments::init();
     Campaigns::init();
+    Donors::init();
+    Donor_Admin::init();
     Donation_Pages::init();
     Subscriptions::init();
     Support_Pages::init();

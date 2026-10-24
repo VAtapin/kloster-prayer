@@ -15,7 +15,6 @@
 .gkod-admin .gkod-stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:12px 0}
 .gkod-admin .gkod-stats>div{min-width:0;padding:12px;border-radius:2px}
 .gkod-admin .gkod-stats strong{font-size:20px;overflow-wrap:anywhere}
-.gkod-admin .widefat td,.gkod-admin .widefat th{overflow-wrap:anywhere}
 .gkod-admin .wp-list-table .column-cb{width:2.2em}
 .gkod-admin .wp-list-table .column-title{width:32%}
 .gkod-admin .wp-list-table .column-details{width:24%}

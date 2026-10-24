@@ -5,7 +5,7 @@ namespace GeorgKlosterOrthodoxDonate;
 
 final class Database
 {
-    private const DB_VERSION = '1.0.4';
+    private const DB_VERSION = '1.0.5';
 
     public static function table(string $name): string
     {
@@ -292,6 +292,19 @@ final class Database
             UNIQUE KEY public_id (public_id),
             UNIQUE KEY provider_subscription (provider,provider_id),
             KEY donor_user_id (donor_user_id)
+        ) {$charset};");
+        $donors = self::table('donors');
+        dbDelta("CREATE TABLE {$donors} (
+            id bigint unsigned NOT NULL AUTO_INCREMENT,
+            email varchar(190) NOT NULL,
+            wp_user_id bigint unsigned NOT NULL DEFAULT 0,
+            access_token_hash char(64) NULL,
+            access_revoked tinyint(1) NOT NULL DEFAULT 0,
+            created_at datetime NOT NULL,
+            updated_at datetime NOT NULL,
+            PRIMARY KEY  (id),
+            UNIQUE KEY email (email),
+            KEY wp_user_id (wp_user_id)
         ) {$charset};");
         $refunds = self::table('payment_refunds');
         dbDelta("CREATE TABLE {$refunds} (

@@ -16,7 +16,7 @@ final class Admin
         add_action('admin_enqueue_scripts', static function (string $hook): void {
             if (str_contains($hook, 'georg-kloster-orthodox-donations')) {
                 wp_enqueue_style('gkod-admin', plugins_url('assets/css/admin.css', FILE), [], VERSION);
-                wp_enqueue_style('gkod-admin-native', plugins_url('assets/css/admin-native.css', FILE), ['gkod-admin'], VERSION);
+                wp_enqueue_style('gkod-admin-native', plugins_url('assets/css/admin-native.css', FILE), ['gkod-admin'], VERSION . '.' . substr(md5_file(DIR . '/assets/css/admin-native.css'), 0, 12));
                 if (str_ends_with($hook, '_page_georg-kloster-orthodox-donations-help')) wp_enqueue_script('gkod-admin-shortcodes', plugins_url('assets/js/admin-shortcodes.js', FILE), [], VERSION, true);
                 wp_enqueue_media();
                 wp_enqueue_script('gkod-admin-images', plugins_url('assets/js/admin-images.js', FILE), ['jquery','media-views'], VERSION . '.' . filemtime(DIR . '/assets/js/admin-images.js'), true);
@@ -107,6 +107,10 @@ final class Admin
             update_option('gkod_paypal_webhook_id', sanitize_text_field((string) Input::post('paypal_webhook_id') ?? ''));
             $methods = array_values(array_intersect(['stripe', 'paypal'], (array) (Input::post_list('methods') ?? [])));
             update_option('gkod_payment_methods', $methods ?: ['stripe']);
+            foreach (['donation' => 'ad5754', 'health' => 'ad5754', 'rest' => '595959'] as $kind => $fallback) {
+                $color = sanitize_hex_color((string) (Input::post('form_color_' . $kind) ?? ''));
+                update_option('gkod_form_color_' . $kind, $color ?: '#' . $fallback);
+            }
             self::redirect('georg-kloster-orthodox-donations-settings', 'saved');
         }
         if ($action === 'save_service') {
@@ -323,7 +327,6 @@ final class Admin
         require_once DIR.'/includes/class-catalog-table.php';
         self::header($kind==='forms'?(__('Forms', 'georg-kloster-orthodox-donations')):(__('Services', 'georg-kloster-orthodox-donations')));
         echo '<a class="page-title-action" href="'.esc_url(admin_url('admin.php?page=georg-kloster-orthodox-donations-'.$kind.'&new=1')).('">'.esc_html__('Add new', 'georg-kloster-orthodox-donations').'</a><hr class="wp-header-end">');
-        if ($kind === 'services') echo '<div class="notice notice-info"><p>'.esc_html__('Select the services to sync, then choose “Synchronize selected with Stripe” in Actions. Stripe product titles, descriptions, images and prices are updated only for the selected services.', 'georg-kloster-orthodox-donations').'</p></div>';
         $table=new Catalog_Table($kind); $table->prepare_items(); $table->views();
         echo '<form method="get"><input type="hidden" name="page" value="georg-kloster-orthodox-donations-'.esc_attr($kind).'">';
         $table->search_box((__('Search', 'georg-kloster-orthodox-donations')),'gkod-catalog');echo '</form>';

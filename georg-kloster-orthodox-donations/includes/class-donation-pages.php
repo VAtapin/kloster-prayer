@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace GeorgKlosterOrthodoxDonate;
 
-/** Campaign administration and account-owned donation history. */
+/** Campaign administration and private donor donation history. */
 final class Donation_Pages
 {
     public static function private_page(): void
@@ -109,31 +109,56 @@ final class Donation_Pages
     public static function history(array|string $atts = []): string
     {
         $atts = shortcode_atts(['lang' => ''], $atts, 'gkod_donation_history');
-        $lang = in_array($atts['lang'], ['en','ru','de','uk','pl'], true) ? $atts['lang'] : I18n::language();
+        $requested_language = Input::get('gkod_lang') ?? '';
+        $lang = in_array($atts['lang'], ['en','ru','de','uk','pl'], true) ? $atts['lang'] : (in_array($requested_language, ['en','ru','de','uk','pl'], true) ? $requested_language : I18n::language());
         return I18n::in_language(static fn(): string => self::history_html($lang), $lang);
     }
 
     private static function history_html(string $lang): string
     {
-        if (!is_user_logged_in()) return '<p><a href="' . esc_url(wp_login_url(get_permalink())) . '">' . esc_html__('Log in to view your donations.', 'georg-kloster-orthodox-donations') . '</a></p>';
+        $donor = Donors::current();
+        if (!$donor) return '<p>' . esc_html__('Open the personal account link from your donation email, or sign in to the WordPress account linked to your donation.', 'georg-kloster-orthodox-donations') . '</p>';
         self::private_page();
         global $wpdb;
         $page = min(1000, max(1, absint(Input::get('donation_page') ?? 1)));
-        // Ownership is the authenticated WordPress user, never a posted ID or email.
+        $email = (string) $donor->email;
+        $user_id = is_user_logged_in() && (int) $donor->wp_user_id === get_current_user_id() ? get_current_user_id() : 0;
+        $where = $user_id > 0 ? 'LOWER(donor_email)=LOWER(%s) OR donor_user_id=%d' : 'LOWER(donor_email)=LOWER(%s)';
+        $query_args = $user_id > 0 ? [Database::table('orders'), $email, $user_id, ($page - 1) * 20] : [Database::table('orders'), $email, ($page - 1) * 20];
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Account-owned custom payment ledger; read current status/refunds without stale private history.
-        $rows = $wpdb->get_results($wpdb->prepare('SELECT id,campaign_id,amount_cents,refunded_cents,currency,payment_status,created_at FROM %i WHERE donor_user_id=%d ORDER BY id DESC LIMIT 21 OFFSET %d', Database::table('orders'), get_current_user_id(), ($page - 1) * 20));
-        $html = '<div class="gkod-donation-history"><h2>' . esc_html__('Your donations', 'georg-kloster-orthodox-donations') . '</h2><p>' . esc_html__('Only payments made while signed in to this account are shown. Guest payments are not linked by email.', 'georg-kloster-orthodox-donations') . '</p><table><thead><tr><th>' . esc_html__('Date', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Campaign', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Amount', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Status', 'georg-kloster-orthodox-donations') . '</th></tr></thead><tbody>';
+        $rows = $wpdb->get_results($wpdb->prepare('SELECT * FROM %i WHERE ' . $where . ' ORDER BY id DESC LIMIT 21 OFFSET %d', ...$query_args));
+        $html = '<div class="gkod-donation-history"><h2>' . esc_html__('Your donations', 'georg-kloster-orthodox-donations') . '</h2><p>' . esc_html($email) . '</p><table><thead><tr><th>' . esc_html__('Date', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Donation', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Amount', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Payment method', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Status', 'georg-kloster-orthodox-donations') . '</th></tr></thead><tbody>';
         foreach (array_slice($rows, 0, 20) as $order) {
             $campaign = $order->campaign_id ? Campaigns::get((int) $order->campaign_id) : null;
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Load titles from the existing order item ledger for the donor's private account view.
+            $service_titles = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d ORDER BY id', Database::table('order_items'), (int) $order->id));
             $statuses = ['pending' => __('Pending', 'georg-kloster-orthodox-donations'), 'paid' => __('Paid', 'georg-kloster-orthodox-donations'), 'failed' => __('Error', 'georg-kloster-orthodox-donations'), 'refunded' => __('Refunded', 'georg-kloster-orthodox-donations'), 'cancelled' => __('Canceled', 'georg-kloster-orthodox-donations')];
             $status = $order->payment_status === 'paid' && $order->refunded_cents > 0 ? __('Partially refunded', 'georg-kloster-orthodox-donations') : ($statuses[$order->payment_status] ?? $order->payment_status);
             $amount = esc_html(number_format_i18n($order->amount_cents / 100, 2) . ' ' . $order->currency);
             if ($order->refunded_cents > 0) $amount .= '<br>' . esc_html__('Refunded', 'georg-kloster-orthodox-donations') . ': ' . esc_html(number_format_i18n($order->refunded_cents / 100, 2) . ' ' . $order->currency);
-            $html .= '<tr><td data-label="' . esc_attr__('Date', 'georg-kloster-orthodox-donations') . '">' . esc_html($order->created_at) . '</td><td data-label="' . esc_attr__('Campaign', 'georg-kloster-orthodox-donations') . '">' . esc_html($campaign && $campaign->status !== 'draft' ? Campaigns::title($campaign, $lang) : I18n::donation_text('title')) . '</td><td data-label="' . esc_attr__('Amount', 'georg-kloster-orthodox-donations') . '"><span>' . $amount . '</span></td><td data-label="' . esc_attr__('Status', 'georg-kloster-orthodox-donations') . '">' . esc_html($status) . '</td></tr>';
+            $purpose = $campaign && $campaign->status !== 'draft' ? Campaigns::title($campaign, $lang) : ($service_titles ? implode(', ', $service_titles) : I18n::donation_text('title', $lang));
+            $html .= '<tr><td data-label="' . esc_attr__('Date', 'georg-kloster-orthodox-donations') . '">' . esc_html($order->created_at) . '<br><small>#' . (int) $order->id . '</small></td><td data-label="' . esc_attr__('Donation', 'georg-kloster-orthodox-donations') . '">' . esc_html($purpose) . '</td><td data-label="' . esc_attr__('Amount', 'georg-kloster-orthodox-donations') . '"><span>' . $amount . '</span></td><td data-label="' . esc_attr__('Payment method', 'georg-kloster-orthodox-donations') . '">' . esc_html(ucfirst((string) $order->payment_provider)) . '</td><td data-label="' . esc_attr__('Status', 'georg-kloster-orthodox-donations') . '">' . esc_html($status) . '</td></tr>';
         }
+        if (!$rows) $html .= '<tr><td colspan="5">' . esc_html__('No donations found.', 'georg-kloster-orthodox-donations') . '</td></tr>';
         $html .= '</tbody></table>';
         if ($page > 1) $html .= '<a href="' . esc_url(add_query_arg('donation_page', $page - 1)) . '">' . esc_html__('Previous', 'georg-kloster-orthodox-donations') . '</a> ';
         if (count($rows) > 20) $html .= '<a href="' . esc_url(add_query_arg('donation_page', $page + 1)) . '">' . esc_html__('Next', 'georg-kloster-orthodox-donations') . '</a>';
-        return $html . '</div>' . (class_exists(Support_Pages::class) ? Support_Pages::subscriptions(false) : '');
+        $html .= '</div>';
+        $html .= '<p><a class="button" href="' . esc_url(Donors::donate_again_url()) . '">' . esc_html__('Make another donation', 'georg-kloster-orthodox-donations') . '</a></p>';
+        if ((int) $donor->wp_user_id === 0) {
+            $existing_user = email_exists($email);
+            if ($existing_user) {
+                $html .= '<section class="gkod-donor-register"><h2>' . esc_html__('Use a WordPress account', 'georg-kloster-orthodox-donations') . '</h2><p>' . esc_html__('This email already has a WordPress account. Sign in with it to connect your donations and turn off the personal link.', 'georg-kloster-orthodox-donations') . '</p><a class="button" href="' . esc_url(wp_login_url(Donors::cabinet_page_url())) . '">' . esc_html__('Sign in and connect account', 'georg-kloster-orthodox-donations') . '</a></section>';
+            } else {
+                $html .= '<section class="gkod-donor-register"><h2>' . esc_html__('Register a WordPress account', 'georg-kloster-orthodox-donations') . '</h2><p>' . esc_html__('Registration is optional. Your donations stay available through this personal link if you do not register.', 'georg-kloster-orthodox-donations') . '</p>';
+                $error = sanitize_key(Input::get('gkod_account_error') ?? '');
+                $errors = ['username' => __('Choose a different username.', 'georg-kloster-orthodox-donations'), 'password' => __('Use a password with at least 12 characters.', 'georg-kloster-orthodox-donations'), 'existing' => __('This email already has a WordPress account. Sign in to connect it.', 'georg-kloster-orthodox-donations'), 'failed' => __('The account could not be created. Please try again.', 'georg-kloster-orthodox-donations')];
+                if (isset($errors[$error])) $html .= '<p role="alert">' . esc_html($errors[$error]) . '</p>';
+                $html .= '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '"><input type="hidden" name="action" value="gkod_donor_register">' . wp_nonce_field('gkod_donor_register', '_wpnonce', true, false) . '<p><label>' . esc_html__('Email address', 'georg-kloster-orthodox-donations') . '<br><input type="email" value="' . esc_attr($email) . '" readonly></label></p><p><label>' . esc_html__('Username', 'georg-kloster-orthodox-donations') . '<br><input name="user_login" autocomplete="username" required minlength="3" maxlength="60"></label></p><p><label>' . esc_html__('Password', 'georg-kloster-orthodox-donations') . '<br><input type="password" name="user_password" autocomplete="new-password" required minlength="12"></label></p><p><button class="button" type="submit">' . esc_html__('Register', 'georg-kloster-orthodox-donations') . '</button></p></form></section>';
+            }
+        } else {
+            $html .= '<p>' . esc_html__('Your donations are connected to your WordPress account.', 'georg-kloster-orthodox-donations') . '</p>';
+        }
+        return $html . (class_exists(Support_Pages::class) ? Support_Pages::subscriptions(false) : '');
     }
 }

@@ -1252,14 +1252,12 @@ msgstr ""
 msgid "Closed"
 msgstr ""
 
-msgid "Log in to view your donations."
-msgstr ""
+
 
 msgid "Your donations"
 msgstr ""
 
-msgid "Only payments made while signed in to this account are shown. Guest payments are not linked by email."
-msgstr ""
+
 
 msgid "Previous"
 msgstr ""
@@ -1273,8 +1271,7 @@ msgstr ""
 msgid "Partially refunded"
 msgstr ""
 
-msgid "Log in and confirm recurring support before continuing."
-msgstr ""
+
 
 msgid "Regular support"
 msgstr ""
@@ -1312,8 +1309,7 @@ msgstr ""
 msgid "PayPal is preparing recurring support. Please try again shortly."
 msgstr ""
 
-msgid "Log in to start regular support."
-msgstr ""
+
 
 msgid "Payment overdue"
 msgstr ""
@@ -1348,8 +1344,7 @@ msgstr ""
 msgid "One-time donation without prayer names or services. The donor enters an amount from 0.50 to 999,999.99 EUR."
 msgstr ""
 
-msgid "Monthly or yearly support. Requires login and explicit consent. The owner can cancel in donation history; configure recurring webhooks and WP-Cron first."
-msgstr ""
+
 
 msgid "Published campaigns with progress, totals and donation forms. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
 msgstr ""
@@ -1357,8 +1352,7 @@ msgstr ""
 msgid "Public report for one published campaign: goal, confirmed receipts after refunds, separately recorded expenses and balance. Does not disclose donor data or include a payment form."
 msgstr ""
 
-msgid "Private payment history and regular-support cancellation for the signed-in account. Guest and historical payments are not assigned by email. Exclude this page from external full-page caches."
-msgstr ""
+
 
 msgid "Payment result for the returned order, using its saved language. Has no shortcode parameters. Forms already include this block; use it separately on a custom return page. A return URL alone does not confirm payment."
 msgstr ""
@@ -1381,8 +1375,7 @@ msgstr ""
 msgid "Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired."
 msgstr ""
 
-msgid "Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which also checks login before showing the form."
-msgstr ""
+
 
 msgid "Copied."
 msgstr ""
@@ -1543,8 +1536,7 @@ msgstr ""
 msgid "prayer slips"
 msgstr ""
 
-msgid "Select the services to sync, then choose “Synchronize selected with Stripe” in Actions. Stripe product titles, descriptions, images and prices are updated only for the selected services."
-msgstr ""
+
 
 msgid "Synchronize selected with Stripe"
 msgstr ""
@@ -1565,4 +1557,162 @@ msgid "Select at least one service to synchronize."
 msgstr ""
 
 msgid "No selected services were found."
+msgstr ""
+
+msgid "Form appearance"
+msgstr ""
+
+
+
+msgid "Donations and regular support"
+msgstr ""
+
+msgid "The forms keep the page background. Choose an accent color for each form type."
+msgstr ""
+
+msgid "Open the personal account link from your donation email, or sign in to the WordPress account linked to your donation."
+msgstr ""
+
+msgid "No donations found."
+msgstr ""
+
+msgid "Make another donation"
+msgstr ""
+
+msgid "Use a WordPress account"
+msgstr ""
+
+msgid "This email already has a WordPress account. Sign in with it to connect your donations and turn off the personal link."
+msgstr ""
+
+msgid "Sign in and connect account"
+msgstr ""
+
+msgid "Register a WordPress account"
+msgstr ""
+
+msgid "Registration is optional. Your donations stay available through this personal link if you do not register."
+msgstr ""
+
+msgid "Choose a different username."
+msgstr ""
+
+msgid "Use a password with at least 12 characters."
+msgstr ""
+
+msgid "This email already has a WordPress account. Sign in to connect it."
+msgstr ""
+
+msgid "The account could not be created. Please try again."
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Register"
+msgstr ""
+
+msgid "Your donations are connected to your WordPress account."
+msgstr ""
+
+msgid "Donors"
+msgstr ""
+
+msgid "Thank-you letter sent."
+msgstr ""
+
+msgid "Thank-you letter could not be sent."
+msgstr ""
+
+msgid "Search donors"
+msgstr ""
+
+msgid "Donors: %s"
+msgstr ""
+
+msgid "Paid total"
+msgstr ""
+
+msgid "Latest donation"
+msgstr ""
+
+msgid "No donors found."
+msgstr ""
+
+msgid "Donor not found."
+msgstr ""
+
+msgid "Back to donors"
+msgstr ""
+
+msgid "Linked to a WordPress account."
+msgstr ""
+
+msgid "Uses a personal donor link."
+msgstr ""
+
+msgid "Thank-you letter"
+msgstr ""
+
+msgid "Send thank-you letter"
+msgstr ""
+
+msgid "The donation does not belong to this donor."
+msgstr ""
+
+msgid "Donor account"
+msgstr ""
+
+msgid "This donor link is no longer available. Please use the latest link from your donation email."
+msgstr ""
+
+msgid "Open your donor account link before registering."
+msgstr ""
+
+msgid "Choose a valid payment frequency and agree to recurring payments."
+msgstr ""
+
+msgid "View your donations and make another donation"
+msgstr ""
+
+msgid "Anyone can start monthly or yearly support without an account. An email address and explicit consent are required; manage or cancel support in the donor cabinet. Configure recurring webhooks and WP-Cron first."
+msgstr ""
+
+msgid "Private donation history and recurring-support cancellation for a donor reached through the personal link in the payment email or a linked WordPress account. Exclude this page from external full-page caches."
+msgstr ""
+
+msgid "Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which presents recurring choices without requiring login."
+msgstr ""
+
+msgid "A thank-you letter is available only for paid donations with an email address."
+msgstr ""
+
+msgid "Dear donor"
+msgstr ""
+
+msgid "Could not generate the thank-you PDF."
+msgstr ""
+
+msgid "Could not prepare the thank-you PDF attachment."
+msgstr ""
+
+msgid "We sincerely thank you for supporting the monastery. Your personal thank-you letter is attached as a PDF."
+msgstr ""
+
+msgid "The thank-you email could not be sent. Please try again."
+msgstr ""
+
+msgid "A thank-you letter was emailed to the donor."
+msgstr ""
+
+msgid "With gratitude for your donation"
+msgstr ""
+
+msgid "Dear %s,"
+msgstr ""
+
+msgid "Thank you for your generous support of the monastery. Your gift helps sustain our prayer and service."
 msgstr ""

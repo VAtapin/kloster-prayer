@@ -83,14 +83,15 @@ final class Stripe_Catalog
         $key_hash = hash('sha256', $secret);
         $existing = $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE service_id=%d AND livemode=%d AND key_hash=%s', $table, (int) $service->id, $live, $key_hash));
         $name = self::service_title($service);
+        $description = trim((string) ($service->description_de ?: $service->description_ru));
         $data = [
             'name' => $name,
-            'description' => trim((string) ($service->description_de ?: $service->description_ru)),
             'active' => (int) $service->is_active ? 'true' : 'false',
             'metadata[gkod_service_id]' => (string) $service->id,
             'metadata[gkod_service_slug]' => (string) $service->slug,
             'metadata[gkod_pricing_mode]' => (string) $service->pricing_mode,
         ];
+        if ($description !== '') $data['description'] = $description;
         $image = Service_Images::url($service);
         $data['images'] = $image !== '' ? [$image] : '';
         $unit_label = self::unit_label((string) $service->pricing_mode);

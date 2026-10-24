@@ -47,8 +47,20 @@ $support=array_replace($base,['frequency'=>'month','recurring_consent'=>'1','don
 donation_assert(!(donation_ajax(array_replace($support,['recurring_consent'=>'']))['success']??true),'Explicit repeat-payment consent required');
 donation_assert(!(donation_ajax(array_replace($support,['frequency'=>'week']))['success']??true),'Unsupported interval rejected');
 wp_set_current_user(0);
-donation_assert(str_contains(Support_Pages::form(),'Log in'),'Guest support form requires authentication');
-donation_assert(!(donation_ajax(array_replace($support,['nonce'=>wp_create_nonce('gkod_payment')]))['success']??true),'Guests cannot create subscriptions');
+donation_assert(!str_contains(Support_Pages::form(),'Log in')&&str_contains(Support_Pages::form(),'name="donor_email"'),'Guest support form is available without an account');
+$guest_support=array_replace($support,['donor_email'=>'guest-support@example.invalid','nonce'=>wp_create_nonce('gkod_payment')]);
+$guest_checkout=donation_ajax($guest_support);
+donation_assert($guest_checkout['success']??false,'Guest can create a recurring-support checkout');
+$guest_subscription=$wpdb->get_row($wpdb->prepare('SELECT * FROM %i ORDER BY id DESC LIMIT 1',Database::table('subscriptions')));
+donation_assert((int)$guest_subscription->donor_user_id===0,'Guest subscription remains associated with the submitted email rather than a WordPress user');
+$wpdb->update(Database::table('subscriptions'),['provider_id'=>'sub_guest','status'=>'active'],['id'=>(int)$guest_subscription->id]);
+$remote_agreements['sub_guest']=['id'=>'sub_guest','metadata'=>['gkod_subscription'=>$guest_subscription->public_id],'status'=>'active'];
+$guest_donor=GeorgKlosterOrthodoxDonate\Donors::ensure('guest-support@example.invalid');
+$guest_session=(int)$guest_donor->id.'.'.(time()+DAY_IN_SECONDS);
+$_COOKIE['gkod_donor_access']=$guest_session.'.'.hash_hmac('sha256',$guest_session,wp_salt('auth'));
+donation_assert(str_contains(Support_Pages::subscriptions(false),'Cancel regular support'),'Guest donor cabinet displays the recurring cancellation action');
+donation_assert(Subscriptions::cancel((int)$guest_subscription->id)===true,'Guest donor can cancel recurring support through the reusable personal-link session');
+unset($_COOKIE['gkod_donor_access']);
 wp_set_current_user(1);
 foreach(['ru','de','uk','pl','en']as$lang)donation_assert(str_contains(Support_Pages::form(['lang'=>$lang]),'name="recurring_consent"'),'Localized recurring form and consent');
 $result=donation_ajax($support);donation_assert($result['success']??false,'Stripe subscription checkout');
@@ -151,4 +163,4 @@ wp_schedule_single_event(time()+600,'gkod_prepare_recurring_plan',[1000,'month',
 wp_schedule_single_event(time()+600,'gkod_sync_recurring_refunds',['ch_fixture','pi_fixture','',0]);
 do_action('deactivate_georg-kloster-orthodox-donations/georg-kloster-orthodox-donations.php');
 donation_assert(!wp_next_scheduled('gkod_prepare_recurring_plan',[1000,'month','fixture-key',0])&&!wp_next_scheduled('gkod_sync_recurring_refunds',['ch_fixture','pi_fixture','',0]),'Deactivation clears background events with arguments');
-echo "PASS recurring support: consent/login, Stripe/PayPal API payloads, signed events, out-of-order events, cycle/refund idempotency, ownership, cancellation/failure handling, background provisioning and compatible schema; HTTP/mail intercepted\n";
+echo "PASS recurring support: guest consent, Stripe/PayPal API payloads, signed events, out-of-order events, cycle/refund idempotency, ownership, cancellation/failure handling, background provisioning and compatible schema; HTTP/mail intercepted\n";

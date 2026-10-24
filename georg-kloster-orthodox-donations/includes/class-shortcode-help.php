@@ -12,10 +12,10 @@ final class Shortcode_Help
             'gkod_prayer_form' => [__('Alias of gkod_form with the same parameters and behavior.', 'georg-kloster-orthodox-donations'), ['id','slug','layout','lang','header'], ['slug="gebetsanliegen"','id="1" layout="two_columns"']],
             'gkod_service' => [__('Form for one active service. Specify its id or slug; an id takes precedence. Find these values in Services.', 'georg-kloster-orthodox-donations'), ['id','slug','layout','lang'], ['slug="altar-candle"','id="1" layout="compact"']],
             'gkod_donation' => [__('One-time donation without prayer names or services. The donor enters an amount from 0.50 to 999,999.99 EUR.', 'georg-kloster-orthodox-donations'), ['campaign_id','layout','lang','header','support'], ['', 'campaign_id="1" header="no"']],
-            'gkod_support' => [__('Monthly or yearly support. Requires login and explicit consent. The owner can cancel in donation history; configure recurring webhooks and WP-Cron first.', 'georg-kloster-orthodox-donations'), ['campaign_id','layout','lang','header'], ['', 'campaign_id="1" layout="compact"']],
+            'gkod_support' => [__('Anyone can start monthly or yearly support without an account. An email address and explicit consent are required; manage or cancel support in the donor cabinet. Configure recurring webhooks and WP-Cron first.', 'georg-kloster-orthodox-donations'), ['campaign_id','layout','lang','header'], ['', 'campaign_id="1" layout="compact"']],
             'gkod_campaigns' => [__('Published campaigns with progress, totals and donation forms. Use layout="compact" for a small campaign card and url="/donate/" to link it to the full campaign page. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments.', 'georg-kloster-orthodox-donations'), ['id','lang','layout','url'], ['', 'id="1"', 'id="1" layout="compact" url="/donate/"']],
             'gkod_campaign_report' => [__('Public report for one published campaign: goal, confirmed receipts after refunds, separately recorded expenses and balance. Does not disclose donor data or include a payment form.', 'georg-kloster-orthodox-donations'), ['id','lang'], ['id="1"']],
-            'gkod_donation_history' => [__('Private payment history and regular-support cancellation for the signed-in account. Guest and historical payments are not assigned by email. Exclude this page from external full-page caches.', 'georg-kloster-orthodox-donations'), ['lang'], ['']],
+            'gkod_donation_history' => [__('Private donation history and recurring-support cancellation for a donor reached through the personal link in the payment email or a linked WordPress account. Exclude this page from external full-page caches.', 'georg-kloster-orthodox-donations'), ['lang'], ['']],
             'gkod_payment_result' => [__('Payment result for the returned order, using its saved language. Has no shortcode parameters. Forms already include this block; use it separately on a custom return page. A return URL alone does not confirm payment.', 'georg-kloster-orthodox-donations'), [], ['']],
         ];
     }
@@ -30,7 +30,7 @@ final class Shortcode_Help
             'header' => __('yes (default) shows the form heading; no hides it. Not supported by gkod_service.', 'georg-kloster-orthodox-donations'),
             'campaign_id' => __('Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired.', 'georg-kloster-orthodox-donations'),
             'url' => __('Destination page for a compact campaign card, normally the page containing the full campaign and donation form.', 'georg-kloster-orthodox-donations'),
-            'support' => __('Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which also checks login before showing the form.', 'georg-kloster-orthodox-donations'),
+            'support' => __('Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which presents recurring choices without requiring login.', 'georg-kloster-orthodox-donations'),
         ];
     }
 

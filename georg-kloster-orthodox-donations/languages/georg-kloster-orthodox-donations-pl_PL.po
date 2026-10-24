@@ -872,14 +872,12 @@ msgstr "Szkic"
 msgid "Closed"
 msgstr "Zamknięta"
 
-msgid "Log in to view your donations."
-msgstr "Zaloguj się, aby zobaczyć swoje darowizny."
+
 
 msgid "Your donations"
 msgstr "Twoje darowizny"
 
-msgid "Only payments made while signed in to this account are shown. Guest payments are not linked by email."
-msgstr "Wyświetlane są tylko płatności dokonane po zalogowaniu na to konto. Płatności gości nie są przypisywane na podstawie adresu e-mail."
+
 
 msgid "Previous"
 msgstr "Poprzednia"
@@ -893,8 +891,7 @@ msgstr "Wybierz wszystkie zdarzenia dla jednorazowych darowizn, próśb modlitew
 msgid "Partially refunded"
 msgstr "Częściowo zwrócono"
 
-msgid "Log in and confirm recurring support before continuing."
-msgstr "Zaloguj się i potwierdź zgodę na regularne wsparcie."
+
 
 msgid "Regular support"
 msgstr "Regularne wsparcie"
@@ -932,8 +929,7 @@ msgstr "Nieprawidłowa odpowiedź operatora płatności."
 msgid "PayPal is preparing recurring support. Please try again shortly."
 msgstr "PayPal przygotowuje regularne wsparcie. Spróbuj ponownie za chwilę."
 
-msgid "Log in to start regular support."
-msgstr "Zaloguj się, aby rozpocząć regularne wsparcie."
+
 
 msgid "Payment overdue"
 msgstr "Płatność zaległa"
@@ -968,8 +964,7 @@ msgstr "Formularz jednej aktywnej posługi. Podaj id lub slug; id ma pierwszeńs
 msgid "One-time donation without prayer names or services. The donor enters an amount from 0.50 to 999,999.99 EUR."
 msgstr "Jednorazowa darowizna bez imion i posług. Darczyńca wpisuje kwotę od 0,50 do 999 999,99 EUR."
 
-msgid "Monthly or yearly support. Requires login and explicit consent. The owner can cancel in donation history; configure recurring webhooks and WP-Cron first."
-msgstr "Wsparcie miesięczne lub roczne. Wymaga zalogowania i wyraźnej zgody. Właściciel może je anulować w historii darowizn; najpierw skonfiguruj webhooki subskrypcji i WP-Cron."
+
 
 msgid "Published campaigns with progress, totals and donation forms. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
 msgstr "Opublikowane zbiórki z postępem, podsumowaniami i formularzami darowizn. Bez id wyświetla do 100 zbiórek. Szkice są ukryte; zamknięte lub wygasłe zbiórki nie przyjmują nowych płatności."
@@ -977,8 +972,7 @@ msgstr "Opublikowane zbiórki z postępem, podsumowaniami i formularzami darowiz
 msgid "Public report for one published campaign: goal, confirmed receipts after refunds, separately recorded expenses and balance. Does not disclose donor data or include a payment form."
 msgstr "Publiczny raport jednej opublikowanej zbiórki: cel, potwierdzone wpływy po zwrotach, osobno wpisane wydatki i saldo. Bez danych darczyńców i formularza płatności."
 
-msgid "Private payment history and regular-support cancellation for the signed-in account. Guest and historical payments are not assigned by email. Exclude this page from external full-page caches."
-msgstr "Prywatna historia płatności i anulowanie regularnego wsparcia dla zalogowanego konta. Płatności gości i wcześniejsze nie są przypisywane według emaila. Wyklucz stronę z zewnętrznej pamięci podręcznej całych stron."
+
 
 msgid "Payment result for the returned order, using its saved language. Has no shortcode parameters. Forms already include this block; use it separately on a custom return page. A return URL alone does not confirm payment."
 msgstr "Wynik płatności po powrocie do zamówienia, w jego zapisanym języku. Bez parametrów shortcode’u. Formularze już zawierają ten blok; użyj go osobno na własnej stronie powrotu. Sam adres powrotu nie potwierdza płatności."
@@ -1001,8 +995,7 @@ msgstr "yes (domyślnie) pokazuje nagłówek formularza; no go ukrywa. Nieobsłu
 msgid "Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired."
 msgstr "Opcjonalny ID zbiórki. Pomiń lub użyj 0 dla ogólnego wsparcia cerkwi. Wskazana zbiórka musi być otwarta i nie może być wygasła."
 
-msgid "Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which also checks login before showing the form."
-msgstr "Parametr zgodności gkod_donation: no (domyślnie) oznacza płatność jednorazową; yes pokazuje opcje regularne. Używaj gkod_support, który sprawdza zalogowanie przed wyświetleniem formularza."
+
 
 msgid "Copied."
 msgstr "Skopiowano."
@@ -1163,8 +1156,7 @@ msgstr "imion"
 msgid "prayer slips"
 msgstr "kartek modlitewnych"
 
-msgid "Select the services to sync, then choose “Synchronize selected with Stripe” in Actions. Stripe product titles, descriptions, images and prices are updated only for the selected services."
-msgstr "Zaznacz potrzebne posługi i wybierz z menu „Działania” polecenie „Synchronizuj wybrane ze Stripe”. W katalogu Stripe zostaną zaktualizowane tylko zaznaczone posługi."
+
 
 msgid "Synchronize selected with Stripe"
 msgstr "Synchronizuj wybrane ze Stripe"
@@ -1186,3 +1178,161 @@ msgstr "Wybierz co najmniej jedną posługę do synchronizacji."
 
 msgid "No selected services were found."
 msgstr "Nie znaleziono wybranych posług."
+
+msgid "Form appearance"
+msgstr "Wygląd formularzy"
+
+
+
+msgid "Donations and regular support"
+msgstr "Darowizny i regularne wsparcie"
+
+msgid "The forms keep the page background. Choose an accent color for each form type."
+msgstr "Formularze zachowują tło strony. Wybierz kolor akcentu dla każdego typu formularza."
+
+msgid "Open the personal account link from your donation email, or sign in to the WordPress account linked to your donation."
+msgstr "Otwórz osobisty link z wiadomości o darowiźnie lub zaloguj się na konto WordPress powiązane z darowizną."
+
+msgid "No donations found."
+msgstr "Nie znaleziono darowizn."
+
+msgid "Make another donation"
+msgstr "Przekaż kolejną darowiznę"
+
+msgid "Use a WordPress account"
+msgstr "Użyj konta WordPress"
+
+msgid "This email already has a WordPress account. Sign in with it to connect your donations and turn off the personal link."
+msgstr "Ten adres e-mail ma już konto WordPress. Zaloguj się, aby połączyć darowizny i wyłączyć osobisty link."
+
+msgid "Sign in and connect account"
+msgstr "Zaloguj się i połącz konto"
+
+msgid "Register a WordPress account"
+msgstr "Zarejestruj konto WordPress"
+
+msgid "Registration is optional. Your donations stay available through this personal link if you do not register."
+msgstr "Rejestracja jest opcjonalna. Jeśli się nie zarejestrujesz, darowizny pozostaną dostępne pod tym osobistym linkiem."
+
+msgid "Choose a different username."
+msgstr "Wybierz inną nazwę użytkownika."
+
+msgid "Use a password with at least 12 characters."
+msgstr "Użyj hasła o długości co najmniej 12 znaków."
+
+msgid "This email already has a WordPress account. Sign in to connect it."
+msgstr "Ten adres e-mail ma już konto WordPress. Zaloguj się, aby je połączyć."
+
+msgid "The account could not be created. Please try again."
+msgstr "Nie udało się utworzyć konta. Spróbuj ponownie."
+
+msgid "Username"
+msgstr "Nazwa użytkownika"
+
+msgid "Password"
+msgstr "Hasło"
+
+msgid "Register"
+msgstr "Zarejestruj się"
+
+msgid "Your donations are connected to your WordPress account."
+msgstr "Twoje darowizny są połączone z kontem WordPress."
+
+msgid "Donors"
+msgstr "Darczyńcy"
+
+msgid "Thank-you letter sent."
+msgstr "Wysłano list z podziękowaniem."
+
+msgid "Thank-you letter could not be sent."
+msgstr "Nie udało się wysłać listu z podziękowaniem."
+
+msgid "Search donors"
+msgstr "Szukaj darczyńców"
+
+msgid "Donors: %s"
+msgstr "Darczyńców: %s"
+
+msgid "Paid total"
+msgstr "Suma wpłat"
+
+msgid "Latest donation"
+msgstr "Ostatnia darowizna"
+
+msgid "No donors found."
+msgstr "Nie znaleziono darczyńców."
+
+msgid "Donor not found."
+msgstr "Nie znaleziono darczyńcy."
+
+msgid "Back to donors"
+msgstr "Wróć do darczyńców"
+
+msgid "Linked to a WordPress account."
+msgstr "Połączony z kontem WordPress."
+
+msgid "Uses a personal donor link."
+msgstr "Korzysta z osobistego linku darczyńcy."
+
+msgid "Thank-you letter"
+msgstr "List z podziękowaniem"
+
+msgid "Send thank-you letter"
+msgstr "Wyślij list z podziękowaniem"
+
+msgid "The donation does not belong to this donor."
+msgstr "Ta darowizna nie należy do tego darczyńcy."
+
+msgid "Donor account"
+msgstr "Konto darczyńcy"
+
+msgid "This donor link is no longer available. Please use the latest link from your donation email."
+msgstr "Ten link do konta nie jest już dostępny. Użyj najnowszego linku z wiadomości o darowiźnie."
+
+msgid "Open your donor account link before registering."
+msgstr "Przed rejestracją otwórz osobisty link z wiadomości o darowiźnie."
+
+msgid "Choose a valid payment frequency and agree to recurring payments."
+msgstr "Wybierz prawidłową częstotliwość i zaakceptuj płatności cykliczne."
+
+msgid "View your donations and make another donation"
+msgstr "Zobacz darowizny i przekaż kolejną"
+
+msgid "Anyone can start monthly or yearly support without an account. An email address and explicit consent are required; manage or cancel support in the donor cabinet. Configure recurring webhooks and WP-Cron first."
+msgstr "Miesięczne lub roczne wsparcie można rozpocząć bez konta. Wymagane są adres e-mail i wyraźna zgoda; wsparciem można zarządzać i je anulować w koncie darczyńcy. Najpierw skonfiguruj webhooki płatności cyklicznych i WP-Cron."
+
+msgid "Private donation history and recurring-support cancellation for a donor reached through the personal link in the payment email or a linked WordPress account. Exclude this page from external full-page caches."
+msgstr "Prywatna historia darowizn i anulowanie regularnego wsparcia są dostępne przez osobisty link z wiadomości o płatności lub połączone konto WordPress. Wyłącz tę stronę z zewnętrznego cache całych stron."
+
+msgid "Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which presents recurring choices without requiring login."
+msgstr "Parametr zgodności dla gkod_donation: no (domyślnie) oznacza płatność jednorazową; yes wyświetla opcje cykliczne. Zalecamy gkod_support, który pokazuje je bez logowania."
+
+msgid "A thank-you letter is available only for paid donations with an email address."
+msgstr "List z podziękowaniem jest dostępny tylko dla opłaconych darowizn z adresem e-mail."
+
+msgid "Dear donor"
+msgstr "Drogi darczyńco"
+
+msgid "Could not generate the thank-you PDF."
+msgstr "Nie udało się utworzyć PDF z podziękowaniem."
+
+msgid "Could not prepare the thank-you PDF attachment."
+msgstr "Nie udało się przygotować załącznika PDF z podziękowaniem."
+
+msgid "We sincerely thank you for supporting the monastery. Your personal thank-you letter is attached as a PDF."
+msgstr "Serdecznie dziękujemy za wsparcie klasztoru. Osobisty list z podziękowaniem znajduje się w załączniku PDF."
+
+msgid "The thank-you email could not be sent. Please try again."
+msgstr "Nie udało się wysłać wiadomości z podziękowaniem. Spróbuj ponownie."
+
+msgid "A thank-you letter was emailed to the donor."
+msgstr "List z podziękowaniem wysłano darczyńcy e-mailem."
+
+msgid "With gratitude for your donation"
+msgstr "Z wdzięcznością za Twoją darowiznę"
+
+msgid "Dear %s,"
+msgstr "Drogi/a %s,"
+
+msgid "Thank you for your generous support of the monastery. Your gift helps sustain our prayer and service."
+msgstr "Dziękujemy za hojne wsparcie klasztoru. Twój dar pomaga nam kontynuować modlitwę i służbę."

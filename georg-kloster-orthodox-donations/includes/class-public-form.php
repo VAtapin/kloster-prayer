@@ -112,9 +112,14 @@ final class Public_Form
             $enabled = ['stripe'];
         }
         $amount_id = wp_unique_id('gkod-donation-');
+        $form_colors = [];
+        foreach (['donation' => '#ad5754', 'health' => '#ad5754', 'rest' => '#595959'] as $kind => $fallback) {
+            $form_colors[$kind] = sanitize_hex_color((string) get_option('gkod_form_color_' . $kind, $fallback)) ?: $fallback;
+        }
+        $form_style = '--gkod-donation-accent:' . $form_colors['donation'] . ';--gkod-health-accent:' . $form_colors['health'] . ';--gkod-rest-accent:' . $form_colors['rest'];
         ob_start();
         ?>
-        <section class="gkod-form gkod-form--<?php echo  esc_attr($layout) ?>" data-request-type="<?php echo $donation ? 'donation' : 'prayer' ?>" data-currency="EUR" data-lang="<?php echo  esc_attr($lang) ?>">
+        <section class="gkod-form gkod-form--<?php echo  esc_attr($layout) ?>" style="<?php echo esc_attr($form_style) ?>" data-request-type="<?php echo $donation ? 'donation' : 'prayer' ?>" data-currency="EUR" data-lang="<?php echo  esc_attr($lang) ?>">
             <?php if (($atts['header'] ?? 'yes') !== 'no') : ?><header class="gkod-form__header">
                 <h2><?php echo  esc_html($form->{$title_key}) ?></h2>
                 <?php if (!empty($form->{$intro_key})) : ?><p><?php echo  esc_html($form->{$intro_key}) ?></p><?php endif; ?>

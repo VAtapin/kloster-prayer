@@ -872,14 +872,12 @@ msgstr "Черновик"
 msgid "Closed"
 msgstr "Закрыт"
 
-msgid "Log in to view your donations."
-msgstr "Войдите, чтобы посмотреть свои пожертвования."
+
 
 msgid "Your donations"
 msgstr "Ваши пожертвования"
 
-msgid "Only payments made while signed in to this account are shown. Guest payments are not linked by email."
-msgstr "Показаны только платежи, сделанные после входа в эту учётную запись. Гостевые платежи не привязываются по email."
+
 
 msgid "Previous"
 msgstr "Назад"
@@ -893,8 +891,7 @@ msgstr "Выберите все события для разовых пожер�
 msgid "Partially refunded"
 msgstr "Частично возвращено"
 
-msgid "Log in and confirm recurring support before continuing."
-msgstr "Войдите и подтвердите согласие на регулярную поддержку."
+
 
 msgid "Regular support"
 msgstr "Регулярная поддержка"
@@ -932,8 +929,7 @@ msgstr "Некорректный ответ платёжной системы."
 msgid "PayPal is preparing recurring support. Please try again shortly."
 msgstr "PayPal подготавливает регулярную поддержку. Повторите попытку немного позже."
 
-msgid "Log in to start regular support."
-msgstr "Войдите, чтобы начать регулярную поддержку."
+
 
 msgid "Payment overdue"
 msgstr "Просрочена оплата"
@@ -968,8 +964,7 @@ msgstr "Форма одной активной требы. Укажите её i
 msgid "One-time donation without prayer names or services. The donor enters an amount from 0.50 to 999,999.99 EUR."
 msgstr "Разовое пожертвование без молитвенных имён и треб. Жертвователь вводит сумму от 0,50 до 999 999,99 EUR."
 
-msgid "Monthly or yearly support. Requires login and explicit consent. The owner can cancel in donation history; configure recurring webhooks and WP-Cron first."
-msgstr "Ежемесячная или ежегодная поддержка. Требуются вход и явное согласие. Владелец может отменить её в истории пожертвований; сначала настройте webhook-события подписок и WP-Cron."
+
 
 msgid "Published campaigns with progress, totals and donation forms. Without id, shows up to 100 published campaigns. Drafts are hidden; closed or expired campaigns do not accept new payments."
 msgstr "Опубликованные сборы с прогрессом, итогами и формами пожертвований. Без id показывается до 100 сборов. Черновики скрыты; закрытые и просроченные сборы не принимают новые платежи."
@@ -977,8 +972,7 @@ msgstr "Опубликованные сборы с прогрессом, ито�
 msgid "Public report for one published campaign: goal, confirmed receipts after refunds, separately recorded expenses and balance. Does not disclose donor data or include a payment form."
 msgstr "Публичный отчёт одного опубликованного сбора: цель, подтверждённые поступления за вычетом возвратов, отдельно введённые расходы и остаток. Без данных жертвователей и формы оплаты."
 
-msgid "Private payment history and regular-support cancellation for the signed-in account. Guest and historical payments are not assigned by email. Exclude this page from external full-page caches."
-msgstr "Личная история платежей и отмена регулярной поддержки вошедшего пользователя. Гостевые и прежние платежи не привязываются по email. Исключите страницу из внешнего полного кеша."
+
 
 msgid "Payment result for the returned order, using its saved language. Has no shortcode parameters. Forms already include this block; use it separately on a custom return page. A return URL alone does not confirm payment."
 msgstr "Результат оплаты заказа после возврата с платёжной страницы, на сохранённом языке заказа. Параметров нет. Формы уже содержат этот блок; отдельно используйте его на своей странице возврата. Сам возврат на сайт не подтверждает оплату."
@@ -1001,8 +995,7 @@ msgstr "yes (по умолчанию) показывает заголовок ф
 msgid "Optional campaign ID. Omit it or use 0 for general church support. A specified campaign must be open and unexpired."
 msgstr "Необязательный ID сбора. Без него или при 0 — поддержка общих нужд храма. Указанный сбор должен быть открыт, а его срок не должен истечь."
 
-msgid "Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which also checks login before showing the form."
-msgstr "Параметр совместимости gkod_donation: no (по умолчанию) — разовый платёж; yes показывает регулярные варианты. Используйте gkod_support: он также проверяет вход перед показом формы."
+
 
 msgid "Copied."
 msgstr "Скопировано."
@@ -1163,8 +1156,7 @@ msgstr "имён"
 msgid "prayer slips"
 msgstr "молитвенных записок"
 
-msgid "Select the services to sync, then choose “Synchronize selected with Stripe” in Actions. Stripe product titles, descriptions, images and prices are updated only for the selected services."
-msgstr "Отметьте нужные требы и выберите в меню «Действия» пункт «Синхронизировать выбранные со Stripe». В каталоге Stripe обновятся только отмеченные требы."
+
 
 msgid "Synchronize selected with Stripe"
 msgstr "Синхронизировать выбранные со Stripe"
@@ -1186,3 +1178,161 @@ msgstr "Выберите хотя бы одну требу для синхрон
 
 msgid "No selected services were found."
 msgstr "Выбранные требы не найдены."
+
+msgid "Form appearance"
+msgstr "Оформление форм"
+
+
+
+msgid "Donations and regular support"
+msgstr "Пожертвования и регулярная поддержка"
+
+msgid "The forms keep the page background. Choose an accent color for each form type."
+msgstr "Формы сохраняют фон страницы. Выберите акцентный цвет для каждого типа формы."
+
+msgid "Open the personal account link from your donation email, or sign in to the WordPress account linked to your donation."
+msgstr "Откройте личную ссылку из письма о пожертвовании или войдите в WordPress-аккаунт, связанный с вашим пожертвованием."
+
+msgid "No donations found."
+msgstr "Пожертвования не найдены."
+
+msgid "Make another donation"
+msgstr "Сделать ещё одно пожертвование"
+
+msgid "Use a WordPress account"
+msgstr "Использовать аккаунт WordPress"
+
+msgid "This email already has a WordPress account. Sign in with it to connect your donations and turn off the personal link."
+msgstr "Для этого адреса уже есть аккаунт WordPress. Войдите в него, чтобы связать пожертвования и отключить личную ссылку."
+
+msgid "Sign in and connect account"
+msgstr "Войти и связать аккаунт"
+
+msgid "Register a WordPress account"
+msgstr "Зарегистрировать аккаунт WordPress"
+
+msgid "Registration is optional. Your donations stay available through this personal link if you do not register."
+msgstr "Регистрация необязательна. Если вы не зарегистрируетесь, пожертвования останутся доступны по этой личной ссылке."
+
+msgid "Choose a different username."
+msgstr "Выберите другое имя пользователя."
+
+msgid "Use a password with at least 12 characters."
+msgstr "Используйте пароль длиной не менее 12 символов."
+
+msgid "This email already has a WordPress account. Sign in to connect it."
+msgstr "Для этого адреса уже есть аккаунт WordPress. Войдите, чтобы связать его."
+
+msgid "The account could not be created. Please try again."
+msgstr "Не удалось создать аккаунт. Попробуйте ещё раз."
+
+msgid "Username"
+msgstr "Имя пользователя"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Register"
+msgstr "Зарегистрироваться"
+
+msgid "Your donations are connected to your WordPress account."
+msgstr "Ваши пожертвования связаны с аккаунтом WordPress."
+
+msgid "Donors"
+msgstr "Жертвователи"
+
+msgid "Thank-you letter sent."
+msgstr "Благодарственное письмо отправлено."
+
+msgid "Thank-you letter could not be sent."
+msgstr "Не удалось отправить благодарственное письмо."
+
+msgid "Search donors"
+msgstr "Поиск жертвователей"
+
+msgid "Donors: %s"
+msgstr "Жертвователей: %s"
+
+msgid "Paid total"
+msgstr "Всего оплачено"
+
+msgid "Latest donation"
+msgstr "Последнее пожертвование"
+
+msgid "No donors found."
+msgstr "Жертвователи не найдены."
+
+msgid "Donor not found."
+msgstr "Жертвователь не найден."
+
+msgid "Back to donors"
+msgstr "Назад к жертвователям"
+
+msgid "Linked to a WordPress account."
+msgstr "Связан с аккаунтом WordPress."
+
+msgid "Uses a personal donor link."
+msgstr "Использует личную ссылку жертвователя."
+
+msgid "Thank-you letter"
+msgstr "Благодарственное письмо"
+
+msgid "Send thank-you letter"
+msgstr "Отправить благодарственное письмо"
+
+msgid "The donation does not belong to this donor."
+msgstr "Это пожертвование не принадлежит этому жертвователю."
+
+msgid "Donor account"
+msgstr "Кабинет жертвователя"
+
+msgid "This donor link is no longer available. Please use the latest link from your donation email."
+msgstr "Эта ссылка больше недоступна. Используйте последнюю ссылку из письма о пожертвовании."
+
+msgid "Open your donor account link before registering."
+msgstr "Перед регистрацией откройте личную ссылку из письма о пожертвовании."
+
+msgid "Choose a valid payment frequency and agree to recurring payments."
+msgstr "Выберите периодичность и подтвердите согласие на регулярные платежи."
+
+msgid "View your donations and make another donation"
+msgstr "Посмотреть пожертвования и сделать ещё одно"
+
+msgid "Anyone can start monthly or yearly support without an account. An email address and explicit consent are required; manage or cancel support in the donor cabinet. Configure recurring webhooks and WP-Cron first."
+msgstr "Оформить ежемесячную или ежегодную поддержку можно без аккаунта. Нужны адрес электронной почты и явное согласие. Управлять поддержкой и отменять её можно в кабинете жертвователя. Сначала настройте вебхуки регулярных платежей и WP-Cron."
+
+msgid "Private donation history and recurring-support cancellation for a donor reached through the personal link in the payment email or a linked WordPress account. Exclude this page from external full-page caches."
+msgstr "Личная история пожертвований и отмена регулярной поддержки доступны по персональной ссылке из письма об оплате или через связанный аккаунт WordPress. Исключите эту страницу из внешнего кеширования целых страниц."
+
+msgid "Compatibility parameter for gkod_donation: no (default) means one-time payment; yes displays recurring choices. Prefer gkod_support, which presents recurring choices without requiring login."
+msgstr "Совместимый параметр для gkod_donation: no (по умолчанию) — разовый платёж; yes показывает варианты регулярной поддержки. Предпочтительно использовать gkod_support: он показывает их без входа в аккаунт."
+
+msgid "A thank-you letter is available only for paid donations with an email address."
+msgstr "Благодарственное письмо можно отправить только по оплаченному пожертвованию с указанным адресом электронной почты."
+
+msgid "Dear donor"
+msgstr "Дорогой жертвователь"
+
+msgid "Could not generate the thank-you PDF."
+msgstr "Не удалось создать PDF с благодарственным письмом."
+
+msgid "Could not prepare the thank-you PDF attachment."
+msgstr "Не удалось подготовить PDF-вложение с благодарственным письмом."
+
+msgid "We sincerely thank you for supporting the monastery. Your personal thank-you letter is attached as a PDF."
+msgstr "Искренне благодарим вас за поддержку монастыря. Персональное благодарственное письмо приложено в формате PDF."
+
+msgid "The thank-you email could not be sent. Please try again."
+msgstr "Не удалось отправить письмо с благодарностью. Попробуйте ещё раз."
+
+msgid "A thank-you letter was emailed to the donor."
+msgstr "Благодарственное письмо отправлено жертвователю по электронной почте."
+
+msgid "With gratitude for your donation"
+msgstr "С благодарностью за ваше пожертвование"
+
+msgid "Dear %s,"
+msgstr "Дорогой(ая) %s,"
+
+msgid "Thank you for your generous support of the monastery. Your gift helps sustain our prayer and service."
+msgstr "Благодарим за щедрую поддержку монастыря. Ваш дар помогает монастырю продолжать молитву и служение."

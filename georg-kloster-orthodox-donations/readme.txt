@@ -18,9 +18,9 @@ Accept donations and Orthodox prayer requests on parish, church, cathedral or mo
 * Targeted campaigns, goals, deadlines and public financial totals.
 * Separately entered expenses and confirmed partial/full refund accounting.
 * Monthly or yearly support with explicit consent and cancellation.
-* Private donation history for signed-in users; public reports do not show donor identities.
+* Private donor history through a reusable email link or optional WordPress account; public reports do not show donor identities.
 * Configurable services and forms with six responsive layouts.
-* WordPress administration tables, reports, CSV export and request archiving.
+* WordPress donor directory, manual thank-you PDF emails, reports, CSV export and request archiving.
 * Local A4 landscape prayer-slip PDFs, including comments and archived requests.
 * English sources; Russian, German, Ukrainian and Polish translations.
 * WordPress gettext; WPML/Polylang for edited content.
@@ -103,12 +103,14 @@ WP-Cron prepares new PayPal plans in the background; retry shortly if requested.
 * [gkod_payment_result] - result block; standard forms already include it.
 * [gkod_campaigns] - public campaign list; id="1" selects one campaign.
 * [gkod_campaign_report id="1"] - public financial totals for a campaign.
-* [gkod_donation_history] - the signed-in account's donations and support cancellation controls.
-* [gkod_support] - signed-in monthly/yearly support with explicit consent.
+* [gkod_donation_history] - private donor history, another-donation link, optional account registration and recurring-support cancellation.
+* [gkod_support] - guest or signed-in monthly/yearly support with explicit consent.
 
 Donation/support forms accept campaign_id="1" to allocate payments to an open, unexpired campaign. Amounts are EUR 0.50-999,999.99 with up to two decimal places. Confirmed partial refunds reduce received totals; fully refunded, failed and pending payments are excluded. Expenses are entered separately by staff with manage_options.
 
-Layouts: standard, compact, wide, two_columns, cards, minimal. header="no" hides supported headings. Without lang, WordPress/the language plugin selects the language. The admin guide lists parameters/defaults. Editors preserve other translations. Guest payments are not linked to accounts by email.
+Layouts: standard, compact, wide, two_columns, cards, minimal. header="no" hides supported headings. Without lang, WordPress/the language plugin selects the language. The admin guide lists parameters/defaults. Editors preserve other translations. After payment, the confirmation email contains a reusable private link to the donor cabinet. It shows donations made with that email and allows recurring support to be canceled without registration or login. Donors can optionally register a WordPress account with the same email; linking it disables the personal link. Exclude the private cabinet page from full-page/CDN caching.
+
+The **Donors** admin page groups donations by email and reads billing contact details from the existing payment records. Staff can manually send a personalized thank-you PDF for a paid donation; these letters are never sent automatically. The PDF layout can be replaced with the monastery's supplied design.
 
 == Frequently Asked Questions ==
 
