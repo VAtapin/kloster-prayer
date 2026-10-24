@@ -1,7 +1,7 @@
 # WordPress.org translation imports
 
-These files are separate imports for translate.wordpress.org and are not included
-in the plugin ZIP. The German bundled PO/MO catalogs are kept in sync for manual
+These files are imports for translate.wordpress.org and are not included in the
+plugin ZIP. The German bundled PO/MO catalogs are kept in sync for manual
 installations; runtime PHP code is unchanged.
 
 - `interface-source.pot`: union of current runtime originals and prior WordPress.org interface originals, so existing approved translations remain importable.
@@ -24,7 +24,7 @@ The generator parses standard PO entries with or without blank separators, combi
 source URL and plugin name required by the directory, and applies reviewed
 publication overrides. `None` is capitalized in Russian. It checks all originals,
 placeholders, HTML/entities, URLs, shortcodes, permissions and provider event names.
-Version 1.0.7 catalogs contain 536 interface strings (including prior originals) and 80 readme strings per RU/DE/UK/PL import. The current runtime POT is included in full; prior originals and translations are retained. These files are prepared for import after the code release.
+Version 1.0.7 catalogs contain 536 interface strings (including prior originals) and 80 readme strings per RU/DE/UK/PL import. The current runtime POT is included in full; prior originals and translations are retained. The full catalogs were imported after the 1.0.7 code release. GlotPress still reports the older 375-string source set; translations for newly added originals require a repeat import after the platform refreshes its source strings.
 
 This follows the publication approach used in `wp_cu_translator`; that repository
 was read only.

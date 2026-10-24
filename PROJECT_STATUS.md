@@ -1,17 +1,17 @@
 # Состояние проекта
 
 ## Текущее состояние
-- Подготовлен релиз плагина `1.0.7`: изменения донорского кабинета/списка, шаблонов благодарственных писем и интерфейсов; теги и публикация пока не выполнены.
-- Импортные каталоги WordPress.org RU/DE/UK/PL собраны по 536 интерфейсных и 80 readme-строк. Они включают текущие исходные строки и сохранённые ранее оригиналы, чтобы импорт не терял утверждённые переводы.
-- В релизный workflow добавлены регрессионные проверки донорских действий, шаблонов благодарственных писем и импортных каталогов.
+- Плагин версии `1.0.7` опубликован в WordPress.org через успешный GitHub Actions run `40135257795`. Commit `6f07700`, тег `georg-kloster-orthodox-donations-1.0.7`.
+- В GlotPress импортированы каталоги RU/DE/UK/PL для Development. RU/DE/UK автоматически синхронизировались в Stable и имеют 375/375 текущих переводов. Польский импорт добавил 30 переводов в Waiting; Stable пока показывает 34 Waiting и 20 Untranslated.
+- WordPress.org пока показывает прежний source-каталог из 375 строк, несмотря на версию 1.0.7 в SVN `trunk`. Импортные PO содержат 536 строк и сохраняют прежние оригиналы, но новые строки релиза пока не появились в GlotPress. Повторный импорт потребуется после обновления исходного каталога платформой.
 
 ## Проверки
-- Прошли: PHP-синтаксис новых тестов, `tests/donor-actions.php`, `tests/thank-you-template.php`, `tests/notifications.php`, `tests/api-domain.php`, `tests/payment-binding.php`, `tests/i18n.php`, сборка PO→MO, `tests/wordpress-org-translations.py`, сборка двух ZIP и проверка WordPress.org assets.
-- `tests/smoke.php` локально не завершился: PHP 8.4 в этой среде не имеет `mbstring`; релизный workflow включает это расширение. WordPress локально не устанавливался.
-- GitHub недоступен из-за DNS (`Could not resolve host: github.com`); commit/push, tag, релиз и импорт переводов ожидают соединения.
+- Прошли: синтаксис PHP (292 файла), `tests/donor-actions.php`, `tests/thank-you-template.php`, `tests/notifications.php`, `tests/api-domain.php`, `tests/payment-binding.php`, `tests/i18n.php`, тест переводов, сборка PO→MO, сборка ZIP и проверка WordPress.org assets.
+- Локальный `tests/smoke.php` не завершился из-за отсутствующего в PHP 8.4 расширения `mbstring`; оно включено в GitHub Actions, и релизные проверки прошли. WordPress локально не устанавливался.
+- `git diff --check` прошёл перед commit. GitHub Actions успешно выполнил проверку, создание релиза и публикацию кода в SVN.
 
 ## Следующий шаг
-- Отправить ветку и тег `georg-kloster-orthodox-donations-1.0.7`, дождаться обязательного GitHub Actions workflow и публикации кода, затем импортировать обновлённые переводы RU/DE/UK/PL в translate.wordpress.org и проверить статусы.
+- Дождаться обновления исходных строк GlotPress после публикации 1.0.7, затем повторно импортировать RU/DE/UK/PL и проверить Stable/Development, включая польское одобрение.
 
 ## Последний связанный commit
-- `5b19c0e` (`Complete donation plugin fixes and audit`); изменения релиза 1.0.7 ещё не закоммичены.
+- `6f07700` (`Prepare plugin 1.0.7 release and translations`); обновление этого статуса содержит результат публикации и импорта.
