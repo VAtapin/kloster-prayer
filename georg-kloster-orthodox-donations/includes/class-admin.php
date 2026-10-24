@@ -15,8 +15,7 @@ final class Admin
         add_filter('plugin_row_meta', [self::class, 'external_meta'], 10, 2);
         add_action('admin_enqueue_scripts', static function (string $hook): void {
             if (str_contains($hook, 'georg-kloster-orthodox-donations')) {
-                wp_enqueue_style('gkod-admin', plugins_url('assets/css/admin.css', FILE), [], VERSION);
-                wp_enqueue_style('gkod-admin-native', plugins_url('assets/css/admin-native.css', FILE), ['gkod-admin'], VERSION . '.' . substr(md5_file(DIR . '/assets/css/admin-native.css'), 0, 12));
+                wp_enqueue_style('gkod-admin', plugins_url('assets/css/admin.css', FILE), [], VERSION . '.' . substr(md5_file(DIR . '/assets/css/admin.css'), 0, 12));
                 if (str_ends_with($hook, '_page_georg-kloster-orthodox-donations-help')) wp_enqueue_script('gkod-admin-shortcodes', plugins_url('assets/js/admin-shortcodes.js', FILE), [], VERSION, true);
                 wp_enqueue_media();
                 wp_enqueue_script('gkod-admin-images', plugins_url('assets/js/admin-images.js', FILE), ['jquery','media-views'], VERSION . '.' . filemtime(DIR . '/assets/js/admin-images.js'), true);
@@ -65,7 +64,10 @@ final class Admin
                 self::redirect('georg-kloster-orthodox-donations-services', 'stripe_sync');
             }
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Authorized administration of custom request/form/service tables; read current rows after edits.
-            if(in_array($operation,['enable','disable'],true))foreach($ids as $item_id) $wpdb->update(Database::table($kind),['is_active'=>$operation==='enable'?1:0,'updated_at'=>current_time('mysql')],['id'=>$item_id]);
+            if(in_array($operation,['enable','disable'],true))foreach($ids as $item_id) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Update only records selected in this authorized bulk action.
+                if ($wpdb->update(Database::table($kind),['is_active'=>$operation==='enable'?1:0,'updated_at'=>current_time('mysql')],['id'=>$item_id]) === false) wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'));
+            }
             self::redirect('georg-kloster-orthodox-donations-'.$kind,'updated');
         }
         if ($action === 'orders_bulk') $action=(Input::post('action')??'-1')!=='-1'?sanitize_key(Input::post('action')):sanitize_key(Input::post('action2')??'');
@@ -89,16 +91,19 @@ final class Admin
             self::redirect('georg-kloster-orthodox-donations', $ok ? 'email_sent' : 'email_failed');
         }
         if ($action === 'save_settings') {
+            $recipient = null;
             if (isset($_POST['notification_email'])) {
                 try { $recipient = Notifications::validate_recipient((string) Input::post('notification_email')); }
                 catch (\InvalidArgumentException $e) { wp_die(esc_html__('Enter one valid notification email or leave the field blank.', 'georg-kloster-orthodox-donations')); }
-                update_option('gkod_notification_email', $recipient);
             }
+            $origin = null;
             if (isset($_POST['api_origin'])) {
                 try { $origin = Payments::normalize_api_origin((string)Input::post('api_origin')); }
                 catch (\InvalidArgumentException $e) { wp_die(esc_html(__('Enter an HTTPS domain without a path, query or credentials, for example https://example.org. Leave blank for automatic selection.', 'georg-kloster-orthodox-donations'))); }
-                update_option('gkod_api_origin', $origin);
             }
+            // Validate every field before writing any setting, so one invalid field cannot partially save the form.
+            if ($recipient !== null) update_option('gkod_notification_email', $recipient);
+            if ($origin !== null) update_option('gkod_api_origin', $origin);
             if (!empty(Input::post('stripe_secret'))) update_option('gkod_stripe_secret', sanitize_text_field((string) Input::post('stripe_secret')));
             if (!empty(Input::post('stripe_webhook_secret'))) update_option('gkod_stripe_webhook_secret', sanitize_text_field((string) Input::post('stripe_webhook_secret')));
             update_option('gkod_paypal_mode', in_array(Input::post('paypal_mode') ?? '', ['live', 'sandbox'], true) ? Input::post('paypal_mode') : 'live');
@@ -110,30 +115,42 @@ final class Admin
             self::redirect('georg-kloster-orthodox-donations-settings', 'saved');
         }
         if ($action === 'save_service') {
-            $id = absint(Input::post('id') ?? 0); $price = (int) round(((float) str_replace(',', '.', (string) (Input::post('price') ?? '0'))) * 100);
+            $id = absint(Input::post('id') ?? 0);
+            $price = Payments::donation_cents((string) (Input::post('price') ?? ''), 0);
+            if ($price === null) wp_die(esc_html__('Please complete all required fields.', 'georg-kloster-orthodox-donations'));
             $data = ['slug' => sanitize_title((string) (Input::post('slug') ?? '')), 'title_ru' => sanitize_text_field((string) Input::post('title_ru') ?? ''), 'title_de' => sanitize_text_field((string) Input::post('title_de') ?? ''), 'title_uk' => sanitize_text_field((string) Input::post('title_uk') ?? ''), 'title_pl' => sanitize_text_field((string) Input::post('title_pl') ?? ''), 'description_ru' => sanitize_textarea_field((string) Input::textarea('description_ru') ?? ''), 'description_de' => sanitize_textarea_field((string) Input::textarea('description_de') ?? ''), 'description_uk' => sanitize_textarea_field((string) Input::textarea('description_uk') ?? ''), 'description_pl' => sanitize_textarea_field((string) Input::textarea('description_pl') ?? ''), 'image_id' => absint(Input::post('image_id') ?? 0), 'intention_mode' => in_array(Input::post('intention_mode') ?? '', ['both','health','rest','none'], true) ? Input::post('intention_mode') : 'both', 'pricing_mode' => in_array(Input::post('pricing_mode') ?? '', ['flat','per_person','per_sheet'], true) ? Input::post('pricing_mode') : 'flat', 'price_cents' => max(0, $price), 'names_per_sheet' => max(1, absint(Input::post('names_per_sheet') ?? 10)), 'is_active' => isset($_POST['is_active']) ? 1 : 0, 'sort_order' => (int) (Input::post('sort_order') ?? 0), 'updated_at' => current_time('mysql')];
+            if ($data['slug'] === '') wp_die(esc_html__('Please complete all required fields.', 'georg-kloster-orthodox-donations'));
             $data = self::preserve_translations($data);
+            if ($id && !$wpdb->get_var($wpdb->prepare('SELECT id FROM %i WHERE id=%d', Database::table('services'), $id))) wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'));
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Authorized administration of custom request/form/service tables; read current rows after edits.
-            if ($id) $wpdb->update(Database::table('services'), $data, ['id' => $id]); else { $data['created_at'] = current_time('mysql'); $wpdb->insert(Database::table('services'), $data); }
+            if ($id) $saved = $wpdb->update(Database::table('services'), $data, ['id' => $id]);
+            else { $data['created_at'] = current_time('mysql'); $saved = $wpdb->insert(Database::table('services'), $data); }
+            if ($saved === false || (!$id && (int) $wpdb->insert_id < 1)) wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'));
             self::redirect('georg-kloster-orthodox-donations-services', 'saved');
         }
         if ($action === 'save_form') {
             $id = absint(Input::post('id') ?? 0);
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Authorized administration of custom request/form/service tables; read current rows after edits.
             $current_form = $id ? $wpdb->get_row($wpdb->prepare('SELECT default_intention,health_color,rest_color FROM %i WHERE id=%d', Database::table('forms'), $id)) : null;
+            if ($id && !$current_form) wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'));
             $current_intention = (string) ($current_form->default_intention ?? 'health');
             $default_intention = isset($_POST['default_intention']) ? ((Input::post('default_intention') === 'rest') ? 'rest' : 'health') : $current_intention;
             $health_color = sanitize_hex_color((string) (Input::post('health_color') ?? '')) ?: (sanitize_hex_color((string) ($current_form->health_color ?? '')) ?: '#ad5754');
             $rest_color = sanitize_hex_color((string) (Input::post('rest_color') ?? '')) ?: (sanitize_hex_color((string) ($current_form->rest_color ?? '')) ?: '#595959');
             $layouts=['standard','compact','wide','two_columns','cards','minimal']; $layout=in_array(Input::post('layout')??'',$layouts,true)?Input::post('layout'):'standard';
             $data = ['slug' => sanitize_title((string) (Input::post('slug') ?? '')), 'title_ru' => sanitize_text_field((string) Input::post('title_ru') ?? ''), 'title_de' => sanitize_text_field((string) Input::post('title_de') ?? ''), 'title_uk' => sanitize_text_field((string) Input::post('title_uk') ?? ''), 'title_pl' => sanitize_text_field((string) Input::post('title_pl') ?? ''), 'intro_ru' => sanitize_textarea_field((string) Input::textarea('intro_ru') ?? ''), 'intro_de' => sanitize_textarea_field((string) Input::textarea('intro_de') ?? ''), 'intro_uk' => sanitize_textarea_field((string) Input::textarea('intro_uk') ?? ''), 'intro_pl' => sanitize_textarea_field((string) Input::textarea('intro_pl') ?? ''), 'layout' => $layout, 'default_intention' => $default_intention, 'health_color' => $health_color, 'rest_color' => $rest_color, 'is_active' => isset($_POST['is_active']) ? 1 : 0, 'updated_at' => current_time('mysql')];
+            if ($data['slug'] === '') wp_die(esc_html__('Please complete all required fields.', 'georg-kloster-orthodox-donations'));
             $data = self::preserve_translations($data);
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Authorized administration of custom request/form/service tables; read current rows after edits.
-            if ($id) $wpdb->update(Database::table('forms'), $data, ['id' => $id]); else { $data['created_at'] = current_time('mysql'); $wpdb->insert(Database::table('forms'), $data); $id = (int) $wpdb->insert_id; }
+            if ($id) $saved = $wpdb->update(Database::table('forms'), $data, ['id' => $id]);
+            else { $data['created_at'] = current_time('mysql'); $saved = $wpdb->insert(Database::table('forms'), $data); $id = (int) $wpdb->insert_id; }
+            if ($saved === false || $id < 1) wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'));
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Authorized administration of custom request/form/service tables; read current rows after edits.
-            $wpdb->delete(Database::table('form_services'), ['form_id' => $id]);
+            if ($wpdb->delete(Database::table('form_services'), ['form_id' => $id]) === false) wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'));
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Authorized administration of custom request/form/service tables; read current rows after edits.
-            foreach (array_map('absint', (array) (Input::post_list('services') ?? [])) as $sort => $service_id) $wpdb->insert(Database::table('form_services'), ['form_id' => $id, 'service_id' => $service_id, 'sort_order' => $sort]);
+            foreach (array_map('absint', (array) (Input::post_list('services') ?? [])) as $sort => $service_id) {
+                if ($service_id > 0 && $wpdb->insert(Database::table('form_services'), ['form_id' => $id, 'service_id' => $service_id, 'sort_order' => $sort]) === false) wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'));
+            }
             self::redirect('georg-kloster-orthodox-donations-forms', 'saved');
         }
         if (in_array($action, ['mark_printed','mark_unprinted','delete_order','archive_order','restore_order'], true)) {
@@ -152,7 +169,7 @@ final class Admin
 
     private static function header(string $title): void
     {
-        echo '<div class="wrap gkod-admin"><h1>' . esc_html($title) . '</h1>';
+        echo '<div class="wrap gkod-admin"><h1 class="wp-heading-inline">' . esc_html($title) . '</h1>';
         if (Input::get('gkod_notice') === 'stripe_sync') {
             $key = 'gkod_stripe_sync_' . get_current_user_id();
             $result = get_transient($key);
@@ -220,22 +237,130 @@ final class Admin
 
     private static function services_native(): void
     {
-        global $wpdb; $id=absint(Input::get('edit')??0); $editing=$id||(Input::get('new') !== null);
+        global $wpdb;
+        $id = absint(Input::get('edit') ?? 0);
+        $editing = $id || Input::get('new') !== null;
         if (!$editing) { self::catalog('services'); return; }
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Authorized administration of custom request/form/service tables; read current rows after edits.
-        $r=$id?$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('services'),$id)):null; self::header($r?(__('Edit service', 'georg-kloster-orthodox-donations')):(__('Add service', 'georg-kloster-orthodox-donations'))); ?>
-        <form method="post"><?php wp_nonce_field('gkod_admin_action', '_gkod_nonce');?><input type="hidden" name="gkod_action" value="save_service"><input type="hidden" name="id" value="<?php echo  (int)($r->id??0) ?>"><table class="form-table" role="presentation"><tbody>
-        <?php foreach(self::editor_languages() as $code=>$label):?><tr><th><label for="title_<?php echo esc_attr($code)?>"><?php echo esc_html__('Title', 'georg-kloster-orthodox-donations'); ?></label></th><td><input type="text" class="regular-text" id="title_<?php echo esc_attr($code)?>" name="title_<?php echo esc_attr($code)?>" value="<?php echo esc_attr($r->{'title_'.$code}??'')?>"></td></tr><tr><th><label for="description_<?php echo esc_attr($code)?>"><?php echo esc_html__('Description', 'georg-kloster-orthodox-donations'); ?></label></th><td><textarea class="large-text" rows="2" id="description_<?php echo esc_attr($code)?>" name="description_<?php echo esc_attr($code)?>"><?php echo esc_textarea($r->{'description_'.$code}??'')?></textarea></td></tr><?php endforeach;?>
-        <tr><th><label for="slug"><?php echo esc_html__('Slug', 'georg-kloster-orthodox-donations'); ?></label></th><td><input type="text" class="regular-text code" id="slug" name="slug" required value="<?php echo esc_attr($r->slug??'')?>"></td></tr><tr><th><?php echo esc_html__('Background image', 'georg-kloster-orthodox-donations'); ?></th><td><input type="hidden" name="image_id" id="gkod-image-id" value="<?php echo  (int)($r->image_id??0) ?>"><?php Service_Images::preview($r); ?><button type="button" class="button" id="gkod-image-select"><?php echo esc_html__('Choose from Media Library', 'georg-kloster-orthodox-donations'); ?></button> <button type="button" class="button-link-delete" id="gkod-image-clear"><?php echo esc_html__('Reset to default', 'georg-kloster-orthodox-donations'); ?></button><p class="description"><?php echo esc_html__('The bundled thematic background is used when no image is selected.', 'georg-kloster-orthodox-donations'); ?></p></td></tr>
-        <tr><th><?php echo esc_html__('Intention', 'georg-kloster-orthodox-donations'); ?></th><td><select name="intention_mode"><?php foreach(['both'=>(__('Both', 'georg-kloster-orthodox-donations')),'health'=>(__('Living only', 'georg-kloster-orthodox-donations')),'rest'=>(__('Departed only', 'georg-kloster-orthodox-donations')),'none'=>(__('No type', 'georg-kloster-orthodox-donations'))] as $v=>$l):?><option value="<?php echo esc_attr($v)?>" <?php echo selected($r->intention_mode??'both',$v,false)?>><?php echo esc_html($l)?></option><?php endforeach;?></select></td></tr><tr><th><?php echo esc_html__('Pricing', 'georg-kloster-orthodox-donations'); ?></th><td><select name="pricing_mode"><?php foreach(['flat'=>(__('Fixed amount', 'georg-kloster-orthodox-donations')),'per_person'=>(__('Per name', 'georg-kloster-orthodox-donations')),'per_sheet'=>(__('Per request', 'georg-kloster-orthodox-donations'))] as $v=>$l):?><option value="<?php echo esc_attr($v)?>" <?php echo selected($r->pricing_mode??'flat',$v,false)?>><?php echo esc_html($l)?></option><?php endforeach;?></select></td></tr><tr><th><?php echo esc_html__('Donation, EUR', 'georg-kloster-orthodox-donations'); ?></th><td><input name="price" type="number" min="0" step="0.01" value="<?php echo esc_attr(isset($r->price_cents)?number_format($r->price_cents/100,2,'.',''):'')?>"></td></tr><tr><th><?php echo esc_html__('Names per slip', 'georg-kloster-orthodox-donations'); ?></th><td><input name="names_per_sheet" type="number" min="1" value="<?php echo  (int)($r->names_per_sheet??10) ?>"></td></tr><tr><th><?php echo esc_html__('Sort order', 'georg-kloster-orthodox-donations'); ?></th><td><input name="sort_order" type="number" value="<?php echo  (int)($r->sort_order??10) ?>"></td></tr><tr><th><?php echo esc_html__('Status', 'georg-kloster-orthodox-donations'); ?></th><td><label><input type="checkbox" name="is_active" value="1" <?php echo checked($r->is_active??1,1,false)?>> <?php echo esc_html__('Active', 'georg-kloster-orthodox-donations'); ?></label></td></tr></tbody></table><?php submit_button($r?(__('Save changes', 'georg-kloster-orthodox-donations')):(__('Add service', 'georg-kloster-orthodox-donations')));?><a class="button" href="<?php echo esc_url(admin_url('admin.php?page=georg-kloster-orthodox-donations-services'))?>"><?php echo esc_html__('Cancel', 'georg-kloster-orthodox-donations'); ?></a></form></div><?php
+        $r = $id ? $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('services'), $id)) : null;
+        self::header($r ? __('Edit service', 'georg-kloster-orthodox-donations') : __('Add service', 'georg-kloster-orthodox-donations'));
+        ?>
+        <form method="post">
+            <?php wp_nonce_field('gkod_admin_action', '_gkod_nonce'); ?>
+            <input type="hidden" name="gkod_action" value="save_service">
+            <input type="hidden" name="id" value="<?php echo (int) ($r->id ?? 0); ?>">
+            <table class="form-table" role="presentation"><tbody>
+            <?php foreach (self::editor_languages() as $code => $label) : ?>
+                <tr>
+                    <th scope="row"><label for="title_<?php echo esc_attr($code); ?>"><?php echo esc_html__('Title', 'georg-kloster-orthodox-donations'); ?></label></th>
+                    <td><input type="text" class="regular-text" id="title_<?php echo esc_attr($code); ?>" name="title_<?php echo esc_attr($code); ?>" value="<?php echo esc_attr($r->{'title_' . $code} ?? ''); ?>" required></td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="description_<?php echo esc_attr($code); ?>"><?php echo esc_html__('Description', 'georg-kloster-orthodox-donations'); ?></label></th>
+                    <td><textarea class="large-text" rows="2" id="description_<?php echo esc_attr($code); ?>" name="description_<?php echo esc_attr($code); ?>"><?php echo esc_textarea($r->{'description_' . $code} ?? ''); ?></textarea></td>
+                </tr>
+            <?php endforeach; ?>
+                <tr>
+                    <th scope="row"><label for="slug"><?php echo esc_html__('Slug', 'georg-kloster-orthodox-donations'); ?></label></th>
+                    <td><input type="text" class="regular-text code" id="slug" name="slug" required value="<?php echo esc_attr($r->slug ?? ''); ?>"></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?php echo esc_html__('Background image', 'georg-kloster-orthodox-donations'); ?></th>
+                    <td>
+                        <input type="hidden" name="image_id" id="gkod-image-id" value="<?php echo (int) ($r->image_id ?? 0); ?>">
+                        <?php Service_Images::preview($r); ?>
+                        <button type="button" class="button" id="gkod-image-select"><?php echo esc_html__('Choose from Media Library', 'georg-kloster-orthodox-donations'); ?></button>
+                        <button type="button" class="button-link-delete" id="gkod-image-clear"><?php echo esc_html__('Reset to default', 'georg-kloster-orthodox-donations'); ?></button>
+                        <p class="description"><?php echo esc_html__('The bundled thematic background is used when no image is selected.', 'georg-kloster-orthodox-donations'); ?></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="intention_mode"><?php echo esc_html__('Intention', 'georg-kloster-orthodox-donations'); ?></label></th>
+                    <td><select id="intention_mode" name="intention_mode">
+                        <?php foreach (['both' => __('Both', 'georg-kloster-orthodox-donations'), 'health' => __('Living only', 'georg-kloster-orthodox-donations'), 'rest' => __('Departed only', 'georg-kloster-orthodox-donations'), 'none' => __('No type', 'georg-kloster-orthodox-donations')] as $value => $label) : ?>
+                            <option value="<?php echo esc_attr($value); ?>" <?php echo selected($r->intention_mode ?? 'both', $value, false); ?>><?php echo esc_html($label); ?></option>
+                        <?php endforeach; ?>
+                    </select></td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="pricing_mode"><?php echo esc_html__('Pricing', 'georg-kloster-orthodox-donations'); ?></label></th>
+                    <td><select id="pricing_mode" name="pricing_mode">
+                        <?php foreach (['flat' => __('Fixed amount', 'georg-kloster-orthodox-donations'), 'per_person' => __('Per name', 'georg-kloster-orthodox-donations'), 'per_sheet' => __('Per request', 'georg-kloster-orthodox-donations')] as $value => $label) : ?>
+                            <option value="<?php echo esc_attr($value); ?>" <?php echo selected($r->pricing_mode ?? 'flat', $value, false); ?>><?php echo esc_html($label); ?></option>
+                        <?php endforeach; ?>
+                    </select></td>
+                </tr>
+                <tr><th scope="row"><label for="price"><?php echo esc_html__('Donation, EUR', 'georg-kloster-orthodox-donations'); ?></label></th><td><input id="price" name="price" type="number" min="0" max="999999.99" step="0.01" required value="<?php echo esc_attr(isset($r->price_cents) ? number_format($r->price_cents / 100, 2, '.', '') : ''); ?>"></td></tr>
+                <tr><th scope="row"><label for="names_per_sheet"><?php echo esc_html__('Names per slip', 'georg-kloster-orthodox-donations'); ?></label></th><td><input id="names_per_sheet" name="names_per_sheet" type="number" min="1" required value="<?php echo (int) ($r->names_per_sheet ?? 10); ?>"></td></tr>
+                <tr><th scope="row"><label for="sort_order"><?php echo esc_html__('Sort order', 'georg-kloster-orthodox-donations'); ?></label></th><td><input id="sort_order" name="sort_order" type="number" value="<?php echo (int) ($r->sort_order ?? 10); ?>"></td></tr>
+                <tr><th scope="row"><?php echo esc_html__('Status', 'georg-kloster-orthodox-donations'); ?></th><td><label><input type="checkbox" name="is_active" value="1" <?php echo checked($r->is_active ?? 1, 1, false); ?>> <?php echo esc_html__('Active', 'georg-kloster-orthodox-donations'); ?></label></td></tr>
+            </tbody></table>
+            <?php submit_button($r ? __('Save changes', 'georg-kloster-orthodox-donations') : __('Add service', 'georg-kloster-orthodox-donations')); ?>
+            <a class="button" href="<?php echo esc_url(admin_url('admin.php?page=georg-kloster-orthodox-donations-services')); ?>"><?php echo esc_html__('Cancel', 'georg-kloster-orthodox-donations'); ?></a>
+        </form></div>
+        <?php
     }
 
     private static function forms_native(): void
     {
-        global $wpdb; $id=absint(Input::get('edit')??0); $editing=$id||(Input::get('new') !== null);
+        global $wpdb;
+        $id = absint(Input::get('edit') ?? 0);
+        $editing = $id || Input::get('new') !== null;
         if (!$editing) { self::catalog('forms'); return; }
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Authorized administration of custom request/form/service tables; read current rows after edits.
-        $r=$id?$wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('forms'),$id)):null;$services=$wpdb->get_results($wpdb->prepare('SELECT * FROM %i ORDER BY sort_order',Database::table('services')));$selected=$r?array_map('intval',$wpdb->get_col($wpdb->prepare('SELECT service_id FROM %i WHERE form_id=%d ORDER BY sort_order', Database::table('form_services'),$id))):[];self::header($r?(__('Edit form', 'georg-kloster-orthodox-donations')):(__('Add form', 'georg-kloster-orthodox-donations')));?><form method="post"><?php wp_nonce_field('gkod_admin_action', '_gkod_nonce');?><input type="hidden" name="gkod_action" value="save_form"><input type="hidden" name="id" value="<?php echo  (int)($r->id??0) ?>"><table class="form-table" role="presentation"><tbody><?php foreach(self::editor_languages() as $code=>$label):?><tr><th><?php echo esc_html__('Title', 'georg-kloster-orthodox-donations'); ?></th><td><input type="text" class="regular-text" name="title_<?php echo esc_attr($code)?>" value="<?php echo esc_attr($r->{'title_'.$code}??'')?>"></td></tr><tr><th><?php echo esc_html__('Introduction', 'georg-kloster-orthodox-donations'); ?></th><td><textarea class="large-text" rows="2" name="intro_<?php echo esc_attr($code)?>"><?php echo esc_textarea($r->{'intro_'.$code}??'')?></textarea></td></tr><?php endforeach;?><tr><th><?php echo esc_html__('Slug', 'georg-kloster-orthodox-donations'); ?></th><td><input type="text" class="regular-text code" required name="slug" value="<?php echo esc_attr($r->slug??'')?>"></td></tr><tr><th><?php echo esc_html__('Services in this form', 'georg-kloster-orthodox-donations'); ?></th><td><fieldset class="gkod-service-checklist"><?php foreach($services as $s):?><label><input type="checkbox" name="services[]" value="<?php echo (int)$s->id?>" <?php echo checked(in_array((int)$s->id,$selected,true),true,false)?>> <?php echo esc_html(($s->{'title_'.array_key_first(self::editor_languages())}??'')?:$s->title_ru?:$s->title_de)?></label><?php endforeach;?></fieldset></td></tr><tr><th><?php echo esc_html__('Layout', 'georg-kloster-orthodox-donations'); ?></th><td><select name="layout"><?php foreach(['standard'=>(__('Classic', 'georg-kloster-orthodox-donations')),'compact'=>(__('Compact', 'georg-kloster-orthodox-donations')),'wide'=>(__('Wide: 3 cards', 'georg-kloster-orthodox-donations')),'two_columns'=>(__('Two columns', 'georg-kloster-orthodox-donations')),'cards'=>(__('Image cards', 'georg-kloster-orthodox-donations')),'minimal'=>(__('Minimal', 'georg-kloster-orthodox-donations'))] as $v=>$l):?><option value="<?php echo esc_attr($v)?>" <?php echo selected($r->layout??'standard',$v,false)?>><?php echo esc_html($l)?></option><?php endforeach;?></select><p class="description"><?php echo esc_html__('The form always fills 100% of the shortcode block; the layout changes its internal arrangement.', 'georg-kloster-orthodox-donations'); ?></p></td></tr><tr><th scope="row"><label for="health_color"><?php echo esc_html__('Color for the living intention', 'georg-kloster-orthodox-donations'); ?></label></th><td><input type="color" id="health_color" name="health_color" value="<?php echo esc_attr(sanitize_hex_color((string)($r->health_color??'')) ?: '#ad5754')?>"></td></tr><tr><th scope="row"><label for="rest_color"><?php echo esc_html__('Color for the departed intention', 'georg-kloster-orthodox-donations'); ?></label></th><td><input type="color" id="rest_color" name="rest_color" value="<?php echo esc_attr(sanitize_hex_color((string)($r->rest_color??'')) ?: '#595959')?>"><p class="description"><?php echo esc_html__('These colors apply only to the intention selectors. Submit buttons use the active WordPress theme.', 'georg-kloster-orthodox-donations'); ?></p></td></tr><tr><th><?php echo esc_html__('Default type', 'georg-kloster-orthodox-donations'); ?></th><td><select name="default_intention"><option value="health" <?php echo selected($r->default_intention??'health','health',false)?>><?php echo esc_html__('For the living', 'georg-kloster-orthodox-donations'); ?></option><option value="rest" <?php echo selected($r->default_intention??'health','rest',false)?>><?php echo esc_html__('For the departed', 'georg-kloster-orthodox-donations'); ?></option></select></td></tr><tr><th><?php echo esc_html__('Status', 'georg-kloster-orthodox-donations'); ?></th><td><label><input type="checkbox" name="is_active" value="1" <?php echo checked($r->is_active??1,1,false)?>> <?php echo esc_html__('Active', 'georg-kloster-orthodox-donations'); ?></label></td></tr></tbody></table><?php submit_button($r?(__('Save changes', 'georg-kloster-orthodox-donations')):(__('Add form', 'georg-kloster-orthodox-donations')));?><a class="button" href="<?php echo esc_url(admin_url('admin.php?page=georg-kloster-orthodox-donations-forms'))?>"><?php echo esc_html__('Cancel', 'georg-kloster-orthodox-donations'); ?></a></form></div><?php
+        $r = $id ? $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('forms'), $id)) : null;
+        if ($id && !$r) wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'));
+        $services = $wpdb->get_results($wpdb->prepare('SELECT * FROM %i ORDER BY sort_order', Database::table('services')));
+        $selected = $r ? array_map('intval', $wpdb->get_col($wpdb->prepare('SELECT service_id FROM %i WHERE form_id=%d ORDER BY sort_order', Database::table('form_services'), $id))) : [];
+        self::header($r ? __('Edit form', 'georg-kloster-orthodox-donations') : __('Add form', 'georg-kloster-orthodox-donations'));
+        ?>
+        <form method="post">
+            <?php wp_nonce_field('gkod_admin_action', '_gkod_nonce'); ?>
+            <input type="hidden" name="gkod_action" value="save_form">
+            <input type="hidden" name="id" value="<?php echo (int) ($r->id ?? 0); ?>">
+            <table class="form-table" role="presentation"><tbody>
+            <?php foreach (self::editor_languages() as $code => $label) : ?>
+                <tr>
+                    <th scope="row"><label for="form_title_<?php echo esc_attr($code); ?>"><?php echo esc_html__('Title', 'georg-kloster-orthodox-donations'); ?></label></th>
+                    <td><input type="text" class="regular-text" id="form_title_<?php echo esc_attr($code); ?>" name="title_<?php echo esc_attr($code); ?>" value="<?php echo esc_attr($r->{'title_' . $code} ?? ''); ?>" required></td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="form_intro_<?php echo esc_attr($code); ?>"><?php echo esc_html__('Introduction', 'georg-kloster-orthodox-donations'); ?></label></th>
+                    <td><textarea class="large-text" rows="2" id="form_intro_<?php echo esc_attr($code); ?>" name="intro_<?php echo esc_attr($code); ?>"><?php echo esc_textarea($r->{'intro_' . $code} ?? ''); ?></textarea></td>
+                </tr>
+            <?php endforeach; ?>
+                <tr>
+                    <th scope="row"><label for="slug"><?php echo esc_html__('Slug', 'georg-kloster-orthodox-donations'); ?></label></th>
+                    <td><input type="text" class="regular-text code" id="slug" name="slug" required value="<?php echo esc_attr($r->slug ?? ''); ?>"></td>
+                </tr>
+                <tr>
+                    <th scope="row"><span id="form-services-label"><?php echo esc_html__('Services in this form', 'georg-kloster-orthodox-donations'); ?></span></th>
+                    <td><fieldset class="gkod-service-checklist" aria-labelledby="form-services-label">
+                        <?php foreach ($services as $service) : ?>
+                            <label><input type="checkbox" name="services[]" value="<?php echo (int) $service->id; ?>" <?php echo checked(in_array((int) $service->id, $selected, true), true, false); ?>> <?php echo esc_html(($service->{'title_' . array_key_first(self::editor_languages())} ?? '') ?: $service->title_ru ?: $service->title_de); ?></label>
+                        <?php endforeach; ?>
+                    </fieldset></td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="layout"><?php echo esc_html__('Layout', 'georg-kloster-orthodox-donations'); ?></label></th>
+                    <td><select id="layout" name="layout">
+                        <?php foreach (['standard' => __('Classic', 'georg-kloster-orthodox-donations'), 'compact' => __('Compact', 'georg-kloster-orthodox-donations'), 'wide' => __('Wide: 3 cards', 'georg-kloster-orthodox-donations'), 'two_columns' => __('Two columns', 'georg-kloster-orthodox-donations'), 'cards' => __('Image cards', 'georg-kloster-orthodox-donations'), 'minimal' => __('Minimal', 'georg-kloster-orthodox-donations')] as $value => $label) : ?>
+                            <option value="<?php echo esc_attr($value); ?>" <?php echo selected($r->layout ?? 'standard', $value, false); ?>><?php echo esc_html($label); ?></option>
+                        <?php endforeach; ?>
+                    </select><p class="description"><?php echo esc_html__('The form always fills 100% of the shortcode block; the layout changes its internal arrangement.', 'georg-kloster-orthodox-donations'); ?></p></td>
+                </tr>
+                <tr><th scope="row"><label for="health_color"><?php echo esc_html__('Color for the living intention', 'georg-kloster-orthodox-donations'); ?></label></th><td><input type="color" id="health_color" name="health_color" value="<?php echo esc_attr(sanitize_hex_color((string) ($r->health_color ?? '')) ?: '#ad5754'); ?>"></td></tr>
+                <tr><th scope="row"><label for="rest_color"><?php echo esc_html__('Color for the departed intention', 'georg-kloster-orthodox-donations'); ?></label></th><td><input type="color" id="rest_color" name="rest_color" value="<?php echo esc_attr(sanitize_hex_color((string) ($r->rest_color ?? '')) ?: '#595959'); ?>"><p class="description"><?php echo esc_html__('These colors apply only to the intention selectors. Submit buttons use the active WordPress theme.', 'georg-kloster-orthodox-donations'); ?></p></td></tr>
+                <tr>
+                    <th scope="row"><label for="default_intention"><?php echo esc_html__('Default type', 'georg-kloster-orthodox-donations'); ?></label></th>
+                    <td><select id="default_intention" name="default_intention"><option value="health" <?php echo selected($r->default_intention ?? 'health', 'health', false); ?>><?php echo esc_html__('For the living', 'georg-kloster-orthodox-donations'); ?></option><option value="rest" <?php echo selected($r->default_intention ?? 'health', 'rest', false); ?>><?php echo esc_html__('For the departed', 'georg-kloster-orthodox-donations'); ?></option></select></td>
+                </tr>
+                <tr><th scope="row"><?php echo esc_html__('Status', 'georg-kloster-orthodox-donations'); ?></th><td><label><input type="checkbox" name="is_active" value="1" <?php echo checked($r->is_active ?? 1, 1, false); ?>> <?php echo esc_html__('Active', 'georg-kloster-orthodox-donations'); ?></label></td></tr>
+            </tbody></table>
+            <?php submit_button($r ? __('Save changes', 'georg-kloster-orthodox-donations') : __('Add form', 'georg-kloster-orthodox-donations')); ?>
+            <a class="button" href="<?php echo esc_url(admin_url('admin.php?page=georg-kloster-orthodox-donations-forms')); ?>"><?php echo esc_html__('Cancel', 'georg-kloster-orthodox-donations'); ?></a>
+        </form></div>
+        <?php
     }
 
     public static function reports(): void { Admin_Screens::reports(); }
@@ -243,7 +368,7 @@ final class Admin
 
     public static function export_csv(): never
     {
-        if (!current_user_can('manage_options')) wp_die('Forbidden', 403);
+        if (!current_user_can('manage_options')) wp_die(esc_html__('Forbidden', 'georg-kloster-orthodox-donations'), '', ['response' => 403]);
         check_admin_referer('gkod_csv');
         global $wpdb;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Authorized administration of custom request/form/service tables; read current rows after edits.

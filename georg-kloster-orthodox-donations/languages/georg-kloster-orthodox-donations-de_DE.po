@@ -1051,8 +1051,8 @@ msgstr "Wähle in Workbench → Webhooks Create an event destination (in ältere
 msgid "Paste the exact Endpoint URL below. It must be publicly accessible over HTTPS and accept POST requests without login, redirects or a security challenge. Do not enter the WordPress settings-page URL."
 msgstr "Füge die unten angegebene Endpoint URL unverändert ein. Die URL muss öffentlich per HTTPS erreichbar sein und POST-Anfragen ohne Anmeldung, Weiterleitung oder Sicherheitsabfrage annehmen. Verwende nicht die URL der WordPress-Einstellungsseite."
 
-msgid "For one-time donations and prayer requests, select checkout.session.completed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
-msgstr "Wähle für einmalige Spenden und Gebetsanliegen checkout.session.completed und charge.refunded. Wähle für regelmäßige Unterstützung zusätzlich die unten aufgeführten Abonnement- und Rechnungsereignisse. Speichere das Ziel."
+msgid "For one-time donations and prayer requests, select checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
+msgstr "Wähle für einmalige Spenden und Gebetsanliegen checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed und charge.refunded. Wähle für regelmäßige Unterstützung zusätzlich die unten aufgeführten Abonnement- und Rechnungsereignisse. Speichere das Ziel."
 
 msgid "Open the saved destination and reveal its Signing secret, starting with whsec_. Paste it into Webhook Secret. Use the secret of this exact endpoint and environment, not a Stripe CLI listener secret. Enable Stripe and save the plugin settings."
 msgstr "Öffne das gespeicherte Ziel und zeige dessen Signing secret mit Präfix whsec_ an. Trage es unter Webhook Secret ein. Verwende das Geheimnis genau dieses Endpunkts und dieser Umgebung, nicht eines Stripe-CLI-Listeners. Aktiviere Stripe und speichere die Plugin-Einstellungen."

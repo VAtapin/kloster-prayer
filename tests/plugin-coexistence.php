@@ -28,8 +28,8 @@ update_option('klp_stripe_secret','legacy-isolated');update_option('gkod_stripe_
 coexist_assert(get_option('klp_stripe_secret')==='legacy-isolated'&&get_option('gkod_stripe_secret')==='parish-isolated','Separate payment settings');
 do_action('wp_enqueue_scripts');
 $old=do_shortcode('[kloster_donation]');$new=do_shortcode('[gkod_donation]');
-coexist_assert(str_contains($old,'class="klp-form ')&&!str_contains($old,'class="gkod-form '),'Old form remains old');
-coexist_assert(str_contains($new,'class="gkod-form ')&&!str_contains($new,'class="klp-form '),'New form has isolated selectors');
+coexist_assert(str_contains($old,'class="klp-form ')&&!str_contains($old,'class="gkod-donation-form '),'Old form remains old');
+coexist_assert(str_contains($new,'class="gkod-donation-form ')&&!str_contains($new,'class="klp-form '),'New form has isolated selectors');
 coexist_assert(wp_script_is('kloster-prayer','enqueued')&&wp_script_is('georg-kloster-orthodox-donations','enqueued'),'Both script handles coexist');
 require_once ABSPATH.'wp-admin/includes/plugin.php';
 do_action('admin_menu');global $menu;

@@ -22,15 +22,15 @@ final class Notifications
     }
 
     /** Called only on a new transition to paid: never backfill historical orders. */
-    public static function enqueue(int $order_id): void
+    public static function enqueue(int $order_id): bool
     {
-        if ($order_id <= 0 || self::recipient() === '') return;
+        if ($order_id <= 0 || self::recipient() === '') return true;
         global $wpdb;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Notification claims/retry state use conditional custom-table operations to prevent duplicate sends.
-        $wpdb->query($wpdb->prepare(
+        return $wpdb->query($wpdb->prepare(
             'INSERT IGNORE INTO %i (order_id,created_at) VALUES (%d,%s)', Database::table('notifications'),
             $order_id, gmdate('Y-m-d H:i:s')
-        ));
+        )) !== false;
     }
 
     public static function retry(): void

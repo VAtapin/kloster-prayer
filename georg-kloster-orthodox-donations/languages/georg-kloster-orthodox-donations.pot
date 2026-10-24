@@ -1431,7 +1431,7 @@ msgstr ""
 msgid "Paste the exact Endpoint URL below. It must be publicly accessible over HTTPS and accept POST requests without login, redirects or a security challenge. Do not enter the WordPress settings-page URL."
 msgstr ""
 
-msgid "For one-time donations and prayer requests, select checkout.session.completed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
+msgid "For one-time donations and prayer requests, select checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
 msgstr ""
 
 msgid "Open the saved destination and reveal its Signing secret, starting with whsec_. Paste it into Webhook Secret. Use the secret of this exact endpoint and environment, not a Stripe CLI listener secret. Enable Stripe and save the plugin settings."

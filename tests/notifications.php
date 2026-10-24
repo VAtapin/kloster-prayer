@@ -22,10 +22,10 @@ function current_time($v){return gmdate('Y-m-d H:i:s');}
 function get_current_user_id(){return 0;}
 function wp_mail($to,$subject,$body,$headers){global $deliveries,$mail_ok,$throws;$deliveries[]=compact('to','subject','body','headers');if($throws)throw new RuntimeException('mail failure');return $mail_ok;}
 class NotificationDB {
- public $prefix='wp_'; public $queue=[]; public $history=[]; public $orders=[];public $rows_affected=0;
+ public $prefix='wp_'; public $queue=[]; public $history=[]; public $orders=[];public $rows_affected=0;public $fail_enqueue=false;
  function prepare($sql,...$args){while(str_contains($sql,'%i')){$table=array_shift($args);$sql=preg_replace('/%i/','`'.str_replace('`','``',(string)$table).'`',$sql,1);}return [$sql,$args];}
  function query($q){[$sql,$a]=$q;
-  if(str_starts_with($sql,'INSERT IGNORE')){if(isset($this->queue[$a[0]]))return 0;$this->queue[$a[0]]=['order_id'=>$a[0],'sent_at'=>null,'locked_at'=>null,'last_attempt_at'=>null,'attempts'=>0];return 1;}
+  if(str_starts_with($sql,'INSERT IGNORE')){if($this->fail_enqueue){$this->fail_enqueue=false;return false;}if(isset($this->queue[$a[0]]))return 0;$this->queue[$a[0]]=['order_id'=>$a[0],'sent_at'=>null,'locked_at'=>null,'last_attempt_at'=>null,'attempts'=>0];return 1;}
   if(str_contains($sql,"SET payment_status='paid'")){[$payment,$date,$id]=$a;$this->rows_affected=0;if($this->orders[$id]->payment_status!=='paid'){$this->orders[$id]->payment_status='paid';$this->rows_affected=1;}return $this->rows_affected;}
   $id=$a[2];if(!isset($this->queue[$id]))return 0;$r=&$this->queue[$id];if($r['sent_at']!==null||($r['locked_at']!==null&&$r['locked_at']>=$a[3]))return 0;$r['locked_at']=$a[0];$r['last_attempt_at']=$a[1];$r['attempts']++;return 1;
  }
@@ -53,5 +53,5 @@ $wpdb->orders[2]->payment_status='paid';$wpdb->queue[2]['locked_at']=gmdate('Y-m
 $wpdb->queue[2]['locked_at']='2000-01-01 00:00:00';$throws=true;check(!N::send(2),'Mail exception retained for retry');$throws=false;
 $recipient='';check(!N::send(2),'Disabling pauses pending notifications');$recipient='new@example.org';check(N::send(2),'Stale lease recovered');check(end($deliveries)['to']==='new@example.org','Pending mail uses current configured recipient');
 $wpdb->orders[3]=clone $order;$wpdb->orders[3]->id=3;$wpdb->orders[3]->payment_status='pending';
-$paid=new ReflectionMethod(GeorgKlosterOrthodoxDonate\Payments::class,'mark_paid');$paid->invoke(null,3,'cs_test_fixture');$count=count($deliveries);$paid->invoke(null,3,'cs_test_fixture');check(count($deliveries)===$count,'Duplicate webhook did not resend');check(isset($wpdb->queue[3])&&$wpdb->queue[3]['sent_at']!==null,'Paid transition queues and sends');check($wpdb->orders[3]->confirmation_sent_at===$order->confirmation_sent_at,'Donor confirmation untouched');
+$paid=new ReflectionMethod(GeorgKlosterOrthodoxDonate\Payments::class,'mark_paid');$wpdb->fail_enqueue=true;check(!$paid->invoke(null,3,'cs_test_fixture'),'Failed notification queue write asks the provider to retry');check($wpdb->orders[3]->payment_status==='paid'&&!isset($wpdb->queue[3]),'Payment remains confirmed when the outbox is temporarily unavailable');check($paid->invoke(null,3,'cs_test_fixture'),'Repeated verified payment event recovers the outbox write');$count=count($deliveries);$paid->invoke(null,3,'cs_test_fixture');check(count($deliveries)===$count,'Duplicate webhook did not resend');check(isset($wpdb->queue[3])&&$wpdb->queue[3]['sent_at']!==null,'Paid transition queues and sends');check($wpdb->orders[3]->confirmation_sent_at===$order->confirmation_sent_at,'Donor confirmation untouched');
 echo "PASS recipient validation, opt-out, HTML, retry/backoff, exception recovery, paid-only delivery, duplicate webhook and donor isolation\n";

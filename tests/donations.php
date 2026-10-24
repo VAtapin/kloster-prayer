@@ -51,7 +51,7 @@ foreach (['0.50'=>50,'0,50'=>50,'12'=>1200,'12,3'=>1230,'12.34'=>1234,'999999.99
 foreach (['','0','0.49','-1','+1','1e3','1.234','1,234.56','1000000','NaN','1.00 trailing',"1\n2"] as $raw) donation_assert(Payments::donation_cents($raw)===null, 'Reject invalid amount: '.$raw);
 foreach (['ru','de','uk','pl'] as $lang) {
     $form = do_shortcode('[gkod_donation lang="'.$lang.'"]');
-    donation_assert(str_contains($form,'name="donation_amount"') && !str_contains($form,'name="names"') && !str_contains($form,'name="services[]"') && !str_contains($form,'name="intention"'), 'Donation form without prayer inputs');
+    donation_assert(str_contains($form,'name="donation_amount"') && str_contains($form,'min="0.50"') && !str_contains($form,'name="names"') && !str_contains($form,'name="services[]"') && !str_contains($form,'name="intention"'), 'Donation form uses the €0.50 minimum without prayer inputs');
     $custom_form = do_shortcode('[gkod_donation lang="'.$lang.'" accent_color="#a03f3f"]');
     donation_assert(!str_contains($custom_form,'--gkod-accent:#a03f3f'), 'Standalone donation does not override theme button color');
     donation_assert(str_contains($form,'class="wp-element-button gkod-submit"'), 'Submit button uses the WordPress theme button class');
@@ -96,7 +96,7 @@ $candle_id=(int)$wpdb->get_var($wpdb->prepare('SELECT id FROM %i WHERE slug=%s',
 $akathist_id=(int)$wpdb->get_var($wpdb->prepare('SELECT id FROM %i WHERE slug=%s',Database::table('services'),'akathist'));
 $wpdb->update(Database::table('services'),['description_de'=>'','description_ru'=>''],['id'=>$candle_id]);
 delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
-$prayer=array_replace($base,['request_type'=>'prayer','donation_amount'=>'','names'=>"Anna\nOlga\nMaria\nIrina\nElena",'services'=>[(string)$candle_id],'intention'=>'health']);
+$prayer=array_replace($base,['request_type'=>'prayer','form_id'=>'1','donation_amount'=>'','names'=>"Anna\nOlga\nMaria\nIrina\nElena",'services'=>[(string)$candle_id],'intention'=>'health']);
 $before_sync=donation_ajax($prayer);
 donation_assert(($before_sync['success']??false)===true,'Prayer checkout keeps working before catalog sync');
 $fallback_checkout=end($http)[1]['body'];
@@ -133,6 +133,21 @@ $repriced_result=donation_ajax($prayer);
 donation_assert(($repriced_result['success']??false)===true,'Repriced prayer service remains payable');
 $repriced_checkout=end($http)[1]['body'];
 donation_assert(($repriced_checkout['line_items[0][price]']??'')==='price_updated_fixture'&&($repriced_checkout['line_items[0][quantity]']??'')==='5','New Stripe unit price retains calculated name quantity');
+$service_markup=Public_Form::service_shortcode(['id'=>$candle_id]);
+preg_match('/name="nonce" value="([^"]+)"/', $service_markup, $service_nonce);
+preg_match('/name="service_scope_id" value="([0-9]+)"/', $service_markup, $service_scope);
+preg_match('/name="service_scope_token" value="([a-f0-9]+)"/', $service_markup, $service_token);
+donation_assert(($service_scope[1]??'')===(string)$candle_id&&isset($service_nonce[1],$service_token[1]),'Single-service shortcode includes a signed service scope');
+delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
+$unscoped=array_replace($base,['request_type'=>'prayer','form_id'=>'0','names'=>'Anna','services'=>[(string)$candle_id],'intention'=>'health']);
+donation_assert(!(donation_ajax($unscoped)['success']??true),'Unscoped service checkout cannot bypass a form service list');
+delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
+$single_service=array_replace($unscoped,['nonce'=>$service_nonce[1],'service_scope_id'=>$service_scope[1],'service_scope_token'=>$service_token[1]]);
+$single_result=donation_ajax($single_service);
+donation_assert(($single_result['success']??false)===true,'Signed single-service shortcode remains payable');
+delete_transient('gkod_rate_'.hash('sha256',GeorgKlosterOrthodoxDonate\Input::client_ip().wp_salt('nonce')));
+$tampered_service=array_replace($single_service,['services'=>[(string)$akathist_id]]);
+donation_assert(!(donation_ajax($tampered_service)['success']??true),'Single-service scope cannot be changed to another service');
 $_GET=['gkod_payment'=>'success','gkod_order'=>$order->public_id];
 donation_assert(!str_contains(Public_Form::result_shortcode(),GeorgKlosterOrthodoxDonate\I18n::donation_text('thanks','ru')),'Return URL cannot claim an unpaid donation');
 function donation_event(object $order, int $amount, string $id): WP_REST_Response {

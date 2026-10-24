@@ -42,9 +42,12 @@ final class Donor_Admin
         }
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Staff directory aggregates the current custom payment ledger by donor email.
         $total = (int) $wpdb->get_var($wpdb->prepare('SELECT COUNT(DISTINCT LOWER(donor_email)) FROM %i WHERE ' . $where, ...array_merge([Database::table('orders')], $args)));
+        if ($wpdb->last_error !== '') wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'), '', ['response' => 500]);
         $args_with_page = array_merge([Database::table('orders')], $args, [$per_page + 1, ($page - 1) * $per_page]);
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- The directory reads existing order data; payer addresses remain in the payment ledger.
         $rows = $wpdb->get_results($wpdb->prepare("SELECT MAX(donor_email) email,MAX(COALESCE(NULLIF(billing_name,''),NULLIF(donor_name,''))) name,COUNT(*) donation_count,SUM(CASE WHEN payment_status='paid' THEN amount_cents-refunded_cents ELSE 0 END) total_paid,MAX(created_at) latest FROM %i WHERE {$where} GROUP BY LOWER(donor_email) ORDER BY latest DESC LIMIT %d OFFSET %d", ...$args_with_page));
+        if ($wpdb->last_error !== '') wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'), '', ['response' => 500]);
+        if (!is_array($rows)) $rows=[];
         echo '<form method="get"><input type="hidden" name="page" value="georg-kloster-orthodox-donations-donors"><p class="search-box"><label class="screen-reader-text" for="gkod-donor-search">' . esc_html__('Search donors', 'georg-kloster-orthodox-donations') . '</label><input id="gkod-donor-search" type="search" name="s" value="' . esc_attr($search) . '"><button class="button">' . esc_html__('Search', 'georg-kloster-orthodox-donations') . '</button></p></form>';
         echo '<p>' . esc_html(sprintf(__('Donors: %s', 'georg-kloster-orthodox-donations'), number_format_i18n($total))) . '</p><table class="wp-list-table widefat striped"><thead><tr><th>' . esc_html__('Donor', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Email address', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Donations', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Paid total', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Latest donation', 'georg-kloster-orthodox-donations') . '</th></tr></thead><tbody>';
         foreach (array_slice($rows, 0, $per_page) as $row) {
@@ -66,6 +69,7 @@ final class Donor_Admin
         $email = (string) $donor->email;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Addresses are read from the payment data already held for each donation, not copied to the donor table.
         $latest = $wpdb->get_row($wpdb->prepare("SELECT billing_name,billing_phone,billing_address FROM %i WHERE LOWER(donor_email)=LOWER(%s) ORDER BY (billing_address IS NOT NULL AND billing_address NOT IN ('','{}')) DESC,(billing_phone IS NOT NULL AND billing_phone<>'') DESC,id DESC LIMIT 1", Database::table('orders'), $email));
+        if ($wpdb->last_error !== '') wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'), '', ['response' => 500]);
         $address = json_decode((string) ($latest->billing_address ?? ''), true) ?: [];
         echo '<p><a href="' . esc_url(admin_url('admin.php?page=georg-kloster-orthodox-donations-donors')) . '">← ' . esc_html__('Back to donors', 'georg-kloster-orthodox-donations') . '</a></p><h2>' . esc_html($latest->billing_name ?? '') . '</h2><p><strong>' . esc_html__('Email address', 'georg-kloster-orthodox-donations') . ':</strong> ' . esc_html($email) . '</p>';
         if ($latest && $latest->billing_phone) echo '<p><strong>' . esc_html__('Phone', 'georg-kloster-orthodox-donations') . ':</strong> ' . esc_html($latest->billing_phone) . '</p>';
@@ -74,10 +78,13 @@ final class Donor_Admin
         echo '<p>' . esc_html((int) $donor->wp_user_id > 0 ? __('Linked to a WordPress account.', 'georg-kloster-orthodox-donations') : __('Uses a personal donor link.', 'georg-kloster-orthodox-donations')) . '</p>';
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Full payment history for this email is displayed from the existing custom order ledger.
         $orders = $wpdb->get_results($wpdb->prepare('SELECT * FROM %i WHERE LOWER(donor_email)=LOWER(%s) ORDER BY id DESC', Database::table('orders'), $email));
+        if ($wpdb->last_error !== '') wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'), '', ['response' => 500]);
+        if (!is_array($orders)) $orders=[];
         echo '<h2>' . esc_html__('Donations', 'georg-kloster-orthodox-donations') . '</h2><table class="wp-list-table widefat striped"><thead><tr><th>' . esc_html__('Date', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Donation', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Amount', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Status', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Thank-you letter', 'georg-kloster-orthodox-donations') . '</th></tr></thead><tbody>';
         foreach ($orders as $order) {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Read the service titles from the linked order items.
             $titles = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d ORDER BY id', Database::table('order_items'), (int) $order->id));
+            if ($wpdb->last_error !== '') wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'), '', ['response' => 500]);
             $campaign = $order->campaign_id ? Campaigns::get((int) $order->campaign_id) : null;
             $purpose = $campaign ? Campaigns::title($campaign, $order->language) : ($titles ? implode(', ', $titles) : I18n::donation_text('title', $order->language));
             echo '<tr><td>' . esc_html((string) $order->created_at) . ' (#' . (int) $order->id . ')</td><td>' . esc_html($purpose) . '</td><td>' . esc_html(number_format_i18n((int) $order->amount_cents / 100, 2) . ' ' . $order->currency) . '</td><td>' . esc_html($order->payment_status) . '</td><td>';

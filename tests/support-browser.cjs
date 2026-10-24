@@ -21,7 +21,7 @@ const {chromium} = require(path.resolve(__dirname, '../../Kalendar/node_modules/
     });
     await page.addScriptTag({path: path.resolve(__dirname, '../georg-kloster-orthodox-donations/assets/js/public.js')});
     await page.evaluate(() => document.dispatchEvent(new Event('DOMContentLoaded')));
-    const form = page.locator('.gkod-form form');
+    const form = page.locator('.gkod-donation-form form');
     await form.locator('[name="donation_amount"]').fill('10,00');
     await form.locator('[name="donor_email"]').fill('donor@example.invalid');
     await form.locator('.gkod-submit').click();

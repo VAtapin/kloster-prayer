@@ -55,7 +55,7 @@ donation_assert(str_contains($report,'12.34')&&!str_contains($report,'donor@exam
 $public=do_shortcode('[gkod_campaigns id="'.$id.'" lang="ru"]');
 donation_assert(str_contains($public,'Ремонт кровли')&&str_contains($public,'name="campaign_id"')&&str_contains($public,'Updated roof tiles'),'Localized campaign page with expenses and linked form');
 donation_assert(str_contains($public,'--gkod-accent:#2468ac'),'Campaign color reaches its donation form');
-donation_assert(strpos($public,'gkod-form')<strpos($public,'Updated roof tiles'),'Expense descriptions render below the donation form');
+donation_assert(strpos($public,'gkod-donation-form')<strpos($public,'Updated roof tiles'),'Expense descriptions render below the donation form');
 $compact=do_shortcode('[gkod_campaigns id="'.$id.'" layout="compact" url="/spenden/"]');
 donation_assert(str_contains($compact,'gkod-campaign-card')&&str_contains($compact,'layout=')===false&&str_contains($compact,'/spenden/?campaign_id='.$id.'#gkod-campaign-'.$id),'Compact campaign card links to full page');
 donation_assert(str_contains($public,'type="radio" name="donation_preset"')&&str_contains($public,'value="custom"')&&str_contains($public,'min="10.00"'),'Campaign form renders three amount options, custom option and €10 minimum');

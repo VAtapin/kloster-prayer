@@ -9,11 +9,6 @@ final class Catalog_Table extends \WP_List_Table
 {
     private string $kind;
     public function __construct(string $kind) { $this->kind=$kind; parent::__construct(['singular'=>'gkod-item','plural'=>'gkod-items','ajax'=>false]); }
-    protected function get_table_classes() {
-        $classes = parent::get_table_classes();
-        if ($this->kind === 'services') $classes = array_values(array_diff($classes, ['fixed']));
-        return $classes;
-    }
     public function get_columns() {
         $columns=['cb'=>'<input type="checkbox">','title'=>(esc_html__('Title', 'georg-kloster-orthodox-donations')),'slug'=>(esc_html__('Slug', 'georg-kloster-orthodox-donations')),'details'=>$this->kind==='forms'?(esc_html__('Shortcode', 'georg-kloster-orthodox-donations')):(esc_html__('Donation', 'georg-kloster-orthodox-donations')),'status'=>(esc_html__('Status', 'georg-kloster-orthodox-donations'))];
         if ($this->kind==='services') $columns['stripe']=esc_html__('Stripe', 'georg-kloster-orthodox-donations');
@@ -42,7 +37,7 @@ final class Catalog_Table extends \WP_List_Table
     }
     protected function get_views() {
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Paginated custom form/service administration; current rows after edits are required.
-        global $wpdb;$table=Database::table($this->kind);$counts=$wpdb->get_row($wpdb->prepare("SELECT COUNT(*) total,SUM(is_active=1) active,SUM(is_active=0) inactive FROM %i", $table));$views=[];
+        global $wpdb;$table=Database::table($this->kind);$counts=$wpdb->get_row($wpdb->prepare("SELECT COUNT(*) total,SUM(is_active=1) active,SUM(is_active=0) inactive FROM %i", $table));if (!$counts || $wpdb->last_error !== '') wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'), '', ['response' => 500]);$views=[];
         foreach([''=>(__('All', 'georg-kloster-orthodox-donations')),'active'=>(__('Active items', 'georg-kloster-orthodox-donations')),'inactive'=>(__('Disabled items', 'georg-kloster-orthodox-donations'))] as $key=>$label){$n=$key===''?$counts->total:($key==='active'?$counts->active:$counts->inactive);$views[$key?:'all']='<a href="'.esc_url(add_query_arg(['page'=>'georg-kloster-orthodox-donations-'.$this->kind,'status'=>$key],admin_url('admin.php'))).'"'.((Input::get('status')??'')===$key?' class="current" aria-current="page"':'').'>'.esc_html($label).' <span class="count">('.(int)$n.')</span></a>';}
         return $views;
     }
@@ -62,9 +57,12 @@ final class Catalog_Table extends \WP_List_Table
         $sql=$from.' WHERE '.implode(' AND ',$where);
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Fixed filter clauses, bound table identifier and search values. Paginated custom form/service administration; current rows after edits are required.
         $total=(int)$wpdb->get_var($wpdb->prepare('SELECT COUNT(*)'.$sql,...array_merge($table_args,$args)));
+        if ($wpdb->last_error !== '') wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'), '', ['response' => 500]);
         $sort=in_array(Input::get('orderby')??'', ['title_'.array_key_first(Admin::editor_languages()),'slug','updated_at'],true)?Input::get('orderby'):'id';$dir=strtolower(Input::get('order')??'asc')==='desc'?'DESC':'ASC';$per=20;
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- ORDER BY and direction are whitelist values; identifiers, filters and paging are bound. Paginated custom form/service administration; current rows after edits are required.
         $this->items=$wpdb->get_results($wpdb->prepare('SELECT '.$select.$sql." ORDER BY {$sort} {$dir} LIMIT %d OFFSET %d",...array_merge($table_args,$args,[$per,($this->get_pagenum()-1)*$per])));
+        if ($wpdb->last_error !== '') wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'), '', ['response' => 500]);
+        if (!is_array($this->items)) $this->items=[];
         $this->_column_headers=[$this->get_columns(),[], $this->get_sortable_columns(),'title'];$this->set_pagination_args(['total_items'=>$total,'per_page'=>$per]);
     }
 }

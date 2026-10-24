@@ -1051,8 +1051,8 @@ msgstr "В Workbench → Webhooks нажмите Create an event destination (в
 msgid "Paste the exact Endpoint URL below. It must be publicly accessible over HTTPS and accept POST requests without login, redirects or a security challenge. Do not enter the WordPress settings-page URL."
 msgstr "Вставьте указанный ниже адрес Endpoint URL без изменений. Он должен быть публично доступен по HTTPS и принимать POST без входа, перенаправлений и защитной проверки. Не вставляйте адрес страницы настроек WordPress."
 
-msgid "For one-time donations and prayer requests, select checkout.session.completed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
-msgstr "Для разовых пожертвований и записок выберите checkout.session.completed и charge.refunded. Для регулярной поддержки дополнительно выберите перечисленные ниже события подписок и счетов. Сохраните назначение."
+msgid "For one-time donations and prayer requests, select checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
+msgstr "Для разовых пожертвований и записок выберите checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed и charge.refunded. Для регулярной поддержки дополнительно выберите перечисленные ниже события подписок и счетов. Сохраните назначение."
 
 msgid "Open the saved destination and reveal its Signing secret, starting with whsec_. Paste it into Webhook Secret. Use the secret of this exact endpoint and environment, not a Stripe CLI listener secret. Enable Stripe and save the plugin settings."
 msgstr "Откройте сохранённое назначение и покажите Signing secret, начинающийся с whsec_. Вставьте его в Webhook Secret. Нужен секрет именно этой конечной точки и среды, а не слушателя Stripe CLI. Включите Stripe и сохраните настройки плагина."

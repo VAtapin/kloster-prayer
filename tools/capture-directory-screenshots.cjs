@@ -12,7 +12,7 @@ const {chromium}=require(path.resolve(__dirname,'../../Kalendar/node_modules/pla
    await page.setContent(fs.readFileSync(path.join(root,'tmp/directory-screenshots/screenshot-'+number+'.html'),'utf8'));
    if(admin){
     for(const css of ['wp-includes/css/buttons.css','wp-admin/css/common.css','wp-admin/css/forms.css','wp-admin/css/list-tables.css'])await page.addStyleTag({path:path.join(root,'tmp/admin-check-core/wordpress',css)});
-    for(const css of ['admin.css','admin-native.css'])await page.addStyleTag({path:path.join(root,'georg-kloster-orthodox-donations/assets/css',css)});
+    await page.addStyleTag({path:path.join(root,'georg-kloster-orthodox-donations/assets/css/admin.css')});
     await page.addStyleTag({content:'body{margin:28px;background:#f0f0f1;font:13px Arial,sans-serif;color:#1d2327}.wrap{margin:0}.screen-reader-text{position:absolute;clip-path:inset(50%)}'});
    }else{
     await page.addStyleTag({content:'body{margin:30px auto;max-width:800px;background:#fff;font:16px/1.5 Arial,sans-serif;color:#202936}.screen-reader-text{position:absolute;clip-path:inset(50%)}'});

@@ -5,6 +5,8 @@ namespace GeorgKlosterOrthodoxDonate;
 
 final class Public_Form
 {
+    private static bool $result_rendered = false;
+
     public static function init(): void
     {
         add_shortcode('gkod_form', [self::class, 'shortcode']);
@@ -95,10 +97,12 @@ final class Public_Form
             return '';
         }
 
+        $payment_nonce = wp_create_nonce('gkod_payment');
+        $service_scope_id = !$donation && $fixed_services !== null && count($services) === 1 ? (int) $services[0]->id : 0;
+        $service_scope_token = $service_scope_id ? hash_hmac('sha256', $service_scope_id . ':' . $payment_nonce, wp_salt('auth')) : '';
         wp_enqueue_script('georg-kloster-orthodox-donations');
         wp_localize_script('georg-kloster-orthodox-donations', 'georgKlosterOrthodoxDonate', [
-            'ajaxUrl' => admin_url('admin-ajax.php'), 'nonce' => wp_create_nonce('gkod_payment'),
-            'error' => I18n::text('error', $lang), 'required' => I18n::text('required', $lang),
+            'ajaxUrl' => admin_url('admin-ajax.php'),
         ]);
 
         $layouts = ['standard','compact','wide','two_columns','cards','minimal'];
@@ -112,36 +116,41 @@ final class Public_Form
             $enabled = ['stripe'];
         }
         $amount_id = wp_unique_id('gkod-donation-');
+        $form_dom_id = wp_unique_id('gkod-donation-form-');
         if ($campaign) {
             $accent_color = sanitize_hex_color((string) ($campaign->accent_color ?? '')) ?: '#8c2732';
         } else {
             $accent_color = '';
         }
+        $minimum_cents = $campaign ? max(100, (int) ($campaign->minimum_cents ?? 1000)) : 50;
         $health_color = !$donation ? (sanitize_hex_color((string) ($form->health_color ?? '')) ?: '#ad5754') : '';
         $rest_color = !$donation ? (sanitize_hex_color((string) ($form->rest_color ?? '')) ?: '#595959') : '';
-        $form_style = $accent_color !== '' ? '--gkod-accent:' . $accent_color : '';
-        if (!$donation) $form_style .= ($form_style !== '' ? ';' : '') . '--gkod-health-accent:' . $health_color . ';--gkod-rest-accent:' . $rest_color;
+        $form_style = '';
+        if ($accent_color !== '') $form_style .= ';--gkod-accent:' . $accent_color;
+        if (!$donation) $form_style .= ';--gkod-health-accent:' . $health_color . ';--gkod-rest-accent:' . $rest_color;
         ob_start();
         ?>
-        <section class="gkod-form gkod-form--<?php echo  esc_attr($layout) ?>" style="<?php echo esc_attr($form_style) ?>" data-request-type="<?php echo $donation ? 'donation' : 'prayer' ?>" data-currency="EUR" data-lang="<?php echo  esc_attr($lang) ?>">
-            <?php if (($atts['header'] ?? 'yes') !== 'no') : ?><header class="gkod-form__header">
+        <section id="<?php echo esc_attr($form_dom_id) ?>" class="gkod-donation-form gkod-donation-form--<?php echo  esc_attr($layout) ?>" style="<?php echo esc_attr($form_style) ?>" data-request-type="<?php echo $donation ? 'donation' : 'prayer' ?>" data-currency="EUR" data-lang="<?php echo  esc_attr($lang) ?>" data-error="<?php echo esc_attr(I18n::text('error', $lang)) ?>" data-required="<?php echo esc_attr(I18n::text('required', $lang)) ?>">
+            <?php if (($atts['header'] ?? 'yes') !== 'no') : ?><header class="gkod-donation-form__header">
                 <h2><?php echo  esc_html($form->{$title_key}) ?></h2>
                 <?php if (!empty($form->{$intro_key})) : ?><p><?php echo  esc_html($form->{$intro_key}) ?></p><?php endif; ?>
             </header><?php endif; ?>
-            <form class="gkod-form__body" novalidate>
+            <form class="gkod-donation-form__body" novalidate>
                 <input type="hidden" name="action" value="gkod_create_payment">
-                <input type="hidden" name="nonce" value="<?php echo  esc_attr(wp_create_nonce('gkod_payment')) ?>">
+                <input type="hidden" name="nonce" value="<?php echo esc_attr($payment_nonce) ?>">
                 <input type="hidden" name="form_id" value="<?php echo  (int) $form->id ?>">
+                <?php if ($service_scope_id) : ?><input type="hidden" name="service_scope_id" value="<?php echo $service_scope_id ?>"><input type="hidden" name="service_scope_token" value="<?php echo esc_attr($service_scope_token) ?>"><?php endif; ?>
                 <input type="hidden" name="language" value="<?php echo  esc_attr($lang) ?>">
                 <input class="gkod-honeypot" type="text" name="website" value="" tabindex="-1" autocomplete="off" aria-hidden="true">
                 <input type="hidden" name="request_type" value="<?php echo $donation ? 'donation' : 'prayer' ?>">
                 <?php if ($donation && !empty($atts['campaign_id'])) : ?><input type="hidden" name="campaign_id" value="<?php echo absint($atts['campaign_id']) ?>"><?php endif; ?>
                 <?php if (!$donation) : ?>
                 <?php $modes = array_unique(array_column($services, 'intention_mode')); $show_both = in_array('both', $modes, true) || (in_array('health', $modes, true) && in_array('rest', $modes, true)); ?>
+                <?php $available_intentions = $show_both ? ['health', 'rest'] : array_values(array_intersect(['health', 'rest'], $modes)); $default_intention = in_array($form->default_intention, $available_intentions, true) ? $form->default_intention : ($available_intentions[0] ?? 'health'); ?>
                 <fieldset class="gkod-intention<?php echo  $show_both ? '' : ' gkod-intention--single' ?>">
                     <legend class="screen-reader-text"><?php echo esc_html(I18n::text('prayer_type', $lang)) ?></legend>
-                    <?php if ($show_both || in_array('health', $modes, true)) : ?><label><input type="radio" name="intention" value="health" <?php echo  checked($form->default_intention, 'health', false) ?>><span>☦ <?php echo  esc_html(I18n::text('health', $lang)) ?></span></label><?php endif; ?>
-                    <?php if ($show_both || in_array('rest', $modes, true)) : ?><label><input type="radio" name="intention" value="rest" <?php echo  checked($form->default_intention, 'rest', false) ?>><span>☦ <?php echo  esc_html(I18n::text('rest', $lang)) ?></span></label><?php endif; ?>
+                    <?php if ($show_both || in_array('health', $modes, true)) : ?><label><input type="radio" name="intention" value="health" <?php echo  checked($default_intention, 'health', false) ?>><span>☦ <?php echo  esc_html(I18n::text('health', $lang)) ?></span></label><?php endif; ?>
+                    <?php if ($show_both || in_array('rest', $modes, true)) : ?><label><input type="radio" name="intention" value="rest" <?php echo  checked($default_intention, 'rest', false) ?>><span>☦ <?php echo  esc_html(I18n::text('rest', $lang)) ?></span></label><?php endif; ?>
                 </fieldset>
                 <fieldset class="gkod-services">
                     <legend><?php echo  esc_html(I18n::text('choose', $lang)) ?></legend>
@@ -155,8 +164,8 @@ final class Public_Form
                     <?php endforeach; ?>
                 </fieldset>
                 <div class="gkod-field">
-                    <label for="gkod-names-<?php echo  (int) $form->id ?>"><?php echo  esc_html(I18n::text('names', $lang)) ?> <span>*</span></label>
-                    <textarea id="gkod-names-<?php echo  (int) $form->id ?>" name="names" rows="<?php echo  $layout === 'compact' ? 4 : 6 ?>" required placeholder="<?php echo  esc_attr(I18n::text('names_placeholder', $lang)) ?>"></textarea>
+                    <label for="<?php echo esc_attr($form_dom_id . '-names') ?>"><?php echo  esc_html(I18n::text('names', $lang)) ?> <span>*</span></label>
+                    <textarea id="<?php echo esc_attr($form_dom_id . '-names') ?>" name="names" rows="<?php echo  $layout === 'compact' ? 4 : 6 ?>" required placeholder="<?php echo  esc_attr(I18n::text('names_placeholder', $lang)) ?>"></textarea>
                     <small><?php echo  esc_html(I18n::text('names_help', $lang)) ?></small>
                 </div>
                 <?php else : ?>
@@ -168,20 +177,20 @@ final class Public_Form
                             <?php endforeach; ?>
                             <label class="gkod-amount-custom"><input type="radio" name="donation_preset" value="custom"><span><?php echo esc_html(I18n::text('custom_amount', $lang)) ?></span></label>
                     </span><?php endif; ?>
-                    <input id="<?php echo esc_attr($amount_id.'-input') ?>" type="text" name="donation_amount" inputmode="decimal" required maxlength="9" pattern="[0-9]{1,6}([.,][0-9]{1,2})?" min="<?php echo esc_attr(number_format(max(100,(int)($campaign->minimum_cents??1000))/100,2,'.','')) ?>" value="<?php echo $campaign ? esc_attr(number_format(($campaign->preset_1_cents??1000)/100,2,'.','')) : '' ?>" aria-describedby="<?php echo esc_attr($amount_id) ?>">
-                    <small id="<?php echo esc_attr($amount_id) ?>"><?php echo esc_html($campaign ? sprintf(I18n::text('minimum_amount_help', $lang), number_format_i18n(max(100,(int)($campaign->minimum_cents??1000))/100,2)) : I18n::donation_text('amount_help', $lang)) ?></small>
+                    <input id="<?php echo esc_attr($amount_id.'-input') ?>" type="text" name="donation_amount" inputmode="decimal" required maxlength="9" pattern="[0-9]{1,6}([.,][0-9]{1,2})?" min="<?php echo esc_attr(number_format($minimum_cents / 100, 2, '.', '')) ?>" value="<?php echo $campaign ? esc_attr(number_format(($campaign->preset_1_cents??1000)/100,2,'.','')) : '' ?>" aria-describedby="<?php echo esc_attr($amount_id) ?>">
+                    <small id="<?php echo esc_attr($amount_id) ?>"><?php echo esc_html($campaign ? sprintf(I18n::text('minimum_amount_help', $lang), number_format_i18n($minimum_cents / 100, 2)) : I18n::donation_text('amount_help', $lang)) ?></small>
                 </div>
                 <?php endif; ?>
-                <div class="gkod-field"><label><?php echo  esc_html(I18n::text('note', $lang)) ?></label><textarea name="note" rows="<?php echo  $layout === 'compact' ? 1 : 2 ?>"></textarea></div>
+                <div class="gkod-field"><label for="<?php echo esc_attr($form_dom_id . '-note') ?>"><?php echo  esc_html(I18n::text('note', $lang)) ?></label><textarea id="<?php echo esc_attr($form_dom_id . '-note') ?>" name="note" rows="<?php echo  $layout === 'compact' ? 1 : 2 ?>"></textarea></div>
                 <?php if ($donation && ($atts['support'] ?? 'no') === 'yes') : ?>
-                <div class="gkod-field gkod-frequency"><label><?php echo esc_html(I18n::in_language(static fn() => __('Frequency', 'georg-kloster-orthodox-donations'), $lang)) ?>
-                    <select name="frequency"><option value="month"><?php echo esc_html(I18n::in_language(static fn() => __('Monthly', 'georg-kloster-orthodox-donations'), $lang)) ?></option><option value="year"><?php echo esc_html(I18n::in_language(static fn() => __('Yearly', 'georg-kloster-orthodox-donations'), $lang)) ?></option></select></label>
+                <div class="gkod-field gkod-frequency"><label for="<?php echo esc_attr($form_dom_id . '-frequency') ?>"><?php echo esc_html(I18n::in_language(static fn() => __('Frequency', 'georg-kloster-orthodox-donations'), $lang)) ?>
+                    <select id="<?php echo esc_attr($form_dom_id . '-frequency') ?>" name="frequency"><option value="month"><?php echo esc_html(I18n::in_language(static fn() => __('Monthly', 'georg-kloster-orthodox-donations'), $lang)) ?></option><option value="year"><?php echo esc_html(I18n::in_language(static fn() => __('Yearly', 'georg-kloster-orthodox-donations'), $lang)) ?></option></select></label>
                 </div>
                 <div class="gkod-field gkod-consent"><label><input type="checkbox" name="recurring_consent" value="1" required><span><?php echo esc_html(I18n::in_language(static fn() => __('Repeat this amount at the selected interval until I cancel. I can cancel in my donation history.', 'georg-kloster-orthodox-donations'), $lang)) ?></span></label></div>
                 <?php endif; ?>
                 <div class="gkod-grid">
-                    <div class="gkod-field"><label><?php echo  esc_html(I18n::text('donor_name', $lang)) ?></label><input type="text" name="donor_name" autocomplete="name"></div>
-                    <div class="gkod-field"><label><?php echo  esc_html(I18n::text('email', $lang)) ?> <span>*</span></label><input type="email" name="donor_email" required autocomplete="email"><small><?php echo  esc_html(I18n::text('email_help', $lang)) ?></small></div>
+                    <div class="gkod-field"><label for="<?php echo esc_attr($form_dom_id . '-donor-name') ?>"><?php echo  esc_html(I18n::text('donor_name', $lang)) ?></label><input id="<?php echo esc_attr($form_dom_id . '-donor-name') ?>" type="text" name="donor_name" autocomplete="name"></div>
+                    <div class="gkod-field"><label for="<?php echo esc_attr($form_dom_id . '-donor-email') ?>"><?php echo  esc_html(I18n::text('email', $lang)) ?> <span>*</span></label><input id="<?php echo esc_attr($form_dom_id . '-donor-email') ?>" type="email" name="donor_email" required autocomplete="email"><small><?php echo  esc_html(I18n::text('email_help', $lang)) ?></small></div>
                 </div>
                 <?php if (count($enabled) > 1) : ?>
                     <fieldset class="gkod-payment"><legend><?php echo  esc_html(I18n::text('provider', $lang)) ?></legend>
@@ -201,6 +210,7 @@ final class Public_Form
 
     public static function result_shortcode(): string
     {
+        if (self::$result_rendered) return '';
         global $wpdb;
         $status = sanitize_key(Input::get('gkod_payment') ?? '');
         if (!in_array($status, ['success', 'cancelled'], true)) {
@@ -224,6 +234,7 @@ final class Public_Form
         $title = I18n::text($state . '_title', $lang);
         $close = I18n::text('close', $lang);
         $icon = $state === 'success' ? '✓' : ($state === 'processing' ? '…' : '×');
+        self::$result_rendered = true;
         return '<div class="gkod-result-modal" data-gkod-result-modal role="dialog" aria-modal="true" aria-labelledby="gkod-result-title">'
             . '<div class="gkod-result-modal__backdrop" data-gkod-result-close></div><div class="gkod-result-modal__card gkod-result-modal__card--' . esc_attr($state) . '" tabindex="-1">'
             . '<button type="button" class="gkod-result-modal__x" data-gkod-result-close aria-label="' . esc_attr($close) . '">×</button>'

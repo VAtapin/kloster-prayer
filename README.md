@@ -31,7 +31,7 @@ Checkout использует Stripe Price ID и количество из ра�
 Каноническое имя для каталога — Georg Kloster – Orthodox Donations; слаг остаётся georg-kloster-orthodox-donations.
 Нельзя считать Git push публикацией в WordPress.org или обновлением сайта.
 
-С версии 1.2.5 в настройках есть отдельный **Email получателя** уведомлений об оплаченных записках.
+В настройках есть отдельный **Email получателя** уведомлений об оплаченных записках.
 Адрес администратора не используется. Пустое поле отключает уведомления; старые заказы автоматически
 не рассылаются. Подтверждение жертвователю сохраняется. Ошибки передачи повторяются через WP-Cron;
 успешная передача письма почтовой системе не гарантирует попадания во «Входящие».
@@ -114,18 +114,18 @@ PayPal — `PAYMENT.SALE.COMPLETED`, `PAYMENT.SALE.REFUNDED`, `BILLING.SUBSCRIPT
 
 Job `deploy-wordpress-org` использует проверенный каталоговый пакет без PO/MO и публикует его в SVN `trunk` и `tags/<версия>`, а `wordpressorg-assets` — в SVN `assets`. Slug закреплён в workflow. `SVN_USERNAME` и `SVN_PASSWORD` хранятся в GitHub Actions secrets; используются только на шаге публикации. Параллельные публикации запрещены. Ошибочный job можно повторить в Actions; существующие SVN tags не переписываются.
 
-После успешных проверок и commit/push выпуск 1.0.5 запускается так:
+После проверки текущей версии и явного разрешения владельца создайте и отправьте Git-тег этой версии. Тег запускает workflow выпуска и публикацию в WordPress.org:
 
 ```text
-git tag georg-kloster-orthodox-donations-1.0.5
-git push origin refs/tags/georg-kloster-orthodox-donations-1.0.5
+git tag georg-kloster-orthodox-donations-<версия>
+git push origin refs/tags/georg-kloster-orthodox-donations-<версия>
 ```
 
 Это публикация плагина в каталоге, а не установка на сайты владельца. Не создавайте повторный тег, если он уже существует. Проверяйте результат обоих jobs и публичный пакет WordPress.org.
 
 ## Пакет для WordPress.org
 
-Для заявки используйте `output/georg-kloster-orthodox-donations-wordpress-org-1.0.5.zip`. По опыту успешной публикации wp_cu_translator этот пакет содержит POT и исходники, но исключает PO/MO. Четыре перевода остаются в репозитории и обычном установочном ZIP; версия каталога загружает стандартные WordPress language packs из `wp-content/languages/plugins`. До публикации переводов на translate.wordpress.org каталоговая версия показывает английский интерфейс. Сохранённый язык писем и PDF также поддерживает language packs.
+Для заявки используйте `output/georg-kloster-orthodox-donations-wordpress-org-<версия>.zip`. Этот пакет содержит POT и исходники, но исключает PO/MO. Четыре перевода остаются в репозитории и обычном установочном ZIP; версия каталога загружает стандартные WordPress language packs из `wp-content/languages/plugins`. До публикации переводов на translate.wordpress.org каталоговая версия показывает английский интерфейс. Сохранённый язык писем и PDF также поддерживает language packs.
 
 Воспроизводимая сборка обоих пакетов из корня проекта:
 

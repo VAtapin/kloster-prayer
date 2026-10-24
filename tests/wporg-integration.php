@@ -70,7 +70,7 @@ update_option('gkod_db_version','1.2.4');Database::maybe_upgrade();
 review_assert((int)$wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i WHERE id=%d',Database::table('orders'),$order->id))===1,'Upgrade preserves order');
 review_assert($wpdb->last_error==='','No database errors');
 $form=do_shortcode('[gkod_form]');
-review_assert(str_contains($form,'gkod-form')&&$wpdb->last_error==='','Real shortcode and service join');
+review_assert(str_contains($form,'gkod-donation-form')&&$wpdb->last_error==='','Real shortcode and service join');
 $_GET=['month'=>wp_date('Y-m')];ob_start();GeorgKlosterOrthodoxDonate\Admin_Screens::reports();$reports=ob_get_clean();
 review_assert(str_contains($reports,'cs_test')===false&&$wpdb->last_error==='','Real monthly reports');
 echo "PASS real WordPress install/activation, schema upgrade, signed webhook/binding, duplicate delivery, archive, detail/comment escaping and archived PDF query; no live network or mail\n";

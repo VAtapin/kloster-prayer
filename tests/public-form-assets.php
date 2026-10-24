@@ -22,15 +22,12 @@ foreach (['assets/css/public.css' => 'style', 'assets/js/public.js' => 'script']
 
 $css = file_get_contents($root . '/assets/css/public.css');
 foreach ([
-    '.gkod-intention input[value="health"]:checked+span{background:var(--gkod-health-accent);border-color:var(--gkod-health-accent)',
-    '.gkod-intention input[value="rest"]:checked+span{background:var(--gkod-rest-accent);border-color:var(--gkod-rest-accent)',
-    '.gkod-form{--gkod-accent:var(--wp--preset--color--primary,#8c2732);--gkod-health-accent:#ad5754;--gkod-rest-accent:#595959;position:relative;background:transparent;border:1px solid #dfe6eb',
-    '.gkod-form__header,.gkod-form--cards .gkod-form__header{padding:1.5rem clamp(1rem,3vw,1.75rem);color:inherit;background:transparent;border:0}',
-    '.gkod-form__body,.gkod-form--cards .gkod-form__body{padding:clamp(1rem,3vw,1.75rem);background:transparent}',
-    'section.gkod-form>header.gkod-form__header{background:transparent}',
-    'section.gkod-form>form.gkod-form__body{background:transparent}',
+    '.gkod-donation-form .gkod-intention input[value="health"]:checked + span {',
+    '.gkod-donation-form .gkod-intention input[value="rest"]:checked + span {',
+    '.gkod-donation-form--two_columns .gkod-grid,',
+    '.gkod-donation-form__header {',
 ] as $rule) {
-    if (!str_contains($css, $rule)) throw new RuntimeException('Configured intention color/transparent surface rule missing: ' . $rule);
+    if (!str_contains($css, $rule)) throw new RuntimeException('Configured form style rule missing: ' . $rule);
 }
 preg_match_all('/([^{}]*\.gkod-submit[^{}]*)\{([^{}]*)\}/', $css, $submit_rules, PREG_SET_ORDER);
 foreach ($submit_rules as [, $selector, $declarations]) {
@@ -40,4 +37,6 @@ foreach ($submit_rules as [, $selector, $declarations]) {
 }
 $form_markup = file_get_contents($root . '/includes/class-public-form.php');
 if (!str_contains($form_markup, 'class="wp-element-button gkod-submit"')) throw new RuntimeException('Submit button must use the WordPress theme button class');
-echo "PASS independent intention colors, transparent bordered form, theme-styled submit buttons and content-hashed cache keys\n";
+if (str_contains($css, '.gkod-form')) throw new RuntimeException('The donation form selectors must not collide with the theme’s generic .gkod-form rule');
+if (preg_match('/^\.gkod-donation-form\s*\{[^}]*\bbackground(?:-color)?\s*:/ms', $css)) throw new RuntimeException('The form root must inherit the page background without a background declaration');
+echo "PASS isolated form selectors, theme-provided page background and buttons, independent intention colors and content-hashed cache keys\n";

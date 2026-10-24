@@ -52,7 +52,7 @@ final class Donation_Pages
         if (!current_user_can('manage_options')) wp_die(esc_html__('Forbidden', 'georg-kloster-orthodox-donations'), '', ['response'=>403]);
         require_once DIR.'/includes/class-donation-admin-table.php';
         $id=absint(Input::get('campaign_id')??0);$campaign=$id?Campaigns::get($id):null;
-        echo '<div class="wrap gkod-admin"><h1>'.esc_html__('Campaigns','georg-kloster-orthodox-donations').'</h1>';
+        echo '<div class="wrap gkod-admin"><h1 class="wp-heading-inline">'.esc_html__('Campaigns','georg-kloster-orthodox-donations').'</h1>';
         if (!$id && Input::get('new')===null) {
             echo '<a class="page-title-action" href="'.esc_url(add_query_arg(['page'=>'georg-kloster-orthodox-donations-campaigns','new'=>1],admin_url('admin.php'))).'">'.esc_html__('Add new','georg-kloster-orthodox-donations').'</a><hr class="wp-header-end">';
             $table=new Donation_Admin_Table('campaigns');$table->prepare_items();$table->display();echo '</div>';return;
@@ -129,11 +129,14 @@ final class Donation_Pages
         $query_args = $user_id > 0 ? [Database::table('orders'), $email, $user_id, ($page - 1) * 20] : [Database::table('orders'), $email, ($page - 1) * 20];
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Account-owned custom payment ledger; read current status/refunds without stale private history.
         $rows = $wpdb->get_results($wpdb->prepare('SELECT * FROM %i WHERE ' . $where . ' ORDER BY id DESC LIMIT 21 OFFSET %d', ...$query_args));
+        if ($wpdb->last_error !== '') return '<p role="alert">' . esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations') . '</p>';
+        if (!is_array($rows)) $rows=[];
         $html = '<div class="gkod-donation-history"><h2>' . esc_html__('Your donations', 'georg-kloster-orthodox-donations') . '</h2><p>' . esc_html($email) . '</p><table><thead><tr><th>' . esc_html__('Date', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Donation', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Amount', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Payment method', 'georg-kloster-orthodox-donations') . '</th><th>' . esc_html__('Status', 'georg-kloster-orthodox-donations') . '</th></tr></thead><tbody>';
         foreach (array_slice($rows, 0, 20) as $order) {
             $campaign = $order->campaign_id ? Campaigns::get((int) $order->campaign_id) : null;
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Load titles from the existing order item ledger for the donor's private account view.
             $service_titles = $wpdb->get_col($wpdb->prepare('SELECT service_title FROM %i WHERE order_id=%d ORDER BY id', Database::table('order_items'), (int) $order->id));
+            if ($wpdb->last_error !== '') return '<p role="alert">' . esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations') . '</p>';
             $statuses = ['pending' => __('Pending', 'georg-kloster-orthodox-donations'), 'paid' => __('Paid', 'georg-kloster-orthodox-donations'), 'failed' => __('Error', 'georg-kloster-orthodox-donations'), 'refunded' => __('Refunded', 'georg-kloster-orthodox-donations'), 'cancelled' => __('Canceled', 'georg-kloster-orthodox-donations')];
             $status = $order->payment_status === 'paid' && $order->refunded_cents > 0 ? __('Partially refunded', 'georg-kloster-orthodox-donations') : ($statuses[$order->payment_status] ?? $order->payment_status);
             $amount = esc_html(number_format_i18n($order->amount_cents / 100, 2) . ' ' . $order->currency);

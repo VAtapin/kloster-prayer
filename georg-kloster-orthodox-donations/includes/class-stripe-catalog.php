@@ -82,6 +82,7 @@ final class Stripe_Catalog
         $table = Database::table('service_stripe_products');
         $key_hash = hash('sha256', $secret);
         $existing = $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE service_id=%d AND livemode=%d AND key_hash=%s', $table, (int) $service->id, $live, $key_hash));
+        if ($wpdb->last_error !== '') return new WP_Error('database', __('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'));
         $name = self::service_title($service);
         $description = trim((string) ($service->description_de ?: $service->description_ru));
         $data = [

@@ -27,6 +27,7 @@ final class Donation_Admin_Table extends \WP_List_Table
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Paginated custom campaign/subscription ledger; current expense/payment/lifecycle state is required.
             ? $wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i WHERE campaign_id=%d',$table,$this->campaign_id))
             : $wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i',$table)));
+        if ($wpdb->last_error !== '') wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'), '', ['response' => 500]);
         $this->set_pagination_args(['total_items'=>$total,'per_page'=>$per]);
         $page=min(max(1,(int)ceil($total/$per)),$this->get_pagenum());
         $offset=($page-1)*$per;
@@ -34,6 +35,8 @@ final class Donation_Admin_Table extends \WP_List_Table
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Paginated custom campaign/subscription ledger; current expense/payment/lifecycle state is required.
             ? $wpdb->get_results($wpdb->prepare('SELECT * FROM %i WHERE campaign_id=%d ORDER BY id DESC LIMIT %d OFFSET %d',$table,$this->campaign_id,$per,$offset))
             : $wpdb->get_results($wpdb->prepare('SELECT * FROM %i ORDER BY id DESC LIMIT %d OFFSET %d',$table,$per,$offset));
+        if ($wpdb->last_error !== '') wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'), '', ['response' => 500]);
+        if (!is_array($this->items)) $this->items=[];
         $this->_column_headers=[$this->get_columns(),[],[],array_key_first($this->get_columns())];
     }
     public function column_default($item,$column)
@@ -52,6 +55,7 @@ final class Donation_Admin_Table extends \WP_List_Table
         }
         if ($column==='report') {
             $totals=Campaigns::totals((int)$item->id);
+            if (is_wp_error($totals)) return esc_html($totals->get_error_message());
             return esc_html__('Goal','georg-kloster-orthodox-donations').': '.esc_html(number_format_i18n($item->goal_cents/100,2).' EUR').'<br>'.esc_html__('Donations received','georg-kloster-orthodox-donations').': '.esc_html(number_format_i18n($totals['received']/100,2).' EUR').'<br>'.esc_html__('Expenses','georg-kloster-orthodox-donations').': '.esc_html(number_format_i18n($totals['spent']/100,2).' EUR').'<br>'.esc_html__('Balance','georg-kloster-orthodox-donations').': '.esc_html(number_format_i18n($totals['balance']/100,2).' EUR');
         }
         if ($column==='account') return '<strong>#'.(int)$item->donor_user_id.'</strong><br>#'.(int)$item->id;

@@ -1051,8 +1051,8 @@ msgstr "У Workbench → Webhooks натисніть Create an event destination
 msgid "Paste the exact Endpoint URL below. It must be publicly accessible over HTTPS and accept POST requests without login, redirects or a security challenge. Do not enter the WordPress settings-page URL."
 msgstr "Вставте вказану нижче адресу Endpoint URL без змін. Вона має бути публічно доступною через HTTPS і приймати POST без входу, перенаправлень та захисної перевірки. Не вставляйте адресу сторінки налаштувань WordPress."
 
-msgid "For one-time donations and prayer requests, select checkout.session.completed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
-msgstr "Для разових пожертв і записок виберіть checkout.session.completed та charge.refunded. Для регулярної підтримки додатково виберіть наведені нижче події підписок і рахунків. Збережіть призначення."
+msgid "For one-time donations and prayer requests, select checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
+msgstr "Для разових пожертв і записок виберіть checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed та charge.refunded. Для регулярної підтримки додатково виберіть наведені нижче події підписок і рахунків. Збережіть призначення."
 
 msgid "Open the saved destination and reveal its Signing secret, starting with whsec_. Paste it into Webhook Secret. Use the secret of this exact endpoint and environment, not a Stripe CLI listener secret. Enable Stripe and save the plugin settings."
 msgstr "Відкрийте збережене призначення й покажіть Signing secret, що починається з whsec_. Вставте його у Webhook Secret. Потрібен секрет саме цієї кінцевої точки й середовища, а не слухача Stripe CLI. Увімкніть Stripe і збережіть налаштування плагіна."

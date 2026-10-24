@@ -81,6 +81,16 @@ final class Payments
         $names = self::clean_names((string) Input::textarea('names') ?? '');
         $email = sanitize_email((string) Input::post('donor_email') ?? '');
         $service_ids = array_values(array_unique(array_map('absint', (array) (Input::post_list('services') ?? []))));
+        $form_id = absint(Input::post('form_id') ?? 0);
+        if (!$donation && $form_id === 0) {
+            $scope_id = absint(Input::post('service_scope_id') ?? 0);
+            $nonce = (string) (Input::post('nonce') ?? '');
+            $signature = (string) (Input::post('service_scope_token') ?? '');
+            $expected = hash_hmac('sha256', $scope_id . ':' . $nonce, wp_salt('auth'));
+            if (count($service_ids) !== 1 || $service_ids[0] !== $scope_id || $scope_id < 1 || $signature === '' || !hash_equals($expected, $signature)) {
+                wp_send_json_error(['message' => I18n::text('required', $language)], 422);
+            }
+        }
         $enabled_methods = (array) get_option('gkod_payment_methods', ['stripe', 'paypal']);
         if (!is_email($email) || strlen($email) > 190 || !in_array($provider, ['stripe', 'paypal'], true) || !in_array($provider, $enabled_methods, true)
             || (!$donation && (!$names || !$service_ids || count($service_ids) > 30 || !in_array($intention, ['health', 'rest'], true)))
@@ -96,7 +106,7 @@ final class Payments
         }
 
         $order = self::create_order([
-            'form_id' => $donation ? 0 : absint(Input::post('form_id') ?? 0), 'language' => $language, 'intention' => $donation ? 'none' : $intention,
+            'form_id' => $donation ? 0 : $form_id, 'language' => $language, 'intention' => $donation ? 'none' : $intention,
             'donation_cents' => $donation_amount,
             'campaign_id' => $campaign_id,
             'names' => implode("\n", $names), 'note' => sanitize_textarea_field((string) Input::textarea('note') ?? ''),
@@ -104,7 +114,7 @@ final class Payments
             'provider' => $provider, 'service_ids' => $service_ids, 'return_url' => self::safe_return_url(),
         ]);
         if (is_wp_error($order)) {
-            wp_send_json_error(['message' => $order->get_error_message()], 422);
+            wp_send_json_error(['message' => $order->get_error_message()], $order->get_error_code() === 'database' ? 503 : 422);
         }
 
         $redirect = $frequency !== 'once' ? Subscriptions::checkout($order, $frequency) : ($provider === 'stripe' ? self::stripe_checkout($order) : self::paypal_checkout($order));
@@ -139,6 +149,10 @@ final class Payments
     public static function create_order(array $data): object
     {
         global $wpdb;
+        if (!in_array($data['language'] ?? '', ['en', 'de', 'ru', 'uk', 'pl'], true)
+            || !in_array($data['provider'] ?? '', ['stripe', 'paypal'], true)) {
+            return new WP_Error('invalid', I18n::text('error', I18n::language()));
+        }
         $donation = $data['intention'] === 'none';
         $campaign_id = (int) ($data['campaign_id'] ?? 0);
         if ($campaign_id && empty($data['trusted_renewal']) && (!$donation || !($campaign = Campaigns::get($campaign_id)) || !Campaigns::accepting($campaign))) return new WP_Error('campaign', __('This campaign is closed.', 'georg-kloster-orthodox-donations'));
@@ -149,15 +163,28 @@ final class Payments
                 return new WP_Error('invalid_amount', I18n::donation_text('invalid_amount', $data['language']));
             }
         } else {
+            $service_ids = array_values(array_unique(array_filter(array_map('absint', (array) ($data['service_ids'] ?? [])))));
+            if (!$service_ids || count($service_ids) > 30 || count(self::split_names((string) ($data['names'] ?? ''))) > 300) {
+                return new WP_Error('invalid_services', I18n::text('error', $data['language']));
+            }
             $services_table = Database::table('services');
-            $placeholders = implode(',', array_fill(0, count($data['service_ids']), '%d'));
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- One %d for each validated service ID, plus the %i table identifier; variadic count is tested on real WordPress. Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
-            $services = $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE is_active=1 AND id IN ({$placeholders})", $services_table, ...$data['service_ids']));
-            if (!$services || count($services) !== count($data['service_ids'])) {
+            $placeholders = implode(',', array_fill(0, count($service_ids), '%d'));
+            $form_id = absint($data['form_id'] ?? 0);
+            if ($form_id > 0) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Fixed form/service relation query with one placeholder per validated service ID.
+                $services = $wpdb->get_results($wpdb->prepare("SELECT s.* FROM %i s INNER JOIN %i fs ON fs.service_id=s.id INNER JOIN %i f ON f.id=fs.form_id WHERE f.id=%d AND f.is_active=1 AND s.is_active=1 AND s.id IN ({$placeholders})", $services_table, Database::table('form_services'), Database::table('forms'), $form_id, ...$service_ids));
+                if ($wpdb->last_error !== '') return new WP_Error('database', I18n::text('error', $data['language']));
+            } else {
+                // The fixed-service shortcode has no form row; reload its selected service from the active catalog.
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- One %d for each validated service ID, plus the %i table identifier.
+                $services = $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE is_active=1 AND id IN ({$placeholders})", $services_table, ...$service_ids));
+                if ($wpdb->last_error !== '') return new WP_Error('database', I18n::text('error', $data['language']));
+            }
+            if (!$services || count($services) !== count($service_ids)) {
                 return new WP_Error('invalid_services', I18n::text('error', $data['language']));
             }
         }
-        $name_count = $donation ? 0 : count(explode("\n", $data['names']));
+        $name_count = $donation ? 0 : count(self::split_names((string) $data['names']));
         $amount = $donation ? $data['donation_cents'] : 0;
         $items = [];
         foreach ($services as $service) {
@@ -173,7 +200,7 @@ final class Payments
             $amount += $subtotal;
             $items[] = [$service, $quantity, $subtotal];
         }
-        if ($amount < 50) {
+        if ($amount < 50 || $amount > 99999999) {
             return new WP_Error('invalid_amount', I18n::text('error', $data['language']));
         }
         $uuid = wp_generate_uuid4();
@@ -197,17 +224,27 @@ final class Payments
         }
         $order_id = (int) $wpdb->insert_id;
         foreach ($items as [$service, $quantity, $subtotal]) {
-            $title_key = 'title_' . $data['language'];
+            // Service records have no English columns; public English forms use the German service copy.
+            $title_key = 'title_' . ($data['language'] === 'en' ? 'de' : $data['language']);
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
-            $wpdb->insert(Database::table('order_items'), [
+            $item_saved = $wpdb->insert(Database::table('order_items'), [
                 'order_id' => $order_id, 'service_id' => (int) $service->id, 'service_title' => $service->{$title_key},
                 'pricing_mode' => $service->pricing_mode, 'unit_price_cents' => (int) $service->price_cents,
                 'quantity' => $quantity, 'sheet_count' => $service->pricing_mode === 'per_sheet' ? $quantity : max(1, (int) ceil($name_count / 10)),
                 'subtotal_cents' => $subtotal,
             ]);
+            if ($item_saved === false) {
+                // Do not start a provider checkout for an order with a partial service snapshot.
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Remove only the new, still-pending order and its item snapshots.
+                $wpdb->delete(Database::table('order_items'), ['order_id' => $order_id], ['%d']);
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- No payment has been created yet; remove the incomplete pending order.
+                $wpdb->delete(Database::table('orders'), ['id' => $order_id], ['%d']);
+                return new WP_Error('database', I18n::text('error', $data['language']));
+            }
         }
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
-        return $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'), $order_id));
+        $order = $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'), $order_id));
+        return $order ?: new WP_Error('database', I18n::text('error', $data['language']));
     }
 
     private static function return_url(object $order, string $status): string
@@ -219,8 +256,9 @@ final class Payments
     private static function safe_return_url(): string
     {
         $referer = wp_get_referer();
-        if (!$referer || !str_starts_with($referer, home_url('/'))) return home_url('/');
-        return remove_query_arg(['gkod_payment', 'gkod_order'], $referer);
+        if (!$referer) return home_url('/');
+        $referer = remove_query_arg(['gkod_payment', 'gkod_order'], $referer);
+        return wp_validate_redirect($referer, home_url('/'));
     }
 
     private static function stripe_checkout(object $order): string|WP_Error
@@ -267,8 +305,7 @@ final class Payments
         $details=(array)($session['customer_details']??[]);
         if(!$details)return false;
         // A read of customer data must never change payment state or send email.
-        self::store_customer_details($id,$details);
-        return true;
+        return self::store_customer_details($id, $details);
     }
 
     public static function paypal_access_token(): string|WP_Error
@@ -279,8 +316,11 @@ final class Payments
         $base = get_option('gkod_paypal_mode', 'live') === 'sandbox' ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
         $response = wp_remote_post($base . '/v1/oauth2/token', ['timeout' => 25, 'headers' => ['Authorization' => 'Basic ' . base64_encode($client . ':' . $secret)], 'body' => ['grant_type' => 'client_credentials']]);
         if (is_wp_error($response)) return $response;
+        $status = wp_remote_retrieve_response_code($response);
         $json = json_decode((string) wp_remote_retrieve_body($response), true);
-        return !empty($json['access_token']) ? $json['access_token'] : new WP_Error('paypal_auth', 'PayPal authentication failed.');
+        return $status >= 200 && $status < 300 && is_array($json) && !empty($json['access_token'])
+            ? (string) $json['access_token']
+            : new WP_Error('paypal_auth', 'PayPal authentication failed.');
     }
 
     private static function paypal_checkout(object $order): string|WP_Error
@@ -296,19 +336,39 @@ final class Payments
         ]], 'payment_source' => ['paypal' => ['experience_context' => ['return_url' => $return, 'cancel_url' => self::return_url($order, 'cancelled'), 'shipping_preference' => 'NO_SHIPPING']]]];
         $response = wp_remote_post($base . '/v2/checkout/orders', ['timeout' => 25, 'headers' => ['Authorization' => 'Bearer ' . $token, 'Content-Type' => 'application/json', 'PayPal-Request-Id' => $order->public_id], 'body' => wp_json_encode($payload)]);
         if (is_wp_error($response)) return $response;
+        $status = wp_remote_retrieve_response_code($response);
         $json = json_decode((string) wp_remote_retrieve_body($response), true);
-        if (!empty($json['id'])) self::set_payment_id((int) $order->id, (string) $json['id']);
-        foreach (($json['links'] ?? []) as $link) if (($link['rel'] ?? '') === 'payer-action') return (string) $link['href'];
+        if ($status < 200 || $status >= 300 || !is_array($json)) return new WP_Error('paypal_create', 'PayPal order creation failed.');
+        if (empty($json['id']) || !self::set_payment_id((int) $order->id, (string) $json['id'])) return new WP_Error('database', I18n::text('error', $order->language));
+        foreach (($json['links'] ?? []) as $link) {
+            $url = (string) ($link['href'] ?? '');
+            if (($link['rel'] ?? '') === 'payer-action' && self::checkout_url_allowed($url, 'paypal')) return $url;
+        }
         return new WP_Error('paypal_create', 'PayPal order creation failed.');
     }
 
     private static function payment_url_from_response(array|WP_Error $response, string $key, int $order_id, string $provider): string|WP_Error
     {
         if (is_wp_error($response)) return $response;
+        $status = wp_remote_retrieve_response_code($response);
         $json = json_decode((string) wp_remote_retrieve_body($response), true);
-        if (wp_remote_retrieve_response_code($response) >= 300 || empty($json[$key])) return new WP_Error($provider . '_create', $json['error']['message'] ?? ucfirst($provider) . ' payment creation failed.');
-        if (!empty($json['id'])) self::set_payment_id($order_id, (string) $json['id']);
+        if ($status < 200 || $status >= 300 || !is_array($json) || empty($json[$key])) {
+            $message = is_array($json) ? (string) ($json['error']['message'] ?? '') : '';
+            return new WP_Error($provider . '_create', $message !== '' ? $message : ucfirst($provider) . ' payment creation failed.');
+        }
+        if (empty($json['id']) || !self::checkout_url_allowed((string) $json[$key], $provider)) return new WP_Error($provider . '_create', ucfirst($provider) . ' payment creation failed.');
+        if (!self::set_payment_id($order_id, (string) $json['id'])) return new WP_Error('database', __('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'));
         return (string) $json[$key];
+    }
+
+    private static function checkout_url_allowed(string $url, string $provider): bool
+    {
+        $parts = wp_parse_url($url);
+        $host = $provider === 'stripe'
+            ? 'checkout.stripe.com'
+            : (get_option('gkod_paypal_mode', 'live') === 'sandbox' ? 'www.sandbox.paypal.com' : 'www.paypal.com');
+        return is_array($parts) && ($parts['scheme'] ?? '') === 'https' && strtolower((string) ($parts['host'] ?? '')) === $host
+            && !isset($parts['user']) && !isset($parts['pass']) && !isset($parts['port']);
     }
 
     private static function payment_label(object $order): string
@@ -332,29 +392,38 @@ final class Payments
         $event = json_decode($payload, true);
         if (!is_array($event) || empty($event['id'])) return new WP_REST_Response(['error' => 'Invalid payload'], 400);
         if (class_exists(Payment_Refunds::class) && ($refund = Payment_Refunds::stripe($event)) !== null) {
-            if ($refund->get_status() === 200) self::record_event('stripe', (string) $event['id'], (string) ($event['type'] ?? ''), 0, $payload);
+            if ($refund->get_status() === 200 && self::record_event('stripe', (string) $event['id'], (string) ($event['type'] ?? ''), 0, $payload) === false) {
+                return new WP_REST_Response(['error' => 'Could not record event'], 503);
+            }
             return $refund;
         }
         if (class_exists(Subscriptions::class) && ($recurring = Subscriptions::stripe($event)) !== null) {
-            if ($recurring->get_status() === 200) self::record_event('stripe', (string) $event['id'], (string) ($event['type'] ?? ''), 0, $payload);
+            if ($recurring->get_status() === 200 && self::record_event('stripe', (string) $event['id'], (string) ($event['type'] ?? ''), 0, $payload) === false) {
+                return new WP_REST_Response(['error' => 'Could not record event'], 503);
+            }
             return $recurring;
         }
         $object = $event['data']['object'] ?? [];
         $order_id = (int) ($object['metadata']['order_id'] ?? $object['client_reference_id'] ?? 0);
-        if (($event['type'] ?? '') === 'checkout.session.completed' && ($object['payment_status'] ?? '') === 'paid') {
+        $event_type = (string) ($event['type'] ?? '');
+        $is_checkout_payment = in_array($event_type, ['checkout.session.completed', 'checkout.session.async_payment_succeeded', 'checkout.session.async_payment_failed'], true);
+        if ($is_checkout_payment) {
             global $wpdb;
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
             $order = $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'), $order_id));
-            if (!$order || !self::stripe_session_matches($order, $object)) return new WP_REST_Response(['error' => 'Payment does not match order'], 400);
+            if ($wpdb->last_error !== '') return new WP_REST_Response(['error' => 'Could not load payment'], 503);
+            if (!$order || !self::stripe_session_belongs_to_order($order, $object)) return new WP_REST_Response(['error' => 'Payment does not match order'], 400);
         }
-        if (!self::record_event('stripe', (string) $event['id'], (string) ($event['type'] ?? ''), $order_id, $payload)) return new WP_REST_Response(['received' => true], 200);
-        if (($event['type'] ?? '') === 'checkout.session.completed' && ($object['payment_status'] ?? '') === 'paid') {
-            self::store_customer_details($order_id, (array) ($object['customer_details'] ?? []));
+        if ($is_checkout_payment && in_array($event_type, ['checkout.session.completed', 'checkout.session.async_payment_succeeded'], true) && ($object['payment_status'] ?? '') === 'paid') {
+            if (!self::store_customer_details($order_id, (array) ($object['customer_details'] ?? []))) return new WP_REST_Response(['error' => 'Could not save payer details'], 503);
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
-            if (!empty($object['payment_intent'])) $wpdb->update(Database::table('orders'), ['payment_reference' => (string) $object['payment_intent']], ['id' => $order_id]);
-            self::mark_paid($order_id, (string) ($object['id'] ?? ''));
+            if (!empty($object['payment_intent']) && $wpdb->update(Database::table('orders'), ['payment_reference' => (string) $object['payment_intent']], ['id' => $order_id]) === false) return new WP_REST_Response(['error' => 'Could not save payment reference'], 503);
+            if (!self::mark_paid($order_id, (string) ($object['id'] ?? ''))) return new WP_REST_Response(['error' => 'Could not confirm payment'], 503);
         }
-        if (($event['type'] ?? '') === 'charge.refunded' && $order_id > 0) self::set_status($order_id, 'refunded');
+        if ($event_type === 'checkout.session.async_payment_failed' && !self::fail_pending_order($order_id)) return new WP_REST_Response(['error' => 'Could not update payment status'], 503);
+        if (($event['type'] ?? '') === 'charge.refunded' && $order_id > 0 && !self::set_status($order_id, 'refunded')) return new WP_REST_Response(['error' => 'Could not update payment status'], 503);
+        // Log only after all local payment writes succeed, so provider retries can recover from database failures.
+        if (self::record_event('stripe', (string) $event['id'], (string) ($event['type'] ?? ''), $order_id, $payload) === false) return new WP_REST_Response(['error' => 'Could not record event'], 503);
         return new WP_REST_Response(['received' => true], 200);
     }
 
@@ -380,11 +449,11 @@ final class Payments
         if (!is_wp_error($token)) {
             $base = get_option('gkod_paypal_mode', 'live') === 'sandbox' ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
             $response = wp_remote_post($base . '/v2/checkout/orders/' . rawurlencode($token_id) . '/capture', ['timeout' => 25, 'headers' => ['Authorization' => 'Bearer ' . $token, 'Content-Type' => 'application/json'], 'body' => '{}']);
-            $json = !is_wp_error($response) ? json_decode((string) wp_remote_retrieve_body($response), true) : [];
+            $status = !is_wp_error($response) ? wp_remote_retrieve_response_code($response) : 0;
+            $json = $status >= 200 && $status < 300 ? json_decode((string) wp_remote_retrieve_body($response), true) : [];
             if (is_array($json) && self::paypal_return_matches($order, $json)) {
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
-                $wpdb->update(Database::table('orders'), ['payment_reference' => (string) $json['purchase_units'][0]['payments']['captures'][0]['id']], ['id' => $order->id]);
-                self::mark_paid((int) $order->id, $token_id);
+                if ($wpdb->update(Database::table('orders'), ['payment_reference' => (string) $json['purchase_units'][0]['payments']['captures'][0]['id']], ['id' => $order->id]) !== false) self::mark_paid((int) $order->id, $token_id);
             }
         }
         wp_safe_redirect(self::return_url($order, 'success')); exit;
@@ -393,16 +462,22 @@ final class Payments
     public static function paypal_webhook(WP_REST_Request $request): WP_REST_Response
     {
         $payload = $request->get_json_params();
+        if (!is_array($payload)) return new WP_REST_Response(['error' => 'Invalid payload'], 400);
         $event_id = (string) ($payload['id'] ?? '');
         if ($event_id === '') return new WP_REST_Response(['error' => 'Invalid payload'], 400);
         $verified = self::verify_paypal_webhook($request, $payload);
+        if (is_wp_error($verified)) return new WP_REST_Response(['error' => 'Could not verify webhook'], 503);
         if (!$verified) return new WP_REST_Response(['error' => 'Invalid signature'], 400);
         if (class_exists(Payment_Refunds::class) && ($refund = Payment_Refunds::paypal($payload)) !== null) {
-            if ($refund->get_status() === 200) self::record_event('paypal', $event_id, (string) ($payload['event_type'] ?? ''), 0, $request->get_body());
+            if ($refund->get_status() === 200 && self::record_event('paypal', $event_id, (string) ($payload['event_type'] ?? ''), 0, $request->get_body()) === false) {
+                return new WP_REST_Response(['error' => 'Could not record event'], 503);
+            }
             return $refund;
         }
         if (class_exists(Subscriptions::class) && ($recurring = Subscriptions::paypal($payload)) !== null) {
-            if ($recurring->get_status() === 200) self::record_event('paypal', $event_id, (string) ($payload['event_type'] ?? ''), 0, $request->get_body());
+            if ($recurring->get_status() === 200 && self::record_event('paypal', $event_id, (string) ($payload['event_type'] ?? ''), 0, $request->get_body()) === false) {
+                return new WP_REST_Response(['error' => 'Could not record event'], 503);
+            }
             return $recurring;
         }
         $resource = $payload['resource'] ?? [];
@@ -411,30 +486,52 @@ final class Payments
             global $wpdb;
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
             $order_id = (int) $wpdb->get_var($wpdb->prepare('SELECT id FROM %i WHERE payment_provider=\'paypal\' AND payment_id=%s', Database::table('orders'), (string) $resource['supplementary_data']['related_ids']['order_id']));
+            if ($wpdb->last_error !== '') return new WP_REST_Response(['error' => 'Could not load payment'], 503);
         }
         if (($payload['event_type'] ?? '') === 'PAYMENT.CAPTURE.COMPLETED') {
             global $wpdb;
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
             $order = $wpdb->get_row($wpdb->prepare('SELECT * FROM %i WHERE id=%d', Database::table('orders'), $order_id));
+            if ($wpdb->last_error !== '') return new WP_REST_Response(['error' => 'Could not load payment'], 503);
             if (!$order || !self::paypal_capture_matches($order, $resource)) return new WP_REST_Response(['error' => 'Payment does not match order'], 400);
         }
-        if (self::record_event('paypal', $event_id, (string) ($payload['event_type'] ?? ''), $order_id, $request->get_body())) {
-            if (($payload['event_type'] ?? '') === 'PAYMENT.CAPTURE.COMPLETED') {
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
-                $wpdb->update(Database::table('orders'), ['payment_reference' => (string) ($resource['id'] ?? '')], ['id' => $order_id]);
-                self::mark_paid($order_id, (string) ($resource['id'] ?? ''));
-            }
-            if (($payload['event_type'] ?? '') === 'PAYMENT.CAPTURE.REFUNDED' && $order_id > 0) self::set_status($order_id, 'refunded');
+        if (($payload['event_type'] ?? '') === 'PAYMENT.CAPTURE.COMPLETED') {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
+            if ($wpdb->update(Database::table('orders'), ['payment_reference' => (string) ($resource['id'] ?? '')], ['id' => $order_id]) === false) return new WP_REST_Response(['error' => 'Could not save payment reference'], 503);
+            if (!self::mark_paid($order_id, (string) ($resource['id'] ?? ''))) return new WP_REST_Response(['error' => 'Could not confirm payment'], 503);
         }
+        if (($payload['event_type'] ?? '') === 'PAYMENT.CAPTURE.REFUNDED' && $order_id > 0 && !self::set_status($order_id, 'refunded')) return new WP_REST_Response(['error' => 'Could not update payment status'], 503);
+        // Log only after all local payment writes succeed, so provider retries can recover from database failures.
+        if (self::record_event('paypal', $event_id, (string) ($payload['event_type'] ?? ''), $order_id, $request->get_body()) === false) return new WP_REST_Response(['error' => 'Could not record event'], 503);
         return new WP_REST_Response(['received' => true], 200);
     }
 
     private static function stripe_session_matches(object $order, array $session): bool
     {
-        return $order->payment_provider === 'stripe' && ($session['payment_status'] ?? '') === 'paid'
+        return self::stripe_session_belongs_to_order($order, $session) && ($session['payment_status'] ?? '') === 'paid';
+    }
+
+    private static function stripe_session_belongs_to_order(object $order, array $session): bool
+    {
+        return $order->payment_provider === 'stripe'
             && ($session['currency'] ?? '') === 'eur' && is_int($session['amount_total'] ?? null)
             && $session['amount_total'] === (int)$order->amount_cents
-            && (string)$order->payment_id !== '' && ($session['id'] ?? '') === (string)$order->payment_id;
+            && (string)$order->payment_id !== '' && ($session['id'] ?? '') === (string)$order->payment_id
+            && ($session['client_reference_id'] ?? '') === (string)$order->public_id
+            && (string) ($session['metadata']['order_id'] ?? '') === (string) $order->id
+            && ($session['metadata']['public_id'] ?? '') === (string) $order->public_id;
+    }
+
+    private static function fail_pending_order(int $order_id): bool
+    {
+        if ($order_id < 1) return false;
+        global $wpdb;
+        $table = Database::table('orders');
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Failed delayed payments must not overwrite a concurrently confirmed payment.
+        $changed = $wpdb->query($wpdb->prepare("UPDATE %i SET payment_status='failed' WHERE id=%d AND payment_status='pending'", $table, $order_id));
+        if ($changed === false) return false;
+        if ($wpdb->rows_affected > 0) Order_Workflow::log($order_id, 'payment_status', __('Payment status:', 'georg-kloster-orthodox-donations') . ' failed');
+        return true;
     }
 
     private static function paypal_capture_matches(object $order, array $capture): bool
@@ -463,57 +560,78 @@ final class Payments
         return self::paypal_capture_matches($order, $capture);
     }
 
-    private static function verify_paypal_webhook(WP_REST_Request $request, array $event): bool
+    private static function verify_paypal_webhook(WP_REST_Request $request, array $event): bool|WP_Error
     {
         $webhook_id = trim((string) get_option('gkod_paypal_webhook_id')); $token = self::paypal_access_token();
-        if ($webhook_id === '' || is_wp_error($token)) return false;
+        if ($webhook_id === '' || is_wp_error($token)) return new WP_Error('paypal_verify_unavailable');
         $base = get_option('gkod_paypal_mode', 'live') === 'sandbox' ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
         $body = ['auth_algo' => $request->get_header('paypal-auth-algo'), 'cert_url' => $request->get_header('paypal-cert-url'), 'transmission_id' => $request->get_header('paypal-transmission-id'), 'transmission_sig' => $request->get_header('paypal-transmission-sig'), 'transmission_time' => $request->get_header('paypal-transmission-time'), 'webhook_id' => $webhook_id, 'webhook_event' => $event];
         $response = wp_remote_post($base . '/v1/notifications/verify-webhook-signature', ['timeout' => 25, 'headers' => ['Authorization' => 'Bearer ' . $token, 'Content-Type' => 'application/json'], 'body' => wp_json_encode($body)]);
-        $json = !is_wp_error($response) ? json_decode((string) wp_remote_retrieve_body($response), true) : [];
-        return ($json['verification_status'] ?? '') === 'SUCCESS';
+        if (is_wp_error($response)) return new WP_Error('paypal_verify_unavailable');
+        $status = wp_remote_retrieve_response_code($response);
+        $json = json_decode((string) wp_remote_retrieve_body($response), true);
+        if ($status < 200 || $status >= 300 || !is_array($json) || !isset($json['verification_status'])) return new WP_Error('paypal_verify_unavailable');
+        return $json['verification_status'] === 'SUCCESS';
     }
 
-    private static function record_event(string $provider, string $event_id, string $type, int $order_id, string $payload): bool
+    private static function record_event(string $provider, string $event_id, string $type, int $order_id, string $payload): int|false
     {
         global $wpdb;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
-        return (bool) $wpdb->query($wpdb->prepare('INSERT IGNORE INTO %i (provider,event_id,event_type,order_id,payload_hash,processed,created_at) VALUES (%s,%s,%s,%d,%s,1,%s)', Database::table('payment_events'), $provider, $event_id, $type, $order_id ?: null, hash('sha256', $payload), current_time('mysql')));
+        return $wpdb->query($wpdb->prepare('INSERT IGNORE INTO %i (provider,event_id,event_type,order_id,payload_hash,processed,created_at) VALUES (%s,%s,%s,%d,%s,1,%s)', Database::table('payment_events'), $provider, $event_id, $type, $order_id ?: null, hash('sha256', $payload), current_time('mysql')));
     }
 
     // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
-    private static function set_payment_id(int $order_id, string $payment_id): void { global $wpdb; $wpdb->update(Database::table('orders'), ['payment_id' => $payment_id], ['id' => $order_id]); }
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
-    private static function set_status(int $order_id, string $status): void { global $wpdb; $changed=$wpdb->update(Database::table('orders'), ['payment_status' => $status], ['id' => $order_id]); if($changed) Order_Workflow::log($order_id,'payment_status',__('Payment status:', 'georg-kloster-orthodox-donations').' '.$status); }
-
-    private static function store_customer_details(int $order_id, array $details): void
+    private static function set_payment_id(int $order_id, string $payment_id): bool
     {
-        if ($order_id <= 0) return;
+        if ($order_id < 1 || $payment_id === '' || strlen($payment_id) > 191) return false;
+        global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Store and confirm the provider's checkout identifier before redirecting the donor.
+        if ($wpdb->update(Database::table('orders'), ['payment_id' => $payment_id], ['id' => $order_id]) === false) return false;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Confirm provider checkout binding persisted before exposing its URL.
+        return (string) $wpdb->get_var($wpdb->prepare('SELECT payment_id FROM %i WHERE id=%d', Database::table('orders'), $order_id)) === $payment_id;
+    }
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
+    private static function set_status(int $order_id, string $status): bool
+    {
+        global $wpdb;
+        $changed = $wpdb->update(Database::table('orders'), ['payment_status' => $status], ['id' => $order_id]);
+        if ($changed === false) return false;
+        if ($changed) Order_Workflow::log($order_id, 'payment_status', __('Payment status:', 'georg-kloster-orthodox-donations') . ' ' . $status);
+        return true;
+    }
+
+    private static function store_customer_details(int $order_id, array $details): bool
+    {
+        if ($order_id <= 0) return false;
         global $wpdb;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
-        $wpdb->update(Database::table('orders'), [
+        return $wpdb->update(Database::table('orders'), [
             'billing_name' => sanitize_text_field((string) ($details['name'] ?? '')),
             'billing_email' => sanitize_email((string) ($details['email'] ?? '')),
             'billing_phone' => sanitize_text_field((string) ($details['phone'] ?? '')),
             'billing_address' => wp_json_encode((array) ($details['address'] ?? []), JSON_UNESCAPED_UNICODE),
-        ], ['id' => $order_id]);
+        ], ['id' => $order_id]) !== false;
     }
 
-    public static function mark_paid(int $order_id, string $payment_id): void
+    public static function mark_paid(int $order_id, string $payment_id): bool
     {
         global $wpdb;
-        if ($order_id <= 0) return;
+        if ($order_id <= 0) return false;
         $table = Database::table('orders');
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
-        $wpdb->query($wpdb->prepare("UPDATE %i SET payment_status='paid',payment_id=COALESCE(NULLIF(%s,''),payment_id),paid_at=COALESCE(paid_at,%s) WHERE id=%d AND payment_status IN ('pending','failed','cancelled')", $table, $payment_id, current_time('mysql'), $order_id));
+        if ($wpdb->query($wpdb->prepare("UPDATE %i SET payment_status='paid',payment_id=COALESCE(NULLIF(%s,''),payment_id),paid_at=COALESCE(paid_at,%s) WHERE id=%d AND payment_status IN ('pending','failed','cancelled')", $table, $payment_id, current_time('mysql'), $order_id)) === false) return false;
         if ($wpdb->rows_affected > 0) {
-            Notifications::enqueue($order_id);
             Order_Workflow::log($order_id,'paid',__('Payment confirmed', 'georg-kloster-orthodox-donations'));
         }
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $order = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id=%d", $table, $order_id));
-        if ($order && $order->payment_status === 'paid' && !$order->confirmation_sent_at) self::send_confirmation($order);
+        if (!$order || $order->payment_status !== 'paid') return false;
+        // Enqueue on every verified paid event. If the first database write failed, the provider retry can still create the notification.
+        if (!Notifications::enqueue($order_id)) return false;
+        if (!$order->confirmation_sent_at) self::send_confirmation($order);
         Notifications::send($order_id);
+        return true;
     }
 
     public static function retry_confirmations(): void
@@ -522,6 +640,7 @@ final class Payments
         global $wpdb;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Payment binding/idempotency requires fresh custom ledger reads and conditional writes.
         $rows = $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE payment_status='paid' AND confirmation_sent_at IS NULL ORDER BY paid_at ASC LIMIT 25", Database::table('orders')));
+        if (!is_array($rows)) return;
         foreach ($rows as $order) self::send_confirmation($order);
     }
 

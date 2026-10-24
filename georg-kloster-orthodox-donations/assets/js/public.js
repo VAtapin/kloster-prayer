@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
       window.history.replaceState({}, document.title, cleanUrl.toString());
     }
   }
-  document.querySelectorAll('.gkod-form').forEach(function (root) {
+  document.querySelectorAll('.gkod-donation-form').forEach(function (root) {
     var form = root.querySelector('form');
     var names = form.elements.names;
     var donation = root.dataset.requestType === 'donation';
@@ -27,7 +27,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var error = root.querySelector('.gkod-error');
     var submit = root.querySelector('.gkod-submit');
     var currency = root.dataset.currency || 'EUR';
-    var lang = root.dataset.lang === 'ru' ? 'ru-RU' : 'de-DE';
+    var lang = ({en: 'en-US', de: 'de-DE', ru: 'ru-RU', uk: 'uk-UA', pl: 'pl-PL'})[root.dataset.lang] || 'de-DE';
+    var requiredMessage = root.dataset.required || window.georgKlosterOrthodoxDonate.required;
+    var genericError = root.dataset.error || window.georgKlosterOrthodoxDonate.error;
 
     function normalizeNames(finalize) {
       if (donation) return;
@@ -47,10 +49,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     function refreshVisibility() {
       if (donation) { calculate(); return; }
-      var intention = form.querySelector('[name="intention"]:checked').value;
+      var selectedIntention = form.querySelector('[name="intention"]:checked');
+      var intention = selectedIntention ? selectedIntention.value : '';
       root.querySelectorAll('.gkod-service').forEach(function (row) {
         var mode = row.dataset.intention;
-        var visible = mode === 'both' || mode === 'none' || mode === intention;
+        var visible = mode === 'both' || mode === 'none' || intention === '' || mode === intention;
         row.hidden = !visible;
         if (!visible) row.querySelector('input').checked = false;
       });
@@ -63,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var parts = value.replace(',', '.').split('.');
         var donationCents = valid ? Number(parts[0]) * 100 + Number(((parts[1] || '') + '00').slice(0, 2)) : 0;
         var minimumCents = Math.round(Number(amount.min || 0.50) * 100);
-        amount.setCustomValidity(valid && donationCents >= minimumCents && donationCents <= 99999999 ? '' : window.georgKlosterOrthodoxDonate.required);
+        amount.setCustomValidity(valid && donationCents >= minimumCents && donationCents <= 99999999 ? '' : requiredMessage);
         output.textContent = new Intl.NumberFormat(lang, {style: 'currency', currency: currency}).format(donationCents / 100);
         return;
       }
@@ -104,16 +107,16 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', function (event) {
       event.preventDefault(); error.hidden = true; normalizeNames(true); calculate();
       if (!form.checkValidity() || (!donation && !form.querySelector('.gkod-service input:checked'))) {
-        error.textContent = window.georgKlosterOrthodoxDonate.required; error.hidden = false; form.reportValidity(); return;
+        error.textContent = requiredMessage; error.hidden = false; form.reportValidity(); return;
       }
       submit.disabled = true;
       fetch(window.georgKlosterOrthodoxDonate.ajaxUrl, {method: 'POST', body: new FormData(form), credentials: 'same-origin'})
         .then(function (response) { return response.json(); })
         .then(function (data) {
-          if (!data.success || !data.data.redirect) throw new Error(data.data && data.data.message || window.georgKlosterOrthodoxDonate.error);
+          if (!data.success || !data.data.redirect) throw new Error(data.data && data.data.message || genericError);
           window.location.assign(data.data.redirect);
         })
-        .catch(function (reason) { error.textContent = reason.message || window.georgKlosterOrthodoxDonate.error; error.hidden = false; submit.disabled = false; });
+        .catch(function (reason) { error.textContent = reason.message || genericError; error.hidden = false; submit.disabled = false; });
     });
     normalizeNames(true);
     refreshVisibility();

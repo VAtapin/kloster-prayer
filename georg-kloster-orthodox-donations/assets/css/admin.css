@@ -1,1 +1,153 @@
-.gkod-admin{max-width:none}.gkod-columns{display:flex;gap:18px;align-items:flex-start;margin-top:18px}.gkod-card{padding:12px}.gkod-card:not(.gkod-grow){width:390px}.gkod-grow{flex:1}.gkod-card>label,.gkod-card fieldset>label{display:block;margin:0 0 15px;font-weight:600}.gkod-card input[type=text],.gkod-card input[type=password],.gkod-card input[type=number],.gkod-card textarea,.gkod-card select{display:block;width:100%;max-width:none;margin-top:6px}.gkod-card fieldset{border:1px solid #dcdcde;padding:12px;margin-bottom:15px}.gkod-card fieldset legend{font-weight:700}.gkod-filters,.gkod-toolbar{display:flex;gap:8px;align-items:center;margin:16px 0}.gkod-orders td{vertical-align:top}.gkod-names{max-height:180px;overflow:auto;min-width:210px}.gkod-status{font-weight:600}.gkod-status--paid{}.gkod-status--pending,.gkod-status--failed{}.gkod-orders small{display:block;margin-top:5px;color:#646970}.gkod-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:16px 0}.gkod-stats>div{padding:20px;background:#fff;border:1px solid #dcdcde;border-radius:7px}.gkod-stats small{display:block;color:#646970}.gkod-stats strong{display:block;font-size:16px;margin-top:7px}.gkod-settings{width:min(760px,100%)!important}.gkod-settings hr{margin:24px 0}@media(max-width:900px){.gkod-columns{display:block}.gkod-card:not(.gkod-grow){width:auto;margin-bottom:16px}.gkod-stats{grid-template-columns:1fr 1fr}}
+/* Plugin-specific admin panels. WordPress owns list-table and tablenav styling. */
+.gkod-admin .gkod-card {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: none;
+    margin: 12px 0;
+    padding: 14px;
+}
+.gkod-admin .gkod-card > label,
+.gkod-admin .gkod-card fieldset > label {
+    display: block;
+    margin: 0 0 15px;
+    font-weight: 600;
+}
+.gkod-admin .gkod-card input[type="text"],
+.gkod-admin .gkod-card input[type="password"],
+.gkod-admin .gkod-card input[type="number"],
+.gkod-admin .gkod-card textarea,
+.gkod-admin .gkod-card select {
+    display: block;
+    width: 100%;
+    max-width: none;
+    margin-top: 6px;
+}
+.gkod-admin .gkod-card fieldset {
+    margin-bottom: 15px;
+    padding: 12px;
+    border: 1px solid #dcdcde;
+}
+.gkod-admin .gkod-card fieldset legend {
+    font-weight: 700;
+}
+.gkod-admin .gkod-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 16px 0;
+}
+.gkod-admin .gkod-payment-settings,
+.gkod-admin .gkod-report-groups {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 12px;
+}
+.gkod-admin .gkod-payment-settings .postbox {
+    min-width: 0;
+    margin: 0;
+}
+.gkod-admin .gkod-payment-settings h2 {
+    margin: 0;
+    padding: 10px 12px;
+    border-bottom: 1px solid #dcdcde;
+    font-size: 14px;
+}
+.gkod-admin .gkod-payment-settings .inside {
+    margin: 0;
+    padding: 0 12px 12px;
+}
+.gkod-admin .gkod-payment-settings p {
+    margin: 10px 0;
+}
+.gkod-admin .gkod-payment-settings p > label {
+    display: block;
+    margin-bottom: 4px;
+}
+.gkod-admin .gkod-payment-settings input:not([type="checkbox"]),
+.gkod-admin .gkod-payment-settings select {
+    width: 100%;
+    max-width: none;
+}
+.gkod-admin code {
+    overflow-wrap: anywhere;
+}
+.gkod-admin .gkod-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 12px 0;
+}
+.gkod-admin .gkod-stats > div {
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #dcdcde;
+    border-radius: 2px;
+    background: #fff;
+}
+.gkod-admin .gkod-stats small {
+    display: block;
+    color: #646970;
+}
+.gkod-admin .gkod-stats strong {
+    display: block;
+    margin-top: 7px;
+    font-size: 20px;
+    overflow-wrap: anywhere;
+}
+.gkod-admin .gkod-names {
+    max-height: 100px;
+    min-width: 0;
+    overflow: auto;
+}
+.gkod-admin .gkod-detail-actions {
+    display: inline-block;
+    margin: 10px 0;
+}
+.gkod-admin .gkod-order-comment {
+    margin-top: 8px;
+    padding: 6px 8px;
+    border-left: 3px solid #c3c4c7;
+    background: #fff;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+.gkod-admin .gkod-order-comment strong {
+    display: block;
+    color: #50575e;
+    font-size: 12px;
+}
+.gkod-shortcode-example {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0;
+}
+.gkod-shortcode-example input {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+}
+.gkod-shortcode-help td {
+    overflow-wrap: anywhere;
+}
+.gkod-copy-status {
+    min-height: 1.5em;
+}
+.gkod-admin #gkod-image-preview img {
+    display: block;
+    max-width: 240px;
+    height: auto;
+    margin-bottom: 8px;
+}
+@media (max-width: 782px) {
+    .gkod-admin .gkod-payment-settings,
+    .gkod-admin .gkod-report-groups {
+        grid-template-columns: 1fr;
+    }
+    .gkod-admin .gkod-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

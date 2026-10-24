@@ -23,7 +23,7 @@ final class Pdf
 
     public static function download(): never
     {
-        if (!current_user_can('manage_options')) wp_die('Forbidden', 403);
+        if (!current_user_can('manage_options')) wp_die(esc_html__('Forbidden', 'georg-kloster-orthodox-donations'), '', ['response' => 403]);
         check_admin_referer('gkod_pdf');
         if (!class_exists(Dompdf::class)) require_once DIR . '/includes/lib/dompdf/autoload.inc.php';
         $cards = !empty(Input::get('blank')) ? [['intention' => (Input::get('intention') ?? '') === 'rest' ? 'rest' : 'health', 'language' => (Input::get('language') ?? '') === 'de' ? 'de' : 'ru', 'title' => '', 'names' => [], 'note' => '']] : self::cards();

@@ -31,6 +31,8 @@ namespace GeorgKlosterOrthodoxDonate {
 
     final class FixtureDB
     {
+        public string $last_error = '';
+
         public function prepare(string $query, ...$args): string { return $query; }
         public function get_results(string $query): array
         {

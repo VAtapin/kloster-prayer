@@ -30,13 +30,15 @@ final class Campaigns
         return '';
     }
 
-    public static function totals(int $id): array
+    public static function totals(int $id): array|\WP_Error
     {
         global $wpdb;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom campaign/expense ledger; read current confirmed income and refunds, without stale financial cache.
         $received = (int) $wpdb->get_var($wpdb->prepare("SELECT COALESCE(SUM(amount_cents-refunded_cents),0) FROM %i WHERE campaign_id=%d AND payment_status='paid'", Database::table('orders'), $id));
+        if ($wpdb->last_error !== '') return new \WP_Error('database', __('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'));
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom campaign/expense ledger; read current confirmed income and refunds, without stale financial cache.
         $spent = (int) $wpdb->get_var($wpdb->prepare('SELECT COALESCE(SUM(amount_cents),0) FROM %i WHERE campaign_id=%d', Database::table('campaign_expenses'), $id));
+        if ($wpdb->last_error !== '') return new \WP_Error('database', __('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'));
         return ['received' => $received, 'spent' => $spent, 'balance' => $received - $spent];
     }
 
@@ -79,7 +81,7 @@ final class Campaigns
         if ($id) $ok = $wpdb->update(Database::table('campaigns'), $data, ['id' => $id]);
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom campaign/expense ledger; read current confirmed income and refunds, without stale financial cache.
         else { $data['created_at'] = current_time('mysql'); $ok = $wpdb->insert(Database::table('campaigns'), $data); $id = (int) $wpdb->insert_id; }
-        return $ok === false ? new \WP_Error('database', __('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations')) : $id;
+        return $ok === false || $id < 1 ? new \WP_Error('database', __('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations')) : $id;
     }
 
     public static function expense(array $input): bool|\WP_Error
@@ -119,6 +121,7 @@ final class Campaigns
         global $wpdb;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Public campaign transparency requires current recorded expenses.
         $expenses = $wpdb->get_results($wpdb->prepare('SELECT description,amount_cents,incurred_on FROM %i WHERE campaign_id=%d ORDER BY incurred_on DESC,id DESC', Database::table('campaign_expenses'), $campaign_id));
+        if ($wpdb->last_error !== '') return '<p class="gkod-error" role="alert">' . esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations') . '</p>';
         if (!$expenses) return '';
         $html = '<div class="gkod-campaign-expenses"><h3>'.esc_html__('Recorded expenses','georg-kloster-orthodox-donations').'</h3><ul>';
         foreach ($expenses as $expense) $html .= '<li><span>'.esc_html($expense->description).'</span><time datetime="'.esc_attr($expense->incurred_on).'">'.esc_html($expense->incurred_on).'</time><strong>'.esc_html(number_format_i18n($expense->amount_cents/100,2).' EUR').'</strong></li>';
@@ -128,6 +131,7 @@ final class Campaigns
     public static function summary(object $campaign): string
     {
         $totals = self::totals((int) $campaign->id);
+        if (is_wp_error($totals)) return '<p class="gkod-error" role="alert">' . esc_html($totals->get_error_message()) . '</p>';
         $rows = [__('Goal', 'georg-kloster-orthodox-donations') => (int) $campaign->goal_cents, __('Donations received', 'georg-kloster-orthodox-donations') => $totals['received'], __('Expenses', 'georg-kloster-orthodox-donations') => $totals['spent'], __('Balance', 'georg-kloster-orthodox-donations') => $totals['balance']];
         $html = '<dl class="gkod-campaign-summary">';
         foreach ($rows as $label => $cents) $html .= '<dt>' . esc_html($label) . '</dt><dd>' . esc_html(number_format_i18n($cents / 100, 2) . ' EUR') . '</dd>';
@@ -153,6 +157,8 @@ final class Campaigns
         $target_url = $atts['url'] !== '' ? esc_url_raw($atts['url']) : add_query_arg([], get_permalink());
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom campaign/expense ledger; read current confirmed income and refunds, without stale financial cache.
         $rows = $atts['id'] ? array_filter([self::get(absint($atts['id']))]) : $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE status IN ('open','closed') ORDER BY id DESC LIMIT 100", Database::table('campaigns')));
+        if (!$atts['id'] && $wpdb->last_error !== '') return '<p role="alert">' . esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations') . '</p>';
+        if (!is_array($rows)) $rows=[];
         return I18n::in_language(static function () use ($rows, $lang, $compact, $target_url): string {
             $html = '<div class="gkod-campaigns">';
             foreach ($rows as $campaign) {
@@ -161,6 +167,10 @@ final class Campaigns
                 $image = !empty($campaign->image_id) ? wp_get_attachment_image((int) $campaign->image_id, 'large', false, ['class' => 'gkod-campaign__image']) : '';
                 if ($compact) {
                     $totals=self::totals((int)$campaign->id);
+                    if (is_wp_error($totals)) {
+                        $html .= '<p class="gkod-error" role="alert">' . esc_html($totals->get_error_message()) . '</p>';
+                        continue;
+                    }
                     $thumb=!empty($campaign->image_id)?wp_get_attachment_image((int)$campaign->image_id,'thumbnail',false,['class'=>'gkod-campaign-card__image']):'';
                     $url=add_query_arg('campaign_id',(int)$campaign->id,$target_url).'#gkod-campaign-'.(int)$campaign->id;
                     $accent_color = sanitize_hex_color((string) ($campaign->accent_color ?? '')) ?: '#8c2732';

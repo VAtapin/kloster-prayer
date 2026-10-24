@@ -1051,8 +1051,8 @@ msgstr "W Workbench → Webhooks wybierz Create an event destination (w starszym
 msgid "Paste the exact Endpoint URL below. It must be publicly accessible over HTTPS and accept POST requests without login, redirects or a security challenge. Do not enter the WordPress settings-page URL."
 msgstr "Wklej dokładny Endpoint URL podany poniżej. Musi być publicznie dostępny przez HTTPS i przyjmować POST bez logowania, przekierowań ani dodatkowej kontroli bezpieczeństwa. Nie wpisuj adresu strony ustawień WordPress."
 
-msgid "For one-time donations and prayer requests, select checkout.session.completed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
-msgstr "Dla jednorazowych darowizn i intencji wybierz checkout.session.completed i charge.refunded. Dla regularnego wsparcia dodaj poniższe zdarzenia subskrypcji i faktur. Zapisz miejsce docelowe."
+msgid "For one-time donations and prayer requests, select checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed and charge.refunded. For regular support, additionally select the following subscription and invoice events. Save the destination."
+msgstr "Dla jednorazowych darowizn i intencji wybierz checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed oraz charge.refunded. W przypadku regularnego wsparcia wybierz także poniższe zdarzenia subskrypcji i faktur. Zapisz miejsce docelowe."
 
 msgid "Open the saved destination and reveal its Signing secret, starting with whsec_. Paste it into Webhook Secret. Use the secret of this exact endpoint and environment, not a Stripe CLI listener secret. Enable Stripe and save the plugin settings."
 msgstr "Otwórz zapisane miejsce docelowe i ujawnij Signing secret zaczynający się od whsec_. Wklej go w Webhook Secret. Użyj sekretu tego konkretnego punktu końcowego i środowiska, a nie odbiornika Stripe CLI. Włącz Stripe i zapisz ustawienia wtyczki."

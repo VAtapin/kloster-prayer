@@ -11,7 +11,7 @@ const {chromium}=require(path.resolve(__dirname,'../../Kalendar/node_modules/pla
   await page.evaluate(()=>{window.sent=[];window.fetch=async(url,options)=>{window.sent.push(Object.fromEntries(options.body));return {json:async()=>({success:false,data:{message:'Local fixture'}})};};});
   for(const dir of ['kloster-prayer','georg-kloster-orthodox-donations'])await page.addScriptTag({path:path.resolve(__dirname,'../tmp/coexistence-check',dir,'assets/js/public.js')});
   await page.evaluate(()=>document.dispatchEvent(new Event('DOMContentLoaded')));
-  for(const [selector,action]of[['.klp-form','klp_create_payment'],['.gkod-form','gkod_create_payment']]){
+  for(const [selector,action]of[['.klp-form','klp_create_payment'],['.gkod-donation-form','gkod_create_payment']]){
    const form=page.locator(selector);
    await form.locator('[name=donation_amount]').fill('10.00');
    await form.locator('[name=donor_email]').fill('fixture@example.invalid');

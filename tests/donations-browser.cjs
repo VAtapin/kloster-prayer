@@ -5,7 +5,7 @@ const {chromium} = require(path.resolve(__dirname, '../../Kalendar/node_modules/
   const browser = await chromium.launch({channel: 'msedge'});
   try {
     const page = await browser.newPage();
-    await page.setContent('<div class="gkod-form" data-lang="ru" data-request-type="donation"><form novalidate><input name="donation_amount" required><input name="donor_email" type="email" required><output></output><div class="gkod-error" hidden></div><button class="gkod-submit">Пожертвовать</button></form></div>');
+    await page.setContent('<div class="gkod-donation-form" data-lang="ru" data-request-type="donation"><form novalidate><input name="donation_amount" required><input name="donor_email" type="email" required><output></output><div class="gkod-error" hidden></div><button class="gkod-submit">Пожертвовать</button></form></div>');
     await page.evaluate(() => {
       window.georgKlosterOrthodoxDonate = {required: 'Заполните обязательные поля.', error: 'Ошибка', ajaxUrl: '/ajax'};
       window.sent = [];

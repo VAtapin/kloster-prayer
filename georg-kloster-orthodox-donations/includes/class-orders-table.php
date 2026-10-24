@@ -43,9 +43,12 @@ final class Orders_Table extends \WP_List_Table
         global $wpdb;[$where,$args]=self::where(Input::get_all());$from=' FROM %i WHERE '.$where;
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Fixed clauses from where(); identifiers and values are bound. Paginated custom request ledger; current payment/archive state is required.
         $total=(int)$wpdb->get_var($wpdb->prepare('SELECT COUNT(*)'.$from,...array_merge([Database::table('orders')],$args)));
+        if ($wpdb->last_error !== '') wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'), '', ['response' => 500]);
         $sort=in_array(Input::get('orderby')??'', ['id','amount_cents','created_at'],true)?Input::get('orderby'):'id';$dir=strtolower(Input::get('order')??'desc')==='asc'?'ASC':'DESC';
         // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Sort/direction whitelist; identifiers, filter values and paging are bound. Paginated custom request ledger; current payment/archive state is required.
         $this->items=$wpdb->get_results($wpdb->prepare('SELECT *'.$from." ORDER BY {$sort} {$dir} LIMIT %d OFFSET %d",...array_merge([Database::table('orders')],$args,[30,($this->get_pagenum()-1)*30])));
+        if ($wpdb->last_error !== '') wp_die(esc_html__('The request could not be processed. Please try again.', 'georg-kloster-orthodox-donations'), '', ['response' => 500]);
+        if (!is_array($this->items)) $this->items=[];
         $this->_column_headers=[$this->get_columns(),[],$this->get_sortable_columns(),'id'];$this->set_pagination_args(['total_items'=>$total,'per_page'=>30]);
     }
     protected function extra_tablenav($which){

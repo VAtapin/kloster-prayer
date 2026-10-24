@@ -5,7 +5,7 @@ const {chromium} = require(path.resolve(__dirname, '../../Kalendar/node_modules/
  const browser=await chromium.launch({channel:'msedge'});
  try {
   const page=await browser.newPage();
-  await page.setContent('<div class="gkod-form" data-lang="ru"><form><textarea name="names"></textarea><input name="intention" type="radio" value="health" checked><label class="gkod-service" data-intention="both" data-mode="per_person" data-price="200" data-limit="10"><input type="checkbox" checked></label><output></output><div class="gkod-error" hidden></div><button class="gkod-submit">Оплатить</button></form></div>');
+  await page.setContent('<div class="gkod-donation-form" data-lang="ru"><form><textarea name="names"></textarea><input name="intention" type="radio" value="health" checked><label class="gkod-service" data-intention="both" data-mode="per_person" data-price="200" data-limit="10"><input type="checkbox" checked></label><output></output><div class="gkod-error" hidden></div><button class="gkod-submit">Оплатить</button></form></div>');
   await page.addScriptTag({path:path.resolve(__dirname,'../georg-kloster-orthodox-donations/assets/js/public.js')});
   await page.evaluate(()=>document.dispatchEvent(new Event('DOMContentLoaded')));
   const field=page.locator('textarea');

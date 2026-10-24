@@ -83,7 +83,7 @@ PayPal REST apps: https://developer.paypal.com/dashboard/applications/
 Use a matching Client ID, Secret, Webhook ID and Sandbox/Live environment. For testing, use a Sandbox Business seller and a separate Personal buyer. PayPal Webhooks Simulator events are not a substitute for a real Sandbox checkout.
 
 One-time events:
-Stripe: checkout.session.completed, charge.refunded.
+Stripe: checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed, charge.refunded.
 PayPal: PAYMENT.CAPTURE.COMPLETED, PAYMENT.CAPTURE.REFUNDED.
 
 Additional recurring events:

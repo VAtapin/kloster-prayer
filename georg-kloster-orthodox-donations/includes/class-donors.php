@@ -89,7 +89,7 @@ final class Donors
         }
         if ($url === home_url('/')) {
             foreach ($pages as $page) {
-                if (has_shortcode((string) $page->post_content, 'gkod_form')) {
+                if (has_shortcode((string) $page->post_content, 'gkod_campaigns')) {
                     $url = (string) get_permalink($page->ID);
                     break;
                 }
@@ -138,7 +138,16 @@ final class Donors
 
     public static function prevent_cache(): void
     {
-        if (isset($_COOKIE[self::COOKIE]) || Input::get('gkod_donor') !== null) Donation_Pages::private_page();
+        if (isset($_COOKIE[self::COOKIE]) || Input::get('gkod_donor') !== null) {
+            Donation_Pages::private_page();
+            return;
+        }
+        if (!is_user_logged_in()) return;
+        $page_id = absint(get_option('gkod_donor_cabinet_page_id', 0));
+        $queried = get_queried_object();
+        if (($page_id > 0 && is_page($page_id)) || (is_object($queried) && isset($queried->post_content) && has_shortcode((string) $queried->post_content, 'gkod_donation_history'))) {
+            Donation_Pages::private_page();
+        }
     }
 
     public static function current(): ?object

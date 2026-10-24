@@ -1,58 +1,991 @@
-.gkod-form{--gkod-blue:#198fd9;--gkod-navy:#212934;--gkod-gold:#b79a5b;--gkod-line:#e2e7eb;--gkod-muted:#68717b;max-width:780px;margin:32px auto;font-family:Manrope,Arial,Helvetica,sans-serif;color:var(--gkod-navy);border:1px solid var(--gkod-line);border-radius:4px}.gkod-form *{box-sizing:border-box}.gkod-form__header{position:relative;padding:34px 38px 28px}.gkod-form__header:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--gkod-blue)}.gkod-form__eyebrow{display:block;color:var(--gkod-blue);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}.gkod-form h2{font-size:28px;line-height:1.25;margin:0 0 8px}.gkod-form__header p{margin:0;color:var(--gkod-muted)}.gkod-form__body{padding:32px 38px}.gkod-form fieldset{padding:0;margin:0 0 28px;border:0}.gkod-form legend,.gkod-field>label{display:block;margin-bottom:11px;font-size:14px;font-weight:800}.gkod-field>label span{color:#b34141}.gkod-intention{display:grid!important;grid-template-columns:1fr 1fr;gap:10px}.gkod-intention label,.gkod-payment label{cursor:pointer}.gkod-intention input,.gkod-payment input{position:absolute;opacity:0;pointer-events:none}.gkod-intention span{display:flex;align-items:center;justify-content:center;padding:14px;border:1px solid var(--gkod-line);border-radius:3px;font-weight:800;transition:.2s}.gkod-intention input:checked+span{color:#fff}.gkod-services{display:grid;gap:8px}.gkod-services legend{margin-bottom:11px;font-weight:800}.gkod-service{display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:13px;padding:13px 15px;border:1px solid var(--gkod-line);border-radius:3px;cursor:pointer;transition:border-color .2s,background .2s,transform .2s}.gkod-service:hover{border-color:#a9cfe7;transform:translateY(-1px)}.gkod-service[hidden]{display:none}.gkod-service input{position:absolute;opacity:0}.gkod-service__check{width:21px;height:21px;border:2px solid #b8c1c8;border-radius:2px;position:relative}.gkod-service input:checked+.gkod-service__check{background:var(--gkod-blue);border-color:var(--gkod-blue)}.gkod-service input:checked+.gkod-service__check:after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}.gkod-service__name{font-weight:700}.gkod-service__name small{display:block;color:var(--gkod-muted);font-size:11px;font-weight:500;margin-top:2px}.gkod-service strong{font-size:15px}.gkod-field{margin-bottom:22px}.gkod-field input,.gkod-field textarea{display:block;width:100%;border:1px solid #ccd4da;border-radius:2px;padding:13px 14px;background:#fff;color:var(--gkod-navy);font:inherit;transition:border .2s,box-shadow .2s}.gkod-field textarea{resize:vertical}.gkod-field input:focus,.gkod-field textarea:focus{outline:0;border-color:var(--gkod-blue);box-shadow:0 0 0 3px rgba(25,143,217,.12)}.gkod-field small{display:block;margin-top:7px;color:var(--gkod-muted);font-size:12px}.gkod-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.gkod-payment{display:flex;gap:10px}.gkod-payment span{display:block;padding:11px 15px;border:1px solid var(--gkod-line);border-radius:3px;font-weight:700}.gkod-payment input:checked+span{border-color:var(--gkod-blue);color:var(--gkod-blue);background:#f1f9fe}.gkod-summary{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-top:1px solid var(--gkod-line);font-weight:700}.gkod-summary strong{font-size:25px}.gkod-secure{margin:13px 0 0;text-align:center;color:var(--gkod-muted);font-size:11px}.gkod-error{margin:0 0 15px;padding:12px 14px;color:#8f2525;background:#fff2f2;border-left:3px solid #c74747}.gkod-notice{padding:18px 20px;margin:24px 0;border-left:4px solid var(--gkod-blue);background:#f1f9fe}.gkod-form--compact .gkod-form__header{padding:25px 28px 20px}.gkod-form--compact .gkod-form__body{padding:25px 28px}.gkod-form--compact .gkod-grid{grid-template-columns:1fr}.screen-reader-text{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:640px){.gkod-form{margin:20px 0}.gkod-form__header,.gkod-form__body{padding:24px 20px}.gkod-grid{grid-template-columns:1fr}.gkod-service{grid-template-columns:22px 1fr auto}.gkod-intention span{padding:12px 8px;font-size:13px}.gkod-summary strong{font-size:21px}}
-.gkod-honeypot{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important}.gkod-intention--single{grid-template-columns:1fr!important}
-.gkod-form{width:100%}.gkod-form__header,.gkod-form__body,.gkod-service__name{min-width:0}.gkod-service{grid-template-columns:24px minmax(0,1fr) auto}.gkod-payment{flex-wrap:wrap}@media(max-width:420px){.gkod-intention{grid-template-columns:1fr!important}.gkod-summary{gap:12px}.gkod-summary strong{white-space:nowrap}}
-.gkod-modal-open{overflow:hidden}.gkod-result-modal{position:fixed;z-index:999999;inset:0;display:grid;place-items:center;padding:20px;font-family:Manrope,Arial,Helvetica,sans-serif}.gkod-result-modal__backdrop{position:absolute;inset:0;background:rgba(15,23,34,.72);backdrop-filter:blur(4px)}.gkod-result-modal__card{position:relative;width:min(520px,100%);padding:42px 40px 36px;text-align:center;background:#fff;border-radius:12px;box-shadow:0 28px 90px rgba(0,0,0,.32);animation:gkod-modal-in .25s ease-out}.gkod-result-modal__card:focus{outline:0}.gkod-result-modal__icon{display:grid;place-items:center;width:72px;height:72px;margin:0 auto 22px;border-radius:50%;color:#fff;background:#18864b;font-size:42px;font-weight:800}.gkod-result-modal__card--processing .gkod-result-modal__icon{background:#198fd9}.gkod-result-modal__card--cancelled .gkod-result-modal__icon{background:#b54141}.gkod-result-modal__card h2{margin:0 0 14px;color:#17212d;font-size:28px;line-height:1.2}.gkod-result-modal__card p{margin:0 auto 26px;color:#53606d;font-size:17px;line-height:1.65}.gkod-result-modal__button{min-width:180px;padding:13px 24px;border:0;border-radius:4px;color:#fff;background:#198fd9;font:800 15px/1.2 Manrope,Arial,sans-serif;cursor:pointer}.gkod-result-modal__x{position:absolute;top:12px;right:15px;padding:5px;border:0;background:transparent;color:#66717c;font-size:29px;line-height:1;cursor:pointer}.gkod-result-modal--closing{opacity:0;transition:opacity .18s}.gkod-result-modal--closing .gkod-result-modal__card{transform:scale(.96);transition:transform .18s}@keyframes gkod-modal-in{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}@media(max-width:540px){.gkod-result-modal__card{padding:36px 22px 28px}.gkod-result-modal__card h2{font-size:24px}.gkod-result-modal__card p{font-size:15px}}
+/* Donation and prayer forms */
+.gkod-donation-form {
+    --gkod-navy: var(--wp--preset--color--contrast, #212934);
+    --gkod-line: #e2e7eb;
+    --gkod-muted: #68717b;
+    --gkod-accent: var(--wp--preset--color--primary, #8c2732);
+    --gkod-health-accent: #ad5754;
+    --gkod-rest-accent: #595959;
+    margin: 24px 0;
+    border: 1px solid #dfe6eb;
+    border-radius: 4px;
+    color: inherit;
+    font-family: inherit;
+}
 
-/* Six form layouts. Content and organization branding remain site-controlled. */
-.gkod-form{max-width:680px;margin:24px auto;border-radius:10px;box-shadow:0 10px 32px rgba(28,38,48,.08)}.gkod-form__header{padding:24px 28px 20px}.gkod-form h2{font-size:25px}.gkod-form__body{padding:24px 28px}.gkod-form fieldset{margin-bottom:20px}.gkod-field{margin-bottom:16px}.gkod-service{padding:10px 12px}.gkod-field input,.gkod-field textarea{padding:10px 12px}.gkod-summary{padding:15px 0}
-.gkod-form--compact{max-width:560px}.gkod-form--compact .gkod-form__header{padding:18px 22px 15px}.gkod-form--compact h2{font-size:22px;margin-bottom:4px}.gkod-form--compact .gkod-form__header p{font-size:13px}.gkod-form--compact .gkod-form__body{padding:18px 22px}.gkod-form--compact fieldset{margin-bottom:14px}.gkod-form--compact .gkod-intention span{padding:9px}.gkod-form--compact .gkod-service{padding:7px 10px}.gkod-form--compact .gkod-field{margin-bottom:11px}.gkod-form--compact .gkod-field input,.gkod-form--compact .gkod-field textarea{padding:8px 10px}.gkod-form--compact .gkod-summary{padding:10px 0}.gkod-form--wide{max-width:1100px}.gkod-form--wide .gkod-services{grid-template-columns:repeat(2,minmax(0,1fr))}.gkod-form--wide .gkod-form__body{padding:28px 34px}
-.gkod-form--two_columns{max-width:900px}.gkod-form--two_columns .gkod-services{grid-template-columns:repeat(2,minmax(0,1fr))}.gkod-form--two_columns .gkod-service strong{font-size:14px}
-.gkod-form--cards{max-width:900px}.gkod-form--cards .gkod-form__header:before{display:none}.gkod-form--cards .gkod-services{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.gkod-form--cards .gkod-service{background:#fff;border:0;border-radius:8px;box-shadow:0 4px 16px rgba(28,38,48,.08)}
-.gkod-form--minimal{max-width:720px;box-shadow:none}.gkod-form--minimal .gkod-form__header{padding:10px 0 18px;background:transparent;border-bottom:1px solid var(--gkod-line)}.gkod-form--minimal .gkod-form__header:before{display:none}.gkod-form--minimal .gkod-form__body{padding:22px 0}.gkod-form--minimal .gkod-service{border-width:0 0 1px;border-radius:0;padding-left:2px;padding-right:2px}
-@media(max-width:700px){.gkod-form--wide .gkod-services,.gkod-form--two_columns .gkod-services,.gkod-form--cards .gkod-services{grid-template-columns:1fr}.gkod-form--wide .gkod-form__body{padding:22px 20px}}
+.gkod-donation-form,
+.gkod-donation-form * {
+    box-sizing: border-box;
+}
 
-/* Final responsive design system: every form follows its shortcode container. */
-.gkod-form,.gkod-form--compact,.gkod-form--wide,.gkod-form--two_columns,.gkod-form--cards,.gkod-form--minimal{width:100%!important;max-width:none!important;margin:24px 0!important;border:1px solid #dfe6eb;border-radius:4px}
-.gkod-form__header{padding:25px 30px 21px;border-bottom:1px solid #e8edf1}.gkod-form__header:before{width:5px;border-radius:0 4px 4px 0}.gkod-form h2{font-size:clamp(23px,2.5vw,31px);letter-spacing:-.025em}.gkod-form__header p{max-width:720px;font-size:14px;line-height:1.55}.gkod-form__body{padding:25px 30px 28px}.gkod-form legend,.gkod-field>label{font-size:13px;letter-spacing:.01em}.gkod-intention{gap:12px}.gkod-intention span{min-height:46px;padding:11px 14px;border-radius:8px;background:#fff}
-.gkod-services{gap:10px}.gkod-service{min-height:58px;padding:10px 14px;border-color:#dfe6eb;border-radius:9px;background:#fff;transform:none!important}.gkod-service:hover{border-color:#62afe0;background:#f8fcff}.gkod-service:has(input:checked){border-color:#198fd9;background:#f2f9fe;box-shadow:inset 0 0 0 1px #198fd9}.gkod-service__check{width:20px;height:20px;border-radius:5px}.gkod-service__name{font-size:14px;line-height:1.35}.gkod-service__name small{font-size:11px}.gkod-service strong{font-size:14px;white-space:nowrap}
-.gkod-field input,.gkod-field textarea{border-color:#d5dde3;border-radius:8px;padding:11px 13px}.gkod-field textarea{min-height:0;line-height:1.5}.gkod-grid{gap:14px}.gkod-summary{margin-top:4px;padding:16px 2px;border-color:#e3e9ed}.gkod-summary strong{font-size:23px}.gkod-secure{margin-top:10px}
-.gkod-form--compact .gkod-form__header{padding:17px 22px 14px}.gkod-form--compact .gkod-form__body{padding:17px 22px 20px}.gkod-form--compact .gkod-services{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.gkod-form--compact .gkod-service{min-height:50px;padding:7px 10px;grid-template-columns:20px minmax(0,1fr) auto}.gkod-form--compact .gkod-service__name small{display:none}.gkod-form--compact fieldset{margin-bottom:13px}.gkod-form--compact .gkod-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.gkod-form--wide .gkod-services{grid-template-columns:repeat(3,minmax(0,1fr))}.gkod-form--wide .gkod-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.gkod-form--two_columns .gkod-services{grid-template-columns:repeat(2,minmax(0,1fr))}.gkod-form--two_columns .gkod-form__body{display:grid;grid-template-columns:1fr 1fr;column-gap:24px}.gkod-form--two_columns .gkod-intention,.gkod-form--two_columns .gkod-services,.gkod-form--two_columns .gkod-summary,.gkod-form--two_columns .gkod-error,.gkod-form--two_columns .gkod-submit,.gkod-form--two_columns .gkod-secure{grid-column:1/-1}.gkod-form--two_columns .gkod-payment{grid-column:1/-1}
-.gkod-form--cards .gkod-form__header{padding:27px 30px;border:0}.gkod-form--cards .gkod-form__body{padding:28px 30px}.gkod-form--cards .gkod-services{grid-template-columns:repeat(3,minmax(0,1fr))}.gkod-form--cards .gkod-service{min-height:76px;grid-template-columns:22px minmax(0,1fr);align-content:center}.gkod-form--cards .gkod-service strong{grid-column:2;color:#147ab9}.gkod-form--cards .gkod-field input,.gkod-form--cards .gkod-field textarea{background:#fff}
-.gkod-form--minimal{box-shadow:none}.gkod-form--minimal .gkod-form__header{padding:0 0 18px;border-bottom:1px solid var(--gkod-line)}.gkod-form--minimal .gkod-form__body{padding:22px 0 0}.gkod-form--minimal .gkod-service{border-radius:0;border-width:0 0 1px;background:transparent;box-shadow:none!important}
-@media(max-width:900px){.gkod-form--compact .gkod-services,.gkod-form--wide .gkod-services,.gkod-form--cards .gkod-services{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:640px){.gkod-form,.gkod-form--compact,.gkod-form--wide,.gkod-form--two_columns,.gkod-form--cards,.gkod-form--minimal{margin:16px 0!important;border-radius:10px}.gkod-form__header,.gkod-form--cards .gkod-form__header{padding:20px 18px 17px}.gkod-form__body,.gkod-form--cards .gkod-form__body{padding:19px 18px 22px}.gkod-form--compact .gkod-services,.gkod-form--wide .gkod-services,.gkod-form--two_columns .gkod-services,.gkod-form--cards .gkod-services{grid-template-columns:1fr}.gkod-form--two_columns .gkod-form__body{display:block}.gkod-form--compact .gkod-grid{grid-template-columns:1fr}.gkod-intention{grid-template-columns:1fr 1fr!important}.gkod-service{min-height:54px}.gkod-form--cards .gkod-service{min-height:62px}.gkod-grid{grid-template-columns:1fr}}
+.gkod-donation-form__header {
+    padding: 1.5rem clamp(1rem, 3vw, 1.75rem);
+    color: inherit;
+    background: transparent;
+}
 
+.gkod-donation-form__header::before {
+    display: none;
+}
 
-/* Theme-aware surface; structure is plugin-owned, typography comes from the theme. */
-.gkod-form{--gkod-blue:var(--wp--preset--color--primary,#198fd9);--gkod-navy:var(--wp--preset--color--contrast,#212934);font-family:inherit;color:inherit}.gkod-form input,.gkod-form textarea,.gkod-form h2{font-family:inherit}.gkod-form h2{color:inherit}
-.gkod-form--cards .gkod-service{position:relative;isolation:isolate;min-height:138px;padding:20px;color:#fff;background-image:linear-gradient(90deg,rgba(9,16,25,.88),rgba(9,16,25,.46)),var(--gkod-service-bg);background-size:cover;background-position:center;border:0;overflow:hidden;box-shadow:0 8px 24px rgba(18,27,36,.16)}.gkod-form--cards .gkod-service:hover{background-image:linear-gradient(90deg,rgba(9,16,25,.78),rgba(9,16,25,.34)),var(--gkod-service-bg);box-shadow:0 12px 28px rgba(18,27,36,.23)}.gkod-form--cards .gkod-service:has(input:checked){color:#fff;background-image:linear-gradient(90deg,color-mix(in srgb,var(--gkod-accent),transparent 12%),rgba(20,17,18,.48)),var(--gkod-service-bg);box-shadow:inset 0 0 0 3px var(--gkod-accent),0 10px 26px rgba(18,27,36,.2)}.gkod-form--cards .gkod-service__name{font-size:17px;text-shadow:0 1px 2px rgba(0,0,0,.65)}.gkod-form--cards .gkod-service__name small{margin-top:6px;color:rgba(255,255,255,.82);font-size:12px}.gkod-form--cards .gkod-service strong{align-self:end;color:#fff;font-size:17px;text-shadow:0 1px 2px rgba(0,0,0,.65)}.gkod-form--cards .gkod-service__check{background:rgba(255,255,255,.9);border-color:#fff}
-@media(max-width:700px){.gkod-form--cards .gkod-service{min-height:118px}}
-.gkod-form--cards .gkod-service{background-image:linear-gradient(90deg,rgba(9,16,25,.88),rgba(9,16,25,.46)),var(--gkod-service-bg)}
-.gkod-form--cards .gkod-service__name small{margin-top:6px;color:rgba(255,255,255,.82);font-size:12px}
-.gkod-campaigns{display:grid;gap:2rem}.gkod-campaign{border:1px solid #dce4ea;border-radius:8px;padding:1.25rem;margin:1rem 0}.gkod-campaign-summary{display:grid;grid-template-columns:1fr auto;gap:.5rem 1rem}.gkod-campaign-summary dd{margin:0;font-weight:600}.gkod-campaign progress{width:100%;height:1rem}.gkod-donation-history table{width:100%;border-collapse:collapse}.gkod-donation-history th,.gkod-donation-history td{padding:.5rem;text-align:left;border-bottom:1px solid #dce4ea}
-.gkod-field.gkod-consent label{display:flex;gap:.6rem;align-items:flex-start}.gkod-field.gkod-consent label span{color:inherit}.gkod-field.gkod-consent input[type=checkbox]{width:auto;flex:0 0 auto;margin:2px 0 0;box-shadow:none;padding:0}.gkod-field.gkod-frequency label{display:flex;flex-direction:column;gap:.35rem}.gkod-frequency select{max-width:100%;padding:.5rem;border:1px solid #dce4ea;border-radius:6px;font:inherit}.gkod-campaign{overflow-wrap:anywhere}.gkod-donation-history{overflow-x:auto}@media(max-width:600px){.gkod-donation-history table,.gkod-donation-history tbody{display:block}.gkod-donation-history thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.gkod-donation-history tr{display:block;border:1px solid #dce4ea;border-radius:6px;margin:.7rem 0}.gkod-donation-history td{display:grid;grid-template-columns:6rem 1fr;gap:.5rem;padding:.6rem;overflow-wrap:anywhere}.gkod-donation-history td:before{content:attr(data-label);font-weight:600}.gkod-donation-history td:last-child{border-bottom:0}}
+.gkod-donation-form__header h2 {
+    margin: 0 0 0.5rem;
+    color: inherit;
+    font-family: inherit;
+    font-size: clamp(1.45rem, 2.5vw, 1.95rem);
+    line-height: 1.25;
+}
 
-.gkod-campaign{padding:clamp(1.25rem,3vw,2.5rem);border:1px solid #e2e8ed;border-radius:16px;background:#fff;box-shadow:0 12px 36px rgba(25,39,52,.08)}.gkod-campaign>h2{margin:0 0 1rem;font-size:clamp(1.5rem,3vw,2.25rem);line-height:1.2}.gkod-campaign__image{display:block;width:100%;max-height:390px;object-fit:cover;border-radius:12px;margin:0 0 1.25rem}.gkod-campaign__description{font-size:1rem;line-height:1.75}.gkod-campaign__description p{margin:.8em 0}.gkod-campaign__goal{margin:1.5rem 0;padding:1.2rem 1.4rem;border:1px solid #e9edf0;border-radius:12px;background:#f7f9fa}.gkod-campaign__goal .gkod-campaign-summary{grid-template-columns:1fr auto;gap:.65rem 1rem}.gkod-campaign__goal .gkod-campaign-summary dt:first-child,.gkod-campaign__goal .gkod-campaign-summary dd:first-of-type{font-size:1.2rem;font-weight:800;color:#174c71}.gkod-campaign__goal progress{display:block;width:100%;height:14px;margin-top:1rem;accent-color:#198fd9}.gkod-campaign-expenses{margin:1.5rem 0}.gkod-campaign-expenses h3{margin:0 0 .75rem}.gkod-campaign-expenses ul{list-style:none;margin:0;padding:0;display:grid;gap:.55rem}.gkod-campaign-expenses li{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:1rem;align-items:center;padding:.8rem 1rem;border:1px solid #e5eaee;border-radius:9px}.gkod-campaign-expenses time{color:#68717b;font-size:.9em}.gkod-amount-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem;margin:0 0 .75rem}.gkod-amount-options label{position:relative;display:block;margin:0!important;cursor:pointer}.gkod-amount-options input{position:absolute!important;opacity:0;width:1px!important;height:1px!important;padding:0!important}.gkod-amount-options label span{display:flex;min-height:52px;align-items:center;justify-content:center;padding:.65rem;border:1px solid #d5dde3;border-radius:10px;background:#fff;font-weight:700;text-align:center;transition:background .15s,border-color .15s,box-shadow .15s}.gkod-amount-options label:hover span{border-color:#a7bfd0;background:#f7fbfd}.gkod-amount-options input:checked+span{border-color:#198fd9;background:#eef8fe;color:#12699d;box-shadow:inset 0 0 0 1px #198fd9}.gkod-amount-options input:focus-visible+span{outline:2px solid #198fd9;outline-offset:2px}.gkod-field>label[for$='-input']{margin-bottom:.65rem}@media(max-width:600px){.gkod-amount-options{grid-template-columns:repeat(2,minmax(0,1fr))}.gkod-campaign-expenses li{grid-template-columns:1fr auto;gap:.35rem .75rem}.gkod-campaign-expenses li time{grid-column:1}.gkod-campaign-expenses li strong{grid-column:2;grid-row:1/3}}
+.gkod-donation-form__header p {
+    margin: 0;
+    color: inherit;
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
 
-.gkod-campaign-card{display:grid;grid-template-columns:110px minmax(0,1fr);gap:1rem;align-items:center;padding:1rem;border:1px solid #e2e8ed;border-radius:12px;background:#fff;box-shadow:0 6px 20px rgba(25,39,52,.07)}.gkod-campaign-card__image{width:110px;height:100px;object-fit:cover;border-radius:9px}.gkod-campaign-card__content{min-width:0}.gkod-campaign-card h2{margin:0 0 .35rem;font-size:1.1rem;line-height:1.3}.gkod-campaign-card p{margin:.25rem 0;color:#56616b;font-size:.9rem}.gkod-campaign-card progress{display:block;width:100%;height:10px;margin:.55rem 0;accent-color:#198fd9}.gkod-campaign-card__link{display:inline-flex;gap:.5rem;align-items:center;font-weight:700;text-decoration:none}.gkod-campaign-card__link:hover{text-decoration:underline}@media(max-width:480px){.gkod-campaign-card{grid-template-columns:76px minmax(0,1fr);gap:.75rem;padding:.8rem}.gkod-campaign-card__image{width:76px;height:76px}}
+.gkod-donation-form__body {
+    padding: clamp(1rem, 3vw, 1.75rem);
+}
 
-/* Let the host theme supply the form surface while retaining spacing and clear sections. */
-.gkod-form{--gkod-accent:var(--wp--preset--color--primary,#8c2732);--gkod-health-accent:#ad5754;--gkod-rest-accent:#595959;position:relative;background:transparent;border:1px solid #dfe6eb;border-radius:4px;box-shadow:none;overflow:visible}section.gkod-form{background:transparent}section.gkod-form>header.gkod-form__header{background:transparent}section.gkod-form>form.gkod-form__body{background:transparent}.gkod-intention input[value="health"]:checked+span{background:var(--gkod-health-accent);border-color:var(--gkod-health-accent)}.gkod-intention input[value="rest"]:checked+span{background:var(--gkod-rest-accent);border-color:var(--gkod-rest-accent)}
-.gkod-form__header,.gkod-form--cards .gkod-form__header{padding:1.5rem clamp(1rem,3vw,1.75rem);color:inherit;background:transparent;border:0}
-.gkod-form__header:before{display:none}.gkod-form__body,.gkod-form--cards .gkod-form__body{padding:clamp(1rem,3vw,1.75rem);background:transparent}
-.gkod-form--minimal .gkod-form__header{padding:1.5rem clamp(1rem,3vw,1.75rem);border-bottom-color:var(--gkod-line)}.gkod-form--minimal .gkod-form__body{padding:clamp(1rem,3vw,1.75rem)}
-.gkod-form--cards{background:transparent}.gkod-form--cards .gkod-form__header p{color:inherit}
+.gkod-donation-form fieldset {
+    min-width: 0;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    border: 0;
+}
 
+.gkod-donation-form legend,
+.gkod-donation-form .gkod-field > label {
+    display: block;
+    margin: 0 0 0.65rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
 
-.gkod-service input:checked+.gkod-service__check{background:var(--gkod-accent);border-color:var(--gkod-accent)}
-.gkod-service:has(input:checked){border-color:var(--gkod-accent);background-color:color-mix(in srgb,var(--gkod-accent),transparent 94%);box-shadow:inset 0 0 0 1px var(--gkod-accent)}
-.gkod-field input:focus,.gkod-field textarea:focus{border-color:var(--gkod-accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--gkod-accent),transparent 86%)}
-.gkod-payment input:checked+span{border-color:var(--gkod-accent);color:var(--gkod-accent);background:color-mix(in srgb,var(--gkod-accent),transparent 92%)}
-.gkod-amount-options input:checked+span{border-color:var(--gkod-accent);background:color-mix(in srgb,var(--gkod-accent),transparent 92%);color:var(--gkod-accent);box-shadow:inset 0 0 0 1px var(--gkod-accent)}.gkod-amount-options input:focus-visible+span{outline-color:var(--gkod-accent)}
-@media(max-width:640px){.gkod-form__header,.gkod-form--cards .gkod-form__header{padding:1.2rem 1rem}.gkod-form__body,.gkod-form--cards .gkod-form__body{padding:1.2rem 1rem}}
-@media(max-width:640px){.gkod-form--minimal .gkod-form__header,.gkod-form--minimal .gkod-form__body{padding:1.2rem 1rem}}
-.gkod-campaign progress,.gkod-campaign-card progress{accent-color:var(--gkod-accent,var(--wp--preset--color--primary,#8c2732))}
-.gkod-campaign__goal .gkod-campaign-summary dt:first-child,.gkod-campaign__goal .gkod-campaign-summary dd:first-of-type{color:var(--gkod-accent,var(--wp--preset--color--primary,#8c2732))}
-.gkod-campaign-card__link{color:var(--gkod-accent,var(--wp--preset--color--primary,#8c2732))}
+.gkod-donation-form .gkod-field > label span {
+    color: #b34141;
+}
+
+.gkod-donation-form .gkod-intention {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.gkod-donation-form .gkod-intention label,
+.gkod-donation-form .gkod-payment label {
+    cursor: pointer;
+}
+
+.gkod-donation-form .gkod-intention input,
+.gkod-donation-form .gkod-payment input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.gkod-donation-form .gkod-intention--single {
+    grid-template-columns: 1fr;
+}
+
+.gkod-donation-form .gkod-intention span {
+    display: flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--gkod-line);
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+    font-weight: 700;
+    text-align: center;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.gkod-donation-form .gkod-intention input:checked + span {
+    color: #fff;
+}
+
+.gkod-donation-form .gkod-intention input[value="health"]:checked + span {
+    border-color: var(--gkod-health-accent);
+    background: var(--gkod-health-accent);
+}
+
+.gkod-donation-form .gkod-intention input[value="rest"]:checked + span {
+    border-color: var(--gkod-rest-accent);
+    background: var(--gkod-rest-accent);
+}
+
+.gkod-donation-form .gkod-intention input:focus-visible + span,
+.gkod-donation-form .gkod-payment input:focus-visible + span {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.gkod-donation-form .gkod-services {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.gkod-donation-form .gkod-services legend {
+    margin-bottom: 0.65rem;
+    font-weight: 700;
+}
+
+.gkod-donation-form .gkod-service {
+    display: grid;
+    min-width: 0;
+    min-height: 58px;
+    grid-template-columns: 22px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid #dfe6eb;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.gkod-donation-form .gkod-service:hover {
+    border-color: #a9cfe7;
+}
+
+.gkod-donation-form .gkod-service[hidden] {
+    display: none;
+}
+
+.gkod-donation-form .gkod-service input {
+    position: absolute;
+    opacity: 0;
+}
+
+.gkod-donation-form .gkod-service input:focus-visible + .gkod-service__check {
+    outline: 2px solid var(--gkod-accent);
+    outline-offset: 2px;
+}
+
+.gkod-donation-form .gkod-service__check {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #b8c1c8;
+    border-radius: 4px;
+}
+
+.gkod-donation-form .gkod-service input:checked + .gkod-service__check {
+    border-color: var(--gkod-accent);
+    background: var(--gkod-accent);
+}
+
+.gkod-donation-form .gkod-service input:checked + .gkod-service__check::after {
+    position: absolute;
+    top: 1px;
+    left: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    content: "";
+    transform: rotate(45deg);
+}
+
+.gkod-donation-form .gkod-service:has(input:checked) {
+    border-color: var(--gkod-accent);
+    background-color: color-mix(in srgb, var(--gkod-accent), transparent 94%);
+    box-shadow: inset 0 0 0 1px var(--gkod-accent);
+}
+
+.gkod-donation-form .gkod-service__name {
+    min-width: 0;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.gkod-donation-form .gkod-service__name small {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--gkod-muted);
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.gkod-donation-form .gkod-service strong {
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.gkod-donation-form .gkod-field {
+    min-width: 0;
+    margin: 0 0 1rem;
+}
+
+.gkod-donation-form .gkod-field input,
+.gkod-donation-form .gkod-field textarea {
+    display: block;
+    width: 100%;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid #d5dde3;
+    border-radius: 6px;
+    background: #fff;
+    color: var(--gkod-navy);
+    font: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.gkod-donation-form .gkod-field textarea {
+    min-height: 3rem;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.gkod-donation-form .gkod-field input:focus,
+.gkod-donation-form .gkod-field textarea:focus {
+    outline: 0;
+    border-color: var(--gkod-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--gkod-accent), transparent 86%);
+}
+
+.gkod-donation-form .gkod-field small {
+    display: block;
+    margin-top: 0.4rem;
+    color: var(--gkod-muted);
+    font-size: 0.8rem;
+}
+
+.gkod-donation-form .gkod-consent label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+}
+
+.gkod-donation-form .gkod-consent label span {
+    color: inherit;
+}
+
+.gkod-donation-form .gkod-consent input[type="checkbox"] {
+    width: auto;
+    flex: 0 0 auto;
+    margin: 2px 0 0;
+    padding: 0;
+    box-shadow: none;
+}
+
+.gkod-donation-form .gkod-frequency label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.gkod-donation-form .gkod-frequency select {
+    max-width: 100%;
+    padding: 0.55rem;
+    border: 1px solid #dce4ea;
+    border-radius: 6px;
+    font: inherit;
+}
+
+.gkod-donation-form .gkod-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+}
+
+.gkod-donation-form .gkod-payment {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.gkod-donation-form .gkod-payment label {
+    position: relative;
+}
+
+.gkod-donation-form .gkod-payment span {
+    display: block;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid var(--gkod-line);
+    border-radius: 6px;
+}
+
+.gkod-donation-form .gkod-payment input:checked + span {
+    border-color: var(--gkod-accent);
+    background: color-mix(in srgb, var(--gkod-accent), transparent 92%);
+    color: var(--gkod-accent);
+}
+
+.gkod-donation-form .gkod-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+    padding: 1rem 0.1rem;
+    border-top: 1px solid #e3e9ed;
+    font-weight: 700;
+}
+
+.gkod-donation-form .gkod-summary strong {
+    font-size: 1.45rem;
+}
+
+.gkod-donation-form .gkod-error {
+    margin: 0 0 1rem;
+    padding: 0.75rem 0.9rem;
+    border-left: 3px solid #c74747;
+    background: #fff2f2;
+    color: #8f2525;
+}
+
+.gkod-donation-form .gkod-secure {
+    margin: 0.65rem 0 0;
+    color: var(--gkod-muted);
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+.gkod-donation-form .gkod-honeypot {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.gkod-donation-form--compact .gkod-donation-form__header {
+    padding: 1.1rem 1.35rem 0.9rem;
+}
+
+.gkod-donation-form--compact .gkod-donation-form__body {
+    padding: 1.1rem 1.35rem;
+}
+
+.gkod-donation-form--compact .gkod-donation-form__header h2 {
+    font-size: 1.35rem;
+}
+
+.gkod-donation-form--compact .gkod-services {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+}
+
+.gkod-donation-form--compact .gkod-service {
+    min-height: 50px;
+    grid-template-columns: 20px minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    padding: 0.45rem 0.6rem;
+}
+
+.gkod-donation-form--compact .gkod-service__name small {
+    display: none;
+}
+
+.gkod-donation-form--compact .gkod-grid,
+.gkod-donation-form--wide .gkod-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gkod-donation-form--wide .gkod-services,
+.gkod-donation-form--cards .gkod-services {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.gkod-donation-form--two_columns .gkod-donation-form__body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.5rem;
+}
+
+.gkod-donation-form--two_columns .gkod-intention,
+.gkod-donation-form--two_columns .gkod-services,
+.gkod-donation-form--two_columns .gkod-grid,
+.gkod-donation-form--two_columns .gkod-payment,
+.gkod-donation-form--two_columns .gkod-summary,
+.gkod-donation-form--two_columns .gkod-error,
+.gkod-donation-form--two_columns .gkod-submit,
+.gkod-donation-form--two_columns .gkod-secure {
+    grid-column: 1 / -1;
+}
+
+.gkod-donation-form--two_columns .gkod-services {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gkod-donation-form--cards .gkod-service {
+    position: relative;
+    min-height: 138px;
+    grid-template-columns: 22px minmax(0, 1fr);
+    align-content: center;
+    padding: 1.25rem;
+    overflow: hidden;
+    border: 0;
+    color: #fff;
+    background-image: linear-gradient(90deg, rgba(9, 16, 25, 0.88), rgba(9, 16, 25, 0.46)), var(--gkod-service-bg);
+    background-position: center;
+    background-size: cover;
+    box-shadow: 0 8px 24px rgba(18, 27, 36, 0.16);
+    isolation: isolate;
+}
+
+.gkod-donation-form--cards .gkod-service:hover {
+    background-image: linear-gradient(90deg, rgba(9, 16, 25, 0.78), rgba(9, 16, 25, 0.34)), var(--gkod-service-bg);
+    box-shadow: 0 12px 28px rgba(18, 27, 36, 0.23);
+}
+
+.gkod-donation-form--cards .gkod-service:has(input:checked) {
+    color: #fff;
+    background-image: linear-gradient(90deg, color-mix(in srgb, var(--gkod-accent), transparent 12%), rgba(20, 17, 18, 0.48)), var(--gkod-service-bg);
+    box-shadow: inset 0 0 0 3px var(--gkod-accent), 0 10px 26px rgba(18, 27, 36, 0.2);
+}
+
+.gkod-donation-form--cards .gkod-service__name {
+    font-size: 1.05rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
+}
+
+.gkod-donation-form--cards .gkod-service__name small {
+    margin-top: 0.4rem;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.8rem;
+}
+
+.gkod-donation-form--cards .gkod-service strong {
+    align-self: end;
+    grid-column: 2;
+    color: #fff;
+    font-size: 1.05rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
+}
+
+.gkod-donation-form--cards .gkod-service__check {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.gkod-donation-form--minimal .gkod-donation-form__header {
+    padding: 1rem 0 1.15rem;
+    border-bottom: 1px solid var(--gkod-line);
+}
+
+.gkod-donation-form--minimal .gkod-donation-form__body {
+    padding: 1.35rem 0 0;
+}
+
+.gkod-donation-form--minimal .gkod-service {
+    border-width: 0 0 1px;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.gkod-donation-form--minimal .gkod-service:has(input:checked) {
+    box-shadow: inset 0 -1px var(--gkod-accent);
+}
+
+.gkod-donation-form .screen-reader-text {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Campaign donation amount choices */
+.gkod-donation-form .gkod-amount-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin: 0 0 0.75rem;
+}
+
+.gkod-donation-form .gkod-amount-options label {
+    position: relative;
+    display: block;
+    margin: 0;
+    cursor: pointer;
+}
+
+.gkod-donation-form .gkod-amount-options input {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    opacity: 0;
+}
+
+.gkod-donation-form .gkod-amount-options label span {
+    display: flex;
+    min-height: 52px;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem;
+    border: 1px solid #d5dde3;
+    border-radius: 10px;
+    background: #fff;
+    font-weight: 700;
+    text-align: center;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.gkod-donation-form .gkod-amount-options label:hover span {
+    border-color: #a7bfd0;
+    background: #f7fbfd;
+}
+
+.gkod-donation-form .gkod-amount-options input:checked + span {
+    border-color: var(--gkod-accent);
+    background: color-mix(in srgb, var(--gkod-accent), transparent 92%);
+    color: var(--gkod-accent);
+    box-shadow: inset 0 0 0 1px var(--gkod-accent);
+}
+
+.gkod-donation-form .gkod-amount-options input:focus-visible + span {
+    outline: 2px solid var(--gkod-accent);
+    outline-offset: 2px;
+}
+
+.gkod-donation-form .gkod-field > label[for$="-input"] {
+    margin-bottom: 0.65rem;
+}
+
+/* Payment result dialog */
+.gkod-modal-open {
+    overflow: hidden;
+}
+
+.gkod-result-modal {
+    position: fixed;
+    z-index: 999999;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    font-family: Manrope, Arial, Helvetica, sans-serif;
+}
+
+.gkod-result-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 34, 0.72);
+    backdrop-filter: blur(4px);
+}
+
+.gkod-result-modal__card {
+    position: relative;
+    width: min(520px, 100%);
+    padding: 42px 40px 36px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.32);
+    text-align: center;
+    animation: gkod-modal-in 0.25s ease-out;
+}
+
+.gkod-result-modal__card:focus {
+    outline: 0;
+}
+
+.gkod-result-modal__icon {
+    display: grid;
+    width: 72px;
+    height: 72px;
+    place-items: center;
+    margin: 0 auto 22px;
+    border-radius: 50%;
+    background: #18864b;
+    color: #fff;
+    font-size: 42px;
+    font-weight: 800;
+}
+
+.gkod-result-modal__card--processing .gkod-result-modal__icon {
+    background: #198fd9;
+}
+
+.gkod-result-modal__card--cancelled .gkod-result-modal__icon {
+    background: #b54141;
+}
+
+.gkod-result-modal__card h2 {
+    margin: 0 0 14px;
+    color: #17212d;
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+.gkod-result-modal__card p {
+    margin: 0 auto 26px;
+    color: #53606d;
+    font-size: 17px;
+    line-height: 1.65;
+}
+
+.gkod-result-modal__button {
+    min-width: 180px;
+    padding: 13px 24px;
+    border: 0;
+    border-radius: 4px;
+    background: #198fd9;
+    color: #fff;
+    font: 800 15px/1.2 Manrope, Arial, sans-serif;
+    cursor: pointer;
+}
+
+.gkod-result-modal__x {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    padding: 5px;
+    border: 0;
+    background: transparent;
+    color: #66717c;
+    font-size: 29px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.gkod-result-modal--closing {
+    opacity: 0;
+    transition: opacity 0.18s;
+}
+
+.gkod-result-modal--closing .gkod-result-modal__card {
+    transform: scale(0.96);
+    transition: transform 0.18s;
+}
+
+@keyframes gkod-modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Donation history */
+.gkod-donation-history {
+    overflow-x: auto;
+}
+
+.gkod-donation-history table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.gkod-donation-history th,
+.gkod-donation-history td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #dce4ea;
+    text-align: left;
+}
+
+/* Campaigns */
+.gkod-campaigns {
+    display: grid;
+    gap: 2rem;
+}
+
+.gkod-campaign {
+    margin: 1rem 0;
+    padding: clamp(1.25rem, 3vw, 2.5rem);
+    overflow-wrap: anywhere;
+    border: 1px solid #e2e8ed;
+    border-radius: 16px;
+    box-shadow: 0 12px 36px rgba(25, 39, 52, 0.08);
+}
+
+.gkod-campaign > h2 {
+    margin: 0 0 1rem;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1.2;
+}
+
+.gkod-campaign__image {
+    display: block;
+    width: 100%;
+    max-height: 390px;
+    margin: 0 0 1.25rem;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.gkod-campaign__description {
+    font-size: 1rem;
+    line-height: 1.75;
+}
+
+.gkod-campaign__description p {
+    margin: 0.8em 0;
+}
+
+.gkod-campaign-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem 1rem;
+}
+
+.gkod-campaign-summary dd {
+    margin: 0;
+    font-weight: 600;
+}
+
+.gkod-campaign__goal {
+    margin: 1.5rem 0;
+    padding: 1.2rem 1.4rem;
+    border: 1px solid #e9edf0;
+    border-radius: 12px;
+    background: #f7f9fa;
+}
+
+.gkod-campaign__goal .gkod-campaign-summary {
+    gap: 0.65rem 1rem;
+}
+
+.gkod-campaign__goal .gkod-campaign-summary dt:first-child,
+.gkod-campaign__goal .gkod-campaign-summary dd:first-of-type {
+    color: var(--gkod-accent, var(--wp--preset--color--primary, #8c2732));
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.gkod-campaign progress,
+.gkod-campaign-card progress {
+    display: block;
+    width: 100%;
+    accent-color: var(--gkod-accent, var(--wp--preset--color--primary, #8c2732));
+}
+
+.gkod-campaign__goal progress {
+    height: 14px;
+    margin-top: 1rem;
+}
+
+.gkod-campaign-expenses {
+    margin: 1.5rem 0;
+}
+
+.gkod-campaign-expenses h3 {
+    margin: 0 0 0.75rem;
+}
+
+.gkod-campaign-expenses ul {
+    display: grid;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.gkod-campaign-expenses li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid #e5eaee;
+    border-radius: 9px;
+}
+
+.gkod-campaign-expenses time {
+    color: #68717b;
+    font-size: 0.9em;
+}
+
+.gkod-campaign-card {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr);
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid #e2e8ed;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(25, 39, 52, 0.07);
+}
+
+.gkod-campaign-card__image {
+    width: 110px;
+    height: 100px;
+    border-radius: 9px;
+    object-fit: cover;
+}
+
+.gkod-campaign-card__content {
+    min-width: 0;
+}
+
+.gkod-campaign-card h2 {
+    margin: 0 0 0.35rem;
+    font-size: 1.1rem;
+    line-height: 1.3;
+}
+
+.gkod-campaign-card p {
+    margin: 0.25rem 0;
+    color: #56616b;
+    font-size: 0.9rem;
+}
+
+.gkod-campaign-card progress {
+    height: 10px;
+    margin: 0.55rem 0;
+}
+
+.gkod-campaign-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gkod-accent, var(--wp--preset--color--primary, #8c2732));
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.gkod-campaign-card__link:hover {
+    text-decoration: underline;
+}
+
+.gkod-notice {
+    margin: 1.5rem 0;
+    padding: 1rem 1.2rem;
+    border-left: 4px solid var(--wp--preset--color--primary, #198fd9);
+    background: #f1f9fe;
+}
+
+@media (max-width: 900px) {
+    .gkod-donation-form--compact .gkod-services,
+    .gkod-donation-form--wide .gkod-services,
+    .gkod-donation-form--cards .gkod-services {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .gkod-donation-form--cards .gkod-service {
+        min-height: 118px;
+    }
+}
+
+@media (max-width: 640px) {
+    .gkod-donation-form {
+        margin: 16px 0;
+        border-radius: 8px;
+    }
+
+    .gkod-donation-form__header,
+    .gkod-donation-form__body {
+        padding: 1.1rem 1rem;
+    }
+
+    .gkod-donation-form--compact .gkod-services,
+    .gkod-donation-form--wide .gkod-services,
+    .gkod-donation-form--two_columns .gkod-services,
+    .gkod-donation-form--cards .gkod-services {
+        grid-template-columns: 1fr;
+    }
+
+    .gkod-donation-form--two_columns .gkod-donation-form__body {
+        display: block;
+    }
+
+    .gkod-donation-form .gkod-grid,
+    .gkod-donation-form--compact .gkod-grid,
+    .gkod-donation-form--wide .gkod-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gkod-donation-form .gkod-summary strong {
+        font-size: 1.3rem;
+        white-space: nowrap;
+    }
+
+    .gkod-donation-form .gkod-amount-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gkod-campaign-expenses li {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.35rem 0.75rem;
+    }
+
+    .gkod-campaign-expenses li time {
+        grid-column: 1;
+    }
+
+    .gkod-campaign-expenses li strong {
+        grid-column: 2;
+        grid-row: 1 / 3;
+    }
+}
+
+@media (max-width: 600px) {
+    .gkod-donation-history table,
+    .gkod-donation-history tbody {
+        display: block;
+    }
+
+    .gkod-donation-history thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+    }
+
+    .gkod-donation-history tr {
+        display: block;
+        margin: 0.7rem 0;
+        border: 1px solid #dce4ea;
+        border-radius: 6px;
+    }
+
+    .gkod-donation-history td {
+        display: grid;
+        grid-template-columns: 6rem minmax(0, 1fr);
+        gap: 0.5rem;
+        padding: 0.6rem;
+        overflow-wrap: anywhere;
+    }
+
+    .gkod-donation-history td::before {
+        content: attr(data-label);
+        font-weight: 600;
+    }
+
+    .gkod-donation-history td:last-child {
+        border-bottom: 0;
+    }
+}
+
+@media (max-width: 540px) {
+    .gkod-result-modal__card {
+        padding: 36px 22px 28px;
+    }
+
+    .gkod-result-modal__card h2 {
+        font-size: 24px;
+    }
+
+    .gkod-result-modal__card p {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .gkod-campaign-card {
+        grid-template-columns: 76px minmax(0, 1fr);
+        gap: 0.75rem;
+        padding: 0.8rem;
+    }
+
+    .gkod-campaign-card__image {
+        width: 76px;
+        height: 76px;
+    }
+}
