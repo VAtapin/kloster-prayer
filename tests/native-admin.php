@@ -22,6 +22,7 @@ foreach(['ru','de'] as $lang){
     $_GET=['campaign_id'=>$ru];ob_start();Donation_Pages::admin();$html=ob_get_clean();
     foreach(['en','ru','de','uk','pl'] as $code)donation_assert(str_contains($html,'name="title_'.$code.'"')===($code===$lang),'Campaign shows only current language');
     donation_assert(str_contains($html,'class="form-table"')&&str_contains($html,'for="title_'.$lang.'"'),'Standard form table and connected labels');
+    donation_assert(str_contains($html,'name="accent_color"'),'Campaign editor exposes its own accent color');
     donation_assert(str_contains($html,'class="wp-editor-area"')&&str_contains($html,'name="image_id"')&&str_contains($html,'name="minimum"')&&str_contains($html,'name="preset_3"'),'Campaign editor includes rich text, image, minimum and preset amounts');
     donation_assert(str_contains($html,'layout=&quot;compact&quot;')&&str_contains($html,'gkod_campaigns id='),'Campaign editor provides full and compact embed examples');
     foreach(['forms','services'] as $kind){

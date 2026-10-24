@@ -41,9 +41,6 @@ add_filter('pre_http_request', static function ($value, $args, $url) use (&$http
     return ['headers'=>[], 'body'=>wp_json_encode($body), 'response'=>['code'=>200,'message'=>'OK'], 'cookies'=>[]];
 }, 10, 3);
 update_option('gkod_payment_methods', ['stripe','paypal']);
-update_option('gkod_form_color_donation', '#a03f3f');
-update_option('gkod_form_color_health', '#ad5754');
-update_option('gkod_form_color_rest', '#595959');
 update_option('gkod_stripe_secret','local-fixture');
 update_option('gkod_stripe_webhook_secret','local-fixture-signing');
 update_option('gkod_paypal_client_id','local-fixture');
@@ -55,13 +52,17 @@ foreach (['','0','0.49','-1','+1','1e3','1.234','1,234.56','1000000','NaN','1.00
 foreach (['ru','de','uk','pl'] as $lang) {
     $form = do_shortcode('[gkod_donation lang="'.$lang.'"]');
     donation_assert(str_contains($form,'name="donation_amount"') && !str_contains($form,'name="names"') && !str_contains($form,'name="services[]"') && !str_contains($form,'name="intention"'), 'Donation form without prayer inputs');
-    donation_assert(str_contains($form,'--gkod-donation-accent:#a03f3f') && str_contains($form,'--gkod-health-accent:#ad5754') && str_contains($form,'--gkod-rest-accent:#595959'), 'Configured, escaped form accent colors are exposed as CSS variables');
+    $custom_form = do_shortcode('[gkod_donation lang="'.$lang.'" accent_color="#a03f3f"]');
+    donation_assert(str_contains($custom_form,'style="--gkod-accent:#a03f3f"'), 'Shortcode accent is exposed on the donation form');
     donation_assert(str_contains($form,esc_html(GeorgKlosterOrthodoxDonate\I18n::donation_text('submit',$lang))), 'Localized donation form');
 }
 $pair=do_shortcode('[gkod_donation][gkod_donation]');
 preg_match_all('/aria-describedby="([^"]+)"/', $pair, $ids);
 donation_assert(count($ids[1])===2 && count(array_unique($ids[1]))===2, 'Multiple forms have unique help IDs');
-donation_assert(str_contains(do_shortcode('[gkod_form]'),'name="names"'), 'Prayer form preserved');
+$wpdb->update(Database::table('forms'),['accent_color'=>'#ad5754'],['id'=>1]);
+$prayer_form=do_shortcode('[gkod_form id="1"]');
+donation_assert(str_contains($prayer_form,'name="names"'), 'Prayer form preserved');
+donation_assert(str_contains($prayer_form,'style="--gkod-accent:#ad5754"'), 'Saved prayer form color reaches its front-end shortcode');
 class DonationJson extends RuntimeException { public function __construct(public array $json) { parent::__construct('AJAX response'); } }
 $die=static fn()=>static function () { throw new DonationJson(json_decode(ob_get_contents() ?: '{}',true) ?: []); };
 add_filter('wp_die_ajax_handler',$die);

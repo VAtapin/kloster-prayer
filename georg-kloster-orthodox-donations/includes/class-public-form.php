@@ -19,8 +19,8 @@ final class Public_Form
 
     public static function register_assets(): void
     {
-        wp_register_style('georg-kloster-orthodox-donations', plugins_url('assets/css/public.css', FILE), [], VERSION . '.' . filemtime(DIR . '/assets/css/public.css'));
-        wp_register_script('georg-kloster-orthodox-donations', plugins_url('assets/js/public.js', FILE), [], VERSION . '.' . filemtime(DIR . '/assets/js/public.js'), true);
+        wp_register_style('georg-kloster-orthodox-donations', plugins_url('assets/css/public.css', FILE), [], VERSION . '.' . substr(md5_file(DIR . '/assets/css/public.css'), 0, 12));
+        wp_register_script('georg-kloster-orthodox-donations', plugins_url('assets/js/public.js', FILE), [], VERSION . '.' . substr(md5_file(DIR . '/assets/js/public.js'), 0, 12), true);
         // Shortcodes are rendered after wp_head in many themes. Enqueue the small
         // stylesheet here so it is always printed in the document head.
         wp_enqueue_style('georg-kloster-orthodox-donations');
@@ -29,7 +29,7 @@ final class Public_Form
     public static function shortcode(array|string $atts = []): string
     {
         global $wpdb;
-        $atts = shortcode_atts(['id' => 0, 'slug' => '', 'layout' => '', 'lang' => '', 'header' => 'yes'], $atts, 'gkod_form');
+        $atts = shortcode_atts(['id' => 0, 'slug' => '', 'layout' => '', 'lang' => '', 'header' => 'yes', 'accent_color' => ''], $atts, 'gkod_form');
         $forms = Database::table('forms');
         if ((int) $atts['id'] > 0) {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Site-owned form/service configuration in custom tables; query has no post/meta API equivalent.
@@ -50,7 +50,7 @@ final class Public_Form
     public static function service_shortcode(array|string $atts = []): string
     {
         global $wpdb;
-        $atts = shortcode_atts(['id' => 0, 'slug' => '', 'layout' => 'compact', 'lang' => ''], $atts, 'gkod_service');
+        $atts = shortcode_atts(['id' => 0, 'slug' => '', 'layout' => 'compact', 'lang' => '', 'accent_color' => ''], $atts, 'gkod_service');
         $services = Database::table('services');
         $service = (int) $atts['id'] > 0
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Site-owned form/service configuration in custom tables; query has no post/meta API equivalent.
@@ -65,7 +65,7 @@ final class Public_Form
 
     public static function donation_shortcode(array|string $atts = []): string
     {
-        $atts = shortcode_atts(['layout' => 'compact', 'lang' => '', 'header' => 'yes', 'campaign_id' => 0, 'support' => 'no'], $atts, 'gkod_donation');
+        $atts = shortcode_atts(['layout' => 'compact', 'lang' => '', 'header' => 'yes', 'campaign_id' => 0, 'support' => 'no', 'accent_color' => ''], $atts, 'gkod_donation');
         $campaign = absint($atts['campaign_id']) ? Campaigns::get(absint($atts['campaign_id'])) : null;
         if (absint($atts['campaign_id']) && (!$campaign || !Campaigns::accepting($campaign))) return I18n::in_language(static fn(): string => '<p>' . esc_html__('This campaign is closed.', 'georg-kloster-orthodox-donations') . '</p>', in_array($atts['lang'], ['en','ru','de','uk','pl'], true) ? $atts['lang'] : I18n::language());
         $atts['request_type'] = 'donation';
@@ -112,11 +112,16 @@ final class Public_Form
             $enabled = ['stripe'];
         }
         $amount_id = wp_unique_id('gkod-donation-');
-        $form_colors = [];
-        foreach (['donation' => '#ad5754', 'health' => '#ad5754', 'rest' => '#595959'] as $kind => $fallback) {
-            $form_colors[$kind] = sanitize_hex_color((string) get_option('gkod_form_color_' . $kind, $fallback)) ?: $fallback;
+        $shortcode_accent = sanitize_hex_color((string) ($atts['accent_color'] ?? '')) ?: '';
+        if ($campaign) {
+            $accent_color = sanitize_hex_color((string) ($campaign->accent_color ?? '')) ?: '#8c2732';
+        } elseif (!$donation) {
+            $default_accent = ($form->default_intention ?? 'health') === 'rest' ? '#17191c' : '#8c2732';
+            $accent_color = $shortcode_accent ?: (sanitize_hex_color((string) ($form->accent_color ?? '')) ?: $default_accent);
+        } else {
+            $accent_color = $shortcode_accent;
         }
-        $form_style = '--gkod-donation-accent:' . $form_colors['donation'] . ';--gkod-health-accent:' . $form_colors['health'] . ';--gkod-rest-accent:' . $form_colors['rest'];
+        $form_style = $accent_color !== '' ? '--gkod-accent:' . $accent_color : '';
         ob_start();
         ?>
         <section class="gkod-form gkod-form--<?php echo  esc_attr($layout) ?>" style="<?php echo esc_attr($form_style) ?>" data-request-type="<?php echo $donation ? 'donation' : 'prayer' ?>" data-currency="EUR" data-lang="<?php echo  esc_attr($lang) ?>">

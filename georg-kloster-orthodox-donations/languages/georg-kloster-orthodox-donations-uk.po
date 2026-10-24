@@ -1336,3 +1336,15 @@ msgstr "Шановний(а) %s,"
 
 msgid "Thank you for your generous support of the monastery. Your gift helps sustain our prayer and service."
 msgstr "Дякуємо за щедру підтримку монастиря. Ваш дар допомагає продовжувати молитву та служіння."
+
+msgid "Form and button color"
+msgstr "Колір форми та кнопок"
+
+msgid "This color is used for buttons and selected options. The form background remains transparent."
+msgstr "Цей колір використовується для кнопок і вибраних параметрів. Фон форми залишається прозорим."
+
+msgid "This color is used for the campaign donation form, progress indicator and links."
+msgstr "Цей колір використовується для форми пожертви, індикатора збору та посилань кампанії."
+
+msgid "Hex color override for this shortcode. It takes precedence over a saved prayer-form color. Campaign forms use the color set in the campaign editor; set this value for a standalone one-time or regular donation form."
+msgstr "Колір у форматі HEX для цієї форми. Він має перевагу над кольором збереженої форми записки. Для зборів використовується колір з редактора збору; тут можна задати колір окремої форми разової або регулярної пожертви."

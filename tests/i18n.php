@@ -10,7 +10,7 @@ $root=dirname(__DIR__).'/georg-kloster-orthodox-donations';
 $pot=new PO();ensure($pot->import_from_file($root.'/languages/georg-kloster-orthodox-donations.pot'),'POT loads');
 $installed=new MO();ensure($installed->import_from_file($root.'/languages/georg-kloster-orthodox-donations-ru_RU.mo'),'Installed Russian catalog loads');
 $oldPack=new MO();$oldPack->headers=$installed->headers;
-$newStrings=['Campaign image','Choose image','Remove image','Use image','Minimum donation','Suggested amount %d','Other amount','Choose an amount or enter your own. Minimum: %s EUR.'];
+$newStrings=['Campaign image','Choose image','Remove image','Use image','Minimum donation','Suggested amount %d','Other amount','Choose an amount or enter your own. Minimum: %s EUR.','Form and button color','This color is used for buttons and selected options. The form background remains transparent.','This color is used for the campaign donation form, progress indicator and links.','Hex color override for this shortcode. It takes precedence over a saved prayer-form color. Campaign forms use the color set in the campaign editor; set this value for a standalone one-time or regular donation form.'];
 foreach($installed->entries as $entry)if(!in_array($entry->singular,$newStrings,true))$oldPack->add_entry($entry);
 $oldPackPath=WP_LANG_DIR.'/plugins/georg-kloster-orthodox-donations-ru_RU.mo';
 if(!is_dir(dirname($oldPackPath)))mkdir(dirname($oldPackPath),0777,true);

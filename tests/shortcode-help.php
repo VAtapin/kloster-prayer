@@ -21,7 +21,7 @@ foreach($titles as $lang=>$title){
     $_GET=['help_lang'=>'ignored'];$html=I18n::in_language(static function(){ob_start();Shortcode_Help::page();return ob_get_clean();},$lang);
     donation_assert(str_contains($html,esc_html($title)),'Guide is translated: '.$lang);
     foreach($documented as $tag)donation_assert(str_contains($html,'['.$tag),'Shortcode present: '.$tag);
-    donation_assert(substr_count($html,'class="button gkod-copy-shortcode"')===15,'All examples are copyable');
+    donation_assert(substr_count($html,'class="button gkod-copy-shortcode"')===19,'All examples are copyable');
     donation_assert(!str_contains($html,'lang=&quot;')&&!str_contains($html,'<nav'),'No forced shortcode language or custom language switcher');
     donation_assert(str_contains($html,'readonly')&&str_contains($html,'role="status"'),'Manual and accessible copy feedback');
     if($lang==='ru')file_put_contents(dirname(__DIR__).'/tmp/shortcode-help-preview.html',$html);

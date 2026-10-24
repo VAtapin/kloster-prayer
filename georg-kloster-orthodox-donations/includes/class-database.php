@@ -5,7 +5,7 @@ namespace GeorgKlosterOrthodoxDonate;
 
 final class Database
 {
-    private const DB_VERSION = '1.0.5';
+    private const DB_VERSION = '1.0.6';
 
     public static function table(string $name): string
     {
@@ -110,6 +110,7 @@ final class Database
             intro_pl text NULL,
             layout varchar(30) NOT NULL DEFAULT 'standard',
             default_intention enum('health','rest') NOT NULL DEFAULT 'health',
+            accent_color varchar(7) NOT NULL DEFAULT '',
             is_active tinyint(1) NOT NULL DEFAULT 1,
             created_at datetime NOT NULL,
             updated_at datetime NOT NULL,
@@ -249,6 +250,7 @@ final class Database
             description_pl text NULL,
             goal_cents int unsigned NOT NULL,
             image_id bigint unsigned NOT NULL DEFAULT 0,
+            accent_color varchar(7) NOT NULL DEFAULT '#8c2732',
             minimum_cents int unsigned NOT NULL DEFAULT 1000,
             preset_1_cents int unsigned NOT NULL DEFAULT 1000,
             preset_2_cents int unsigned NOT NULL DEFAULT 2000,

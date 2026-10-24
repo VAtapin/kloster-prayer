@@ -61,7 +61,8 @@ final class Campaigns
             || !in_array($status, ['draft', 'open', 'closed'], true) || ($deadline !== '' && (!$date || $date->format('Y-m-d') !== $deadline))) {
             return new \WP_Error('invalid', __('Please complete all required fields.', 'georg-kloster-orthodox-donations'));
         }
-        $data = ['goal_cents' => $goal, 'image_id' => $image_id, 'minimum_cents' => $minimum, 'preset_1_cents' => $presets[1], 'preset_2_cents' => $presets[2], 'preset_3_cents' => $presets[3], 'status' => $status, 'deadline' => $deadline ?: null, 'updated_at' => current_time('mysql')];
+        $accent_color = sanitize_hex_color((string) ($input['accent_color'] ?? ($existing->accent_color ?? ''))) ?: '#8c2732';
+        $data = ['goal_cents' => $goal, 'image_id' => $image_id, 'accent_color' => $accent_color, 'minimum_cents' => $minimum, 'preset_1_cents' => $presets[1], 'preset_2_cents' => $presets[2], 'preset_3_cents' => $presets[3], 'status' => $status, 'deadline' => $deadline ?: null, 'updated_at' => current_time('mysql')];
         foreach (['en', 'de', 'ru', 'uk', 'pl'] as $lang) {
             foreach (['title','description'] as $field) {
                 $key=$field.'_'.$lang;
@@ -162,10 +163,12 @@ final class Campaigns
                     $totals=self::totals((int)$campaign->id);
                     $thumb=!empty($campaign->image_id)?wp_get_attachment_image((int)$campaign->image_id,'thumbnail',false,['class'=>'gkod-campaign-card__image']):'';
                     $url=add_query_arg('campaign_id',(int)$campaign->id,$target_url).'#gkod-campaign-'.(int)$campaign->id;
-                    $html.='<article class="gkod-campaign-card">'.$thumb.'<div class="gkod-campaign-card__content"><h2>'.esc_html(self::title($campaign,$lang)).'</h2><p>'.esc_html(number_format_i18n($totals['received']/100,2).' / '.number_format_i18n($campaign->goal_cents/100,2).' EUR').'</p><progress max="100" value="'.min(100,(int)floor($totals['received']*100/max(1,(int)$campaign->goal_cents))).'"></progress><a class="gkod-campaign-card__link" href="'.esc_url($url).'">'.esc_html__('Donate','georg-kloster-orthodox-donations').' <span aria-hidden="true">→</span></a></div></article>';
+                    $accent_color = sanitize_hex_color((string) ($campaign->accent_color ?? '')) ?: '#8c2732';
+                    $html.='<article class="gkod-campaign-card" style="--gkod-accent:'.esc_attr($accent_color).'">'.$thumb.'<div class="gkod-campaign-card__content"><h2>'.esc_html(self::title($campaign,$lang)).'</h2><p>'.esc_html(number_format_i18n($totals['received']/100,2).' / '.number_format_i18n($campaign->goal_cents/100,2).' EUR').'</p><progress max="100" value="'.min(100,(int)floor($totals['received']*100/max(1,(int)$campaign->goal_cents))).'"></progress><a class="gkod-campaign-card__link" href="'.esc_url($url).'">'.esc_html__('Donate','georg-kloster-orthodox-donations').' <span aria-hidden="true">→</span></a></div></article>';
                     continue;
                 }
-                $html .= '<section class="gkod-campaign" id="gkod-campaign-' . (int)$campaign->id . '"><h2>' . esc_html(self::title($campaign, $lang)) . '</h2>' . $image . '<div class="gkod-campaign__description">' . wpautop(wp_kses_post($description)) . '</div><div class="gkod-campaign__goal">' . self::summary($campaign) . '</div>';
+                $accent_color = sanitize_hex_color((string) ($campaign->accent_color ?? '')) ?: '#8c2732';
+                $html .= '<section class="gkod-campaign" id="gkod-campaign-' . (int)$campaign->id . '" style="--gkod-accent:' . esc_attr($accent_color) . '"><h2>' . esc_html(self::title($campaign, $lang)) . '</h2>' . $image . '<div class="gkod-campaign__description">' . wpautop(wp_kses_post($description)) . '</div><div class="gkod-campaign__goal">' . self::summary($campaign) . '</div>';
                 if ($campaign->deadline) $html .= '<p>' . esc_html__('Deadline', 'georg-kloster-orthodox-donations') . ': ' . esc_html($campaign->deadline) . '</p>';
                 $html .= self::accepting($campaign) ? Public_Form::donation_shortcode(['campaign_id' => (int) $campaign->id, 'lang' => $lang, 'header' => 'no']) : '<p>' . esc_html__('This campaign is closed.', 'georg-kloster-orthodox-donations') . '</p>';
                 $html .= self::expense_list((int)$campaign->id);

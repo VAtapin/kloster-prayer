@@ -1716,3 +1716,15 @@ msgstr ""
 
 msgid "Thank you for your generous support of the monastery. Your gift helps sustain our prayer and service."
 msgstr ""
+
+msgid "Form and button color"
+msgstr ""
+
+msgid "This color is used for buttons and selected options. The form background remains transparent."
+msgstr ""
+
+msgid "This color is used for the campaign donation form, progress indicator and links."
+msgstr ""
+
+msgid "Hex color override for this shortcode. It takes precedence over a saved prayer-form color. Campaign forms use the color set in the campaign editor; set this value for a standalone one-time or regular donation form."
+msgstr ""
