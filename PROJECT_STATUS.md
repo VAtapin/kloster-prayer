@@ -1,20 +1,19 @@
 # Состояние проекта
 
 ## Текущее состояние
-- Версия `1.0.7` ранее опубликована в WordPress.org через GitHub Actions run `40135257795`. Релиз `1.0.8` подготовлен для исправления отправки формы на страницах без шапки и подвала; публикация выполняется после установки релизного тега.
+- Плагин версии `1.0.8` опубликован в WordPress.org. Каталог API подтверждает версию `1.0.8`; GitHub Actions run `40739425820` успешно выполнил сборку и публикацию в SVN. Тег `georg-kloster-orthodox-donations-1.0.8` указывает на commit `0c34a33`.
 - Отправка форм работает без глобального JS-объекта темы: URL `admin-ajax.php` передаётся в атрибуте формы как резервный источник.
 - В GlotPress импортированы каталоги RU/DE/UK/PL для Development. RU/DE/UK автоматически синхронизировались в Stable и имеют 375/375 текущих переводов. Польский импорт добавил 30 переводов в Waiting; Stable пока показывает 34 Waiting и 20 Untranslated.
 - WordPress.org пока показывает прежний source-каталог из 375 строк, несмотря на версию 1.0.7 в SVN `trunk`. Импортные PO содержат 536 строк и сохраняют прежние оригиналы, но новые строки релиза пока не появились в GlotPress. Повторный импорт потребуется после обновления исходного каталога платформой.
 
 ## Проверки
-- Прошли: синтаксис PHP (292 файла), `tests/donor-actions.php`, `tests/thank-you-template.php`, `tests/notifications.php`, `tests/api-domain.php`, `tests/payment-binding.php`, `tests/i18n.php`, тест переводов, сборка PO→MO, сборка ZIP и проверка WordPress.org assets.
-- По исправлению отправки формы прошли: `php -l` для изменённых PHP-файлов, `php tests/public-form-assets.php`, `node --check` для `assets/js/public.js`, `git diff --check`.
-- Локальный `tests/smoke.php` не завершился из-за отсутствующего в PHP 8.4 расширения `mbstring`; оно включено в GitHub Actions, и релизные проверки прошли. WordPress локально не устанавливался.
-- `git diff --check` прошёл перед commit. GitHub Actions успешно выполнил проверку, создание релиза и публикацию кода в SVN.
+- Для релиза 1.0.8 GitHub Actions успешно выполнил обязательные проверки, сборку ZIP и публикацию в WordPress.org SVN.
+- Локально прошли PHP lint всех PHP-файлов (плагин и тесты), `tests/public-form-assets.php`, `tests/notifications.php`, `tests/donor-actions.php`, `tests/thank-you-template.php`, `tests/api-domain.php`, `tests/payment-binding.php`, `tests/i18n.php`, проверка каталогов переводов, сборка ZIP и проверка WordPress.org assets.
+- Локальный `tests/smoke.php` не завершился из-за отсутствующего в PHP 8.4 расширения `mbstring`; GitHub Actions запускает его с требуемым расширением и завершился успешно. Локальный WordPress не устанавливался.
 
 ## Следующий шаг
 - После обновления плагина очистить кэш страницы `/molitvy/` и проверить тестовую отправку с рабочего браузера.
 - Дождаться обновления исходных строк GlotPress после публикации 1.0.7, затем повторно импортировать RU/DE/UK/PL и проверить Stable/Development, включая польское одобрение.
 
 ## Последний связанный commit
-- Релиз `1.0.8` готовится на основе исправления формы `ba6dfc2`; hash релизного commit будет добавлен после публикации.
+- `0c34a33` (`Prepare plugin 1.0.8 release`).
