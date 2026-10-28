@@ -28,8 +28,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var submit = root.querySelector('.gkod-submit');
     var currency = root.dataset.currency || 'EUR';
     var lang = ({en: 'en-US', de: 'de-DE', ru: 'ru-RU', uk: 'uk-UA', pl: 'pl-PL'})[root.dataset.lang] || 'de-DE';
-    var requiredMessage = root.dataset.required || window.georgKlosterOrthodoxDonate.required;
-    var genericError = root.dataset.error || window.georgKlosterOrthodoxDonate.error;
+    var config = window.georgKlosterOrthodoxDonate || {};
+    var requiredMessage = root.dataset.required || config.required || '';
+    var genericError = root.dataset.error || config.error || '';
+    var ajaxUrl = root.dataset.ajaxUrl || config.ajaxUrl;
 
     function normalizeNames(finalize) {
       if (donation) return;
@@ -110,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
         error.textContent = requiredMessage; error.hidden = false; form.reportValidity(); return;
       }
       submit.disabled = true;
-      fetch(window.georgKlosterOrthodoxDonate.ajaxUrl, {method: 'POST', body: new FormData(form), credentials: 'same-origin'})
+      fetch(ajaxUrl, {method: 'POST', body: new FormData(form), credentials: 'same-origin'})
         .then(function (response) { return response.json(); })
         .then(function (data) {
           if (!data.success || !data.data.redirect) throw new Error(data.data && data.data.message || genericError);

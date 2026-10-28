@@ -2,16 +2,19 @@
 
 ## Текущее состояние
 - Плагин версии `1.0.7` опубликован в WordPress.org через успешный GitHub Actions run `40135257795`. Commit `6f07700`, тег `georg-kloster-orthodox-donations-1.0.7`.
+- Отправка форм работает без глобального JS-объекта темы: URL `admin-ajax.php` передаётся в атрибуте формы как резервный источник.
 - В GlotPress импортированы каталоги RU/DE/UK/PL для Development. RU/DE/UK автоматически синхронизировались в Stable и имеют 375/375 текущих переводов. Польский импорт добавил 30 переводов в Waiting; Stable пока показывает 34 Waiting и 20 Untranslated.
 - WordPress.org пока показывает прежний source-каталог из 375 строк, несмотря на версию 1.0.7 в SVN `trunk`. Импортные PO содержат 536 строк и сохраняют прежние оригиналы, но новые строки релиза пока не появились в GlotPress. Повторный импорт потребуется после обновления исходного каталога платформой.
 
 ## Проверки
 - Прошли: синтаксис PHP (292 файла), `tests/donor-actions.php`, `tests/thank-you-template.php`, `tests/notifications.php`, `tests/api-domain.php`, `tests/payment-binding.php`, `tests/i18n.php`, тест переводов, сборка PO→MO, сборка ZIP и проверка WordPress.org assets.
+- По исправлению отправки формы прошли: `php -l` для изменённых PHP-файлов, `php tests/public-form-assets.php`, `node --check` для `assets/js/public.js`, `git diff --check`.
 - Локальный `tests/smoke.php` не завершился из-за отсутствующего в PHP 8.4 расширения `mbstring`; оно включено в GitHub Actions, и релизные проверки прошли. WordPress локально не устанавливался.
 - `git diff --check` прошёл перед commit. GitHub Actions успешно выполнил проверку, создание релиза и публикацию кода в SVN.
 
 ## Следующий шаг
+- После обновления плагина очистить кэш страницы `/molitvy/` и проверить тестовую отправку с рабочего браузера.
 - Дождаться обновления исходных строк GlotPress после публикации 1.0.7, затем повторно импортировать RU/DE/UK/PL и проверить Stable/Development, включая польское одобрение.
 
 ## Последний связанный commit
-- `6f07700` (`Prepare plugin 1.0.7 release and translations`); обновление этого статуса содержит результат публикации и импорта.
+- `6f07700` (`Prepare plugin 1.0.7 release and translations`); baseline before the AJAX endpoint fallback fix.

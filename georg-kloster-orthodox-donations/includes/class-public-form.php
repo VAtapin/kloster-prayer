@@ -130,7 +130,7 @@ final class Public_Form
         if (!$donation) $form_style .= ';--gkod-health-accent:' . $health_color . ';--gkod-rest-accent:' . $rest_color;
         ob_start();
         ?>
-        <section id="<?php echo esc_attr($form_dom_id) ?>" class="gkod-donation-form gkod-donation-form--<?php echo  esc_attr($layout) ?>" style="<?php echo esc_attr($form_style) ?>" data-request-type="<?php echo $donation ? 'donation' : 'prayer' ?>" data-currency="EUR" data-lang="<?php echo  esc_attr($lang) ?>" data-error="<?php echo esc_attr(I18n::text('error', $lang)) ?>" data-required="<?php echo esc_attr(I18n::text('required', $lang)) ?>">
+        <section id="<?php echo esc_attr($form_dom_id) ?>" class="gkod-donation-form gkod-donation-form--<?php echo  esc_attr($layout) ?>" style="<?php echo esc_attr($form_style) ?>" data-request-type="<?php echo $donation ? 'donation' : 'prayer' ?>" data-currency="EUR" data-lang="<?php echo  esc_attr($lang) ?>" data-ajax-url="<?php echo esc_url(admin_url('admin-ajax.php')) ?>" data-error="<?php echo esc_attr(I18n::text('error', $lang)) ?>" data-required="<?php echo esc_attr(I18n::text('required', $lang)) ?>">
             <?php if (($atts['header'] ?? 'yes') !== 'no') : ?><header class="gkod-donation-form__header">
                 <h2><?php echo  esc_html($form->{$title_key}) ?></h2>
                 <?php if (!empty($form->{$intro_key})) : ?><p><?php echo  esc_html($form->{$intro_key}) ?></p><?php endif; ?>

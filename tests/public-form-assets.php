@@ -37,6 +37,9 @@ foreach ($submit_rules as [, $selector, $declarations]) {
 }
 $form_markup = file_get_contents($root . '/includes/class-public-form.php');
 if (!str_contains($form_markup, 'class="wp-element-button gkod-submit"')) throw new RuntimeException('Submit button must use the WordPress theme button class');
+if (!str_contains($form_markup, 'data-ajax-url="<?php echo esc_url(admin_url(\'admin-ajax.php\')) ?>"')) throw new RuntimeException('The form must carry its own AJAX endpoint for templates without localized footer scripts');
+$script_markup = file_get_contents($root . '/assets/js/public.js');
+if (!str_contains($script_markup, 'root.dataset.ajaxUrl || config.ajaxUrl') || !str_contains($script_markup, 'var config = window.georgKlosterOrthodoxDonate || {};')) throw new RuntimeException('Form submission must tolerate missing WordPress-localized script data');
 if (str_contains($css, '.gkod-form')) throw new RuntimeException('The donation form selectors must not collide with the theme’s generic .gkod-form rule');
 if (preg_match('/^\.gkod-donation-form\s*\{[^}]*\bbackground(?:-color)?\s*:/ms', $css)) throw new RuntimeException('The form root must inherit the page background without a background declaration');
 echo "PASS isolated form selectors, theme-provided page background and buttons, independent intention colors and content-hashed cache keys\n";
