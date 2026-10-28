@@ -4,7 +4,7 @@ Tags: orthodox, prayer, donations, stripe, paypal
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,9 @@ Update provider webhook/return URLs after moving. An API-domain override must se
 6. WordPress support table and cancellation controls.
 
 == Changelog ==
+
+= 1.0.8 =
+* Fix donation form submission on pages without the theme header or footer.
 
 = 1.0.7 =
 * Add the donor directory and payment history in WordPress administration.
